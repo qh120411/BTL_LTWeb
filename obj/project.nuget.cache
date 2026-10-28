@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "oo/Fq7gaNHw=",
+  "success": true,
+  "projectFilePath": "D:\\lmd\\nam3\\ltw\\BTL_LTWEB\\BTL_LTWEB.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\lemin\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.22.1\\microsoft.visualstudio.azure.containers.tools.targets.1.22.1.nupkg.sha512"
+  ],
+  "logs": []
+}
