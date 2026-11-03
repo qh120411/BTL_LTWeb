@@ -1,4 +1,4 @@
-# BTL_LTWeb — Website Thư viện UTC
+﻿# BTL_LTWeb — Website Thư viện UTC
 
 Bài tập lớn môn Lập trình Web, xây dựng website thư viện Trường Đại học Giao thông Vận tải (UTC) theo mô hình **ASP.NET Core MVC**. Project hướng đến hỗ trợ bạn đọc tra cứu học liệu, tiếp cận dịch vụ thư viện và hỗ trợ quản lý tài liệu, bạn đọc, hoạt động mượn trả.
 
@@ -38,51 +38,99 @@ Link Figma: [UTC Library — Prototype](https://www.figma.com/proto/4ul02l3jmMTv
 | Công cụ phát triển | Visual Studio hoặc .NET CLI |
 | Container | Dockerfile sử dụng Windows Nano Server |
 
-## Cây thư mục
+## Cây thư mục dự án (Bố cục chuẩn hóa theo Figma)
+
+Dự án được tổ chức theo mô hình **ASP.NET Core Areas** gồm 2 phân hệ độc lập: **Quản trị Thư viện (`Areas/Admin`)** (21 màn hình Figma) và **Cổng Bạn đọc OPAC (`Areas/Reader`)** (10 màn hình Figma):
 
 ```text
 BTL_LTWeb/
+├── Areas/
+│   ├── Admin/                                  # PHÂN HỆ QUẢN TRỊ (21 màn hình Figma)
+│   │   ├── Controllers/
+│   │   │   ├── DashboardController.cs          # 01 · Tổng quan KPI & biểu đồ lưu thông
+│   │   │   ├── CatalogController.cs            # 02, 09, 10, 19 · Quản lý học liệu, bản sao, cảnh báo trùng
+│   │   │   ├── ReaderController.cs             # 03, 11, 12 · Quản lý bạn đọc, hồ sơ, nhập Excel QLĐT
+│   │   │   ├── CirculationController.cs        # 04, 13, 14, 17, 18, 20 · Mượn trả, chặn quá hạn, đối chiếu barcode
+│   │   │   ├── OverdueController.cs            # 05 · Theo dõi quá hạn
+│   │   │   ├── IncidentController.cs           # 06, 15, 21 · Mất, hỏng & hoàn tất bồi thường
+│   │   │   ├── ReportController.cs             # 07 · Báo cáo & thống kê (xuất Excel)
+│   │   │   └── UserController.cs               # 08, 16 · Tài khoản cán bộ, phân quyền nhân viên
+│   │   ├── ViewModels/                         # DTO / ViewModel riêng cho Admin
+│   │   └── Views/
+│   │       ├── Shared/
+│   │       │   ├── _AdminLayout.cshtml         # Layout Master Admin (Sidebar Navy + Header)
+│   │       │   ├── _AdminHeader.cshtml
+│   │       │   ├── _AdminSidebar.cshtml        # Sidebar điều hướng các phân hệ
+│   │       │   └── Partials/                   # Component dùng lại: Badge trạng thái, phân trang, modal
+│   │       ├── Dashboard/                      # [Figma 01] Tổng quan KPI
+│   │       ├── Catalog/                        # [Figma 02, 09, 10, 19] Học liệu & bản sao
+│   │       ├── Reader/                         # [Figma 03, 11, 12] Bạn đọc & nhập Excel
+│   │       ├── Circulation/                    # [Figma 04, 13, 14, 17, 18, 20] Mượn trả & xử lý barcode
+│   │       ├── Overdue/                        # [Figma 05] Theo dõi quá hạn
+│   │       ├── Incident/                       # [Figma 06, 15, 21] Mất hỏng & bồi thường
+│   │       ├── Report/                         # [Figma 07] Báo cáo lưu thông
+│   │       └── User/                           # [Figma 08, 16] Tài khoản & phân quyền
+│   │
+│   └── Reader/                                 # PHÂN HỆ BẠN ĐỌC & OPAC (10 màn hình Figma)
+│       ├── Controllers/
+│       │   ├── HomeController.cs               # 01 · Trang chủ Thư viện UTC
+│       │   ├── SearchController.cs             # 02 · Tra cứu học liệu OPAC đa tiêu chí
+│       │   ├── DocumentController.cs           # 03 · Chi tiết học liệu & Giới thiệu sách
+│       │   ├── GuideController.cs              # 04 · Dịch vụ & hướng dẫn mượn trả
+│       │   ├── NewsController.cs               # 05 · Tin tức & thông báo hoạt động
+│       │   └── MyLibraryController.cs          # 07, 08, 09, 10 · Sách đang mượn, lịch sử, thông báo, hồ sơ
+│       ├── ViewModels/                         # ViewModel riêng cho OPAC & Bạn đọc
+│       └── Views/
+│           ├── Shared/
+│           │   ├── _ReaderLayout.cshtml        # Layout Master Bạn đọc (Header UTC + Menu + Footer)
+│           │   ├── _ReaderHeader.cshtml        # Header tra cứu nhanh + Avatar
+│           │   ├── _ReaderFooter.cshtml        # Footer liên hệ ĐHGTVT
+│           │   └── Partials/                   # Card sách, Quick search, Bộ lọc
+│           ├── Home/                           # [Figma 01] Trang chủ Thư viện
+│           ├── Search/                         # [Figma 02] Tra cứu OPAC
+│           ├── Document/                       # [Figma 03] Chi tiết học liệu & giới thiệu sách
+│           ├── Guide/                          # [Figma 04] Dịch vụ & hướng dẫn
+│           ├── News/                           # [Figma 05] Tin tức & hoạt động
+│           └── MyLibrary/                      # [Figma 07, 08, 09, 10] Phân hệ "Thư viện của tôi"
+│
 ├── Controllers/
-│   └── HomeController.cs             # Xử lý trang chủ, Privacy và lỗi
+│   ├── AccountController.cs                    # [Figma Reader 06] Đăng nhập & phân luồng (Admin / Bạn đọc)
+│   └── HomeController.cs                       # Điều hướng mặc định
 ├── Models/
-│   └── ErrorViewModel.cs             # Model hiển thị thông tin lỗi
-├── Properties/
-│   └── launchSettings.json          # Profile chạy và cổng localhost
+│   └── ErrorViewModel.cs                       # Model lỗi
 ├── Views/
-│   ├── Home/
-│   │   ├── Index.cshtml              # Trang chủ
-│   │   └── Privacy.cshtml            # Trang Privacy
-│   ├── Shared/
-│   │   ├── _Header.cshtml            # Header và thanh điều hướng
-│   │   ├── _Footer.cshtml            # Footer và thông tin liên hệ
-│   │   ├── _Layout.cshtml            # Bố cục chung
-│   │   ├── _Layout.cshtml.css        # CSS riêng của layout
-│   │   ├── _ValidationScriptsPartial.cshtml
-│   │   └── Error.cshtml              # Trang thông báo lỗi
-│   ├── _ViewImports.cshtml           # Namespace và Tag Helpers
-│   └── _ViewStart.cshtml             # Khai báo layout mặc định
+│   ├── Shared/                                 # Layout và thành phần dùng chung gốc
+│   │   ├── _Header.cshtml
+│   │   ├── _Footer.cshtml
+│   │   └── _Layout.cshtml
+│   ├── _ViewImports.cshtml
+│   └── _ViewStart.cshtml
 ├── wwwroot/
 │   ├── css/
-│   │   └── site.css                  # CSS của website
+│   │   ├── admin-theme.css                     # Bảng màu Admin
+│   │   ├── reader-theme.css                    # Bảng màu Reader (Navy #0B3C68, Gold #D99B26)
+│   │   └── site.css
 │   ├── js/
-│   │   └── site.js                   # JavaScript của website
-│   ├── lib/                         # Bootstrap, jQuery, validation
+│   │   ├── admin-circulation.js                # Xử lý quét barcode & mượn trả
+│   │   ├── reader-opac.js                      # Tìm kiếm OPAC debounce
+│   │   └── site.js
+│   ├── images/
+│   │   └── covers/                             # Ảnh bìa sách tải lên
 │   ├── logo/
-│   │   └── utc.png                   # Logo UTC
-│   └── favicon.ico
-├── .dockerignore
-├── .gitignore                       # Bỏ qua cache IDE, file build và cấu hình cá nhân
-├── appsettings.json                 # Cấu hình ứng dụng
-├── appsettings.Development.json     # Cấu hình môi trường phát triển
-├── BTL_LTWEB.csproj                  # Cấu hình project và package
-├── BTL_LTWEB.sln                     # Solution Visual Studio
-├── Dockerfile                       # Cấu hình build container Windows
-├── Program.cs                       # Khởi tạo ứng dụng, middleware, routing
-├── QLThuVienUTC_TheoBaoCao-1.sql      # Script cơ sở dữ liệu và dữ liệu mẫu
+│   │   └── utc.png                             # Logo UTC
+│   └── lib/                                    # Bootstrap, jQuery, validation
+├── Properties/
+│   └── launchSettings.json                     # Cấu hình cổng chạy (http: 5124, https: 7223)
+├── appsettings.json                            # Cấu hình connection string & hệ thống
+├── BTL_LTWEB.csproj
+├── BTL_LTWEB.sln
+├── Dockerfile
+├── Program.cs                                  # Cấu hình Area routing, Authentication, DI
+├── QLThuVienUTC_TheoBaoCao-1.sql                 # CSDL 16 bảng
 └── README.md
 ```
 
-Cây trên tập trung vào mã nguồn; không liệt kê `.git/`, `.vs/`, `.vs_backup/`, `bin/`, `obj/` và file cấu hình IDE cá nhân. Thư mục `wwwroot/images/` cũng đã được khai báo trong project để bổ sung hình ảnh.
+Cây trên tập trung vào mã nguồn; không liệt kê `.git/`, `.vs/`, `.vs_backup/`, `bin/`, `obj/` và file cấu hình IDE cá nhân. Thư mục `wwwroot/images/covers/` dùng để lưu trữ ảnh bìa sách.
 
 ## Cài đặt và chạy project
 
@@ -205,3 +253,4 @@ Trên GitHub, tạo Pull Request từ nhánh vừa push vào `main`, mô tả n�
 - Chỉ commit mã nguồn, tài nguyên và tài liệu cần thiết. `.gitignore` đã cấu hình bỏ qua `.vs/`, `.vs_backup/`, `bin/`, `obj/`, file cấu hình IDE cá nhân và log; vẫn cần kiểm tra kỹ danh sách file được stage và không commit thông tin kết nối riêng.
 - Nếu gặp xung đột, xử lý và kiểm tra lại trước khi commit; không dùng force push lên nhánh chung.
 - Chạy `dotnet build` và kiểm tra các trang liên quan trước khi gửi Pull Request.
+ 
