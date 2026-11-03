@@ -1,0 +1,9 @@
+/* Bảng màu Admin chuẩn hóa theo README.md & Figma */
+:root {
+    --utc-admin-navy: #174c7f;
+    --utc-admin-sidebar: #176a9e;
+    --utc-admin-blue: #0079ba;
+    --utc-admin-bg: #f1faff;
+    --utc-admin-card: #ffffff;
+    --utc-admin-border: #cbd5e1;
+}

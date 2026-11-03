@@ -6,51 +6,85 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="admin-page-title mb-0">Quản lý học liệu</h1>
-    <button class="btn btn-utc-primary px-4 py-2">+ Thêm học liệu mới</button>
+    <button class="btn btn-utc-primary" type="button" onclick="alert('Chức năng thêm học liệu mới.')">
+        + Thêm học liệu
+    </button>
 </div>
 
+<!-- Khung giới thiệu nghiệp vụ -->
 <div class="admin-info-box">
-    Quản lý danh mục giáo trình, sách chuyên khảo, tài liệu điện tử và các bản sao lưu hành trong thư viện.
+    <div class="admin-info-title">Danh mục học liệu và bản sao lưu hành</div>
+    <div class="admin-info-desc">Quản lý giáo trình, sách chuyên khảo, tài liệu điện tử, số lượng bản sao và vị trí xếp giá.</div>
 </div>
 
+<!-- Bộ lọc tìm kiếm & thể loại trực tiếp trên nền -->
+<div class="row g-3 mb-4">
+    <div class="col-md-7">
+        <label class="form-label-utc">Tra cứu học liệu</label>
+        <input type="text" class="form-control form-control-utc" placeholder="Tên sách, mã tài liệu, tác giả..." />
+    </div>
+    <div class="col-md-5">
+        <label class="form-label-utc">Thể loại</label>
+        <select class="form-select form-control-utc">
+            <option>Tất cả thể loại</option>
+            <option>Công nghệ thông tin</option>
+            <option>Kỹ thuật xây dựng</option>
+            <option>Khoa học cơ bản</option>
+        </select>
+    </div>
+</div>
+
+<!-- Bảng danh sách học liệu -->
 <div class="admin-table-card">
     <table class="table-utc">
         <thead>
             <tr>
-                <th>Mã học liệu</th>
-                <th>Tên học liệu</th>
-                <th>Thể loại</th>
-                <th>Định dạng</th>
-                <th>Tổng bản</th>
-                <th>Thao tác</th>
+                <th style="width: 15%;">Mã học liệu</th>
+                <th style="width: 27%;">Tên học liệu</th>
+                <th style="width: 18%;">Thể loại</th>
+                <th style="width: 12%;">Định dạng</th>
+                <th style="width: 10%;">Tổng bản</th>
+                <th style="width: 10%;">Trạng thái</th>
+                <th style="width: 8%;">Thao tác</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td class="fw-semibold">TLVN26-001</td>
+                <td>TLVN26-001</td>
                 <td>Nhập môn lập trình Python</td>
                 <td>Công nghệ thông tin</td>
                 <td>Sách in</td>
                 <td>20</td>
+                <td>Có sẵn (11/20)</td>
                 <td><a href="#" class="action-link">Chi tiết</a></td>
             </tr>
             <tr>
-                <td class="fw-semibold">TLVN26-002</td>
+                <td>TLVN26-002</td>
                 <td>Cơ học kết cấu</td>
                 <td>Kỹ thuật xây dựng</td>
                 <td>Sách in</td>
                 <td>15</td>
+                <td>Có sẵn (8/15)</td>
                 <td><a href="#" class="action-link">Chi tiết</a></td>
             </tr>
             <tr>
-                <td class="fw-semibold">TLGB26-001</td>
+                <td>TLGB26-001</td>
                 <td>Introduction to Data Science</td>
                 <td>Công nghệ thông tin</td>
                 <td>Sách in</td>
                 <td>12</td>
+                <td>Có sẵn (9/12)</td>
+                <td><a href="#" class="action-link">Chi tiết</a></td>
+            </tr>
+            <tr>
+                <td>TLVN26-003</td>
+                <td>Xác suất thống kê</td>
+                <td>Khoa học cơ bản</td>
+                <td>Tài liệu điện tử</td>
+                <td>18</td>
+                <td>Sẵn sàng tải</td>
                 <td><a href="#" class="action-link">Chi tiết</a></td>
             </tr>
         </tbody>
     </table>
 </div>
-

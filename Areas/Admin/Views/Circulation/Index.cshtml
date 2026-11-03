@@ -5,44 +5,73 @@
 <div class="admin-breadcrumb">THƯ VIỆN UTC / QUẢN TRỊ</div>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="admin-page-title mb-0">Quản lý Mượn trả</h1>
-    <button class="btn btn-utc-primary px-4 py-2">+ Tạo giao dịch mượn</button>
+    <h1 class="admin-page-title mb-0">Mượn trả</h1>
+    <button class="btn btn-utc-primary" type="button" onclick="alert('Mở biểu mẫu tạo giao dịch mượn mới.')">
+        + Tạo giao dịch mượn
+    </button>
 </div>
 
+<!-- Khung giới thiệu nghiệp vụ -->
 <div class="admin-info-box">
-    Tiếp nhận yêu cầu mượn trả tài liệu, quét mã vạch bản sao và kiểm tra tính hợp lệ của thẻ bạn đọc.
+    <div class="admin-info-title">Quản lý lưu thông tài liệu</div>
+    <div class="admin-info-desc">Tiếp nhận yêu cầu mượn trả, kiểm tra điều kiện thẻ bạn đọc và đối chiếu mã vạch bản sao.</div>
 </div>
 
+<!-- Bộ lọc tìm kiếm & trạng thái trực tiếp trên nền -->
+<div class="row g-3 mb-4">
+    <div class="col-md-7">
+        <label class="form-label-utc">Tra cứu giao dịch</label>
+        <input type="text" class="form-control form-control-utc" placeholder="Mã giao dịch, mã bạn đọc, tên sách..." />
+    </div>
+    <div class="col-md-5">
+        <label class="form-label-utc">Trạng thái giao dịch</label>
+        <select class="form-select form-control-utc">
+            <option>Tất cả trạng thái</option>
+            <option>Đang mượn</option>
+            <option>Đã trả</option>
+            <option>Quá hạn</option>
+        </select>
+    </div>
+</div>
+
+<!-- Bảng danh sách giao dịch mượn trả -->
 <div class="admin-table-card">
     <table class="table-utc">
         <thead>
             <tr>
-                <th>Mã giao dịch</th>
-                <th>Mã bạn đọc</th>
-                <th>Ngày mượn</th>
-                <th>Hạn trả</th>
-                <th>Trạng thái</th>
-                <th>Thao tác</th>
+                <th style="width: 16%;">Mã giao dịch</th>
+                <th style="width: 24%;">Bạn đọc</th>
+                <th style="width: 18%;">Mã bản sao</th>
+                <th style="width: 14%;">Ngày mượn</th>
+                <th style="width: 14%;">Hạn trả</th>
+                <th style="width: 14%;">Trạng thái</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td class="fw-semibold">GD2610270001</td>
-                <td>SV001 (Nguyễn Minh Anh)</td>
+                <td>GD2610270001</td>
+                <td>SV001 - Nguyễn Minh Anh</td>
+                <td>TLVN26-001-001</td>
                 <td>15/10/2026</td>
                 <td>29/10/2026</td>
-                <td><span class="badge bg-danger">Quá hạn</span></td>
-                <td><a href="#" class="action-link">Xử lý trả</a></td>
+                <td><span class="badge-status badge-overdue"><i class="bi bi-exclamation-triangle-fill"></i> Quá hạn 5 ngày</span></td>
             </tr>
             <tr>
-                <td class="fw-semibold">GD2610270002</td>
-                <td>SV002 (Trần Hoàng Nam)</td>
+                <td>GD2610270002</td>
+                <td>SV001 - Nguyễn Minh Anh</td>
+                <td>TLVN26-002-001</td>
                 <td>25/10/2026</td>
                 <td>08/11/2026</td>
-                <td><span class="badge bg-primary">Đang mượn</span></td>
-                <td><a href="#" class="action-link">Xử lý trả</a></td>
+                <td><span class="badge-status badge-borrowed"><i class="bi bi-clock-history"></i> Đang mượn</span></td>
+            </tr>
+            <tr>
+                <td>GD2610100003</td>
+                <td>SV002 - Trần Hoàng Nam</td>
+                <td>TLVN26-001-002</td>
+                <td>10/10/2026</td>
+                <td>24/10/2026</td>
+                <td><span class="badge-status badge-available"><i class="bi bi-check-circle-fill"></i> Đã trả</span></td>
             </tr>
         </tbody>
     </table>
 </div>
-

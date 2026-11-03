@@ -1,0 +1,264 @@
+@{
+    ViewData["Title"] = "Tra cứu học liệu OPAC";
+    string keyword = Context.Request.Query["keyword"].ToString();
+    string category = Context.Request.Query["category"].ToString();
+    if (string.IsNullOrEmpty(category))
+    {
+        category = "all";
+    }
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
+}
+
+<section class="utc-search-page-section">
+    <div class="container">
+        <!-- Breadcrumb -->
+        <div class="utc-breadcrumb">CỔNG BẠN ĐỌC / TRA CỨU OPAC</div>
+        <h1 class="utc-page-title-main">
+            @if (category == "thesis")
+            {
+                <span>Luận văn, Luận án &amp; Công trình nghiên cứu</span>
+            }
+            else if (category == "books")
+            {
+                <span>Sách &amp; Giáo trình Đại học UTC</span>
+            }
+            else
+            {
+                <span>Tra cứu học liệu trực tuyến (OPAC)</span>
+            }
+        </h1>
+        <p class="utc-page-subtitle-main">
+            Hệ thống tra cứu mục lục trực tuyến OPAC dành cho sinh viên, giảng viên trường Đại học GTVT.
+        </p>
+
+        <!-- Search Bar -->
+        <form action="/Reader/Search" method="get" class="utc-search-box-large">
+            <input type="hidden" name="category" value="@category" />
+            <div class="utc-search-box-field">
+                <label class="utc-field-label">Từ khóa tìm kiếm (nhan đề, tác giả, chuyên ngành, mã ISBN)</label>
+                <input type="text" 
+                       name="keyword" 
+                       id="opacSearchInput"
+                       class="utc-field-input" 
+                       value="@keyword" 
+                       placeholder="Nhập từ khóa tìm kiếm (Ví dụ: Python, Cơ sở dữ liệu, Cầu hầm, Logistics...)" />
+            </div>
+            <button type="submit" class="btn-utc-primary" style="padding: 13px 28px;">
+                <i class="bi bi-search me-1"></i> Tra cứu OPAC
+            </button>
+        </form>
+
+        <!-- 2-Column Catalog Layout -->
+        <div class="utc-catalog-layout">
+            <!-- Sidebar: Bộ lọc kết quả -->
+            <aside class="utc-filter-sidebar">
+                <h3 class="utc-filter-title">Lọc kết quả</h3>
+
+                <form action="/Reader/Search" method="get" id="filterForm">
+                    <input type="hidden" name="keyword" value="@keyword" />
+
+                    <div class="utc-filter-group mb-3">
+                        <label class="utc-field-label">Loại tài liệu</label>
+                        <select name="category" class="utc-filter-select" onchange="document.getElementById('filterForm').submit()">
+                            <option value="all" selected="@(category == "all" ? "selected" : null)">Tất cả học liệu</option>
+                            <option value="books" selected="@(category == "books" ? "selected" : null)">Sách &amp; giáo trình</option>
+                            <option value="thesis" selected="@(category == "thesis" ? "selected" : null)">Luận văn, luận án</option>
+                            <option value="journal" selected="@(category == "journal" ? "selected" : null)">Báo &amp; tạp chí</option>
+                        </select>
+                    </div>
+
+                    <div class="utc-filter-group mb-3">
+                        <label class="utc-field-label">Chuyên ngành đào tạo</label>
+                        <select class="utc-filter-select">
+                            <option selected>Tất cả chuyên ngành</option>
+                            <option>Công nghệ thông tin</option>
+                            <option>Kỹ thuật xây dựng công trình</option>
+                            <option>Kinh tế vận tải &amp; Logistics</option>
+                            <option>Cơ khí &amp; Điện - Điện tử</option>
+                        </select>
+                    </div>
+
+                    <div class="utc-filter-group mb-3">
+                        <label class="utc-field-label">Ngôn ngữ xuất bản</label>
+                        <select class="utc-filter-select">
+                            <option selected>Tiếng Việt</option>
+                            <option>Tiếng Anh</option>
+                            <option>Tất cả ngôn ngữ</option>
+                        </select>
+                    </div>
+
+                    <div class="utc-filter-group mb-3">
+                        <label class="utc-field-label">Tình trạng lưu thông</label>
+                        <select class="utc-filter-select">
+                            <option selected>Có bản sẵn tại thư viện</option>
+                            <option>Tất cả tình trạng</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-utc-primary w-100">
+                        Áp dụng bộ lọc
+                    </button>
+                </form>
+
+                <p class="utc-filter-note">
+                    <i class="bi bi-info-circle me-1"></i> Tra cứu mở công khai. Đăng nhập để sử dụng tính năng mượn về và gia hạn.
+                </p>
+            </aside>
+
+            <!-- Results List -->
+            <div class="utc-catalog-results">
+                <div class="utc-catalog-results-header">
+                    <div class="utc-results-count">
+                        @if (category == "thesis")
+                        {
+                            <span>4 công trình học thuật tiêu biểu</span>
+                        }
+                        else
+                        {
+                            <span>4 đầu sách giáo trình có sẵn</span>
+                        }
+                    </div>
+                    <div class="text-muted small">Cập nhật theo dữ liệu kho thư viện</div>
+                </div>
+
+                <div class="utc-catalog-cards-grid">
+                    @if (category == "thesis")
+                    {
+                        <!-- Thesis 1 -->
+                        <a href="/Reader/Document/Details/5" class="utc-catalog-book-card">
+                            <div class="utc-typographic-cover" style="background-color: #fef3c7;">
+                                <span class="utc-cover-tag" style="color: #92400e;">UTC / LUẬN ÁN TIẾN SĨ</span>
+                                <div class="utc-cover-title" style="color: #78350f; font-size: 20px;">
+                                    Giao thông<br />Thông minh AI
+                                </div>
+                                <span class="utc-cover-sub" style="color: #92400e;">NCS: TS. Trần Văn Minh · 2025</span>
+                            </div>
+                            <span class="utc-book-category">CÔNG NGHỆ &amp; GIAO THÔNG</span>
+                            <div class="utc-book-card-name">Ứng dụng AI và IoT trong tối ưu hóa mạng lưới điều hành giao thông đô thị Hà Nội</div>
+                            <span class="utc-book-meta-badge" style="background-color: #fef3c7; color: #92400e;">
+                                <i class="bi bi-file-earmark-pdf-fill me-1"></i> Bản điện tử (Toàn văn)
+                            </span>
+                        </a>
+
+                        <!-- Thesis 2 -->
+                        <a href="/Reader/Document/Details/6" class="utc-catalog-book-card">
+                            <div class="utc-typographic-cover" style="background-color: #e0e7ff;">
+                                <span class="utc-cover-tag" style="color: #3730a3;">UTC / LUẬN VĂN THẠC SĨ</span>
+                                <div class="utc-cover-title" style="color: #312e81; font-size: 20px;">
+                                    Cầu dây văng<br />Đường sắt cao tốc
+                                </div>
+                                <span class="utc-cover-sub" style="color: #3730a3;">Học viên: ThS. Lê Hoàng Long · 2026</span>
+                            </div>
+                            <span class="utc-book-category">KỸ THUẬT CÔNG TRÌNH</span>
+                            <div class="utc-book-card-name">Phân tích động lực học kết cấu mố trụ cầu đường sắt tốc độ cao chịu tải trọng động đất</div>
+                            <span class="utc-book-meta-badge" style="background-color: #e0e7ff; color: #3730a3;">
+                                <i class="bi bi-file-earmark-pdf-fill me-1"></i> Bản điện tử &amp; 1 Bản in
+                            </span>
+                        </a>
+
+                        <!-- Thesis 3 -->
+                        <a href="/Reader/Document/Details/7" class="utc-catalog-book-card">
+                            <div class="utc-typographic-cover" style="background-color: #f3e8ff;">
+                                <span class="utc-cover-tag" style="color: #6b21a8;">UTC / LUẬN VĂN THẠC SĨ</span>
+                                <div class="utc-cover-title" style="color: #581c87; font-size: 20px;">
+                                    Logistics<br />Cảng Hải Phòng
+                                </div>
+                                <span class="utc-cover-sub" style="color: #6b21a8;">Học viên: ThS. Phạm Thu Trang · 2025</span>
+                            </div>
+                            <span class="utc-book-category">KINH TẾ VẬN TẢI</span>
+                            <div class="utc-book-card-name">Giải pháp hoàn thiện chuỗi cung ứng container xuất nhập khẩu qua cụm cảng quốc tế Hải Phòng</div>
+                            <span class="utc-book-meta-badge" style="background-color: #f3e8ff; color: #6b21a8;">
+                                <i class="bi bi-file-earmark-pdf-fill me-1"></i> Bản điện tử (Toàn văn)
+                            </span>
+                        </a>
+
+                        <!-- Thesis 4 -->
+                        <a href="/Reader/Document/Details/8" class="utc-catalog-book-card">
+                            <div class="utc-typographic-cover" style="background-color: #ccfbf1;">
+                                <span class="utc-cover-tag" style="color: #115e59;">UTC / ĐỒ ÁN KỸ SƯ TÀI NĂNG</span>
+                                <div class="utc-cover-title" style="color: #134e4a; font-size: 20px;">
+                                    Hành trình xe buýt<br />Real-time
+                                </div>
+                                <span class="utc-cover-sub" style="color: #115e59;">Sinh viên: Nguyễn Đức Anh · 2026</span>
+                            </div>
+                            <span class="utc-book-category">CÔNG NGHỆ THÔNG TIN</span>
+                            <div class="utc-book-card-name">Thiết kế hệ thống giám sát hành trình phương tiện vận tải hành khách công cộng theo thời gian thực</div>
+                            <span class="utc-book-meta-badge" style="background-color: #ccfbf1; color: #115e59;">
+                                <i class="bi bi-file-earmark-pdf-fill me-1"></i> Bản điện tử &amp; Mã nguồn
+                            </span>
+                        </a>
+                    }
+                    else
+                    {
+                        <!-- Book 1 -->
+                        <a href="/Reader/Document/Details/1" class="utc-catalog-book-card">
+                            <div class="utc-typographic-cover">
+                                <span class="utc-cover-tag">UTC / HỌC LIỆU</span>
+                                <div class="utc-cover-title">
+                                    Lập trình<br />Python
+                                </div>
+                                <span class="utc-cover-sub">Giáo trình đại học</span>
+                            </div>
+                            <span class="utc-book-category">CÔNG NGHỆ THÔNG TIN</span>
+                            <div class="utc-book-card-name">Lập trình Python cơ bản</div>
+                            <span class="utc-book-meta-badge">
+                                <i class="bi bi-check2-circle me-1"></i> 11 bản sẵn có · Sách in
+                            </span>
+                        </a>
+
+                        <!-- Book 2 -->
+                        <a href="/Reader/Document/Details/2" class="utc-catalog-book-card">
+                            <div class="utc-typographic-cover" style="background-color: #e0f2fe;">
+                                <span class="utc-cover-tag">UTC / HỌC LIỆU</span>
+                                <div class="utc-cover-title">
+                                    Cơ sở<br />dữ liệu
+                                </div>
+                                <span class="utc-cover-sub">Giáo trình đại học</span>
+                            </div>
+                            <span class="utc-book-category">CÔNG NGHỆ THÔNG TIN</span>
+                            <div class="utc-book-card-name">Cơ sở dữ liệu nâng cao</div>
+                            <span class="utc-book-meta-badge">
+                                <i class="bi bi-check2-circle me-1"></i> 8 bản sẵn có · Sách in
+                            </span>
+                        </a>
+
+                        <!-- Book 3 -->
+                        <a href="/Reader/Document/Details/3" class="utc-catalog-book-card">
+                            <div class="utc-typographic-cover" style="background-color: #f0fdf4;">
+                                <span class="utc-cover-tag">UTC / HỌC LIỆU</span>
+                                <div class="utc-cover-title">
+                                    Kỹ thuật<br />Điện
+                                </div>
+                                <span class="utc-cover-sub">Giáo trình đại học</span>
+                            </div>
+                            <span class="utc-book-category">CƠ KHÍ &amp; ĐIỆN</span>
+                            <div class="utc-book-card-name">Kỹ thuật điện và điện tử đại cương</div>
+                            <span class="utc-book-meta-badge">
+                                <i class="bi bi-check2-circle me-1"></i> 12 bản sẵn có · Sách in
+                            </span>
+                        </a>
+
+                        <!-- Book 4 -->
+                        <a href="/Reader/Document/Details/4" class="utc-catalog-book-card">
+                            <div class="utc-typographic-cover" style="background-color: #fffbeb;">
+                                <span class="utc-cover-tag">UTC / HỌC LIỆU</span>
+                                <div class="utc-cover-title">
+                                    Quản trị<br />Logistics
+                                </div>
+                                <span class="utc-cover-sub">Giáo trình chuyên ngành</span>
+                            </div>
+                            <span class="utc-book-category">KINH TẾ VẬN TẢI</span>
+                            <div class="utc-book-card-name">Quản trị chuỗi cung ứng &amp; Logistics</div>
+                            <span class="utc-book-meta-badge">
+                                <i class="bi bi-check2-circle me-1"></i> 7 bản sẵn có · Sách in
+                            </span>
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

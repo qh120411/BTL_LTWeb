@@ -1,0 +1,16 @@
+@model dynamic
+
+<a href="/Reader/Document/Details/@(Model?.Id ?? 1)" class="utc-catalog-book-card">
+    <div class="utc-typographic-cover" style="background-color: @(Model?.CoverBg ?? "#e7f6ff");">
+        <span class="utc-cover-tag">UTC / HỌC LIỆU</span>
+        <div class="utc-cover-title">
+            @(Model?.CoverTitle ?? "Học liệu\nUTC")
+        </div>
+        <span class="utc-cover-sub">Giáo trình đại học</span>
+    </div>
+    <span class="utc-book-category">@(Model?.Category ?? "CÔNG NGHỆ THÔNG TIN")</span>
+    <div class="utc-book-card-name">@(Model?.Title ?? "Tên học liệu")</div>
+    <span class="utc-book-meta-badge">
+        <i class="bi bi-check2-circle me-1"></i> @(Model?.StockText ?? "Có sẵn tại thư viện")
+    </span>
+</a>

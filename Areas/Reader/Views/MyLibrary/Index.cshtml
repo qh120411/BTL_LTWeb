@@ -1,0 +1,223 @@
+@{
+    ViewData["Title"] = "Thư viện của tôi";
+}
+
+<section class="py-5" style="background-color: var(--utc-bg-soft); min-height: 80vh;">
+    <div class="container">
+        <!-- Breadcrumb & Tiêu đề -->
+        <div class="utc-breadcrumb">CỔNG BẠN ĐỌC / THƯ VIỆN CỦA TÔI</div>
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+                <h1 class="utc-page-title-main mb-1">Thư viện của tôi</h1>
+                <div class="text-muted small">Bạn đọc: <strong>Nguyễn Minh Anh</strong> (Mã SV: <strong>SV001</strong> - Khoa CNTT)</div>
+            </div>
+            <a href="/Reader/Search" class="btn-utc-primary">
+                <i class="bi bi-search me-1"></i> Tra cứu mượn sách mới
+            </a>
+        </div>
+
+        <!-- 4 Card thống kê cá nhân (Chuẩn Figma 07) -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="p-3 bg-white rounded-utc border-utc shadow-sm">
+                    <div class="text-muted small">Sách đang mượn</div>
+                    <div class="fs-2 fw-bold text-navy">2</div>
+                    <div class="text-muted small">Hạn mức tối đa: 3 cuốn</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="p-3 bg-white rounded-utc border-utc shadow-sm">
+                    <div class="text-muted small">Sách quá hạn</div>
+                    <div class="fs-2 fw-bold text-danger">1</div>
+                    <div class="text-danger small fw-medium">Cần hoàn trả ngay tại quầy</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="p-3 bg-white rounded-utc border-utc shadow-sm">
+                    <div class="text-muted small">Lịch sử đã mượn</div>
+                    <div class="fs-2 fw-bold text-brand">15</div>
+                    <div class="text-muted small">Trong năm học 2026</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="p-3 bg-white rounded-utc border-utc shadow-sm">
+                    <div class="text-muted small">Trạng thái thẻ</div>
+                    <div class="fs-2 fw-bold text-success">Hoạt động</div>
+                    <div class="text-muted small">Hạn thẻ: 30/06/2027</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab chuyển đổi giữa các màn hình 07, 08, 09, 10 -->
+        <div class="bg-white rounded-utc border-utc shadow-sm p-4">
+            <ul class="nav nav-tabs mb-4" id="myLibraryTabs" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active fw-bold text-navy" id="borrowed-tab" data-bs-toggle="tab" data-bs-target="#tab-borrowed">
+                        <i class="bi bi-book-half me-1"></i> Sách đang mượn &amp; Hạn trả (Figma 07)
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link fw-bold text-navy" id="history-tab" data-bs-toggle="tab" data-bs-target="#tab-history">
+                        <i class="bi bi-clock-history me-1"></i> Lịch sử mượn trả (Figma 08)
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link fw-bold text-navy" id="notices-tab" data-bs-toggle="tab" data-bs-target="#tab-notices">
+                        <i class="bi bi-bell-fill me-1"></i> Thông báo của tôi (Figma 09)
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link fw-bold text-navy" id="profile-tab" data-bs-toggle="tab" data-bs-target="#tab-profile">
+                        <i class="bi bi-person-lines-fill me-1"></i> Thông tin bạn đọc (Figma 10)
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="myLibraryTabContent">
+                <!-- Tab 1: Sách đang mượn & Hạn trả (Figma 07) -->
+                <div class="tab-pane fade show active" id="tab-borrowed">
+                    <div class="table-responsive">
+                        <table class="utc-copies-table">
+                            <thead>
+                                <tr>
+                                    <th>Mã GD</th>
+                                    <th>Tên tài liệu / Sách</th>
+                                    <th>Ngày mượn</th>
+                                    <th>Hạn trả</th>
+                                    <th>Tình trạng</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>GD2610270001</strong></td>
+                                    <td>Lập trình Python cơ bản (Bản BS001-03)</td>
+                                    <td>15/10/2026</td>
+                                    <td><strong class="text-danger">29/10/2026</strong></td>
+                                    <td><span class="badge-status badge-overdue"><i class="bi bi-exclamation-triangle-fill"></i> Quá hạn 5 ngày</span></td>
+                                    <td>
+                                        <a href="/Reader/Guide" class="btn btn-outline-danger btn-sm">Xem quy định phạt</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>GD2610270002</strong></td>
+                                    <td>Cơ sở dữ liệu nâng cao (Bản BS002-01)</td>
+                                    <td>25/10/2026</td>
+                                    <td><strong>08/11/2026</strong></td>
+                                    <td><span class="badge-status badge-borrowed"><i class="bi bi-clock-history"></i> Còn 5 ngày</span></td>
+                                    <td>
+                                        <button class="btn btn-utc-primary btn-sm" onclick="alert('Yêu cầu gia hạn thêm 7 ngày đã được gửi thành công!')">Gia hạn sách</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Lịch sử mượn trả (Figma 08) -->
+                <div class="tab-pane fade" id="tab-history">
+                    <div class="table-responsive">
+                        <table class="utc-copies-table">
+                            <thead>
+                                <tr>
+                                    <th>Mã giao dịch</th>
+                                    <th>Tên sách giáo trình</th>
+                                    <th>Ngày mượn</th>
+                                    <th>Ngày trả</th>
+                                    <th>Trạng thái hoàn tất</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>GD2610100003</td>
+                                    <td>Nhập môn Lập trình C++</td>
+                                    <td>10/10/2026</td>
+                                    <td>24/10/2026</td>
+                                    <td><span class="badge-status badge-available"><i class="bi bi-check-circle-fill"></i> Đã trả đúng hạn</span></td>
+                                </tr>
+                                <tr>
+                                    <td>GD2609010012</td>
+                                    <td>Kỹ thuật điện đại cương</td>
+                                    <td>01/09/2026</td>
+                                    <td>15/09/2026</td>
+                                    <td><span class="badge-status badge-available"><i class="bi bi-check-circle-fill"></i> Đã trả đúng hạn</span></td>
+                                </tr>
+                                <tr>
+                                    <td>GD2608150045</td>
+                                    <td>Toán cao cấp A1</td>
+                                    <td>15/08/2026</td>
+                                    <td>29/08/2026</td>
+                                    <td><span class="badge-status badge-available"><i class="bi bi-check-circle-fill"></i> Đã trả đúng hạn</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Thông báo của tôi (Figma 09) -->
+                <div class="tab-pane fade" id="tab-notices">
+                    <div class="d-flex flex-column gap-3">
+                        <div class="p-3 rounded-utc border-utc bg-soft d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="text-danger fw-bold"><i class="bi bi-exclamation-circle-fill me-1"></i> Cảnh báo sách quá hạn</div>
+                                <div class="small text-muted">Cuốn sách "Lập trình Python cơ bản" của bạn đã quá hạn trả từ ngày 29/10/2026. Vui lòng mang sách tới quầy thủ thư tầng 5 Nhà A8 để làm thủ tục hoàn trả.</div>
+                            </div>
+                            <span class="text-muted small">Hôm nay</span>
+                        </div>
+                        <div class="p-3 rounded-utc border-utc bg-soft d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="text-brand fw-bold"><i class="bi bi-info-circle-fill me-1"></i> Nhắc nhở hạn trả sắp tới</div>
+                                <div class="small text-muted">Cuốn sách "Cơ sở dữ liệu nâng cao" còn 5 ngày nữa sẽ đến hạn trả (08/11/2026). Bạn có thể gia hạn trực tuyến ngay tại mục Sách đang mượn.</div>
+                            </div>
+                            <span class="text-muted small">2 ngày trước</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 4: Thông tin bạn đọc & Hồ sơ thẻ (Figma 10) -->
+                <div class="tab-pane fade" id="tab-profile">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <h4 class="text-navy fw-bold fs-5 mb-3">Hồ sơ định danh bạn đọc</h4>
+                            <div class="utc-meta-item mb-2">
+                                <span class="utc-meta-label">Họ và tên</span>
+                                <div class="utc-meta-value">Nguyễn Minh Anh</div>
+                            </div>
+                            <div class="utc-meta-item mb-2">
+                                <span class="utc-meta-label">Mã sinh viên / Mã bạn đọc</span>
+                                <div class="utc-meta-value">SV001</div>
+                            </div>
+                            <div class="utc-meta-item mb-2">
+                                <span class="utc-meta-label">Lớp sinh hoạt / Khóa</span>
+                                <div class="utc-meta-value">Công nghệ thông tin 1 - K62</div>
+                            </div>
+                            <div class="utc-meta-item mb-2">
+                                <span class="utc-meta-label">Khoa đào tạo</span>
+                                <div class="utc-meta-value">Khoa Công nghệ thông tin</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="text-navy fw-bold fs-5 mb-3">Thông tin thẻ thư viện UTC</h4>
+                            <div class="utc-meta-item mb-2">
+                                <span class="utc-meta-label">Mã thẻ thư viện</span>
+                                <div class="utc-meta-value">THE-UTC-2022-001</div>
+                            </div>
+                            <div class="utc-meta-item mb-2">
+                                <span class="utc-meta-label">Ngày cấp thẻ</span>
+                                <div class="utc-meta-value">15/09/2022</div>
+                            </div>
+                            <div class="utc-meta-item mb-2">
+                                <span class="utc-meta-label">Ngày hết hạn</span>
+                                <div class="utc-meta-value">30/06/2027</div>
+                            </div>
+                            <div class="utc-meta-item mb-2">
+                                <span class="utc-meta-label">Trạng thái xác thực QLĐT</span>
+                                <div class="utc-meta-value text-success">Đã đồng bộ dữ liệu QLĐT thành công</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

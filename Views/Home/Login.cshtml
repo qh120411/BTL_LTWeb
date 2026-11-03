@@ -1,0 +1,78 @@
+@{
+    ViewData["Title"] = "Đăng nhập";
+}
+
+<section class="py-5" style="background-color: var(--utc-bg-soft); min-height: 70vh; display: flex; align-items: center;">
+    <div class="container" style="max-width: 560px;">
+        <div class="bg-white p-4 p-md-5 rounded-utc border-utc shadow-md">
+            <div class="text-center mb-4">
+                <div class="utc-logo-wrapper mx-auto mb-3" style="width: 72px; height: 72px;">
+                    <img src="~/logo/utc.png" alt="UTC Logo" />
+                </div>
+                <h2 class="text-navy fw-bold fs-4 mb-1">ĐĂNG NHẬP HỆ THỐNG</h2>
+                <div class="text-muted small">Cổng thông tin &amp; Quản trị Thư viện Đại học GTVT</div>
+            </div>
+
+            <!-- Tab chọn vai trò Bạn đọc / Cán bộ -->
+            <ul class="nav nav-pills nav-fill mb-4 p-1 rounded-utc" style="background-color: var(--utc-bg-soft);">
+                <li class="nav-item">
+                    <button class="nav-link active fw-medium py-2" id="tab-reader" data-bs-toggle="pill" data-bs-target="#pane-reader">
+                        <i class="bi bi-person-fill me-1"></i> Bạn đọc (Sinh viên/GV)
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link fw-medium py-2" id="tab-staff" data-bs-toggle="pill" data-bs-target="#pane-staff">
+                        <i class="bi bi-shield-lock-fill me-1"></i> Cán bộ thư viện
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <!-- Form Đăng nhập Bạn đọc -->
+                <div class="tab-pane fade show active" id="pane-reader">
+                    <form action="/" method="get">
+                        <div class="mb-3">
+                            <label class="form-label text-navy fw-medium small">Mã sinh viên / Mã bạn đọc</label>
+                            <input type="text" class="form-control py-2 border-utc" placeholder="Nhập mã sinh viên (Ví dụ: 211200001)" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-navy fw-medium small">Mật khẩu</label>
+                            <input type="password" class="form-control py-2 border-utc" placeholder="Nhập mật khẩu" required />
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="rememberMe">
+                                <label class="form-check-label text-muted small" for="rememberMe">Ghi nhớ đăng nhập</label>
+                            </div>
+                            <a href="#" class="text-brand small">Quên mật khẩu?</a>
+                        </div>
+                        <button type="submit" class="btn-utc-primary w-100 py-2">
+                            Đăng nhập bạn đọc &rarr;
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Form Đăng nhập Cán bộ -->
+                <div class="tab-pane fade" id="pane-staff">
+                    <form action="/Admin/Dashboard" method="get">
+                        <div class="mb-3">
+                            <label class="form-label text-navy fw-medium small">Tài khoản cán bộ (Email / Username)</label>
+                            <input type="text" class="form-control py-2 border-utc" placeholder="lan.demo@utc.edu.vn" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-navy fw-medium small">Mật khẩu nghiệp vụ</label>
+                            <input type="password" class="form-control py-2 border-utc" placeholder="••••••••" required />
+                        </div>
+                        <button type="submit" class="btn-utc-primary w-100 py-2 mt-4">
+                            Đăng nhập hệ thống Quản trị &rarr;
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="text-center mt-4 pt-3 border-top text-muted small">
+                Chưa có tài khoản? <a href="/Home/Services" class="text-brand fw-medium">Xem hướng dẫn cấp thẻ</a>
+            </div>
+        </div>
+    </div>
+</section>

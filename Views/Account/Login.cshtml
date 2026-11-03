@@ -1,0 +1,82 @@
+@{
+    ViewData["Title"] = "Đăng nhập hệ thống";
+}
+
+<section class="py-5" style="background-color: var(--utc-bg-soft); min-height: 75vh; display: flex; align-items: center;">
+    <div class="container" style="max-width: 540px;">
+        <div class="bg-white p-4 p-md-5 rounded-utc border-utc shadow-md">
+            <div class="text-center mb-4">
+                <div class="utc-logo-wrapper mx-auto mb-3" style="width: 72px; height: 72px;">
+                    <img src="~/logo/utc.png" alt="UTC Logo" />
+                </div>
+                <h2 class="text-navy fw-bold fs-4 mb-1">ĐĂNG NHẬP THƯ VIỆN UTC</h2>
+                <div class="text-muted small">Cổng tra cứu học liệu &amp; Quản trị nghiệp vụ</div>
+            </div>
+
+            <!-- Tab chọn vai trò phân luồng -->
+            <ul class="nav nav-pills nav-fill mb-4 p-1 rounded-utc" style="background-color: var(--utc-bg-soft);">
+                <li class="nav-item">
+                    <button class="nav-link active fw-medium py-2" id="tab-reader" data-bs-toggle="pill" data-bs-target="#pane-reader">
+                        <i class="bi bi-person-fill me-1"></i> Bạn đọc (Sinh viên/GV)
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link fw-medium py-2" id="tab-staff" data-bs-toggle="pill" data-bs-target="#pane-staff">
+                        <i class="bi bi-shield-lock-fill me-1"></i> Thủ thư / Admin
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <!-- Tab Bạn đọc -->
+                <div class="tab-pane fade show active" id="pane-reader">
+                    <form asp-controller="Account" asp-action="Login" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="role" value="reader" />
+                        <div class="mb-3">
+                            <label class="form-label text-navy fw-medium small">Mã sinh viên / Mã bạn đọc</label>
+                            <input type="text" name="username" class="form-control py-2 border-utc" placeholder="Nhập mã sinh viên (Ví dụ: 211200001)" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-navy fw-medium small">Mật khẩu</label>
+                            <input type="password" name="password" class="form-control py-2 border-utc" placeholder="Nhập mật khẩu" required />
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="rememberReader">
+                                <label class="form-check-label text-muted small" for="rememberReader">Ghi nhớ đăng nhập</label>
+                            </div>
+                            <a href="#" class="text-brand small">Quên mật khẩu?</a>
+                        </div>
+                        <button type="submit" class="btn-utc-primary w-100 py-2">
+                            Đăng nhập bạn đọc &rarr;
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Tab Thủ thư / Admin -->
+                <div class="tab-pane fade" id="pane-staff">
+                    <form asp-controller="Account" asp-action="Login" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="role" value="admin" />
+                        <div class="mb-3">
+                            <label class="form-label text-navy fw-medium small">Tài khoản cán bộ (Email)</label>
+                            <input type="text" name="username" class="form-control py-2 border-utc" value="lan.demo@utc.edu.vn" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-navy fw-medium small">Mật khẩu</label>
+                            <input type="password" name="password" class="form-control py-2 border-utc" value="123456" required />
+                        </div>
+                        <button type="submit" class="btn-utc-primary w-100 py-2 mt-4">
+                            Vào hệ thống Quản trị Thư viện &rarr;
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="text-center mt-4 pt-3 border-top text-muted small">
+                Chưa có tài khoản? <a href="/Reader/Guide" class="text-brand fw-medium">Xem hướng dẫn cấp thẻ bạn đọc</a>
+            </div>
+        </div>
+    </div>
+</section>

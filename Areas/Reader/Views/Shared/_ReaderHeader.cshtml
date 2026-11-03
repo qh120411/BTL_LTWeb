@@ -1,0 +1,85 @@
+@{
+    string currentController = ViewContext.RouteData.Values["Controller"]?.ToString() ?? "Home";
+    string currentAction = ViewContext.RouteData.Values["Action"]?.ToString() ?? "Index";
+}
+
+<header class="utc-site-header">
+    <!-- Utility bar trên cùng -->
+    <div class="utc-utility-bar">
+        <div class="container utc-utility-inner">
+            <span class="utc-utility-school">TRƯỜNG ĐẠI HỌC GIAO THÔNG VẬN TẢI</span>
+            <div class="utc-utility-links">
+                <span>Hỗ trợ bạn đọc</span>
+                <span class="dot">·</span>
+                <a href="#">VI</a> / <a href="#">EN</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Brand Bar (Logo + Tên thư viện + Account / Admin actions) -->
+    <div class="utc-brand-bar">
+        <div class="container utc-brand-inner">
+            <a href="/Reader/Home" class="utc-brand-lockup">
+                <div class="utc-logo-wrapper">
+                    <img src="~/logo/utc.png" alt="Logo UTC" />
+                </div>
+                <div class="utc-identity-text">
+                    <span class="utc-identity-title">THƯ VIỆN ĐẠI HỌC GIAO THÔNG VẬN TẢI</span>
+                    <span class="utc-identity-sub">UNIVERSITY OF TRANSPORT AND COMMUNICATIONS LIBRARY</span>
+                </div>
+            </a>
+
+            <div class="utc-account-actions">
+                <a href="/Admin/Dashboard" class="btn-utc-secondary" title="Vào phân hệ dành cho cán bộ thủ thư">
+                    <i class="bi bi-gear-fill me-1"></i> Trang quản trị
+                </a>
+                <a href="/Reader/MyLibrary" class="btn-utc-secondary" title="Thư viện của tôi">
+                    <i class="bi bi-person-circle me-1"></i> Bạn đọc (SV001)
+                </a>
+                <a href="/Account/Login" class="btn-utc-secondary">
+                    Đăng xuất
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Menu chính của Bạn đọc -->
+    <nav class="utc-main-nav">
+        <div class="container utc-nav-inner">
+            <ul class="utc-nav-list" id="readerNavList">
+                <li>
+                    <a href="/Reader/Home" class="utc-nav-link @(currentController == "Home" ? "active" : "")">
+                        Trang chủ
+                    </a>
+                </li>
+                <li>
+                    <a href="/Reader/Search" class="utc-nav-link @(currentController == "Search" || currentController == "Document" ? "active" : "")">
+                        Tra cứu học liệu
+                    </a>
+                </li>
+                <li>
+                    <a href="/Reader/Guide" class="utc-nav-link @(currentController == "Guide" ? "active" : "")">
+                        Dịch vụ &amp; Hướng dẫn
+                    </a>
+                </li>
+                <li>
+                    <a href="/Reader/News" class="utc-nav-link @(currentController == "News" ? "active" : "")">
+                        Tin tức &amp; thông báo
+                    </a>
+                </li>
+                <li>
+                    <a href="/Reader/MyLibrary" class="utc-nav-link @(currentController == "MyLibrary" ? "active" : "")">
+                        Thư viện của tôi
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 3 dải màu thương hiệu UTC -->
+    <div class="utc-brand-stripes">
+        <span class="utc-stripe-navy"></span>
+        <span class="utc-stripe-gold"></span>
+        <span class="utc-stripe-sky"></span>
+    </div>
+</header>

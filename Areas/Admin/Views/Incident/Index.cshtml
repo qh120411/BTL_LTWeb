@@ -6,35 +6,55 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="admin-page-title mb-0">Mất / hỏng &amp; bồi thường</h1>
-    <button class="btn btn-utc-primary px-4 py-2">+ Lập biên bản xử lý</button>
+    <button class="btn btn-utc-primary" type="button" onclick="alert('Mở biểu mẫu lập biên bản sự cố mất/hỏng tài liệu.')">
+        + Lập biên bản sự cố
+    </button>
 </div>
 
+<!-- Khung giới thiệu nghiệp vụ -->
 <div class="admin-info-box">
-    Ghi nhận tình trạng sự cố mất sách, hư hại tài liệu và lập hồ sơ bồi thường theo nội quy thư viện.
+    <div class="admin-info-title">Xử lý sự cố tài liệu và bồi thường</div>
+    <div class="admin-info-desc">Ghi nhận tình trạng tài liệu mất, rách bìa, hư hại và tính toán mức bồi thường theo quy định thư viện.</div>
 </div>
 
+<!-- Bộ lọc tìm kiếm & tình trạng trực tiếp trên nền -->
+<div class="row g-3 mb-4">
+    <div class="col-md-7">
+        <label class="form-label-utc">Tra cứu biên bản sự cố</label>
+        <input type="text" class="form-control form-control-utc" placeholder="Mã biên bản, mã bạn đọc, tên sách..." />
+    </div>
+    <div class="col-md-5">
+        <label class="form-label-utc">Tình trạng bồi thường</label>
+        <select class="form-select form-control-utc">
+            <option>Tất cả tình trạng</option>
+            <option>Chờ thanh toán</option>
+            <option>Đã hoàn tất bồi thường</option>
+        </select>
+    </div>
+</div>
+
+<!-- Bảng danh sách biên bản sự cố -->
 <div class="admin-table-card">
     <table class="table-utc">
         <thead>
             <tr>
-                <th>Mã biên bản</th>
-                <th>Bạn đọc</th>
-                <th>Tên sách</th>
-                <th>Sự cố</th>
-                <th>Mức bồi thường</th>
-                <th>Trạng thái</th>
+                <th style="width: 14%;">Mã biên bản</th>
+                <th style="width: 22%;">Bạn đọc</th>
+                <th style="width: 22%;">Tên sách</th>
+                <th style="width: 18%;">Sự cố ghi nhận</th>
+                <th style="width: 12%;">Mức bồi thường</th>
+                <th style="width: 12%;">Trạng thái</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td class="fw-semibold">BB2610-001</td>
+                <td>BB2610-001</td>
                 <td>SV001 - Nguyễn Minh Anh</td>
                 <td>Lập trình Python cơ bản</td>
                 <td>Rách bìa &amp; mất trang</td>
                 <td>50.000 đ</td>
-                <td><span class="badge bg-warning text-dark">Chờ thanh toán</span></td>
+                <td>Chờ thanh toán</td>
             </tr>
         </tbody>
     </table>
 </div>
-

@@ -68,3 +68,5 @@ D:\LapTrinhWeb\BTL_LTWEB\BTL_LTWeb\obj\Debug\net8.0\refint\BTL_LTWEB.dll
 D:\LapTrinhWeb\BTL_LTWEB\BTL_LTWeb\obj\Debug\net8.0\BTL_LTWEB.pdb
 D:\LapTrinhWeb\BTL_LTWEB\BTL_LTWeb\obj\Debug\net8.0\BTL_LTWEB.genruntimeconfig.cache
 D:\LapTrinhWeb\BTL_LTWEB\BTL_LTWeb\obj\Debug\net8.0\ref\BTL_LTWEB.dll
+D:\LapTrinhWeb\BTL_LTWEB\BTL_LTWeb\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+D:\LapTrinhWeb\BTL_LTWEB\BTL_LTWeb\obj\Debug\net8.0\BTL_LTWEB.csproj.Up2Date

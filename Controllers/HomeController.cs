@@ -13,9 +13,10 @@ namespace BTL_LTWEB.Controllers
             _logger = logger;
         }
 
+        // Điều hướng mặc định vào Cổng Bạn đọc (Areas/Reader/Home)
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Index", "Home", new { area = "Reader" });
         }
 
         public IActionResult Privacy()

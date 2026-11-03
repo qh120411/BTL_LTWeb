@@ -6,51 +6,72 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="admin-page-title mb-0">Tài khoản &amp; phân quyền</h1>
-    <button class="btn btn-utc-primary px-4 py-2">+ Thêm cán bộ</button>
+    <button class="btn btn-utc-primary" type="button" onclick="alert('Mở biểu mẫu thêm tài khoản cán bộ thư viện mới.')">
+        + Thêm cán bộ
+    </button>
 </div>
 
+<!-- Khung giới thiệu nghiệp vụ -->
 <div class="admin-info-box">
-    Quản lý tài khoản đăng nhập cán bộ thư viện, phân công vai trò (Quản trị viên, Quản lý bạn đọc, Thủ thư mượn trả).
+    <div class="admin-info-title">Danh sách tài khoản cán bộ thư viện</div>
+    <div class="admin-info-desc">Phân quyền theo vai trò (Quản trị viên, Quản lý bạn đọc, Thủ thư mượn trả) để bảo đảm an toàn dữ liệu.</div>
 </div>
 
+<!-- Bộ lọc tìm kiếm & vai trò trực tiếp trên nền -->
+<div class="row g-3 mb-4">
+    <div class="col-md-7">
+        <label class="form-label-utc">Tra cứu cán bộ</label>
+        <input type="text" class="form-control form-control-utc" placeholder="Mã cán bộ, họ tên, email..." />
+    </div>
+    <div class="col-md-5">
+        <label class="form-label-utc">Vai trò</label>
+        <select class="form-select form-control-utc">
+            <option>Tất cả vai trò</option>
+            <option>Quản trị viên (QTV)</option>
+            <option>Quản lý bạn đọc (QLB)</option>
+            <option>Thủ thư mượn trả (TTM)</option>
+        </select>
+    </div>
+</div>
+
+<!-- Bảng danh sách cán bộ -->
 <div class="admin-table-card">
     <table class="table-utc">
         <thead>
             <tr>
-                <th>Mã NV</th>
-                <th>Họ tên</th>
-                <th>Tên đăng nhập</th>
-                <th>Vai trò</th>
-                <th>Trạng thái</th>
-                <th>Thao tác</th>
+                <th style="width: 14%;">Mã NV</th>
+                <th style="width: 22%;">Họ tên</th>
+                <th style="width: 26%;">Tên đăng nhập</th>
+                <th style="width: 20%;">Vai trò</th>
+                <th style="width: 10%;">Trạng thái</th>
+                <th style="width: 8%;">Thao tác</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td class="fw-semibold">NV26-01</td>
+                <td>NV26-01</td>
                 <td>Nguyễn Thị Lan</td>
-                <td>admin.demo@utc.edu.vn</td>
+                <td>lan.demo@utc.edu.vn</td>
                 <td>Quản trị viên (QTV)</td>
-                <td><span class="badge-status badge-active">Hoạt động</span></td>
+                <td>Hoạt động</td>
                 <td><a href="#" class="action-link">Sửa quyền</a></td>
             </tr>
             <tr>
-                <td class="fw-semibold">NV26-02</td>
+                <td>NV26-02</td>
                 <td>Trần Văn Minh</td>
                 <td>bandoc.demo@utc.edu.vn</td>
                 <td>Quản lý bạn đọc (QLB)</td>
-                <td><span class="badge-status badge-active">Hoạt động</span></td>
+                <td>Hoạt động</td>
                 <td><a href="#" class="action-link">Sửa quyền</a></td>
             </tr>
             <tr>
-                <td class="fw-semibold">NV26-03</td>
+                <td>NV26-03</td>
                 <td>Lê Thị Hà</td>
                 <td>thuthu.demo@utc.edu.vn</td>
                 <td>Thủ thư mượn trả (TTM)</td>
-                <td><span class="badge-status badge-active">Hoạt động</span></td>
+                <td>Hoạt động</td>
                 <td><a href="#" class="action-link">Sửa quyền</a></td>
             </tr>
         </tbody>
     </table>
 </div>
-

@@ -1,0 +1,598 @@
+/* ==========================================================================
+   UTC LIBRARY - HOME PAGE STYLES (Trang chủ chuẩn Figma Demo C)
+   ========================================================================== */
+
+/* ===== HERO & FLOATING SEARCH ===== */
+.utc-hero-section {
+    background-color: var(--utc-paper);
+    padding: 24px 0 16px;
+}
+
+.utc-floating-search-panel {
+    background-color: var(--utc-paper);
+    border: 1px solid var(--utc-line);
+    border-radius: var(--utc-radius-md);
+    padding: 28px 32px;
+    box-shadow: var(--utc-shadow-sm);
+}
+
+.utc-catalog-tabs {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.utc-tab-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 24px;
+    border-radius: var(--utc-radius-md);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: var(--utc-transition);
+}
+
+.utc-tab-btn.active {
+    background-color: var(--utc-brand);
+    color: var(--utc-paper);
+    border: 1px solid var(--utc-brand);
+}
+
+.utc-tab-btn:not(.active) {
+    background-color: var(--utc-paper);
+    border: 1px solid var(--utc-line);
+    color: var(--utc-navy);
+}
+
+.utc-tab-btn:not(.active):hover {
+    background-color: var(--utc-blue-soft);
+    border-color: var(--utc-brand);
+}
+
+.utc-search-query-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.utc-search-input-wrap {
+    flex: 1;
+    position: relative;
+}
+
+.utc-search-input {
+    width: 100%;
+    background-color: var(--utc-blue-soft);
+    border: 1px solid var(--utc-line);
+    border-radius: var(--utc-radius-md);
+    padding: 14px 20px;
+    font-size: 15px;
+    color: var(--utc-ink);
+    outline: none;
+    transition: var(--utc-transition);
+    font-family: inherit;
+}
+
+.utc-search-input:focus {
+    background-color: var(--utc-paper);
+    border-color: var(--utc-brand);
+    box-shadow: 0 0 0 3px rgba(0, 121, 186, 0.15);
+}
+
+.utc-search-input::placeholder {
+    color: #40566c;
+}
+
+.utc-search-btn {
+    padding: 14px 28px;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.utc-search-help-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--utc-muted);
+}
+
+.utc-adv-search-link {
+    color: var(--utc-brand);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--utc-transition);
+}
+
+.utc-adv-search-link:hover {
+    text-decoration: underline;
+    color: var(--utc-navy);
+}
+
+/* ===== QUICK ACCESS (4 LINKS) ===== */
+.utc-quick-access-section {
+    background-color: var(--utc-paper);
+    padding: 12px 0 24px;
+}
+
+.utc-quick-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.utc-quick-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background-color: var(--utc-bg-soft);
+    border-radius: var(--utc-radius-sm);
+    padding: 14px 20px;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: var(--utc-transition);
+}
+
+.utc-quick-card:hover {
+    background-color: #e9f2fa;
+    border-color: var(--utc-line);
+    transform: translateY(-2px);
+    box-shadow: var(--utc-shadow-sm);
+}
+
+.utc-quick-icon-bg {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--utc-radius-md);
+    background-color: var(--utc-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.utc-quick-icon-bg img {
+    width: 24px;
+    height: 24px;
+}
+
+.utc-quick-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.utc-quick-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--utc-navy);
+    line-height: 1.35;
+}
+
+.utc-quick-sub {
+    font-size: 13px;
+    color: var(--utc-muted);
+    line-height: 1.3;
+}
+
+/* ===== NEWS & ANNOUNCEMENTS (3 COLUMNS) ===== */
+.utc-news-section {
+    background-color: var(--utc-paper);
+    padding: 32px 0 40px;
+}
+
+.utc-news-layout {
+    display: grid;
+    grid-template-columns: 360px 1fr 360px;
+    gap: 32px;
+}
+
+/* Cột 1: Học liệu đáng chú ý */
+.utc-editorial-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.utc-section-header-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--utc-ink);
+    line-height: 1.4;
+    margin-bottom: 4px;
+}
+
+.utc-editorial-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--utc-line);
+    text-decoration: none;
+    transition: var(--utc-transition);
+}
+
+.utc-editorial-item:hover .utc-editorial-item-title {
+    color: var(--utc-brand);
+}
+
+.utc-editorial-tag {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--utc-muted);
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+.utc-editorial-item-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--utc-ink);
+    line-height: 1.4;
+    transition: var(--utc-transition);
+}
+
+.utc-editorial-author {
+    font-size: 14px;
+    color: var(--utc-muted);
+}
+
+/* Cột 2: Featured Article */
+.utc-featured-col {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-decoration: none;
+}
+
+.utc-featured-tag {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--utc-brand);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.utc-featured-img-wrap {
+    width: 100%;
+    height: 380px;
+    border-radius: var(--utc-radius-md);
+    overflow: hidden;
+    position: relative;
+    background-color: var(--utc-bg-soft);
+}
+
+.utc-featured-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.utc-featured-col:hover .utc-featured-img-wrap img {
+    transform: scale(1.02);
+}
+
+.utc-featured-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--utc-ink);
+    line-height: 1.35;
+    margin-top: 4px;
+    transition: var(--utc-transition);
+}
+
+.utc-featured-col:hover .utc-featured-title {
+    color: var(--utc-brand);
+}
+
+.utc-featured-desc {
+    font-size: 15px;
+    color: var(--utc-muted);
+    line-height: 1.5;
+}
+
+/* Cột 3: Thông báo & Tra cứu nhanh */
+.utc-notices-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-left: 24px;
+    border-left: 1px solid var(--utc-line);
+}
+
+.utc-notice-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--utc-line);
+    text-decoration: none;
+    transition: var(--utc-transition);
+}
+
+.utc-notice-item:hover .utc-notice-title {
+    color: var(--utc-brand);
+    padding-left: 4px;
+}
+
+.utc-notice-tag {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--utc-muted);
+    letter-spacing: 0.3px;
+}
+
+.utc-notice-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--utc-ink);
+    line-height: 1.4;
+    transition: var(--utc-transition);
+}
+
+.utc-quick-links-group {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.utc-quick-links-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--utc-brand);
+    margin-bottom: 4px;
+}
+
+.utc-side-link {
+    font-size: 15px;
+    color: var(--utc-ink);
+    text-decoration: none;
+    transition: var(--utc-transition);
+    display: inline-block;
+}
+
+.utc-side-link:hover {
+    color: var(--utc-brand);
+    padding-left: 4px;
+}
+
+/* ===== RESOURCE COLLECTIONS ===== */
+.utc-resources-section {
+    background-color: var(--utc-paper);
+    padding: 36px 0;
+    border-top: 1px solid var(--utc-line);
+    border-bottom: 1px solid var(--utc-line);
+}
+
+.utc-resources-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--utc-brand);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.utc-resource-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.utc-resource-card {
+    background-color: var(--utc-bg-soft);
+    border: 1px solid transparent;
+    border-radius: var(--utc-radius-md);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-decoration: none;
+    transition: var(--utc-transition);
+}
+
+.utc-resource-card:hover {
+    background-color: #e9f2fa;
+    border-color: var(--utc-line);
+    transform: translateY(-2px);
+    box-shadow: var(--utc-shadow-sm);
+}
+
+.utc-resource-card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--utc-ink);
+}
+
+.utc-resource-card-desc {
+    font-size: 13.5px;
+    color: var(--utc-muted);
+    line-height: 1.4;
+}
+
+/* ===== NEW ARRIVALS (SÁCH & GIÁO TRÌNH) ===== */
+.utc-arrivals-section {
+    background-color: var(--utc-paper);
+    padding: 40px 0;
+}
+
+.utc-section-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.utc-section-tag-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--utc-brand);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+}
+
+.utc-books-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+.utc-book-card-item {
+    border: 1px solid var(--utc-line);
+    border-radius: var(--utc-radius-md);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-decoration: none;
+    background-color: var(--utc-paper);
+    transition: var(--utc-transition);
+}
+
+.utc-book-card-item:hover {
+    border-color: var(--utc-brand);
+    box-shadow: var(--utc-shadow-md);
+    transform: translateY(-3px);
+}
+
+.utc-book-card-tag {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--utc-brand);
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+.utc-book-card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--utc-ink);
+    line-height: 1.35;
+    flex: 1;
+}
+
+.utc-book-card-author {
+    font-size: 13px;
+    color: var(--utc-muted);
+}
+
+/* ===== READER SERVICES SHORTCUTS ===== */
+.utc-services-section {
+    background-color: var(--utc-paper);
+    padding: 40px 0 50px;
+    border-top: 1px solid var(--utc-line);
+}
+
+.utc-service-cards-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 20px;
+}
+
+.utc-service-item-card {
+    background-color: #f1f5f9;
+    border: 1px solid #d8e2eb;
+    border-radius: var(--utc-radius-md);
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-decoration: none;
+    transition: var(--utc-transition);
+}
+
+.utc-service-item-card:hover {
+    background-color: #e5eff8;
+    border-color: var(--utc-brand);
+    transform: translateY(-2px);
+    box-shadow: var(--utc-shadow-sm);
+}
+
+.utc-service-tag {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--utc-muted);
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+.utc-service-main-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--utc-navy);
+}
+
+.utc-service-cta {
+    font-size: 14px;
+    color: var(--utc-muted);
+    transition: var(--utc-transition);
+}
+
+.utc-service-item-card:hover .utc-service-cta {
+    color: var(--utc-brand);
+    font-weight: 500;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1200px) {
+    .utc-news-layout {
+        grid-template-columns: 1fr 1fr;
+    }
+    .utc-notices-col {
+        grid-column: span 2;
+        padding-left: 0;
+        border-left: none;
+        border-top: 1px solid var(--utc-line);
+        padding-top: 24px;
+    }
+}
+
+@media (max-width: 992px) {
+    .utc-quick-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .utc-resource-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .utc-books-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .utc-service-cards-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .utc-news-layout {
+        grid-template-columns: 1fr;
+    }
+    .utc-notices-col {
+        grid-column: span 1;
+    }
+    .utc-search-query-row {
+        flex-direction: column;
+    }
+    .utc-search-btn {
+        width: 100%;
+    }
+    .utc-quick-grid {
+        grid-template-columns: 1fr;
+    }
+    .utc-resource-cards-grid {
+        grid-template-columns: 1fr;
+    }
+    .utc-books-grid {
+        grid-template-columns: 1fr;
+    }
+}

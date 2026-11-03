@@ -3,67 +3,142 @@
     ViewBag.ActiveMenu = "Dashboard";
 }
 
+<!-- Breadcrumb -->
 <div class="admin-breadcrumb">THƯ VIỆN UTC / QUẢN TRỊ</div>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="admin-page-title mb-0">Tổng quan thư viện</h1>
+<div class="d-flex justify-content-between align-items-center mb-3">
     <div>
-        <a href="/Admin/Report" class="btn btn-outline-secondary px-3 py-2 me-2">Xem báo cáo chi tiết</a>
-        <a href="/Admin/Reader" class="btn btn-utc-primary px-3 py-2">Quản lý bạn đọc</a>
+        <h1 class="admin-page-title mb-1">Tổng quan</h1>
+        <div class="text-muted" style="font-size: 14.5px;">
+            Tổng hợp học liệu và nghiệp vụ &middot; Mốc dữ liệu minh họa: @DateTime.Now.ToString("dd/MM/yyyy")
+        </div>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="/Admin/Report" class="btn btn-utc-primary">
+            <i class="bi bi-file-earmark-bar-graph me-1"></i> Xem báo cáo tháng
+        </a>
     </div>
 </div>
 
-<div class="admin-info-box">
-    Chào mừng bạn đến với Hệ thống Quản trị Thư viện Đại học Giao thông Vận tải (UTC Library Management System).
-</div>
-
+<!-- 4 Card Thống kê chuẩn 100% Figma -->
 <div class="row g-3 mb-4">
     <div class="col-md-3 col-sm-6">
-        <div class="kpi-card">
-            <div class="kpi-title">Tổng số bạn đọc</div>
-            <div class="kpi-value text-primary">4.250</div>
+        <div class="kpi-card" style="background-color: #e7f5ff; border: 1px solid #d4ebf9;">
+            <div class="kpi-title" style="color: var(--utc-text-muted);">Đầu sách</div>
+            <div class="kpi-value" style="color: #0079ba;">4</div>
+            <div class="small text-muted mt-1">Đầu sách trong danh mục</div>
         </div>
     </div>
     <div class="col-md-3 col-sm-6">
-        <div class="kpi-card">
-            <div class="kpi-title">Lượt mượn trong tháng</div>
-            <div class="kpi-value">42</div>
+        <div class="kpi-card" style="background-color: #e9faf4; border: 1px solid #c8f0e0;">
+            <div class="kpi-title" style="color: var(--utc-text-muted);">Bản sẵn có</div>
+            <div class="kpi-value" style="color: #0079ba;">38</div>
+            <div class="small text-muted mt-1">Sẵn sàng phục vụ bạn đọc</div>
         </div>
     </div>
     <div class="col-md-3 col-sm-6">
-        <div class="kpi-card">
-            <div class="kpi-title">Quá hạn cần xử lý</div>
-            <div class="kpi-value text-danger">1</div>
+        <div class="kpi-card" style="background-color: #edf2ff; border: 1px solid #d9e2fc;">
+            <div class="kpi-title" style="color: var(--utc-text-muted);">Đang mượn</div>
+            <div class="kpi-value" style="color: #0079ba;">26</div>
+            <div class="small text-muted mt-1">Bản sách đang lưu hành ngoài kho</div>
         </div>
     </div>
     <div class="col-md-3 col-sm-6">
-        <div class="kpi-card">
-            <div class="kpi-title">Tổng đầu sách lưu hành</div>
-            <div class="kpi-value text-success">65</div>
+        <div class="kpi-card" style="background-color: #fff5d9; border: 1px solid #fae6b2;">
+            <div class="kpi-title" style="color: #8c5c00;">Mất / chờ bồi thường</div>
+            <div class="kpi-value" style="color: #8c5c00;">1</div>
+            <div class="small text-muted mt-1">Cần xử lý thủ tục bồi thường</div>
         </div>
     </div>
 </div>
 
-<div class="row g-4">
-    <div class="col-md-6">
-        <div class="admin-filter-card h-100">
-            <h5 class="fw-bold mb-3 text-primary">Lối tắt quản lý bạn đọc</h5>
-            <p class="text-muted small">Quản lý thông tin bạn đọc đồng bộ từ Phòng Quản lý Đào tạo (QLĐT), cấp quyền thẻ thư viện và theo dõi hạn mượn.</p>
-            <div class="d-flex gap-2">
-                <a href="/Admin/Reader" class="btn btn-utc-primary btn-sm">Danh sách bạn đọc</a>
-                <a href="/Admin/Reader/ImportQldt" class="btn btn-outline-secondary btn-sm">Nhập dữ liệu QLĐT</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="admin-filter-card h-100">
-            <h5 class="fw-bold mb-3 text-primary">Báo cáo &amp; thống kê</h5>
-            <p class="text-muted small">Theo dõi tình hình lưu thông tài liệu, tỷ lệ sách sẵn có, đang mượn và mất hỏng theo kỳ báo cáo.</p>
-            <div class="d-flex gap-2">
-                <a href="/Admin/Report" class="btn btn-utc-primary btn-sm">Xem thống kê</a>
-                <a href="/Admin/Report/ExportExcel" class="btn btn-outline-secondary btn-sm">Xuất Excel</a>
-            </div>
-        </div>
+<!-- Bảng Công việc cần theo dõi (Chuẩn bảng Figma) -->
+<div class="mb-4">
+    <h3 class="fw-bold mb-3" style="color: var(--utc-navy); font-size: 20px;">
+        Công việc cần theo dõi
+    </h3>
+    <div class="admin-table-card">
+        <table class="table-utc">
+            <thead>
+                <tr>
+                    <th style="width: 40%;">Nội dung nghiệp vụ</th>
+                    <th style="width: 30%;">Số lượng ghi nhận</th>
+                    <th style="width: 30%;">Thao tác xử lý</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="fw-medium text-navy">
+                        <i class="bi bi-clock-history text-danger me-2"></i> Lượt mượn quá hạn
+                    </td>
+                    <td><span class="badge-overdue">1 lượt</span></td>
+                    <td>
+                        <a href="/Admin/Overdue" class="text-brand fw-medium">Xem danh sách quá hạn &rarr;</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="fw-medium text-navy">
+                        <i class="bi bi-exclamation-octagon text-warning me-2"></i> Sách mất chưa hoàn tất bồi thường
+                    </td>
+                    <td><span class="badge-overdue" style="background-color: #fff5d9; color: #8c5c00;">1 hồ sơ</span></td>
+                    <td>
+                        <a href="/Admin/Incident" class="text-brand fw-medium">Mở hồ sơ sự cố &rarr;</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="fw-medium text-navy">
+                        <i class="bi bi-journal-bookmark-fill text-brand me-2"></i> Học liệu và bản sách trong kho
+                    </td>
+                    <td><strong>65 bản / 4 đầu sách</strong></td>
+                    <td>
+                        <a href="/Admin/Catalog" class="text-brand fw-medium">Xem quản lý học liệu &rarr;</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 
+<!-- Bảng Giao dịch lưu thông gần đây -->
+<div class="admin-table-card mb-4">
+    <div class="p-3 bg-white border-bottom d-flex justify-content-between align-items-center">
+        <span class="fw-bold" style="color: var(--utc-navy); font-size: 16px;">
+            Giao dịch mượn trả gần đây
+        </span>
+        <a href="/Admin/Circulation" class="small text-brand fw-medium">Xem tất cả &rarr;</a>
+    </div>
+    <table class="table-utc">
+        <thead>
+            <tr>
+                <th style="width: 15%;">Mã GD</th>
+                <th style="width: 25%;">Bạn đọc</th>
+                <th style="width: 28%;">Tài liệu</th>
+                <th style="width: 16%;">Hạn trả</th>
+                <th style="width: 16%;">Trạng thái</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>GD2610270001</strong></td>
+                <td>SV001 - Nguyễn Minh Anh</td>
+                <td>Lập trình Python cơ bản</td>
+                <td>29/10/2026</td>
+                <td><span class="badge-status badge-overdue"><i class="bi bi-exclamation-triangle-fill"></i> Quá hạn 5 ngày</span></td>
+            </tr>
+            <tr>
+                <td><strong>GD2610270002</strong></td>
+                <td>SV001 - Nguyễn Minh Anh</td>
+                <td>Cơ sở dữ liệu nâng cao</td>
+                <td>08/11/2026</td>
+                <td><span class="badge-status badge-borrowed"><i class="bi bi-clock-history"></i> Đang mượn</span></td>
+            </tr>
+            <tr>
+                <td><strong>GD2610100003</strong></td>
+                <td>SV002 - Trần Hoàng Nam</td>
+                <td>Lập trình Python cơ bản</td>
+                <td>24/10/2026</td>
+                <td><span class="badge-status badge-available"><i class="bi bi-check-circle-fill"></i> Đã trả sách</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

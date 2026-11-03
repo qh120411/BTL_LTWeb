@@ -83,16 +83,92 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/LapTrinhWeb/BTL_LTWEB/BTL_LTWeb/Areas/Reader/Views/Document/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUmVhZGVyXFZpZXdzXERvY3VtZW50XERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/LapTrinhWeb/BTL_LTWEB/BTL_LTWeb/Areas/Reader/Views/Guide/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUmVhZGVyXFZpZXdzXEd1aWRlXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/LapTrinhWeb/BTL_LTWEB/BTL_LTWeb/Areas/Reader/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUmVhZGVyXFZpZXdzXEhvbWVcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/LapTrinhWeb/BTL_LTWEB/BTL_LTWeb/Areas/Reader/Views/MyLibrary/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUmVhZGVyXFZpZXdzXE15TGlicmFyeVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/LapTrinhWeb/BTL_LTWEB/BTL_LTWeb/Areas/Reader/Views/News/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUmVhZGVyXFZpZXdzXE5ld3NcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/LapTrinhWeb/BTL_LTWEB/BTL_LTWeb/Areas/Reader/Views/Search/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUmVhZGVyXFZpZXdzXFNlYXJjaFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/LapTrinhWeb/BTL_LTWEB/BTL_LTWeb/Areas/Reader/Views/Shared/Partials/_BookCard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUmVhZGVyXFZpZXdzXFNoYXJlZFxQYXJ0aWFsc1xfQm9va0NhcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/LapTrinhWeb/BTL_LTWEB/BTL_LTWeb/Areas/Reader/Views/Shared/Partials/_QuickSearch.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUmVhZGVyXFZpZXdzXFNoYXJlZFxQYXJ0aWFsc1xfUXVpY2tTZWFyY2guY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/LapTrinhWeb/BTL_LTWEB/BTL_LTWeb/Areas/Reader/Views/Shared/_ReaderFooter.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUmVhZGVyXFZpZXdzXFNoYXJlZFxfUmVhZGVyRm9vdGVyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/LapTrinhWeb/BTL_LTWEB/BTL_LTWeb/Areas/Reader/Views/Shared/_ReaderHeader.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUmVhZGVyXFZpZXdzXFNoYXJlZFxfUmVhZGVySGVhZGVyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/LapTrinhWeb/BTL_LTWEB/BTL_LTWeb/Areas/Reader/Views/Shared/_ReaderLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUmVhZGVyXFZpZXdzXFNoYXJlZFxfUmVhZGVyTGF5b3V0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/LapTrinhWeb/BTL_LTWEB/BTL_LTWeb/Areas/Reader/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUmVhZGVyXFZpZXdzXF9WaWV3SW1wb3J0cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/LapTrinhWeb/BTL_LTWEB/BTL_LTWeb/Areas/Reader/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcUmVhZGVyXFZpZXdzXF9WaWV3U3RhcnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/LapTrinhWeb/BTL_LTWEB/BTL_LTWeb/Views/Account/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/LapTrinhWeb/BTL_LTWEB/BTL_LTWeb/Views/Home/About.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxBYm91dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/LapTrinhWeb/BTL_LTWEB/BTL_LTWeb/Views/Home/BookDetail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxCb29rRGV0YWlsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/LapTrinhWeb/BTL_LTWEB/BTL_LTWeb/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/LapTrinhWeb/BTL_LTWEB/BTL_LTWeb/Views/Home/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/LapTrinhWeb/BTL_LTWEB/BTL_LTWeb/Views/Home/News.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxOZXdzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/LapTrinhWeb/BTL_LTWEB/BTL_LTWeb/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/LapTrinhWeb/BTL_LTWEB/BTL_LTWeb/Views/Home/Search.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxTZWFyY2guY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/LapTrinhWeb/BTL_LTWEB/BTL_LTWeb/Views/Home/Services.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxTZXJ2aWNlcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/LapTrinhWeb/BTL_LTWEB/BTL_LTWeb/Views/Shared/Error.cshtml]

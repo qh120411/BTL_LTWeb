@@ -7,7 +7,7 @@ public class DashboardController : Controller
 {
     public IActionResult Index()
     {
+        ViewBag.ActiveMenu = "Dashboard";
         return View();
     }
 }
-

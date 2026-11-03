@@ -5,36 +5,57 @@
 <div class="admin-breadcrumb">THƯ VIỆN UTC / QUẢN TRỊ</div>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="admin-page-title mb-0">Theo dõi quá hạn</h1>
-    <button class="btn btn-outline-danger px-4 py-2">Gửi thông báo nhắc trả</button>
+    <h1 class="admin-page-title mb-0">Quá hạn</h1>
+    <button class="btn btn-utc-primary" type="button" onclick="alert('Đã gửi thông báo nhắc nhở qua email đến các bạn đọc quá hạn.')">
+        Gửi thông báo nhắc trả
+    </button>
 </div>
 
+<!-- Khung giới thiệu nghiệp vụ -->
 <div class="admin-info-box">
-    Danh sách các bản sách mượn đã quá hạn trả quy định. Cần theo dõi và gửi thông báo nhắc nhở đến bạn đọc.
+    <div class="admin-info-title">Danh sách tài liệu mượn quá hạn quy định</div>
+    <div class="admin-info-desc">Hệ thống tự động rà soát giao dịch đã qua ngày hẹn trả và tạm khóa quyền mượn sách mới của bạn đọc vi phạm.</div>
 </div>
 
+<!-- Bộ lọc tìm kiếm & mức độ trực tiếp trên nền -->
+<div class="row g-3 mb-4">
+    <div class="col-md-7">
+        <label class="form-label-utc">Tra cứu bạn đọc quá hạn</label>
+        <input type="text" class="form-control form-control-utc" placeholder="Mã sinh viên, họ tên, tên sách..." />
+    </div>
+    <div class="col-md-5">
+        <label class="form-label-utc">Mức độ quá hạn</label>
+        <select class="form-select form-control-utc">
+            <option>Tất cả (Từ 1 ngày trở lên)</option>
+            <option>Quá hạn dưới 7 ngày</option>
+            <option>Quá hạn 7 - 30 ngày</option>
+            <option>Quá hạn trên 30 ngày</option>
+        </select>
+    </div>
+</div>
+
+<!-- Bảng danh sách quá hạn -->
 <div class="admin-table-card">
     <table class="table-utc">
         <thead>
             <tr>
-                <th>Mã GD</th>
-                <th>Bạn đọc</th>
-                <th>Tên sách</th>
-                <th>Hạn trả</th>
-                <th>Số ngày quá hạn</th>
-                <th>Thao tác</th>
+                <th style="width: 15%;">Mã GD</th>
+                <th style="width: 25%;">Bạn đọc</th>
+                <th style="width: 25%;">Tên sách</th>
+                <th style="width: 12%;">Hạn trả</th>
+                <th style="width: 13%;">Số ngày quá hạn</th>
+                <th style="width: 10%;">Thao tác</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td class="fw-semibold">GD2610270001</td>
+                <td>GD2610270001</td>
                 <td>SV001 - Nguyễn Minh Anh</td>
                 <td>Nhập môn lập trình Python</td>
                 <td>29/10/2026</td>
-                <td><span class="badge bg-danger">Quá hạn 5 ngày</span></td>
+                <td>Quá hạn 5 ngày</td>
                 <td><a href="/Admin/Reader/Details/SV001" class="action-link">Xem hồ sơ</a></td>
             </tr>
         </tbody>
     </table>
 </div>
-
