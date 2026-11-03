@@ -1,0 +1,83 @@
+@model ReaderIndexViewModel
+@{
+    ViewData["Title"] = "Quản lý bạn đọc";
+}
+
+<div class="admin-breadcrumb">THƯ VIỆN UTC / QUẢN TRỊ</div>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="admin-page-title mb-0">Quản lý bạn đọc</h1>
+    <a asp-action="ImportQldt" class="btn btn-utc-primary">
+        Nhập dữ liệu QLĐT
+    </a>
+</div>
+
+<!-- Khung thông tin sinh viên từ phòng QLĐT -->
+<div class="admin-info-box">
+    <div class="admin-info-title">Thông tin sinh viên từ phòng QLĐT</div>
+    <div class="admin-info-desc">Thư viện quản lý quyền sử dụng, hạn mức và lịch sử mượn; dùng thẻ sinh viên của trường.</div>
+</div>
+
+<!-- Bộ lọc tìm kiếm & nhóm bạn đọc trực tiếp trên nền -->
+<form method="get" asp-action="Index" class="mb-4" id="readerFilterForm">
+    <div class="row g-3">
+        <div class="col-md-7">
+            <label class="form-label-utc">Tra cứu bạn đọc</label>
+            <input type="text" name="search" class="form-control form-control-utc" 
+                   placeholder="Mã sinh viên, họ tên, lớp..." value="@Model.SearchKeyword" 
+                   onkeydown="if(event.key === 'Enter'){ this.form.submit(); }" />
+        </div>
+        <div class="col-md-5">
+            <label class="form-label-utc">Nhóm bạn đọc</label>
+            <select name="group" class="form-select form-control-utc" onchange="this.form.submit()">
+                @foreach (var g in Model.Groups)
+                {
+                    <option value="@g" selected="@(g == Model.SelectedGroup)">@g</option>
+                }
+            </select>
+        </div>
+    </div>
+</form>
+
+<!-- Bảng danh sách bạn đọc -->
+<div class="admin-table-card">
+    <table class="table-utc">
+        <thead>
+            <tr>
+                <th style="width: 18%;">Mã</th>
+                <th style="width: 25%;">Họ tên</th>
+                <th style="width: 20%;">Nhóm</th>
+                <th style="width: 21%;">Quyền sử dụng</th>
+                <th style="width: 16%;">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Readers.Count == 0)
+            {
+                <tr>
+                    <td colspan="5" class="py-4 text-muted">
+                        Không tìm thấy bạn đọc nào phù hợp với điều kiện tra cứu.
+                    </td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var r in Model.Readers)
+                {
+                    <tr>
+                        <td>@r.MaBD</td>
+                        <td>@r.HoTen</td>
+                        <td>@r.Nhom</td>
+                        <td>@r.QuyenSuDung</td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@r.MaBD" class="action-link">
+                                Xem hồ sơ
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+

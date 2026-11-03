@@ -1,0 +1,41 @@
+@{
+    string activeMenu = ViewBag.ActiveMenu as string ?? "";
+}
+
+<!-- THANH MENU BÊN TRÁI (SIDEBAR) CỐ ĐỊNH XUẤT HIỆN Ở TẤT CẢ CÁC TRANG QUẢN TRỊ -->
+<aside class="admin-sidebar" id="adminSidebar">
+    <div class="sidebar-category">QUẢN TRỊ THƯ VIỆN</div>
+    
+    <nav class="sidebar-nav">
+        <a href="/Admin/Dashboard" class="sidebar-link @(activeMenu == "Dashboard" ? "active" : "")">
+            Tổng quan
+        </a>
+        <a href="/Admin/Catalog" class="sidebar-link @(activeMenu == "Catalog" ? "active" : "")">
+            Quản lý học liệu
+        </a>
+        <a href="/Admin/Reader" class="sidebar-link @(activeMenu == "Reader" ? "active" : "")">
+            Quản lý bạn đọc
+        </a>
+        <a href="/Admin/Circulation" class="sidebar-link @(activeMenu == "Circulation" ? "active" : "")">
+            Mượn trả
+        </a>
+        <a href="/Admin/Overdue" class="sidebar-link @(activeMenu == "Overdue" ? "active" : "")">
+            Quá hạn
+        </a>
+        <a href="/Admin/Incident" class="sidebar-link @(activeMenu == "Incident" ? "active" : "")">
+            Mất / hỏng &amp; bồi thường
+        </a>
+        <a href="/Admin/Report" class="sidebar-link @(activeMenu == "Report" ? "active" : "")">
+            Báo cáo
+        </a>
+        <a href="/Admin/User" class="sidebar-link @(activeMenu == "User" ? "active" : "")">
+            Tài khoản &amp; phân quyền
+        </a>
+    </nav>
+
+    <div class="sidebar-footer">
+        <a href="/" class="btn btn-back-web w-100 text-center">
+            &larr; Về website
+        </a>
+    </div>
+</aside>

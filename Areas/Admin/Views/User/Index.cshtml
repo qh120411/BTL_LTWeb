@@ -1,0 +1,56 @@
+@{
+    ViewData["Title"] = "Tài khoản & phân quyền";
+}
+
+<div class="admin-breadcrumb">THƯ VIỆN UTC / QUẢN TRỊ</div>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="admin-page-title mb-0">Tài khoản &amp; phân quyền</h1>
+    <button class="btn btn-utc-primary px-4 py-2">+ Thêm cán bộ</button>
+</div>
+
+<div class="admin-info-box">
+    Quản lý tài khoản đăng nhập cán bộ thư viện, phân công vai trò (Quản trị viên, Quản lý bạn đọc, Thủ thư mượn trả).
+</div>
+
+<div class="admin-table-card">
+    <table class="table-utc">
+        <thead>
+            <tr>
+                <th>Mã NV</th>
+                <th>Họ tên</th>
+                <th>Tên đăng nhập</th>
+                <th>Vai trò</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="fw-semibold">NV26-01</td>
+                <td>Nguyễn Thị Lan</td>
+                <td>admin.demo@utc.edu.vn</td>
+                <td>Quản trị viên (QTV)</td>
+                <td><span class="badge-status badge-active">Hoạt động</span></td>
+                <td><a href="#" class="action-link">Sửa quyền</a></td>
+            </tr>
+            <tr>
+                <td class="fw-semibold">NV26-02</td>
+                <td>Trần Văn Minh</td>
+                <td>bandoc.demo@utc.edu.vn</td>
+                <td>Quản lý bạn đọc (QLB)</td>
+                <td><span class="badge-status badge-active">Hoạt động</span></td>
+                <td><a href="#" class="action-link">Sửa quyền</a></td>
+            </tr>
+            <tr>
+                <td class="fw-semibold">NV26-03</td>
+                <td>Lê Thị Hà</td>
+                <td>thuthu.demo@utc.edu.vn</td>
+                <td>Thủ thư mượn trả (TTM)</td>
+                <td><span class="badge-status badge-active">Hoạt động</span></td>
+                <td><a href="#" class="action-link">Sửa quyền</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+

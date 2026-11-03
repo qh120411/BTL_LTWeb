@@ -1,0 +1,69 @@
+@{
+    ViewData["Title"] = "Tổng quan";
+    ViewBag.ActiveMenu = "Dashboard";
+}
+
+<div class="admin-breadcrumb">THƯ VIỆN UTC / QUẢN TRỊ</div>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="admin-page-title mb-0">Tổng quan thư viện</h1>
+    <div>
+        <a href="/Admin/Report" class="btn btn-outline-secondary px-3 py-2 me-2">Xem báo cáo chi tiết</a>
+        <a href="/Admin/Reader" class="btn btn-utc-primary px-3 py-2">Quản lý bạn đọc</a>
+    </div>
+</div>
+
+<div class="admin-info-box">
+    Chào mừng bạn đến với Hệ thống Quản trị Thư viện Đại học Giao thông Vận tải (UTC Library Management System).
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3 col-sm-6">
+        <div class="kpi-card">
+            <div class="kpi-title">Tổng số bạn đọc</div>
+            <div class="kpi-value text-primary">4.250</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="kpi-card">
+            <div class="kpi-title">Lượt mượn trong tháng</div>
+            <div class="kpi-value">42</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="kpi-card">
+            <div class="kpi-title">Quá hạn cần xử lý</div>
+            <div class="kpi-value text-danger">1</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="kpi-card">
+            <div class="kpi-title">Tổng đầu sách lưu hành</div>
+            <div class="kpi-value text-success">65</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="admin-filter-card h-100">
+            <h5 class="fw-bold mb-3 text-primary">Lối tắt quản lý bạn đọc</h5>
+            <p class="text-muted small">Quản lý thông tin bạn đọc đồng bộ từ Phòng Quản lý Đào tạo (QLĐT), cấp quyền thẻ thư viện và theo dõi hạn mượn.</p>
+            <div class="d-flex gap-2">
+                <a href="/Admin/Reader" class="btn btn-utc-primary btn-sm">Danh sách bạn đọc</a>
+                <a href="/Admin/Reader/ImportQldt" class="btn btn-outline-secondary btn-sm">Nhập dữ liệu QLĐT</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="admin-filter-card h-100">
+            <h5 class="fw-bold mb-3 text-primary">Báo cáo &amp; thống kê</h5>
+            <p class="text-muted small">Theo dõi tình hình lưu thông tài liệu, tỷ lệ sách sẵn có, đang mượn và mất hỏng theo kỳ báo cáo.</p>
+            <div class="d-flex gap-2">
+                <a href="/Admin/Report" class="btn btn-utc-primary btn-sm">Xem thống kê</a>
+                <a href="/Admin/Report/ExportExcel" class="btn btn-outline-secondary btn-sm">Xuất Excel</a>
+            </div>
+        </div>
+    </div>
+</div>
+

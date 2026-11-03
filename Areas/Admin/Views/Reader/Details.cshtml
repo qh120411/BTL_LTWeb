@@ -1,0 +1,147 @@
+@model ReaderDetailViewModel
+@{
+    ViewData["Title"] = "Hồ sơ bạn đọc";
+}
+
+<div class="admin-breadcrumb">THƯ VIỆN UTC / QUẢN TRỊ</div>
+
+<h1 class="admin-page-title mb-4">Hồ sơ bạn đọc</h1>
+
+<form asp-action="UpdateProfile" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="MaBD" />
+    <input type="hidden" asp-for="HoTen" />
+    <input type="hidden" asp-for="LopKhoa" />
+    <input type="hidden" asp-for="TrangThaiHocTap" />
+    <input type="hidden" asp-for="SoSachDangMuon" />
+    <input type="hidden" asp-for="SoSachQuaHan" />
+
+    <!-- 4 hàng thông tin 2 cột trực tiếp trên nền -->
+    <div class="row g-3 mb-4">
+        <!-- Hàng 1 -->
+        <div class="col-md-6">
+            <label class="form-label-utc">Mã sinh viên / mã bạn đọc (từ QLĐT)</label>
+            <input type="text" class="form-control form-control-utc" value="@Model.MaBD" readonly />
+        </div>
+        <div class="col-md-6">
+            <label class="form-label-utc">Họ tên (từ QLĐT)</label>
+            <input type="text" class="form-control form-control-utc" value="@Model.HoTen" readonly />
+        </div>
+
+        <!-- Hàng 2 -->
+        <div class="col-md-6">
+            <label class="form-label-utc">Lớp / khóa (từ QLĐT)</label>
+            <input type="text" class="form-control form-control-utc" value="@Model.LopKhoa" readonly />
+        </div>
+        <div class="col-md-6">
+            <label class="form-label-utc">Trạng thái học tập (từ QLĐT)</label>
+            <input type="text" class="form-control form-control-utc" value="@Model.TrangThaiHocTap" readonly />
+        </div>
+
+        <!-- Hàng 3 -->
+        <div class="col-md-6">
+            <label class="form-label-utc" asp-for="Nhom">Nhóm bạn đọc</label>
+            <select class="form-select form-control-utc" asp-for="Nhom">
+                <option value="Sinh viên">Sinh viên</option>
+                <option value="Giảng viên">Giảng viên</option>
+                <option value="Ngoài trường">Ngoài trường</option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label-utc" asp-for="QuyenSuDung">Quyền sử dụng thư viện</label>
+            <select class="form-select form-control-utc" asp-for="QuyenSuDung">
+                <option value="Hoạt động / Tạm khóa">Hoạt động / Tạm khóa</option>
+                <option value="Hoạt động">Hoạt động</option>
+                <option value="Tạm khóa">Tạm khóa</option>
+                <option value="Đọc tại chỗ">Đọc tại chỗ</option>
+            </select>
+        </div>
+
+        <!-- Hàng 4 -->
+        <div class="col-md-6">
+            <label class="form-label-utc" asp-for="GioiHanSach">Giới hạn số sách</label>
+            <input type="text" class="form-control form-control-utc" asp-for="GioiHanSach" value="5 cuốn (giá trị minh họa)" />
+        </div>
+        <div class="col-md-6">
+            <label class="form-label-utc" asp-for="HieuLucQuyen">Hiệu lực quyền sử dụng</label>
+            <input type="text" class="form-control form-control-utc" asp-for="HieuLucQuyen" value="30/06/2027" />
+        </div>
+    </div>
+
+    <!-- Khung trạng thái mượn sách & chú thích QLĐT -->
+    <div class="admin-info-box mb-4">
+        <div class="admin-info-title">
+            Đang mượn @Model.SoSachDangMuon cuốn @(Model.SoSachQuaHan > 0 ? $"· Có {Model.SoSachQuaHan} cuốn quá hạn" : "")
+        </div>
+        <div class="admin-info-desc">
+            Thông tin học tập lấy từ trường; thẻ sinh viên không được cấp hoặc khóa tại trang quản trị thư viện.
+        </div>
+    </div>
+
+    <!-- Hàng nút thao tác -->
+    <div class="d-flex align-items-center gap-3">
+        <button type="submit" class="btn btn-utc-primary">
+            Lưu thiết lập thư viện
+        </button>
+
+        <button type="button" class="btn btn-outline-utc" data-bs-toggle="modal" data-bs-target="#borrowHistoryModal">
+            Xem giao dịch mượn
+        </button>
+
+        <a asp-action="Index" class="btn btn-outline-utc">
+            Quay lại
+        </a>
+    </div>
+</form>
+
+<!-- Modal: Xem giao dịch mượn -->
+<div class="modal fade" id="borrowHistoryModal" tabindex="-1" aria-labelledby="borrowHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="borrowHistoryModalLabel">
+                    Giao dịch mượn trả - @Model.HoTen (@Model.MaBD)
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                @if (Model.BorrowTransactions == null || Model.BorrowTransactions.Count == 0)
+                {
+                    <div class="p-4 text-center text-muted">Bạn đọc hiện không có giao dịch mượn sách nào.</div>
+                }
+                else
+                {
+                    <table class="table-utc">
+                        <thead>
+                            <tr>
+                                <th>Mã GD</th>
+                                <th>Mã sách</th>
+                                <th>Tên sách</th>
+                                <th>Ngày mượn</th>
+                                <th>Hạn trả</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var gd in Model.BorrowTransactions)
+                            {
+                                <tr>
+                                    <td class="fw-semibold">@gd.MaGD</td>
+                                    <td>@gd.MaSach</td>
+                                    <td>@gd.TenSach</td>
+                                    <td>@gd.NgayMuon</td>
+                                    <td>@gd.NgayHenTra</td>
+                                    <td>@gd.TrangThai</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-utc" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+

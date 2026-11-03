@@ -99,23 +99,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Admin\\.nuget\\packages\\": {},
+    "C:\\Users\\dovan\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Admin\\Desktop\\BTL_LTWeb\\BTL_LTWEB.csproj",
+      "projectUniqueName": "D:\\LapTrinhWeb\\BTL_LTWEB\\BTL_LTWeb\\BTL_LTWEB.csproj",
       "projectName": "BTL_LTWEB",
-      "projectPath": "C:\\Users\\Admin\\Desktop\\BTL_LTWeb\\BTL_LTWEB.csproj",
-      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Admin\\Desktop\\BTL_LTWeb\\obj\\",
+      "projectPath": "D:\\LapTrinhWeb\\BTL_LTWEB\\BTL_LTWeb\\BTL_LTWEB.csproj",
+      "packagesPath": "C:\\Users\\dovan\\.nuget\\packages\\",
+      "outputPath": "D:\\LapTrinhWeb\\BTL_LTWEB\\BTL_LTWeb\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\dovan\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],

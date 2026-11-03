@@ -1,3 +1,5 @@
+using BTL_LTWEB.Areas.Admin.Services;
+
 namespace BTL_LTWEB
 {
     public class Program
@@ -8,6 +10,10 @@ namespace BTL_LTWEB
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            // Register Business Services
+            builder.Services.AddSingleton<IReaderService, ReaderService>();
+            builder.Services.AddSingleton<IReportService, ReportService>();
 
             var app = builder.Build();
 
@@ -26,6 +32,12 @@ namespace BTL_LTWEB
 
             app.UseAuthorization();
 
+            // Route for Areas (Admin / Reader)
+            app.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
+
+            // Default Route
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");

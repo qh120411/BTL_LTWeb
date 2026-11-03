@@ -1,0 +1,403 @@
+/* UTC Library Admin Theme - Chuẩn chính xác 100% theo Figma Prototype */
+:root {
+    --utc-navy-dark: #174c7f;
+    --utc-sidebar-bg: #176a9e;          /* Màu xanh chuẩn thanh menu Figma #176a9e */
+    --utc-sidebar-active-text: #176a9e;
+    --utc-blue: #0079ba;                /* Màu nút chính chuẩn Figma #0079ba */
+    --utc-blue-hover: #0068a0;
+    --utc-bg-body: #f1faff;             /* Màu nền chính chuẩn Figma #f1faff */
+    --utc-card-bg: #ffffff;
+    --utc-info-bg: #e6f3fc;             /* Màu khung thông báo chuẩn Figma #e6f3fc */
+    --utc-table-th-bg: #e7f6ff;         /* Màu tiêu đề bảng chuẩn Figma #e7f6ff */
+    --utc-text-dark: #1e293b;
+    --utc-text-navy: #174c7f;
+    --utc-text-muted: #5a7387;
+    --utc-border-color: #cbd5e1;
+    --utc-border-card: #e2edf5;
+}
+
+html, body {
+    height: 100%;
+}
+
+body.admin-body {
+    background-color: var(--utc-bg-body);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--utc-text-dark);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ================= HEADER (LUÔN XUẤT HIỆN Ở ĐỈNH TẤT CẢ CÁC TRANG) ================= */
+.admin-main-header {
+    background-color: #ffffff;
+    border-bottom: 1px solid #dce8f2;
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+}
+
+.admin-topbar {
+    background-color: var(--utc-navy-dark);
+    color: #ffffff;
+    font-size: 11.5px;
+    padding: 6px 0;
+    letter-spacing: 0.3px;
+}
+
+.topbar-title {
+    font-weight: 600;
+}
+
+.topbar-links {
+    font-weight: 400;
+    color: #e0f0fa;
+}
+
+.admin-navbar {
+    padding: 12px 0;
+}
+
+.admin-logo {
+    height: 44px;
+    width: 44px;
+    object-fit: contain;
+}
+
+.brand-vi {
+    color: var(--utc-text-navy);
+    font-weight: 700;
+    font-size: 16.5px;
+    letter-spacing: 0.2px;
+    line-height: 1.25;
+}
+
+.brand-en {
+    color: #627d92;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.4px;
+    line-height: 1.2;
+    margin-top: 2px;
+}
+
+.btn-utc-primary {
+    background-color: var(--utc-blue);
+    border: none;
+    color: #ffffff;
+    font-size: 13.5px;
+    font-weight: 500;
+    padding: 8px 22px;
+    border-radius: 4px;
+    transition: all 0.15s ease-in-out;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-utc-primary:hover, .btn-utc-primary:focus {
+    background-color: var(--utc-blue-hover);
+    color: #ffffff;
+}
+
+.btn-outline-utc {
+    background-color: #ffffff;
+    border: 1px solid var(--utc-border-color);
+    color: var(--utc-text-dark);
+    font-size: 13.5px;
+    font-weight: 500;
+    padding: 8px 20px;
+    border-radius: 4px;
+    transition: all 0.15s ease-in-out;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-outline-utc:hover {
+    background-color: #f8fafc;
+    border-color: #94a3b8;
+    color: #0f172a;
+}
+
+.user-btn {
+    border-color: var(--utc-border-color);
+    color: var(--utc-text-dark);
+    background-color: #ffffff;
+    border-radius: 4px;
+    font-size: 13.5px;
+    font-weight: 500;
+    padding: 8px 18px;
+}
+
+.user-btn:hover {
+    background-color: #f8fafc;
+    color: #0f172a;
+    border-color: #94a3b8;
+}
+
+/* ================= CẤU TRÚC LAYOUT: SIDEBAR CỐ ĐỊNH + MAIN CONTENT ================= */
+.admin-wrapper {
+    display: flex;
+    flex: 1;
+    min-height: calc(100vh - 82px);
+    position: relative;
+    background-color: var(--utc-bg-body);
+}
+
+/* THANH MENU BÊN TRÁI: LUÔN XUẤT HIỆN Ở TẤT CẢ CÁC TRANG */
+.admin-sidebar {
+    width: 250px;
+    min-width: 250px;
+    max-width: 250px;
+    background-color: var(--utc-sidebar-bg);
+    padding: 20px 14px;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 82px;
+    height: calc(100vh - 82px);
+    overflow-y: auto;
+    z-index: 1020;
+}
+
+.sidebar-category {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 16px;
+    padding-left: 14px;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.sidebar-link {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 9px 16px;
+    border-radius: 6px;
+    font-size: 13.5px;
+    font-weight: 400;
+    transition: all 0.15s ease-in-out;
+    display: block;
+}
+
+.sidebar-link:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Trạng thái Active giống hệt Figma: Nền trắng, bo góc, chữ xanh đậm */
+.sidebar-link.active {
+    background-color: #ffffff;
+    color: var(--utc-sidebar-active-text);
+    font-weight: 700;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Nút ← Về website ở đáy sidebar */
+.sidebar-footer {
+    margin-top: 20px;
+    padding-top: 10px;
+}
+
+.btn-back-web {
+    font-size: 13.5px;
+    font-weight: 500;
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #1e293b;
+    border: none;
+    padding: 9px 14px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: all 0.15s ease-in-out;
+    display: block;
+    text-decoration: none;
+}
+
+.btn-back-web:hover {
+    background-color: #f8fafc;
+    color: #0f172a;
+}
+
+/* ================= KHU VỰC NỘI DUNG CHÍNH (MAIN CONTENT) ================= */
+.admin-content {
+    flex: 1;
+    padding: 28px 42px;
+    background-color: var(--utc-bg-body);
+    overflow-x: auto;
+}
+
+.admin-breadcrumb {
+    font-size: 11px;
+    color: #7b93a7;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    margin-bottom: 10px;
+}
+
+.admin-page-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--utc-text-navy);
+    margin-bottom: 22px;
+    line-height: 1.2;
+}
+
+/* Info Description Box (Xanh nhạt chuẩn Figma) */
+.admin-info-box {
+    background-color: var(--utc-info-bg);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin-bottom: 22px;
+}
+
+.admin-info-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--utc-text-navy);
+    margin-bottom: 3px;
+}
+
+.admin-info-desc {
+    font-size: 13px;
+    color: var(--utc-text-muted);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Form Styles */
+.form-label-utc {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: #475569;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.form-control-utc {
+    border: 1px solid var(--utc-border-color);
+    border-radius: 4px;
+    padding: 8px 14px;
+    font-size: 13.5px;
+    background-color: #ffffff !important;
+    color: var(--utc-text-dark) !important;
+    height: 40px;
+}
+
+.form-control-utc:focus {
+    border-color: var(--utc-blue);
+    box-shadow: 0 0 0 2px rgba(0, 121, 186, 0.15);
+    outline: none;
+}
+
+.form-control-utc[readonly], 
+.form-control-utc:disabled {
+    background-color: #ffffff !important;
+    color: var(--utc-text-dark) !important;
+    border-color: var(--utc-border-color);
+    cursor: default;
+}
+
+/* KPI Cards (4 cards trong Báo cáo) */
+.kpi-card {
+    background: #ffffff;
+    border-radius: 6px;
+    padding: 16px 20px;
+    border: 1px solid var(--utc-border-card);
+    height: 100%;
+}
+
+.kpi-title {
+    font-size: 13px;
+    color: var(--utc-text-muted);
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.kpi-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--utc-text-navy);
+    line-height: 1.1;
+}
+
+/* Data Table Card */
+.admin-table-card {
+    background-color: #ffffff;
+    border-radius: 6px;
+    border: 1px solid var(--utc-border-card);
+    overflow: hidden;
+}
+
+.table-utc {
+    width: 100%;
+    margin-bottom: 0;
+    border-collapse: collapse;
+}
+
+.table-utc thead th {
+    background-color: var(--utc-table-th-bg);
+    color: #334155;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 12px 18px;
+    border-bottom: 1px solid #d8ebf7;
+    text-align: left;
+}
+
+.table-utc tbody td {
+    padding: 13px 18px;
+    font-size: 13.5px;
+    color: var(--utc-text-dark);
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+    text-align: left;
+    background-color: #ffffff;
+}
+
+.table-utc tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table-utc tfoot td {
+    background-color: #ffffff;
+    font-weight: 700;
+    padding: 13px 18px;
+    border-top: 1px solid var(--utc-border-card);
+    color: var(--utc-text-navy);
+    text-align: left;
+}
+
+/* Action Link 'Xem hồ sơ' */
+.action-link {
+    color: var(--utc-blue);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 13.5px;
+}
+
+.action-link:hover {
+    text-decoration: underline;
+    color: var(--utc-blue-hover);
+}
+
+/* Ghi chú dưới bảng */
+.admin-table-note {
+    font-size: 12.5px;
+    color: #64748b;
+    margin-top: 14px;
+}

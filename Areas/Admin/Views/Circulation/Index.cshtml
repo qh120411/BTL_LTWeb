@@ -1,0 +1,48 @@
+@{
+    ViewData["Title"] = "Mượn trả";
+}
+
+<div class="admin-breadcrumb">THƯ VIỆN UTC / QUẢN TRỊ</div>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="admin-page-title mb-0">Quản lý Mượn trả</h1>
+    <button class="btn btn-utc-primary px-4 py-2">+ Tạo giao dịch mượn</button>
+</div>
+
+<div class="admin-info-box">
+    Tiếp nhận yêu cầu mượn trả tài liệu, quét mã vạch bản sao và kiểm tra tính hợp lệ của thẻ bạn đọc.
+</div>
+
+<div class="admin-table-card">
+    <table class="table-utc">
+        <thead>
+            <tr>
+                <th>Mã giao dịch</th>
+                <th>Mã bạn đọc</th>
+                <th>Ngày mượn</th>
+                <th>Hạn trả</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="fw-semibold">GD2610270001</td>
+                <td>SV001 (Nguyễn Minh Anh)</td>
+                <td>15/10/2026</td>
+                <td>29/10/2026</td>
+                <td><span class="badge bg-danger">Quá hạn</span></td>
+                <td><a href="#" class="action-link">Xử lý trả</a></td>
+            </tr>
+            <tr>
+                <td class="fw-semibold">GD2610270002</td>
+                <td>SV002 (Trần Hoàng Nam)</td>
+                <td>25/10/2026</td>
+                <td>08/11/2026</td>
+                <td><span class="badge bg-primary">Đang mượn</span></td>
+                <td><a href="#" class="action-link">Xử lý trả</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+

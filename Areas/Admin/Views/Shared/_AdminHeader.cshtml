@@ -1,0 +1,40 @@
+<header class="admin-main-header">
+    <!-- Top banner siêu nhỏ trên cùng -->
+    <div class="admin-topbar">
+        <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
+            <span class="topbar-title">TRƯỜNG ĐẠI HỌC GIAO THÔNG VẬN TẢI</span>
+            <span class="topbar-links">Hỗ trợ bạn đọc &middot; VI / EN</span>
+        </div>
+    </div>
+
+    <!-- Header chính: Logo UTC + Tiêu đề + Nút Tổng quan & User -->
+    <div class="admin-navbar">
+        <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
+            <a href="/Admin/Dashboard" class="admin-brand d-flex align-items-center text-decoration-none">
+                <img src="~/logo/utc.png" alt="UTC Logo" class="admin-logo me-3" onerror="this.src='/images/logo.png'" />
+                <div class="admin-brand-text">
+                    <div class="brand-vi">THƯ VIỆN ĐẠI HỌC GIAO THÔNG VẬN TẢI</div>
+                    <div class="brand-en">UNIVERSITY OF TRANSPORT AND COMMUNICATIONS LIBRARY</div>
+                </div>
+            </a>
+
+            <div class="admin-actions d-flex align-items-center gap-2">
+                <a href="/Admin/Dashboard" class="btn btn-utc-primary">Tổng quan</a>
+                <div class="dropdown">
+                    <button class="btn user-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Thủ thư Lan
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                        <li><span class="dropdown-item-text text-muted small">lan.demo@utc.edu.vn</span></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="/Admin/User">Tài khoản & Phân quyền</a></li>
+                        <li><a class="dropdown-item" href="/">Về Cổng Bạn đọc</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="/Account/Logout">Đăng xuất</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+

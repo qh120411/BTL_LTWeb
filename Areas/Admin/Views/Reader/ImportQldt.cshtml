@@ -1,0 +1,72 @@
+@model ImportQldtViewModel
+@{
+    ViewData["Title"] = "Nhập dữ liệu QLĐT";
+}
+
+<div class="admin-breadcrumb">THƯ VIỆN UTC / QUẢN TRỊ</div>
+
+<h1 class="admin-page-title mb-4">Nhập dữ liệu QLĐT</h1>
+
+<!-- Khung giới thiệu nghiệp vụ -->
+<div class="admin-info-box">
+    <div class="admin-info-title">Nhập dữ liệu từ phòng quản lý đào tạo</div>
+    <div class="admin-info-desc">Đối chiếu theo mã sinh viên. Chỉ cập nhật dữ liệu nhận diện, không ghi đè lịch sử mượn và trạng thái nghiệp vụ.</div>
+</div>
+
+<form asp-action="ConfirmImportQldt" method="post">
+    @Html.AntiForgeryToken()
+
+    <!-- Chọn nguồn dữ liệu & Tệp trực tiếp trên nền -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <label class="form-label-utc">Nguồn dữ liệu</label>
+            <input type="text" class="form-control form-control-utc" value="@Model.NguonDuLieu" readonly />
+        </div>
+        <div class="col-md-6">
+            <label class="form-label-utc">Tệp dữ liệu</label>
+            <input type="text" class="form-control form-control-utc" value="@Model.TepDuLieu" readonly />
+        </div>
+    </div>
+
+    <!-- Bảng xem trước dữ liệu đối chiếu -->
+    <div class="admin-table-card mb-4">
+        <table class="table-utc">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Mã sinh viên</th>
+                    <th style="width: 35%;">Họ tên</th>
+                    <th style="width: 20%;">Lớp / khóa</th>
+                    <th style="width: 20%;">Kiểm tra</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.PreviewItems)
+                {
+                    <tr>
+                        <td>@item.MaSV</td>
+                        <td>@item.HoTen</td>
+                        <td>@item.LopKhoa</td>
+                        <td>@item.TrangThaiKiemTra</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Thông báo kết quả kiểm tra trước khi xác nhận -->
+    <div class="admin-info-box mb-4">
+        <div class="admin-info-title">@Model.TotalValid dòng hợp lệ · @Model.TotalError dòng lỗi</div>
+        <div class="admin-info-desc">Kiểm tra mã trùng, trường bắt buộc và dữ liệu thiếu trước khi xác nhận nhập.</div>
+    </div>
+
+    <!-- Hàng nút hành động -->
+    <div class="d-flex align-items-center gap-3">
+        <button type="submit" class="btn btn-utc-primary">
+            Xác nhận nhập dữ liệu
+        </button>
+        <a asp-action="Index" class="btn btn-outline-utc">
+            Hủy
+        </a>
+    </div>
+</form>
+
