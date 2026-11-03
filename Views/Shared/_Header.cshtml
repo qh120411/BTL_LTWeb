@@ -1,44 +1,52 @@
 <header class="site-header">
+
+  <!-- Top utility bar -->
   <div class="topbar">
     <div class="container topbar-inner">
       <span class="topbar-left">TRƯỜNG ĐẠI HỌC GIAO THÔNG VẬN TẢI</span>
       <span class="topbar-right">
-        <span class="topbar-support">Hỗ trợ bạn đọc <span class="divider">·</span></span>
-        <a href="#">VI</a> / <a href="#">EN</a>
+        H&#7895; tr&#7907; b&#7841;n &#273;&#7885;c &nbsp;&middot;&nbsp; <a href="#">VI</a> / <a href="#">EN</a>
       </span>
     </div>
   </div>
 
+  <!-- Brand bar -->
   <div class="brandbar">
     <div class="container brandbar-inner">
-      <a href="index.html" class="brand">
-        <img src="~/logo/utc.png" alt="Logo UTC" class="brand-logo" onerror="this.style.visibility='hidden'" />
-        <span class="brand-text">
-          <strong>THƯ VIỆN ĐẠI HỌC GIAO THÔNG VẬN TẢI</strong>
-          <small>UNIVERSITY OF TRANSPORT AND COMMUNICATIONS LIBRARY</small>
-        </span>
+      <a href="/Reader" class="brand">
+        <img src="~/logo/utc.png" alt="Logo UTC" class="brand-logo" />
+        <div class="brand-text">
+          <span class="brand-title">TH&#431; VI&#7878;N &#272;&#7840;I H&#7884;C GIAO TH&#212;NG V&#7840;N T&#7842;I</span>
+          <span class="brand-sub">UNIVERSITY OF TRANSPORT AND COMMUNICATIONS LIBRARY</span>
+        </div>
       </a>
-      <button type="button" class="btn btn-login">Đăng nhập</button>
+      <div class="header-actions">
+        <a href="/Account/Login" class="btn-figma-secondary btn-header-login">&#272;&#259;ng nh&#7853;p</a>
+      </div>
     </div>
   </div>
 
+  <!-- Main navigation -->
   <nav class="navbar">
     <div class="container nav-inner">
-      <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-list" aria-label="Mở menu">
+      <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-list" aria-label="M&#7903; menu">
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-list" id="nav-list">
-        <li><a href="index.html" data-page="home">Trang chủ</a></li>
-        <li><a href="#" data-page="search">Tra cứu học liệu</a></li>
-        <li><a href="#" data-page="service">Dịch vụ</a></li>
-        <li><a href="#" data-page="news">Tin tức &amp; thông báo</a></li>
-        <li><a href="#" data-page="about">Giới thiệu</a></li>
+        <li><a href="/Reader" class="active">Trang ch&#7911;</a></li>
+        <li><a href="/Reader/Search">Tra c&#7913;u h&#7885;c li&#7879;u</a></li>
+        <li><a href="/Reader/Guide">D&#7883;ch v&#7909;</a></li>
+        <li><a href="/Reader/News">Tin t&#7913;c &amp; th&#244;ng b&#225;o</a></li>
+        <li><a href="/Reader/Guide#about">Gi&#7899;i thi&#7879;u</a></li>
       </ul>
     </div>
   </nav>
-  <div class="stripes">
+
+  <!-- UTC brand stripes: navy / gold / sky -->
+  <div class="utc-brand-stripes">
     <span class="stripe-navy"></span>
     <span class="stripe-gold"></span>
     <span class="stripe-sky"></span>
   </div>
+
 </header>

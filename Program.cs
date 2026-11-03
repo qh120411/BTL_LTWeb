@@ -26,6 +26,12 @@ namespace BTL_LTWEB
 
             app.UseAuthorization();
 
+            // Route cho các Areas (Admin, Reader)
+            app.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+            // Route mặc định
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
