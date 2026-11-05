@@ -30,15 +30,28 @@
             </a>
 
             <div class="utc-account-actions">
-                <a href="/Admin/Dashboard" class="btn-utc-secondary" title="Vào phân hệ dành cho cán bộ thủ thư">
-                    <i class="bi bi-gear-fill me-1"></i> Trang quản trị
-                </a>
-                <a href="/Reader/MyLibrary" class="btn-utc-secondary" title="Thư viện của tôi">
-                    <i class="bi bi-person-circle me-1"></i> Bạn đọc (SV001)
-                </a>
-                <a href="/Account/Login" class="btn-utc-secondary">
-                    Đăng xuất
-                </a>
+                @if (User.IsInRole("Admin") || User.IsInRole("Thuthu"))
+                {
+                    <a href="/Admin/Dashboard" class="btn-utc-secondary" title="Vào phân hệ dành cho cán bộ thủ thư">
+                        <i class="bi bi-gear-fill me-1"></i> Trang quản trị
+                    </a>
+                }
+
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a href="/Reader/Profile" class="btn-utc-secondary" title="Xem & cập nhật Hồ sơ cá nhân (Profile)">
+                        <i class="bi bi-person-badge-fill me-1 text-primary"></i> @User.Identity.Name
+                    </a>
+                    <a href="/Account/Logout" class="btn btn-outline-danger btn-sm" style="border-radius: var(--utc-radius-sm); padding: 7px 14px;" title="Đăng xuất khỏi hệ thống">
+                        <i class="bi bi-box-arrow-right me-1"></i> Đăng xuất
+                    </a>
+                }
+                else
+                {
+                    <a href="/Account/Login" class="btn-utc-primary">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Đăng nhập
+                    </a>
+                }
             </div>
         </div>
     </div>
@@ -70,6 +83,11 @@
                 <li>
                     <a href="/Reader/MyLibrary" class="utc-nav-link @(currentController == "MyLibrary" ? "active" : "")">
                         Thư viện của tôi
+                    </a>
+                </li>
+                <li>
+                    <a href="/Reader/Profile" class="utc-nav-link @(currentController == "Profile" ? "active" : "")">
+                        <i class="bi bi-person-vcard me-1"></i> Hồ sơ sinh viên
                     </a>
                 </li>
             </ul>

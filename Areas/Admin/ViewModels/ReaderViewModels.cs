@@ -1,4 +1,5 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using BTL_LTWEB.Areas.Reader.Models;
 
 namespace BTL_LTWEB.Areas.Admin.ViewModels;
 
@@ -19,6 +20,10 @@ public class ReaderIndexViewModel
     public string? SelectedGroup { get; set; }
     public List<string> Groups { get; set; } = new() { "Tất cả nhóm", "Sinh viên", "Giảng viên", "Ngoài trường" };
     public List<ReaderListItemViewModel> Readers { get; set; } = new();
+
+    // 2 Bảng tách biệt: Đang mượn sách vs Không mượn sách
+    public List<ReaderListItemViewModel> BorrowingReaders => Readers.Where(r => r.SoSachDangMuon > 0).ToList();
+    public List<ReaderListItemViewModel> NonBorrowingReaders => Readers.Where(r => r.SoSachDangMuon == 0).ToList();
 }
 
 public class ReaderDetailViewModel
@@ -38,12 +43,17 @@ public class ReaderDetailViewModel
     public string GioiHanSach { get; set; } = "5 cuốn";
 
     [Display(Name = "Hiệu lực quyền sử dụng")]
-    public string HieuLucQuyen { get; set; } = "2027-06-30";
+    public string HieuLucQuyen { get; set; } = "2028-06-30";
 
-    public int SoSachDangMuon { get; set; } = 2;
-    public int SoSachQuaHan { get; set; } = 1;
+    public int SoSachDangMuon => BorrowTransactions.Count;
+    public int SoSachQuaHan => BorrowTransactions.Count(b => b.IsQuaHan);
+    public decimal TongTienPhat => BorrowTransactions.Where(b => b.IsQuaHan).Sum(b => b.TienPhat);
 
+    // Danh sách sách đang mượn (sổ ra trực tiếp)
     public List<BorrowTransactionViewModel> BorrowTransactions { get; set; } = new();
+
+    // Danh mục học liệu để tra cứu và mượn thêm theo phong cách OPAC
+    public List<BookItem> AvailableBooks { get; set; } = new();
 }
 
 public class BorrowTransactionViewModel
@@ -51,11 +61,15 @@ public class BorrowTransactionViewModel
     public string MaGD { get; set; } = string.Empty;
     public string MaSach { get; set; } = string.Empty;
     public string TenSach { get; set; } = string.Empty;
+    public string TacGia { get; set; } = string.Empty;
+    public string CoverImage { get; set; } = string.Empty;
     public string NgayMuon { get; set; } = string.Empty;
     public string NgayHenTra { get; set; } = string.Empty;
     public string? NgayTra { get; set; }
     public string TrangThai { get; set; } = string.Empty;
     public bool IsQuaHan { get; set; }
+    public int SoNgayQuaHan { get; set; }
+    public decimal TienPhat { get; set; } = 0;
 }
 
 public class ImportQldtItemViewModel
@@ -71,9 +85,8 @@ public class ImportQldtItemViewModel
 public class ImportQldtViewModel
 {
     public string NguonDuLieu { get; set; } = "Danh sách sinh viên từ QLĐT";
-    public string TepDuLieu { get; set; } = "sinh-vien-k65.xlsx (minh họa)";
+    public string TepDuLieu { get; set; } = "DanhSach_SinhVien_K65_CLCCNTT1.xlsx";
     public List<ImportQldtItemViewModel> PreviewItems { get; set; } = new();
     public int TotalValid => PreviewItems.Count(x => x.IsValid);
     public int TotalError => PreviewItems.Count(x => !x.IsValid);
 }
-

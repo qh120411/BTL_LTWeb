@@ -1,14 +1,40 @@
+﻿using BTL_LTWEB.Areas.Admin.Services;
+using BTL_LTWEB.Areas.Admin.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BTL_LTWEB.Areas.Admin.Controllers;
 
 [Area("Admin")]
-public class OverdueController : Controller
+public class OverdueController : AdminBaseController
 {
-    public IActionResult Index()
+    private readonly IReaderService _readerService;
+
+    public OverdueController(IReaderService readerService)
+    {
+        _readerService = readerService;
+    }
+
+    public IActionResult Index(string? search, string? level)
     {
         ViewBag.ActiveMenu = "Overdue";
-        return View();
+
+        var overdues = _readerService.GetAllOverdueLoans();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var kw = search.Trim().ToLower();
+            overdues = overdues.Where(x => x.MaBD.ToLower().Contains(kw) ||
+                                           x.HoTen.ToLower().Contains(kw) ||
+                                           x.TenSach.ToLower().Contains(kw)).ToList();
+        }
+
+        var model = new OverdueIndexViewModel
+        {
+            SearchKeyword = search,
+            SelectedLevel = level ?? "Tất cả",
+            OverdueList = overdues
+        };
+
+        return View(model);
     }
 }
-

@@ -1,0 +1,336 @@
+﻿<!-- ========================================================================= -->
+<!-- MODAL DÙNG CHUNG: XÁC NHẬN TRẢ SÁCH HOẶC BỒI THƯỜNG (MẤT / HỎNG SÁCH) -->
+<!-- ========================================================================= -->
+<div class="modal fade" id="returnAndCompensationModal" tabindex="-1" aria-labelledby="rcModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden;">
+            <div class="modal-header text-white" style="background: linear-gradient(135deg, #174c7f, #0079ba); padding: 16px 24px;">
+                <div>
+                    <h5 class="modal-title fw-bold mb-0" id="rcModalLabel">
+                        <i class="bi bi-arrow-left-right me-2"></i>Xác nhận trả sách &amp; Bồi thường sự cố
+                    </h5>
+                    <div class="text-white-50 small mt-1">Quầy lưu thông Thư viện UTC &middot; Tự động hạch toán vào Sổ quỹ tài chính CSDL</div>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form action="/Admin/Circulation/ProcessReturnOrCompensation" method="post" id="formReturnAndCompensation">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="maBD" id="rcInputMaBD" value="" />
+                <input type="hidden" name="maGD" id="rcInputMaGD" value="" />
+                <input type="hidden" name="returnUrl" id="rcInputReturnUrl" value="" />
+
+                <div class="modal-body p-4">
+                    <!-- Khung thông tin giao dịch cần xử lý -->
+                    <div class="card border mb-4 bg-light" style="border-radius: 8px;">
+                        <div class="card-body p-3">
+                            <div class="row g-2 align-items-center">
+                                <div class="col-md-7">
+                                    <div class="text-muted small">Mã giao dịch: <strong id="rcDisplayMaGD" class="text-primary font-monospace"></strong></div>
+                                    <div class="fw-bold text-navy fs-6 mb-1" id="rcDisplayTenSach">Tên sách</div>
+                                    <div class="text-muted small">
+                                        Bạn đọc: <strong id="rcDisplayHoTen" class="text-dark"></strong> &middot; 
+                                        Mã SV/GV: <span id="rcDisplayMaBD" class="font-monospace"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-5 text-md-end">
+                                    <div id="rcOverdueBadge" class="badge bg-danger text-white px-3 py-2 d-none" style="font-size: 12px;">
+                                        <i class="bi bi-exclamation-triangle-fill me-1"></i> Quá hạn (Phạt 100.000 đ)
+                                    </div>
+                                    <div id="rcOnTimeBadge" class="badge bg-success text-white px-3 py-2 d-none" style="font-size: 12px;">
+                                        <i class="bi bi-check-circle-fill me-1"></i> Còn hạn mượn (0 đ)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LỰA CHỌN PHƯƠNG ÁN XỬ LÝ -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-navy mb-2">
+                            <span class="badge bg-primary me-1">Bước 1</span> Chọn hình thức xử lý tài liệu <span class="text-danger">*</span>
+                        </label>
+                        
+                        <!-- Radio 1: Trả sách bình thường -->
+                        <div class="card border p-3 mb-2 rc-option-card active" id="cardNormalReturn" style="border-radius: 8px; cursor: pointer; border-color: #0079ba !important; background-color: #f0f9ff;">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="actionType" id="radioNormalReturn" value="NormalReturn" checked>
+                                <label class="form-check-label fw-bold text-navy" for="radioNormalReturn">
+                                    <i class="bi bi-check-circle text-success me-1"></i> 1. Trả sách bình thường (Tài liệu nguyên vẹn)
+                                </label>
+                                <div class="text-muted small mt-1 ms-1">
+                                    Thu hồi sách vật lý nhập lại kho. Nếu quá hạn sẽ thu tiền phạt nộp muộn <strong>100.000 VNĐ</strong> và tự động ghi vào <em>Quỹ thu nộp muộn</em>.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Radio 2: Báo mất / hỏng & Bồi thường -->
+                        <div class="card border p-3 rc-option-card" id="cardCompensation" style="border-radius: 8px; cursor: pointer;">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="actionType" id="radioCompensation" value="Compensation">
+                                <label class="form-check-label fw-bold text-danger" for="radioCompensation">
+                                    <i class="bi bi-exclamation-octagon text-danger me-1"></i> 2. Báo mất / hỏng sách &amp; Bồi thường
+                                </label>
+                                <div class="text-muted small mt-1 ms-1">
+                                    Áp dụng khi bạn đọc làm mất hoặc hư hại học liệu. Bạn đọc có thể lựa chọn <strong>Đền sách mới</strong> hoặc <strong>Đền tiền</strong> theo quy chế thư viện.
+                                </div>
+                            </div>
+
+                            <!-- KHỐI LỰA CHỌN BỒI THƯỜNG (Chỉ mở khi chọn Bồi thường) -->
+                            <div id="compensationDetailSection" class="mt-3 ps-3 border-top pt-3 d-none">
+                                <div class="fw-bold text-dark mb-2" style="font-size: 13.5px;">
+                                    <i class="bi bi-arrow-return-right text-primary me-1"></i> Lựa chọn hình thức bồi thường:
+                                </div>
+
+                                <div class="row g-2 mb-3">
+                                    <!-- Lựa chọn 2A: Đền sách mới -->
+                                    <div class="col-md-6">
+                                        <div class="border rounded-2 p-2 h-100 bg-white">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="compensationType" id="compNewBook" value="NewBook" checked>
+                                                <label class="form-check-label fw-bold text-dark" for="compNewBook">
+                                                    Đền sách mới
+                                                </label>
+                                                <div class="text-muted small" style="font-size: 11.5px;">
+                                                    Bạn đọc tự mua và bàn giao lại 01 cuốn sách mới tương đương để bổ sung vào kho. (Tiền đền bù: <strong>0 đ</strong>).
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Lựa chọn 2B: Đền tiền -->
+                                    <div class="col-md-6">
+                                        <div class="border rounded-2 p-2 h-100 bg-white">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="compensationType" id="compCash" value="Cash">
+                                                <label class="form-check-label fw-bold text-dark" for="compCash">
+                                                    Đền tiền bồi thường
+                                                </label>
+                                                <div class="text-muted small" style="font-size: 11.5px;">
+                                                    Nộp tiền bồi hoàn tài liệu vào quỹ thư viện (ghi vào <em>Quỹ thu đền bù mất/hỏng</em>).
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Ô nhập số tiền đền bù (Khi chọn Đền tiền) -->
+                                <div id="cashAmountSection" class="mb-3 d-none">
+                                    <label class="form-label-utc" for="inputCompensationAmount">Mức tiền bồi thường tài liệu (VNĐ):</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control form-control-utc" id="inputCompensationAmount" 
+                                               name="compensationAmount" value="150000" step="10000" min="0" />
+                                        <span class="input-group-text bg-light">VNĐ</span>
+                                    </div>
+                                    <div class="form-text small text-muted">Định mức theo giá bìa học liệu hoặc biên bản sự cố UTC (Mặc định: 150.000 VNĐ).</div>
+                                </div>
+
+                                <!-- Checkbox nộp quá hạn kèm theo nếu có quá hạn -->
+                                <div id="overdueCheckboxSection" class="form-check mb-2 d-none">
+                                    <input class="form-check-input" type="checkbox" name="payOverdue" id="rcPayOverdueCheck" value="true" checked>
+                                    <label class="form-check-label text-dark small fw-medium" for="rcPayOverdueCheck">
+                                        Thu kèm phí phạt quá hạn <span class="badge bg-danger">100.000 VNĐ</span> (hạch toán vào Quỹ nộp muộn)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BẢNG TÍNH TOÁN TỔNG THU TÀI CHÍNH THỜI GIAN THỰC -->
+                    <div class="card border-0 p-3 mb-3" style="background-color: #ecfdf5; border-radius: 8px; border-left: 4px solid #10b981 !important;">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-bold text-dark">
+                                <i class="bi bi-wallet2 text-success me-1"></i> TỔNG TIỀN PHẢI NỘP / THU VÀO CSDL:
+                            </span>
+                            <span id="rcTotalAmount" class="fs-5 fw-bold text-success font-monospace">0 VNĐ</span>
+                        </div>
+                        <div class="row g-2 small border-top pt-2 text-muted">
+                            <div class="col-sm-6">
+                                &bull; Phạt nộp muộn: <strong id="rcOverdueAmount" class="text-warning-emphasis">0 VNĐ</strong>
+                            </div>
+                            <div class="col-sm-6">
+                                &bull; Đền bù mất/hỏng: <strong id="rcCompensationAmount" class="text-danger">0 VNĐ</strong>
+                            </div>
+                        </div>
+                        <div class="mt-2 text-muted" style="font-size: 11px;">
+                            * Tiền nộp sẽ được phân tách tự động và ghi vào Sổ quỹ tài chính Thư viện UTC theo từng khoản mục.
+                        </div>
+                    </div>
+
+                    <!-- Ghi chú nghiệp vụ -->
+                    <div>
+                        <label class="form-label-utc mb-1" for="inputNote">Ghi chú phiếu thu / Biên bản (Tùy chọn):</label>
+                        <input type="text" class="form-control form-control-utc" id="inputNote" name="note" 
+                               placeholder="VD: Trả sách đúng hẹn / Báo mất khi đi học quân sự / Đã nộp bản mới..." />
+                    </div>
+                </div>
+
+                <div class="modal-footer bg-light px-4 py-3">
+                    <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Hủy bỏ</button>
+                    <button type="submit" class="btn btn-utc-primary px-4 fw-bold">
+                        <i class="bi bi-check2-circle me-1"></i> Xác nhận thực hiện &amp; Lưu CSDL
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Hàm khởi tạo và xử lý tương tác của Modal Trả sách & Bồi thường
+    function initReturnAndCompensationModal() {
+        var modalEl = document.getElementById("returnAndCompensationModal");
+        if (!modalEl) return;
+
+        var rcModal = new bootstrap.Modal(modalEl);
+
+        var rcInputMaBD = document.getElementById("rcInputMaBD");
+        var rcInputMaGD = document.getElementById("rcInputMaGD");
+        var rcInputReturnUrl = document.getElementById("rcInputReturnUrl");
+
+        var rcDisplayMaGD = document.getElementById("rcDisplayMaGD");
+        var rcDisplayTenSach = document.getElementById("rcDisplayTenSach");
+        var rcDisplayHoTen = document.getElementById("rcDisplayHoTen");
+        var rcDisplayMaBD = document.getElementById("rcDisplayMaBD");
+
+        var rcOverdueBadge = document.getElementById("rcOverdueBadge");
+        var rcOnTimeBadge = document.getElementById("rcOnTimeBadge");
+
+        var radioNormalReturn = document.getElementById("radioNormalReturn");
+        var radioCompensation = document.getElementById("radioCompensation");
+        var cardNormalReturn = document.getElementById("cardNormalReturn");
+        var cardCompensation = document.getElementById("cardCompensation");
+
+        var compensationDetailSection = document.getElementById("compensationDetailSection");
+        var compNewBook = document.getElementById("compNewBook");
+        var compCash = document.getElementById("compCash");
+        var cashAmountSection = document.getElementById("cashAmountSection");
+        var inputCompensationAmount = document.getElementById("inputCompensationAmount");
+        var overdueCheckboxSection = document.getElementById("overdueCheckboxSection");
+        var rcPayOverdueCheck = document.getElementById("rcPayOverdueCheck");
+
+        var rcTotalAmount = document.getElementById("rcTotalAmount");
+        var rcOverdueAmount = document.getElementById("rcOverdueAmount");
+        var rcCompensationAmount = document.getElementById("rcCompensationAmount");
+        var inputNote = document.getElementById("inputNote");
+
+        var currentIsOverdue = false;
+
+        function updateFinancialCalculation() {
+            var isComp = radioCompensation.checked;
+            var isCash = compCash.checked;
+            var isOverdue = currentIsOverdue;
+            var willPayOverdue = isOverdue && (radioNormalReturn.checked || rcPayOverdueCheck.checked);
+
+            var overdueFee = willPayOverdue ? 100000 : 0;
+            var compFee = (isComp && isCash) ? parseFloat(inputCompensationAmount.value || "0") : 0;
+            var total = overdueFee + compFee;
+
+            rcOverdueAmount.textContent = overdueFee.toLocaleString("vi-VN") + " VNĐ";
+            rcCompensationAmount.textContent = compFee.toLocaleString("vi-VN") + " VNĐ";
+            rcTotalAmount.textContent = total.toLocaleString("vi-VN") + " VNĐ";
+        }
+
+        // Bắt sự kiện chuyển đổi giữa Trả thường và Bồi thường
+        function updateOptionUI() {
+            if (radioNormalReturn.checked) {
+                cardNormalReturn.classList.add("active");
+                cardNormalReturn.style.borderColor = "#0079ba";
+                cardNormalReturn.style.backgroundColor = "#f0f9ff";
+
+                cardCompensation.classList.remove("active");
+                cardCompensation.style.borderColor = "#cbd5e1";
+                cardCompensation.style.backgroundColor = "#fff";
+
+                compensationDetailSection.classList.add("d-none");
+            } else {
+                cardCompensation.classList.add("active");
+                cardCompensation.style.borderColor = "#ef4444";
+                cardCompensation.style.backgroundColor = "#fff5f5";
+
+                cardNormalReturn.classList.remove("active");
+                cardNormalReturn.style.borderColor = "#cbd5e1";
+                cardNormalReturn.style.backgroundColor = "#fff";
+
+                compensationDetailSection.classList.remove("d-none");
+            }
+
+            if (compCash.checked && radioCompensation.checked) {
+                cashAmountSection.classList.remove("d-none");
+            } else {
+                cashAmountSection.classList.add("d-none");
+            }
+
+            if (currentIsOverdue && radioCompensation.checked) {
+                overdueCheckboxSection.classList.remove("d-none");
+            } else {
+                overdueCheckboxSection.classList.add("d-none");
+            }
+
+            updateFinancialCalculation();
+        }
+
+        radioNormalReturn.addEventListener("change", updateOptionUI);
+        radioCompensation.addEventListener("change", updateOptionUI);
+        cardNormalReturn.addEventListener("click", function(e) {
+            if (e.target.tagName !== "INPUT") {
+                radioNormalReturn.checked = true;
+                updateOptionUI();
+            }
+        });
+        cardCompensation.addEventListener("click", function(e) {
+            if (e.target.tagName !== "INPUT") {
+                radioCompensation.checked = true;
+                updateOptionUI();
+            }
+        });
+
+        compNewBook.addEventListener("change", updateOptionUI);
+        compCash.addEventListener("change", updateOptionUI);
+        inputCompensationAmount.addEventListener("input", updateFinancialCalculation);
+        rcPayOverdueCheck.addEventListener("change", updateFinancialCalculation);
+
+        // Mở modal từ bất kỳ nút nào có class btn-return-trigger
+        document.querySelectorAll(".btn-return-trigger").forEach(function(btn) {
+            btn.addEventListener("click", function() {
+                var magd = this.getAttribute("data-magd");
+                var mabd = this.getAttribute("data-mabd");
+                var hoten = this.getAttribute("data-hoten");
+                var tensach = this.getAttribute("data-tensach");
+                var quahan = this.getAttribute("data-quahan") === "true";
+                var returnUrl = this.getAttribute("data-returnurl") || window.location.pathname;
+
+                rcInputMaBD.value = mabd;
+                rcInputMaGD.value = magd;
+                rcInputReturnUrl.value = returnUrl;
+
+                rcDisplayMaGD.textContent = magd;
+                rcDisplayHoTen.textContent = hoten;
+                rcDisplayMaBD.textContent = mabd;
+                rcDisplayTenSach.textContent = tensach;
+
+                currentIsOverdue = quahan;
+
+                if (quahan) {
+                    rcOverdueBadge.classList.remove("d-none");
+                    rcOnTimeBadge.classList.add("d-none");
+                } else {
+                    rcOverdueBadge.classList.add("d-none");
+                    rcOnTimeBadge.classList.remove("d-none");
+                }
+
+                // Reset mặc định về Trả sách bình thường
+                radioNormalReturn.checked = true;
+                compNewBook.checked = true;
+                inputCompensationAmount.value = "150000";
+                rcPayOverdueCheck.checked = true;
+                inputNote.value = "";
+
+                updateOptionUI();
+                rcModal.show();
+            });
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", initReturnAndCompensationModal);
+</script>

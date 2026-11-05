@@ -29,6 +29,21 @@
     box-shadow: var(--utc-shadow-sm);
 }
 
+.utc-detail-cover-card-img-wrap {
+    height: 440px;
+    border-radius: var(--utc-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--utc-shadow-md);
+    background-color: #f8fafc;
+    border: 1px solid var(--utc-line);
+}
+
+.utc-detail-cover-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .utc-detail-cover-tag {
     font-size: 13px;
     font-weight: 600;

@@ -1,4 +1,6 @@
 using BTL_LTWEB.Areas.Admin.Services;
+using BTL_LTWEB.Areas.Reader.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace BTL_LTWEB
 {
@@ -14,6 +16,19 @@ namespace BTL_LTWEB
             // Register Business Services
             builder.Services.AddSingleton<IReaderService, ReaderService>();
             builder.Services.AddSingleton<IReportService, ReportService>();
+            builder.Services.AddSingleton<IBookCatalogService, BookCatalogService>();
+            builder.Services.AddSingleton<IUserProfileService, UserProfileService>();
+
+            // Cookie Authentication
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Account/Login";
+                    options.LogoutPath = "/Account/Logout";
+                    options.AccessDeniedPath = "/Account/AccessDenied";
+                    options.ExpireTimeSpan = TimeSpan.FromHours(12);
+                    options.SlidingExpiration = true;
+                });
 
             var app = builder.Build();
 
@@ -21,7 +36,6 @@ namespace BTL_LTWEB
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
                 app.UseHttpsRedirection();
             }
@@ -29,6 +43,7 @@ namespace BTL_LTWEB
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             // Cấu hình Routing chuẩn hóa theo README.md cho 2 phân hệ Admin & Reader
@@ -46,10 +61,10 @@ namespace BTL_LTWEB
                 name: "areas",
                 pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
-            // Default Route
+            // Default Route -> Đăng nhập
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Account}/{action=Login}/{id?}");
 
             app.Run();
         }

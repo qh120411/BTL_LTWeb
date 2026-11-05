@@ -1,4 +1,4 @@
-namespace BTL_LTWEB.Areas.Admin.ViewModels;
+﻿namespace BTL_LTWEB.Areas.Admin.ViewModels;
 
 public class BookReportItemViewModel
 {

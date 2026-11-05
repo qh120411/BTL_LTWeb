@@ -45,7 +45,14 @@
                     <li><a href="https://www.utc.edu.vn" target="_blank" rel="noopener">Website UTC</a></li>
                     <li><a href="https://qldt.utc.edu.vn" target="_blank" rel="noopener">Cổng thông tin sinh viên</a></li>
                     <li><a href="https://qldt.utc.edu.vn" target="_blank" rel="noopener">Phòng Quản lý đào tạo</a></li>
-                    <li><a href="/Admin/Dashboard">Cổng quản trị thủ thư</a></li>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Thuthu"))
+                    {
+                        <li><a href="/Admin/Dashboard">Cổng quản trị thủ thư</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="/Reader/Guide">Nội quy &amp; Giờ phục vụ</a></li>
+                    }
                 </ul>
             </div>
         </div>

@@ -1,13 +1,22 @@
+﻿using BTL_LTWEB.Areas.Admin.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BTL_LTWEB.Areas.Admin.Controllers;
 
 [Area("Admin")]
-public class DashboardController : Controller
+public class DashboardController : AdminBaseController
 {
+    private readonly IReaderService _readerService;
+
+    public DashboardController(IReaderService readerService)
+    {
+        _readerService = readerService;
+    }
+
     public IActionResult Index()
     {
         ViewBag.ActiveMenu = "Dashboard";
-        return View();
+        var model = _readerService.GetDashboardStatistics();
+        return View(model);
     }
 }

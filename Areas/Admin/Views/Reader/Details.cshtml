@@ -1,147 +1,408 @@
-@model ReaderDetailViewModel
+﻿@model ReaderDetailViewModel
 @{
-    ViewData["Title"] = "Hồ sơ bạn đọc";
+    ViewData["Title"] = "Hồ sơ bạn đọc - " + Model.HoTen;
+    ViewBag.ActiveMenu = "Reader";
 }
 
 <div class="admin-breadcrumb">THƯ VIỆN UTC / QUẢN TRỊ</div>
 
-<h1 class="admin-page-title mb-4">Hồ sơ bạn đọc</h1>
-
-<form asp-action="UpdateProfile" method="post">
-    @Html.AntiForgeryToken()
-    <input type="hidden" asp-for="MaBD" />
-    <input type="hidden" asp-for="HoTen" />
-    <input type="hidden" asp-for="LopKhoa" />
-    <input type="hidden" asp-for="TrangThaiHocTap" />
-    <input type="hidden" asp-for="SoSachDangMuon" />
-    <input type="hidden" asp-for="SoSachQuaHan" />
-
-    <!-- 4 hàng thông tin 2 cột trực tiếp trên nền -->
-    <div class="row g-3 mb-4">
-        <!-- Hàng 1 -->
-        <div class="col-md-6">
-            <label class="form-label-utc">Mã sinh viên / mã bạn đọc (từ QLĐT)</label>
-            <input type="text" class="form-control form-control-utc" value="@Model.MaBD" readonly />
-        </div>
-        <div class="col-md-6">
-            <label class="form-label-utc">Họ tên (từ QLĐT)</label>
-            <input type="text" class="form-control form-control-utc" value="@Model.HoTen" readonly />
-        </div>
-
-        <!-- Hàng 2 -->
-        <div class="col-md-6">
-            <label class="form-label-utc">Lớp / khóa (từ QLĐT)</label>
-            <input type="text" class="form-control form-control-utc" value="@Model.LopKhoa" readonly />
-        </div>
-        <div class="col-md-6">
-            <label class="form-label-utc">Trạng thái học tập (từ QLĐT)</label>
-            <input type="text" class="form-control form-control-utc" value="@Model.TrangThaiHocTap" readonly />
-        </div>
-
-        <!-- Hàng 3 -->
-        <div class="col-md-6">
-            <label class="form-label-utc" asp-for="Nhom">Nhóm bạn đọc</label>
-            <select class="form-select form-control-utc" asp-for="Nhom">
-                <option value="Sinh viên">Sinh viên</option>
-                <option value="Giảng viên">Giảng viên</option>
-                <option value="Ngoài trường">Ngoài trường</option>
-            </select>
-        </div>
-        <div class="col-md-6">
-            <label class="form-label-utc" asp-for="QuyenSuDung">Quyền sử dụng thư viện</label>
-            <select class="form-select form-control-utc" asp-for="QuyenSuDung">
-                <option value="Hoạt động / Tạm khóa">Hoạt động / Tạm khóa</option>
-                <option value="Hoạt động">Hoạt động</option>
-                <option value="Tạm khóa">Tạm khóa</option>
-                <option value="Đọc tại chỗ">Đọc tại chỗ</option>
-            </select>
-        </div>
-
-        <!-- Hàng 4 -->
-        <div class="col-md-6">
-            <label class="form-label-utc" asp-for="GioiHanSach">Giới hạn số sách</label>
-            <input type="text" class="form-control form-control-utc" asp-for="GioiHanSach" value="5 cuốn (giá trị minh họa)" />
-        </div>
-        <div class="col-md-6">
-            <label class="form-label-utc" asp-for="HieuLucQuyen">Hiệu lực quyền sử dụng</label>
-            <input type="text" class="form-control form-control-utc" asp-for="HieuLucQuyen" value="30/06/2027" />
-        </div>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h1 class="admin-page-title mb-0">Hồ sơ bạn đọc</h1>
+        <div class="text-muted small">Mã bạn đọc: <strong>@Model.MaBD</strong> &middot; @Model.HoTen</div>
     </div>
-
-    <!-- Khung trạng thái mượn sách & chú thích QLĐT -->
-    <div class="admin-info-box mb-4">
-        <div class="admin-info-title">
-            Đang mượn @Model.SoSachDangMuon cuốn @(Model.SoSachQuaHan > 0 ? $"· Có {Model.SoSachQuaHan} cuốn quá hạn" : "")
-        </div>
-        <div class="admin-info-desc">
-            Thông tin học tập lấy từ trường; thẻ sinh viên không được cấp hoặc khóa tại trang quản trị thư viện.
-        </div>
-    </div>
-
-    <!-- Hàng nút thao tác -->
-    <div class="d-flex align-items-center gap-3">
-        <button type="submit" class="btn btn-utc-primary">
-            Lưu thiết lập thư viện
+    <div class="d-flex gap-2">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#opacBorrowModal">
+            <i class="bi bi-journal-plus me-1"></i> + Mượn thêm sách (Tra cứu OPAC)
         </button>
-
-        <button type="button" class="btn btn-outline-utc" data-bs-toggle="modal" data-bs-target="#borrowHistoryModal">
-            Xem giao dịch mượn
-        </button>
-
         <a asp-action="Index" class="btn btn-outline-utc">
-            Quay lại
+            <i class="bi bi-arrow-left me-1"></i> Danh sách bạn đọc
         </a>
     </div>
-</form>
+</div>
 
-<!-- Modal: Xem giao dịch mượn -->
-<div class="modal fade" id="borrowHistoryModal" tabindex="-1" aria-labelledby="borrowHistoryModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title fw-bold" id="borrowHistoryModalLabel">
-                    Giao dịch mượn trả - @Model.HoTen (@Model.MaBD)
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- Thông báo thành công hoặc lỗi -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+        <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+        <strong>@TempData["SuccessMessage"]</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+        <strong>@TempData["ErrorMessage"]</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<!-- 1. Form thông tin bạn đọc & thiết lập quyền mượn -->
+<div class="admin-table-card p-4 mb-4">
+    <h5 class="fw-bold text-navy mb-3">
+        <i class="bi bi-person-vcard me-2 text-primary"></i> Thông tin định danh &amp; Thiết lập thẻ thư viện
+    </h5>
+    <form asp-action="UpdateProfile" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="MaBD" />
+        <input type="hidden" asp-for="HoTen" />
+        <input type="hidden" asp-for="LopKhoa" />
+        <input type="hidden" asp-for="TrangThaiHocTap" />
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label class="form-label-utc">Mã sinh viên / mã bạn đọc (từ QLĐT)</label>
+                <input type="text" class="form-control form-control-utc bg-light fw-bold text-navy" value="@Model.MaBD" readonly />
             </div>
-            <div class="modal-body p-0">
+            <div class="col-md-6">
+                <label class="form-label-utc">Họ tên (từ QLĐT)</label>
+                <input type="text" class="form-control form-control-utc bg-light fw-bold text-navy" value="@Model.HoTen" readonly />
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label-utc">Lớp / khóa (từ QLĐT)</label>
+                <input type="text" class="form-control form-control-utc bg-light" value="@Model.LopKhoa" readonly />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label-utc">Trạng thái học tập (từ QLĐT)</label>
+                <input type="text" class="form-control form-control-utc bg-light text-success fw-medium" value="@Model.TrangThaiHocTap" readonly />
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label-utc" asp-for="Nhom">Nhóm bạn đọc</label>
+                <select class="form-select form-control-utc" asp-for="Nhom">
+                    <option value="Sinh viên">Sinh viên</option>
+                    <option value="Giảng viên">Giảng viên</option>
+                    <option value="Ngoài trường">Ngoài trường</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label-utc" asp-for="QuyenSuDung">Quyền sử dụng thư viện</label>
+                <select class="form-select form-control-utc" asp-for="QuyenSuDung">
+                    <option value="Hoạt động">Hoạt động</option>
+                    <option value="Tạm khóa">Tạm khóa</option>
+                    <option value="Đọc tại chỗ">Đọc tại chỗ</option>
+                </select>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label-utc" asp-for="GioiHanSach">Giới hạn số sách</label>
+                <input type="text" class="form-control form-control-utc" asp-for="GioiHanSach" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label-utc" asp-for="HieuLucQuyen">Hiệu lực quyền sử dụng thẻ</label>
+                <input type="text" class="form-control form-control-utc" asp-for="HieuLucQuyen" />
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center">
+            <button type="submit" class="btn btn-utc-primary">
+                <i class="bi bi-save me-1"></i> Lưu thiết lập thư viện
+            </button>
+            <div class="text-muted small">
+                * Thẻ sinh viên do trường ĐH Giao thông Vận tải cấp.
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- 2. KHU VỰC SÁCH ĐANG MƯỢN (SỔ RA TRỰC TIẾP TRÊN TRANG KÈM NÚT TRẢ VÀ TẤT TOÁN PHẠT) -->
+<div class="admin-table-card mb-4">
+    <div class="p-3 bg-white border-bottom d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-journal-bookmark-fill text-primary fs-5"></i>
+            <span class="fw-bold text-navy fs-5">
+                Danh sách sách đang mượn (@Model.SoSachDangMuon cuốn)
+            </span>
+            <span class="badge bg-primary text-white">Đang mượn: @Model.SoSachDangMuon</span>
+            @if (Model.SoSachQuaHan > 0)
+            {
+                <span class="badge bg-danger text-white">Quá hạn: @Model.SoSachQuaHan cuốn</span>
+            }
+        </div>
+        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#opacBorrowModal">
+            <i class="bi bi-plus-circle me-1"></i> Mượn thêm sách (Tra cứu OPAC)
+        </button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table-utc">
+            <thead>
+                <tr>
+                    <th style="width: 5%; text-align: center;">STT</th>
+                    <th style="width: 8%; text-align: center;">Bìa sách</th>
+                    <th style="width: 32%;">Thông tin học liệu / Sách</th>
+                    <th style="width: 12%;">Mã bản sao</th>
+                    <th style="width: 11%;">Ngày mượn</th>
+                    <th style="width: 11%;">Hạn trả (1 năm)</th>
+                    <th style="width: 11%;">Trạng thái</th>
+                    <th style="width: 10%; text-align: right;">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
                 @if (Model.BorrowTransactions == null || Model.BorrowTransactions.Count == 0)
                 {
-                    <div class="p-4 text-center text-muted">Bạn đọc hiện không có giao dịch mượn sách nào.</div>
+                    <tr>
+                        <td colspan="8" class="p-4 text-center text-muted">
+                            <i class="bi bi-check2-circle fs-3 text-success d-block mb-2"></i>
+                            Bạn đọc hiện không có cuốn sách nào đang mượn hoặc đã trả hết sách.
+                        </td>
+                    </tr>
                 }
                 else
                 {
-                    <table class="table-utc">
-                        <thead>
-                            <tr>
-                                <th>Mã GD</th>
-                                <th>Mã sách</th>
-                                <th>Tên sách</th>
-                                <th>Ngày mượn</th>
-                                <th>Hạn trả</th>
-                                <th>Trạng thái</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var gd in Model.BorrowTransactions)
-                            {
-                                <tr>
-                                    <td class="fw-semibold">@gd.MaGD</td>
-                                    <td>@gd.MaSach</td>
-                                    <td>@gd.TenSach</td>
-                                    <td>@gd.NgayMuon</td>
-                                    <td>@gd.NgayHenTra</td>
-                                    <td>@gd.TrangThai</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                    int idx = 1;
+                    foreach (var gd in Model.BorrowTransactions)
+                    {
+                        <tr>
+                            <td style="text-align: center; font-weight: 600; color: #64748b;">
+                                @idx
+                            </td>
+                            <td style="text-align: center;">
+                                <img src="@gd.CoverImage" alt="@gd.TenSach" 
+                                     style="width: 38px; height: 52px; object-fit: cover; border-radius: 4px; border: 1px solid #e2e8f0;" 
+                                     onerror="this.src='/images/covers/sach_01.jpg'" />
+                            </td>
+                            <td>
+                                <div class="fw-bold text-navy" style="font-size: 14.5px;">@gd.TenSach</div>
+                                <div class="text-muted small">
+                                    <i class="bi bi-person me-1"></i> @gd.TacGia &middot; Mã GD: <strong>@gd.MaGD</strong>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark border">@gd.MaSach</span>
+                            </td>
+                            <td>
+                                <span class="fw-medium text-dark">@gd.NgayMuon</span>
+                            </td>
+                            <td>
+                                <strong class="@(gd.IsQuaHan ? "text-danger" : "text-success")">@gd.NgayHenTra</strong>
+                                <div class="text-muted" style="font-size: 11px;">(Hạn 1 năm)</div>
+                            </td>
+                            <td>
+                                @if (gd.IsQuaHan)
+                                {
+                                    <span class="badge bg-danger text-white px-2 py-1" style="font-size: 12px;">
+                                        <i class="bi bi-exclamation-triangle-fill me-1"></i> @gd.TrangThai
+                                    </span>
+                                    <div class="text-danger small mt-1 fw-bold">
+                                        Phạt: @gd.TienPhat.ToString("N0") đ
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success text-white px-2 py-1" style="font-size: 12px;">
+                                        <i class="bi bi-check-circle-fill me-1"></i> Còn hạn
+                                    </span>
+                                }
+                            </td>
+                            <td style="text-align: right;">
+                                <!-- NÚT TRẢ SÁCH (MỞ POPUP XÁC NHẬN TRẢ HOẶC BỒI THƯỜNG MẤT/HỎNG) -->
+                                <button type="button" class="btn btn-outline-@(gd.IsQuaHan ? "danger" : "success") btn-sm btn-return-trigger px-2 py-1"
+                                        data-magd="@gd.MaGD"
+                                        data-mabd="@Model.MaBD"
+                                        data-hoten="@Model.HoTen"
+                                        data-tensach="@gd.TenSach"
+                                        data-quahan="@(gd.IsQuaHan ? "true" : "false")"
+                                        data-returnurl="/Admin/Reader/Details/@Model.MaBD"
+                                        title="Tiếp nhận trả sách hoặc bồi thường mất/hỏng">
+                                    <i class="bi bi-arrow-return-left me-1"></i> Trả sách
+                                </button>
+                            </td>
+                        </tr>
+                        idx++;
+                    }
                 }
+            </tbody>
+            <!-- Dòng tổng cộng và tính tổng tiền phạt cần nộp -->
+            <tfoot class="bg-light">
+                <tr>
+                    <td colspan="5" class="py-3 fw-bold">
+                        <i class="bi bi-calculator me-1 text-primary"></i> Tổng số sách đang mượn: 
+                        <span class="text-navy">@Model.SoSachDangMuon cuốn</span> 
+                        (@(Model.SoSachDangMuon - Model.SoSachQuaHan) cuốn còn hạn, <span class="text-danger">@Model.SoSachQuaHan cuốn quá hạn</span>)
+                    </td>
+                    <td colspan="3" class="text-end py-3">
+                        <span class="text-muted fw-bold me-2">TỔNG TIỀN PHẠT CẦN THU:</span>
+                        @if (Model.TongTienPhat > 0)
+                        {
+                            <span class="badge bg-danger fs-6 px-3 py-2">
+                                @Model.TongTienPhat.ToString("N0") VNĐ
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success fs-6 px-3 py-2">
+                                0 VNĐ (Không nợ phạt)
+                            </span>
+                        }
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<!-- 3. MODAL TRA CỨU HỌC LIỆU & CHO MƯỢN SÁCH PHONG CÁCH OPAC -->
+<div class="modal fade" id="opacBorrowModal" tabindex="-1" aria-labelledby="opacBorrowModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-navy text-white" style="background-color: var(--utc-navy);">
+                <div>
+                    <h5 class="modal-title fw-bold text-white mb-1" id="opacBorrowModalLabel">
+                        <i class="bi bi-search me-2"></i> Tra cứu học liệu &amp; Cho mượn sách (OPAC)
+                    </h5>
+                    <div class="text-white-50 small">
+                        Đang tạo giao dịch mượn cho bạn đọc: <strong>@Model.HoTen</strong> (MSV: <strong>@Model.MaBD</strong>) &middot; Hạn mượn quy định: <strong>1 năm</strong>
+                    </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-footer">
+
+            <!-- Thanh tìm kiếm & lọc nhanh trong Modal -->
+            <div class="modal-body p-4" style="background-color: #f8fafc;">
+                <div class="card p-3 mb-4 shadow-sm border-0">
+                    <div class="row g-3">
+                        <div class="col-md-7">
+                            <label class="form-label fw-bold text-navy small mb-1">Từ khóa tra cứu OPAC</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
+                                <input type="text" id="opacModalSearch" class="form-control" 
+                                       placeholder="Tìm theo tên sách, tác giả, nhà xuất bản..." 
+                                       oninput="filterOpacModalBooks()" />
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <label class="form-label fw-bold text-navy small mb-1">Chuyên ngành đào tạo</label>
+                            <select id="opacModalCategory" class="form-select" onchange="filterOpacModalBooks()">
+                                <option value="all">Tất cả chuyên ngành</option>
+                                <option value="cntt">Công nghệ thông tin</option>
+                                <option value="xaydung">Kỹ thuật xây dựng</option>
+                                <option value="kinhte">Kinh tế &amp; Quản trị</option>
+                                <option value="toanly">Khoa học cơ bản</option>
+                                <option value="chinhtri">Lý luận chính trị &amp; Pháp luật</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-2 text-muted small">
+                        <i class="bi bi-info-circle text-primary me-1"></i>
+                        Quy tắc mượn: <strong>Mỗi sinh viên chỉ được mượn 1 quyển / 1 đầu sách</strong>. Thời gian mượn luôn là <strong>1 năm</strong> kể từ ngày mượn.
+                    </div>
+                </div>
+
+                <!-- Lưới hiển thị các thẻ sách chuẩn OPAC (như ảnh người dùng cung cấp) -->
+                <div class="row g-3" id="opacBooksContainer">
+                    @foreach (var book in Model.AvailableBooks)
+                    {
+                        bool isAlreadyBorrowed = Model.BorrowTransactions?.Any(t => t.TenSach.Equals(book.Title, StringComparison.OrdinalIgnoreCase)) ?? false;
+                        bool isAvailable = book.AvailableCopies > 0;
+
+                        <div class="col-lg-3 col-md-4 col-sm-6 opac-book-card-item" 
+                             data-title="@book.Title.ToLower()" 
+                             data-author="@book.Authors.ToLower()" 
+                             data-major="@book.Major.ToLower()">
+                            <div class="card h-100 shadow-sm border" style="border-radius: 8px; overflow: hidden; background: #fff;">
+                                <!-- Bìa sách -->
+                                <div style="height: 190px; background-color: #f1f5f9; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                                    <img src="@book.CoverImage" alt="@book.Title" 
+                                         style="max-height: 100%; width: auto; object-fit: contain;" 
+                                         onerror="this.src='/images/covers/sach_01.jpg'" />
+                                </div>
+                                
+                                <div class="card-body p-3 d-flex flex-column justify-content-between">
+                                    <div>
+                                        <div class="text-uppercase text-primary fw-bold mb-1" style="font-size: 11px; letter-spacing: 0.3px;">
+                                            @book.MajorName
+                                        </div>
+                                        <h6 class="fw-bold text-navy mb-1" style="font-size: 13.5px; line-height: 1.35; min-height: 38px;">
+                                            @book.Title
+                                        </h6>
+                                        <div class="text-muted small mb-2 text-truncate" style="font-size: 12px;">
+                                            <i class="bi bi-person me-1"></i> @book.Authors
+                                        </div>
+                                        <div class="mb-3">
+                                            @if (isAvailable)
+                                            {
+                                                <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size: 11px;">
+                                                    <i class="bi bi-check2 me-1"></i> @book.AvailableCopies bản sẵn có &middot; Sách in
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle" style="font-size: 11px;">
+                                                    <i class="bi bi-x me-1"></i> Hết bản sao
+                                                </span>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <!-- Nút Cho mượn / Trạng thái -->
+                                    <div>
+                                        @if (isAlreadyBorrowed)
+                                        {
+                                            <button type="button" class="btn btn-secondary btn-sm w-100" disabled style="font-size: 12.5px;">
+                                                <i class="bi bi-check2-all me-1"></i> Đã mượn cuốn này
+                                            </button>
+                                        }
+                                        else if (!isAvailable)
+                                        {
+                                            <button type="button" class="btn btn-outline-secondary btn-sm w-100" disabled style="font-size: 12.5px;">
+                                                Tạm hết sách
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <form asp-action="BorrowBook" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="maBD" value="@Model.MaBD" />
+                                                <input type="hidden" name="bookId" value="@book.Id" />
+                                                <button type="submit" class="btn btn-utc-primary btn-sm w-100 fw-bold" style="font-size: 12.5px;"
+                                                        onclick="return confirm('Xác nhận cho bạn đọc \'@Model.HoTen\' mượn cuốn sách \'@book.Title\'?\nThời hạn mượn quy định: 1 năm.');">
+                                                    <i class="bi bi-journal-plus me-1"></i> Xác nhận mượn
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="modal-footer bg-light">
                 <button type="button" class="btn btn-outline-utc" data-bs-dismiss="modal">Đóng</button>
             </div>
         </div>
     </div>
 </div>
 
+<!-- MODAL DÙNG CHUNG: XÁC NHẬN TRẢ SÁCH HOẶC BỒI THƯỜNG MẤT/HỎNG -->
+<partial name="_ReturnAndCompensationModal" />
+
+@section Scripts {
+    <script>
+        function filterOpacModalBooks() {
+            var keyword = document.getElementById('opacModalSearch').value.toLowerCase().trim();
+            var category = document.getElementById('opacModalCategory').value.toLowerCase();
+            var items = document.querySelectorAll('.opac-book-card-item');
+
+            items.forEach(function(card) {
+                var title = card.getAttribute('data-title') || '';
+                var author = card.getAttribute('data-author') || '';
+                var major = card.getAttribute('data-major') || '';
+
+                var matchKeyword = (keyword === '') || (title.includes(keyword) || author.includes(keyword));
+                var matchCategory = (category === 'all') || (major === category);
+
+                if (matchKeyword && matchCategory) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+}

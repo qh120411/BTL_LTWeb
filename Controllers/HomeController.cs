@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using BTL_LTWEB.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,10 +13,19 @@ namespace BTL_LTWEB.Controllers
             _logger = logger;
         }
 
-        // Điều hướng mặc định vào Cổng Bạn đọc (Areas/Reader/Home)
+        // Vào web mặc định: nếu chưa đăng nhập bắt buộc chuyển đến Login
         public IActionResult Index()
         {
-            return RedirectToAction("Index", "Home", new { area = "Reader" });
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                if (User.IsInRole("Admin") || User.IsInRole("Thuthu"))
+                {
+                    return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+                }
+                return RedirectToAction("Index", "Home", new { area = "Reader" });
+            }
+
+            return RedirectToAction("Login", "Account");
         }
 
         public IActionResult Privacy()
