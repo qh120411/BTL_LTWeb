@@ -1,0 +1,103 @@
+@model BTL_LTWEB.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Đăng nhập - Thư viện UTC";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/account/login.css" asp-append-version="true" />
+}
+
+<div class="login-page-wrapper">
+    <section class="login-section">
+        <div class="container login-container">
+
+            <!-- Cột trái: Giới thiệu & thông điệp chào mừng (Login introduction) -->
+            <div class="login-intro-col">
+                <p class="login-kicker">UTC LIBRARY / CHÀO MỪNG TRỞ LẠI</p>
+                <h1 class="login-display-title">
+                    Tri thức của bạn.<br />
+                    Hành trình của bạn.
+                </h1>
+                <p class="login-intro-desc">
+                    Đăng nhập để xem sách đang mượn,<br />
+                    lịch sử sử dụng và thông báo cá nhân.
+                </p>
+                <div class="login-badge-pill">
+                    <svg class="login-badge-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="m9 12 2 2 4-4"/>
+                    </svg>
+                    <span>Một tài khoản · Trải nghiệm xuyên suốt</span>
+                </div>
+            </div>
+
+            <!-- Cột phải: Form đăng nhập (Login form) -->
+            <div class="login-form-col">
+                <div class="login-card">
+                    <h2 class="login-card-title">Đăng nhập thư viện</h2>
+                    <p class="login-card-sub">Sử dụng tài khoản được thư viện cấp.</p>
+
+                    <form asp-controller="Account" asp-action="Login" method="post" class="login-form-inner">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="ReturnUrl" />
+
+                        @if (!ViewData.ModelState.IsValid && ViewData.ModelState[string.Empty]?.Errors.Count > 0)
+                        {
+                            <div class="login-alert-danger">
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            </div>
+                        }
+
+                        <!-- Tên đăng nhập / Mã sinh viên -->
+                        <div class="login-field-group">
+                            <label asp-for="Username" class="login-field-label">Tên đăng nhập / Mã sinh viên</label>
+                            <div class="login-input-box">
+                                <input asp-for="Username"
+                                       class="login-field-input"
+                                       placeholder="Nhập tên đăng nhập hoặc mã SV"
+                                       autocomplete="username"
+                                       autofocus />
+                            </div>
+                            <span asp-validation-for="Username" class="login-field-error"></span>
+                        </div>
+
+                        <!-- Mật khẩu -->
+                        <div class="login-field-group">
+                            <label asp-for="Password" class="login-field-label">Mật khẩu</label>
+                            <div class="login-input-box">
+                                <input asp-for="Password"
+                                       class="login-field-input"
+                                       placeholder="Nhập mật khẩu"
+                                       autocomplete="current-password" />
+                            </div>
+                            <span asp-validation-for="Password" class="login-field-error"></span>
+                        </div>
+
+                        <!-- Quên mật khẩu & Ghi nhớ -->
+                        <div class="login-extra-row">
+                            <label class="login-remember-box">
+                                <input asp-for="RememberMe" type="checkbox" class="login-checkbox" />
+                                <span>Ghi nhớ đăng nhập</span>
+                            </label>
+                            <a href="/Reader/Guide#support" class="login-forgot-link">Quên mật khẩu? →</a>
+                        </div>
+
+                        <!-- Nút Đăng nhập -->
+                        <button type="submit" class="btn-login-hero">Đăng nhập →</button>
+
+                        <!-- Chân form: Hỗ trợ -->
+                        <p class="login-support-note">
+                            Cần hỗ trợ tài khoản? <a href="/Reader/Guide#support" class="login-support-link">Liên hệ thư viện.</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
