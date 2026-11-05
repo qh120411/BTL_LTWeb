@@ -1,6 +1,8 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Text.Json;
 using BTL_LTWEB.Areas.Reader.Models;
+using BTL_LTWEB.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace BTL_LTWEB.Areas.Reader.Services
 {
@@ -15,29 +17,12 @@ namespace BTL_LTWEB.Areas.Reader.Services
         private readonly ConcurrentDictionary<string, UserProfileViewModel> _profiles = new(StringComparer.OrdinalIgnoreCase);
         private readonly string _storageFilePath;
         private readonly object _fileLock = new();
+        private readonly QLThuVienUtcContext? _dbContext;
 
-        // Danh mục mẫu các đầu sách thật để cấp phát mượn ngẫu nhiên cho sinh viên
-        private static readonly List<(string Title, string Authors, string Cover, string Barcode)> AvailableCatalog = new()
+        public UserProfileService(IWebHostEnvironment env, QLThuVienUtcContext? dbContext = null)
         {
-            ("Cấu trúc dữ liệu và giải thuật (Python)", "Bùi Việt Hà", "/images/covers/sach_01.jpg", "BS-00001"),
-            ("Giáo trình Cơ sở dữ liệu quan hệ", "Phạm Minh Chuẩn, Trịnh Thị Nhị", "/images/covers/sach_02.jpg", "BS-00005"),
-            ("Giáo trình Mạng máy tính", "Nguyễn Thế Lộc, Nguyễn Hồng Phương", "/images/covers/sach_03.jpg", "BS-00009"),
-            ("Giáo trình Cơ sở An toàn thông tin", "HV Công nghệ Bưu chính Viễn thông", "/images/covers/sach_04.jpg", "BS-00013"),
-            ("Giáo trình Kỹ thuật lập trình C", "Phạm Văn Ất, Nguyễn Hiếu Cường", "/images/covers/sach_05.jpg", "BS-00017"),
-            ("Giáo trình C++ và Lập trình hướng đối tượng", "Phạm Văn Ất, Lê Trường Thông", "/images/covers/sach_06.jpg", "BS-00021"),
-            ("Giáo trình Trí tuệ nhân tạo, Học máy và Học sâu", "Nguyễn Tuấn Đăng", "/images/covers/sach_07.jpg", "BS-00025"),
-            ("Giáo trình Kiến trúc máy tính và Hợp ngữ", "Phạm Văn Cường", "/images/covers/sach_08.jpg", "BS-00029"),
-            ("Giáo trình Kỹ nghệ phần mềm", "Đoàn Văn Ban", "/images/covers/sach_09.jpg", "BS-00033"),
-            ("Giáo trình Lập trình Python cơ bản và ứng dụng", "Đậu Hải Long", "/images/covers/sach_10.jpg", "BS-00037"),
-            ("Giáo trình Hệ quản trị cơ sở dữ liệu SQL Server", "Nguyễn Gia Tuấn Anh", "/images/covers/sach_11.jpg", "BS-00041"),
-            ("Phát triển ứng dụng Web với ASP.NET Core MVC", "Microsoft Press Vietnam", "/images/covers/sach_12.jpg", "BS-00045"),
-            ("Giáo trình Toán cao cấp cho kỹ sư - Tập 1", "Nguyễn Đình Trí, Trần Việt Dũng", "/images/covers/sach_21.jpg", "BS-00081"),
-            ("Giáo trình Vật lý đại cương - Cơ và Nhiệt", "Lương Duyên Bình", "/images/covers/sach_23.jpg", "BS-00089"),
-            ("Xác suất thống kê và ứng dụng", "Đào Hữu Hồ", "/images/covers/sach_25.jpg", "BS-00097")
-        };
+            _dbContext = dbContext;
 
-        public UserProfileService(IWebHostEnvironment env)
-        {
             var dataDir = Path.Combine(env.ContentRootPath, "App_Data");
             if (!Directory.Exists(dataDir))
             {
@@ -46,7 +31,6 @@ namespace BTL_LTWEB.Areas.Reader.Services
             _storageFilePath = Path.Combine(dataDir, "student_profiles.json");
 
             LoadProfilesFromFile();
-            EnsureDefaultProfiles();
         }
 
         public UserProfileViewModel GetProfile(string studentId, string? fallbackName = null)
@@ -56,17 +40,102 @@ namespace BTL_LTWEB.Areas.Reader.Services
                 studentId = "242630923";
             }
 
-            if (!_profiles.TryGetValue(studentId, out var profile))
+            // 1. ƯU TIÊN TRUY VẤN TRỰC TIẾP TỪ CSDL SQL SERVER QLThuVienUTC
+            if (_dbContext != null)
             {
-                profile = CreateDefaultStudentProfile(studentId, fallbackName);
-                _profiles[studentId] = profile;
+                try
+                {
+                    var banDoc = _dbContext.BanDocs
+                        .Include(b => b.MaLopNavigation)
+                        .Include(b => b.TheBanDoc)
+                        .FirstOrDefault(b => b.MaSinhVien == studentId);
+
+                    if (banDoc != null)
+                    {
+                        var profile = new UserProfileViewModel
+                        {
+                            MaSinhVien = banDoc.MaSinhVien,
+                            HoTen = banDoc.HoTen,
+                            NgaySinh = banDoc.NgaySinh.HasValue ? banDoc.NgaySinh.Value.ToString("dd/MM/yyyy") : "18/05/2006",
+                            SoCCCD = $"03320600{studentId.Substring(Math.Max(0, studentId.Length - 4))}",
+                            NganhHoc = "CLC Công nghệ thông tin Việt - Anh",
+                            LopQuanLy = banDoc.MaLopNavigation != null ? banDoc.MaLopNavigation.TenLop : "K65.CLCCNTT1",
+                            SoDienThoai = banDoc.SoDienThoai ?? "0986123456",
+                            DiaChiNha = banDoc.DiaChi ?? "Số 3 Phố Cầu Giấy, Láng Thượng, Đống Đa, Hà Nội",
+                            SoTaiKhoanNganHang = "1028374659",
+                            TenNganHang = "Vietcombank",
+                            Email = banDoc.Email ?? $"{studentId}@utc.edu.vn",
+                            AvatarUrl = "/images/default-avatar.png",
+                            BorrowedBooks = new List<BorrowedBookItem>()
+                        };
+
+                        // Đọc danh sách sách đang mượn từ bảng ChiTietMuon (chỉ lấy sách chưa trả: NgayTra == null)
+                        var activeLoans = _dbContext.ChiTietMuons
+                            .Include(c => c.MaPhieuMuonNavigation)
+                                .ThenInclude(p => p.MaTheBanDocNavigation)
+                            .Include(c => c.MaBanSaoNavigation)
+                                .ThenInclude(b => b.MaTaiLieuNavigation)
+                                    .ThenInclude(t => t.TaiLieuTacGia)
+                                        .ThenInclude(tg => tg.MaTacGiaNavigation)
+                            .Where(c => c.MaPhieuMuonNavigation.MaTheBanDocNavigation.MaBanDoc == banDoc.MaBanDoc 
+                                     && c.NgayTra == null 
+                                     && c.TrangThai != "Đã trả" 
+                                     && c.TrangThai != "Đã đền sách mới" 
+                                     && c.TrangThai != "Đã đền tiền")
+                            .OrderBy(c => c.HanTra)
+                            .ToList();
+
+                        var today = DateTime.Today;
+                        foreach (var ctm in activeLoans)
+                        {
+                            var book = ctm.MaBanSaoNavigation?.MaTaiLieuNavigation;
+                            var hanTraDate = ctm.HanTra.ToDateTime(TimeOnly.MinValue);
+                            var isOverdue = today > hanTraDate || ctm.TrangThai == "Quá hạn";
+                            var daysOverdue = isOverdue ? Math.Max(1, (int)(today - hanTraDate).TotalDays) : 0;
+                            var daysLeft = isOverdue ? 0 : Math.Max(0, (int)(hanTraDate - today).TotalDays);
+
+                            var authors = (book != null && book.TaiLieuTacGia.Any())
+                                ? string.Join(", ", book.TaiLieuTacGia.Select(tg => tg.MaTacGiaNavigation.HoTen))
+                                : "Nhiều tác giả";
+
+                            profile.BorrowedBooks.Add(new BorrowedBookItem
+                            {
+                                MaGD = $"GD{ctm.MaPhieuMuonNavigation.NgayMuon:yyMMdd}-{ctm.MaChiTietMuon:D3}",
+                                MaVach = ctm.MaBanSaoNavigation?.MaVach ?? $"BS-{ctm.MaBanSao:D5}",
+                                TenSach = book?.TenTaiLieu ?? "Học liệu UTC",
+                                TacGia = authors,
+                                CoverImage = book?.AnhBia ?? "/images/covers/sach_01.jpg",
+                                NgayMuon = ctm.MaPhieuMuonNavigation.NgayMuon,
+                                HanTra = hanTraDate,
+                                IsQuaHan = isOverdue,
+                                SoNgayQuaHan = daysOverdue,
+                                SoNgayConLai = daysLeft,
+                                TrangThaiText = isOverdue ? "Đang quá hạn" : "Đang mượn (Còn hạn)",
+                                TienPhat = isOverdue ? 100_000m : 0m
+                            });
+                        }
+
+                        // Cập nhật lại cache bộ nhớ
+                        _profiles[studentId] = profile;
+                        return profile;
+                    }
+                }
+                catch
+                {
+                    // Fallback sang memory nếu lỗi kết nối DB tạm thời
+                }
+            }
+
+            // 2. FALLBACK NẾU CHƯA CÓ DB KẾT NỐI
+            if (!_profiles.TryGetValue(studentId, out var cachedProfile))
+            {
+                cachedProfile = CreateDefaultStudentProfile(studentId, fallbackName);
+                _profiles[studentId] = cachedProfile;
                 SaveProfilesToFile();
             }
 
-            // Luôn cập nhật và tính toán lại hạn trả (1 năm), trạng thái quá hạn và tiền phạt (100k/quyển)
-            RefreshLoanStatuses(profile);
-
-            return profile;
+            RefreshLoanStatuses(cachedProfile);
+            return cachedProfile;
         }
 
         public void UpdateProfile(UserProfileViewModel model)
@@ -74,6 +143,30 @@ namespace BTL_LTWEB.Areas.Reader.Services
             if (string.IsNullOrWhiteSpace(model.MaSinhVien))
             {
                 return;
+            }
+
+            // Cập nhật vào SQL Server nếu có DbContext
+            if (_dbContext != null)
+            {
+                try
+                {
+                    var banDoc = _dbContext.BanDocs.FirstOrDefault(b => b.MaSinhVien == model.MaSinhVien);
+                    if (banDoc != null)
+                    {
+                        if (!string.IsNullOrWhiteSpace(model.SoDienThoai))
+                            banDoc.SoDienThoai = model.SoDienThoai.Trim();
+                        if (!string.IsNullOrWhiteSpace(model.DiaChiNha))
+                            banDoc.DiaChi = model.DiaChiNha.Trim();
+                        if (!string.IsNullOrWhiteSpace(model.Email))
+                            banDoc.Email = model.Email.Trim();
+
+                        _dbContext.SaveChanges();
+                    }
+                }
+                catch
+                {
+                    // Bỏ qua lỗi DB
+                }
             }
 
             if (_profiles.TryGetValue(model.MaSinhVien, out var existing))
@@ -102,95 +195,6 @@ namespace BTL_LTWEB.Areas.Reader.Services
             SaveProfilesToFile();
         }
 
-        private void EnsureDefaultProfiles()
-        {
-            // Chỉ khởi tạo mặc định nếu chưa từng có dữ liệu lưu trong file CSDL
-            if (_profiles.ContainsKey("242630923"))
-            {
-                return;
-            }
-
-            // Thiết lập chuẩn cho sinh viên Đỗ Văn Đạt (242630923):
-            // Mượn đúng 5 cuốn sách: 2 cuốn còn hạn và 3 cuốn quá hạn (phạt 100k/quyển -> tổng phạt 300k)
-            var datProfile = new UserProfileViewModel
-            {
-                MaSinhVien = "242630923",
-                HoTen = "Đỗ Văn Đạt",
-                NgaySinh = "18/05/2006",
-                SoCCCD = "033206009004",
-                NganhHoc = "CLC Công nghệ thông tin Việt - Anh",
-                LopQuanLy = "CLC Công nghệ thông tin - Anh 1 K65",
-                SoDienThoai = "0986123456",
-                DiaChiNha = "Số 3 Phố Cầu Giấy, Phường Láng Thượng, Quận Đống Đa, Hà Nội",
-                SoTaiKhoanNganHang = "1028374659",
-                TenNganHang = "Vietcombank",
-                Email = "242630923@utc.edu.vn",
-                BorrowedBooks = new List<BorrowedBookItem>
-                {
-                    // 1. Cuốn 1: CÒN HẠN
-                    new BorrowedBookItem
-                    {
-                        MaGD = "GD260315-001",
-                        MaVach = "BS-00001",
-                        TenSach = "Cấu trúc dữ liệu và giải thuật (Python)",
-                        TacGia = "Bùi Việt Hà",
-                        CoverImage = "/images/covers/sach_01.jpg",
-                        NgayMuon = new DateTime(2026, 3, 15),
-                        HanTra = new DateTime(2027, 3, 15) // Quy định 1 năm
-                    },
-                    // 2. Cuốn 2: CÒN HẠN
-                    new BorrowedBookItem
-                    {
-                        MaGD = "GD260520-002",
-                        MaVach = "BS-00037",
-                        TenSach = "Giáo trình Lập trình Python cơ bản và ứng dụng",
-                        TacGia = "Đậu Hải Long",
-                        CoverImage = "/images/covers/sach_10.jpg",
-                        NgayMuon = new DateTime(2026, 5, 20),
-                        HanTra = new DateTime(2027, 5, 20) // Quy định 1 năm
-                    },
-                    // 3. Cuốn 3: ĐANG QUÁ HẠN (Hạn trả 10/10/2026) -> Phạt 100k
-                    new BorrowedBookItem
-                    {
-                        MaGD = "GD251010-003",
-                        MaVach = "BS-00005",
-                        TenSach = "Giáo trình Cơ sở dữ liệu quan hệ",
-                        TacGia = "Phạm Minh Chuẩn, Trịnh Thị Nhị",
-                        CoverImage = "/images/covers/sach_02.jpg",
-                        NgayMuon = new DateTime(2025, 10, 10),
-                        HanTra = new DateTime(2026, 10, 10) // Quá hạn 26 ngày
-                    },
-                    // 4. Cuốn 4: ĐANG QUÁ HẠN (Hạn trả 25/08/2026) -> Phạt 100k
-                    new BorrowedBookItem
-                    {
-                        MaGD = "GD250825-004",
-                        MaVach = "BS-00021",
-                        TenSach = "Giáo trình C++ và Lập trình hướng đối tượng",
-                        TacGia = "Phạm Văn Ất, Lê Trường Thông",
-                        CoverImage = "/images/covers/sach_06.jpg",
-                        NgayMuon = new DateTime(2025, 8, 25),
-                        HanTra = new DateTime(2026, 8, 25) // Quá hạn 72 ngày
-                    },
-                    // 5. Cuốn 5: ĐANG QUÁ HẠN (Hạn trả 01/11/2026) -> Phạt 100k
-                    new BorrowedBookItem
-                    {
-                        MaGD = "GD251101-005",
-                        MaVach = "BS-00033",
-                        TenSach = "Giáo trình Kỹ nghệ phần mềm",
-                        TacGia = "Đoàn Văn Ban",
-                        CoverImage = "/images/covers/sach_09.jpg",
-                        NgayMuon = new DateTime(2025, 11, 1),
-                        HanTra = new DateTime(2026, 11, 1) // Quá hạn 4 ngày
-                    }
-                }
-            };
-
-            RefreshLoanStatuses(datProfile);
-            _profiles["242630923"] = datProfile;
-
-            SaveProfilesToFile();
-        }
-
         private UserProfileViewModel CreateDefaultStudentProfile(string studentId, string? fallbackName)
         {
             var profile = new UserProfileViewModel
@@ -201,77 +205,31 @@ namespace BTL_LTWEB.Areas.Reader.Services
                 SoCCCD = $"03320600{studentId.Substring(Math.Max(0, studentId.Length - 4))}",
                 NganhHoc = "CLC Công nghệ thông tin Việt - Anh",
                 LopQuanLy = "CLC Công nghệ thông tin - Anh 1 K65",
-                SoDienThoai = "",
-                DiaChiNha = "",
-                SoTaiKhoanNganHang = "",
-                TenNganHang = "",
+                SoDienThoai = "0986123456",
+                DiaChiNha = "Số 3 Phố Cầu Giấy, Láng Thượng, Đống Đa, Hà Nội",
+                SoTaiKhoanNganHang = "1028374659",
+                TenNganHang = "Vietcombank",
                 Email = $"{studentId}@utc.edu.vn",
-                BorrowedBooks = GenerateRandomLoansForStudent(studentId)
+                BorrowedBooks = new List<BorrowedBookItem>()
             };
 
             RefreshLoanStatuses(profile);
             return profile;
         }
 
-        private List<BorrowedBookItem> GenerateRandomLoansForStudent(string studentId)
-        {
-            var result = new List<BorrowedBookItem>();
-            int hash = Math.Abs(studentId.GetHashCode());
-            int count = (hash % 4) + 1; // 1 đến 4 cuốn ngẫu nhiên
-            var rnd = new Random(hash);
-
-            for (int i = 0; i < count; i++)
-            {
-                var book = AvailableCatalog[(hash + i * 3) % AvailableCatalog.Count];
-                bool isOverdue = (i % 2 == 1); // Xen kẽ cuốn còn hạn và quá hạn
-
-                DateTime ngayMuon;
-                if (isOverdue)
-                {
-                    // Mượn từ năm ngoái (2025) -> Hạn trả năm 2026 đã quá hạn
-                    int month = (rnd.Next(1, 10));
-                    int day = (rnd.Next(1, 28));
-                    ngayMuon = new DateTime(2025, month, day);
-                }
-                else
-                {
-                    // Mượn trong năm 2026 -> Hạn trả năm 2027 vẫn còn hạn
-                    int month = (rnd.Next(1, 10));
-                    int day = (rnd.Next(1, 28));
-                    ngayMuon = new DateTime(2026, month, day);
-                }
-
-                result.Add(new BorrowedBookItem
-                {
-                    MaGD = $"GD26{studentId.Substring(Math.Max(0, studentId.Length - 4))}-{i + 1:D3}",
-                    MaVach = $"{book.Barcode}-{studentId.Substring(Math.Max(0, studentId.Length - 2))}",
-                    TenSach = book.Title,
-                    TacGia = book.Authors,
-                    CoverImage = book.Cover,
-                    NgayMuon = ngayMuon,
-                    HanTra = ngayMuon.AddYears(1) // Quy định thời gian mượn luôn là 1 năm
-                });
-            }
-
-            return result;
-        }
-
         private void RefreshLoanStatuses(UserProfileViewModel profile)
         {
-            var today = new DateTime(2026, 11, 5); // Ngày hệ thống thực tế
+            var today = DateTime.Today;
 
             foreach (var item in profile.BorrowedBooks)
             {
-                // Quy tắc mượn luôn là 1 năm
-                item.HanTra = item.NgayMuon.AddYears(1);
-
                 if (today > item.HanTra)
                 {
                     item.IsQuaHan = true;
-                    item.SoNgayQuaHan = (int)(today - item.HanTra).TotalDays;
+                    item.SoNgayQuaHan = Math.Max(1, (int)(today - item.HanTra).TotalDays);
                     item.SoNgayConLai = 0;
                     item.TrangThaiText = "Đang quá hạn";
-                    item.TienPhat = 100_000m; // Quá hạn tiền nộp luôn là 100k/quyển
+                    item.TienPhat = 100_000m;
                 }
                 else
                 {

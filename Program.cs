@@ -1,6 +1,8 @@
 using BTL_LTWEB.Areas.Admin.Services;
 using BTL_LTWEB.Areas.Reader.Services;
+using BTL_LTWEB.Models.Entities;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 
 namespace BTL_LTWEB
 {
@@ -13,11 +15,15 @@ namespace BTL_LTWEB
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            // Register Business Services
-            builder.Services.AddSingleton<IReaderService, ReaderService>();
-            builder.Services.AddSingleton<IReportService, ReportService>();
-            builder.Services.AddSingleton<IBookCatalogService, BookCatalogService>();
-            builder.Services.AddSingleton<IUserProfileService, UserProfileService>();
+            // Đăng ký Entity Framework Core kết nối trực tiếp CSDL SQL Server QLThuVienUTC
+            builder.Services.AddDbContext<QLThuVienUtcContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            // Register Business Services (Scoped tương thích hoàn hảo với EF Core)
+            builder.Services.AddScoped<IReaderService, ReaderService>();
+            builder.Services.AddScoped<IReportService, ReportService>();
+            builder.Services.AddScoped<IBookCatalogService, BookCatalogService>();
+            builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 
             // Cookie Authentication
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

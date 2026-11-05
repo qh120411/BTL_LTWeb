@@ -19,6 +19,10 @@ GO
 
 USE QLThuVienUTC;
 GO
+SET ANSI_NULLS ON;
+GO
+SET QUOTED_IDENTIFIER ON;
+GO
 
 /* XOA CAC BANG CU CUNG TEN DE CO THE CHAY LAI SCRIPT (CHI DUNG CHO MOI TRUONG DEMO) */
 DROP TABLE IF EXISTS dbo.ChiTietThanhToan;
@@ -103,10 +107,10 @@ CREATE TABLE dbo.VaiTro (
 CREATE TABLE dbo.TaiKhoan (
     MaTaiKhoan      INT IDENTITY(1,1) PRIMARY KEY,
     TenDangNhap     VARCHAR(100) NOT NULL UNIQUE,
-    EmailDangNhap   VARCHAR(150) NULL UNIQUE,
+    EmailDangNhap   VARCHAR(150) NULL,
     MatKhauHash     NVARCHAR(500) NOT NULL,
-    MaBanDoc        INT NULL UNIQUE,
-    MaNhanVien      INT NULL UNIQUE,
+    MaBanDoc        INT NULL,
+    MaNhanVien      INT NULL,
     TrangThai       NVARCHAR(30) NOT NULL DEFAULT N'Hoạt động',
     NgayTao         DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
     LanDangNhapCuoi DATETIME2 NULL,
@@ -118,6 +122,14 @@ CREATE TABLE dbo.TaiKhoan (
         (MaBanDoc IS NULL AND MaNhanVien IS NOT NULL)
     )
 );
+
+GO
+CREATE UNIQUE NONCLUSTERED INDEX UQ_TaiKhoan_Email ON dbo.TaiKhoan(EmailDangNhap) WHERE EmailDangNhap IS NOT NULL;
+GO
+CREATE UNIQUE NONCLUSTERED INDEX UQ_TaiKhoan_BanDoc ON dbo.TaiKhoan(MaBanDoc) WHERE MaBanDoc IS NOT NULL;
+GO
+CREATE UNIQUE NONCLUSTERED INDEX UQ_TaiKhoan_NhanVien ON dbo.TaiKhoan(MaNhanVien) WHERE MaNhanVien IS NOT NULL;
+GO
 
 CREATE TABLE dbo.Quyen (
     MaQuyen     VARCHAR(50) NOT NULL PRIMARY KEY,
@@ -1401,8 +1413,8 @@ BEGIN
 
     INSERT INTO dbo.ViPham (MaBanDoc, MaChiTietMuon, LoaiViPham, MoTa, NgayViPham)
     VALUES (@MaBanDocDat, @CTM_Dat_3, N'Mượn quá hạn', N'Quá hạn trả sách Cơ sở dữ liệu quan hệ (thời hạn 1 năm)', '2026-10-11');
-    INSERT INTO dbo.TienPhat (MaViPham, SoTien, LyDo, TrangThai)
-    VALUES (SCOPE_IDENTITY(), 100000.00, N'Phạt mượn quá hạn 100.000đ/quyển', N'Chưa thu');
+    INSERT INTO dbo.TienPhat (MaViPham, SoTien, TrangThai)
+    VALUES (SCOPE_IDENTITY(), 100000.00, N'Chưa thanh toán');
 
     -- Cuốn 4 (QUÁ HẠN): Giáo trình C++ và Lập trình hướng đối tượng (Bản sao 21)
     -- Mượn: 25/08/2025 -> Hạn trả: 25/08/2026 (Quá hạn) -> Phạt 100k
@@ -1413,8 +1425,8 @@ BEGIN
 
     INSERT INTO dbo.ViPham (MaBanDoc, MaChiTietMuon, LoaiViPham, MoTa, NgayViPham)
     VALUES (@MaBanDocDat, @CTM_Dat_4, N'Mượn quá hạn', N'Quá hạn trả sách C++ và Lập trình hướng đối tượng (thời hạn 1 năm)', '2026-08-26');
-    INSERT INTO dbo.TienPhat (MaViPham, SoTien, LyDo, TrangThai)
-    VALUES (SCOPE_IDENTITY(), 100000.00, N'Phạt mượn quá hạn 100.000đ/quyển', N'Chưa thu');
+    INSERT INTO dbo.TienPhat (MaViPham, SoTien, TrangThai)
+    VALUES (SCOPE_IDENTITY(), 100000.00, N'Chưa thanh toán');
 
     -- Cuốn 5 (QUÁ HẠN): Giáo trình Kỹ nghệ phần mềm (Bản sao 33)
     -- Mượn: 01/11/2025 -> Hạn trả: 01/11/2026 (Quá hạn) -> Phạt 100k
@@ -1425,8 +1437,8 @@ BEGIN
 
     INSERT INTO dbo.ViPham (MaBanDoc, MaChiTietMuon, LoaiViPham, MoTa, NgayViPham)
     VALUES (@MaBanDocDat, @CTM_Dat_5, N'Mượn quá hạn', N'Quá hạn trả sách Kỹ nghệ phần mềm (thời hạn 1 năm)', '2026-11-02');
-    INSERT INTO dbo.TienPhat (MaViPham, SoTien, LyDo, TrangThai)
-    VALUES (SCOPE_IDENTITY(), 100000.00, N'Phạt mượn quá hạn 100.000đ/quyển', N'Chưa thu');
+    INSERT INTO dbo.TienPhat (MaViPham, SoTien, TrangThai)
+    VALUES (SCOPE_IDENTITY(), 100000.00, N'Chưa thanh toán');
 END
 GO
 
@@ -1449,8 +1461,8 @@ BEGIN
 
     INSERT INTO dbo.ViPham (MaBanDoc, MaChiTietMuon, LoaiViPham, MoTa, NgayViPham)
     VALUES (@MaBanDocAn, @CTM_An, N'Mượn quá hạn', N'Quá hạn sách Mạng máy tính', '2026-09-11');
-    INSERT INTO dbo.TienPhat (MaViPham, SoTien, LyDo, TrangThai)
-    VALUES (SCOPE_IDENTITY(), 100000.00, N'Phạt quá hạn 100.000đ/quyển', N'Chưa thu');
+    INSERT INTO dbo.TienPhat (MaViPham, SoTien, TrangThai)
+    VALUES (SCOPE_IDENTITY(), 100000.00, N'Chưa thanh toán');
 
     -- Cuốn 2: Bản sao 13 (Cơ sở An toàn thông tin) - Mượn: 10/04/2026 -> Hạn trả: 10/04/2027 (Còn hạn)
     INSERT INTO dbo.ChiTietMuon (MaPhieuMuon, MaBanSao, HanTra, TrangThai) VALUES (@PM_An, 13, '2027-04-10', N'Đang mượn');
