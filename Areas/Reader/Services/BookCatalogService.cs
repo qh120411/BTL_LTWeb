@@ -1,4 +1,7 @@
-﻿using BTL_LTWEB.Areas.Reader.Models;
+﻿using System.Text.Json;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
+using BTL_LTWEB.Areas.Reader.Models;
 
 namespace BTL_LTWEB.Areas.Reader.Services
 {
@@ -18,11 +21,63 @@ namespace BTL_LTWEB.Areas.Reader.Services
     public class BookCatalogService : IBookCatalogService
     {
         private readonly List<BookItem> _books = new();
+        private readonly string _storagePath;
+        private readonly object _fileLock = new();
 
-        public BookCatalogService()
+        public BookCatalogService(IWebHostEnvironment env)
         {
+            var dataDir = Path.Combine(env.ContentRootPath, "App_Data");
+            if (!Directory.Exists(dataDir))
+            {
+                Directory.CreateDirectory(dataDir);
+            }
+            _storagePath = Path.Combine(dataDir, "catalog_books.json");
+
+            LoadFromDisk();
+        }
+
+        private void LoadFromDisk()
+        {
+            try
+            {
+                lock (_fileLock)
+                {
+                    if (File.Exists(_storagePath))
+                    {
+                        var json = File.ReadAllText(_storagePath, System.Text.Encoding.UTF8);
+                        var loaded = JsonSerializer.Deserialize<List<BookItem>>(json);
+                        if (loaded != null && loaded.Count > 0)
+                        {
+                            _books.Clear();
+                            _books.AddRange(loaded);
+                            return;
+                        }
+                    }
+                }
+            }
+            catch { }
+
             InitData();
             InitCopies();
+            SaveToDisk();
+        }
+
+        public void SaveToDisk()
+        {
+            try
+            {
+                lock (_fileLock)
+                {
+                    var options = new JsonSerializerOptions
+                    {
+                        WriteIndented = true,
+                        Encoder = JavaScriptEncoder.Create(UnicodeRanges.All)
+                    };
+                    var json = JsonSerializer.Serialize(_books, options);
+                    File.WriteAllText(_storagePath, json, System.Text.Encoding.UTF8);
+                }
+            }
+            catch { }
         }
 
         private void InitCopies()
@@ -151,6 +206,7 @@ namespace BTL_LTWEB.Areas.Reader.Services
             }
 
             _books.Insert(0, book);
+            SaveToDisk();
             return true;
         }
 
@@ -185,6 +241,7 @@ namespace BTL_LTWEB.Areas.Reader.Services
                 c.Shelf = existing.Shelf;
             }
 
+            SaveToDisk();
             return true;
         }
 
@@ -205,6 +262,7 @@ namespace BTL_LTWEB.Areas.Reader.Services
             }
 
             _books.Remove(existing);
+            SaveToDisk();
             return true;
         }
 

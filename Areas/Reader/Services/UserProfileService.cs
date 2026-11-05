@@ -87,6 +87,11 @@ namespace BTL_LTWEB.Areas.Reader.Services
                 {
                     existing.AvatarUrl = model.AvatarUrl;
                 }
+                if (model.BorrowedBooks != null)
+                {
+                    existing.BorrowedBooks = model.BorrowedBooks;
+                    RefreshLoanStatuses(existing);
+                }
             }
             else
             {
@@ -99,6 +104,12 @@ namespace BTL_LTWEB.Areas.Reader.Services
 
         private void EnsureDefaultProfiles()
         {
+            // Chỉ khởi tạo mặc định nếu chưa từng có dữ liệu lưu trong file CSDL
+            if (_profiles.ContainsKey("242630923"))
+            {
+                return;
+            }
+
             // Thiết lập chuẩn cho sinh viên Đỗ Văn Đạt (242630923):
             // Mượn đúng 5 cuốn sách: 2 cuốn còn hạn và 3 cuốn quá hạn (phạt 100k/quyển -> tổng phạt 300k)
             var datProfile = new UserProfileViewModel

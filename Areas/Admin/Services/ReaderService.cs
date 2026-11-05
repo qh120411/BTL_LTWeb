@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿using System.Text.Json;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
+using System.Text;
 using BTL_LTWEB.Areas.Admin.ViewModels;
 using BTL_LTWEB.Areas.Reader.Models;
 using BTL_LTWEB.Areas.Reader.Services;
@@ -30,6 +33,8 @@ public class ReaderService : IReaderService
 
     private readonly IBookCatalogService _catalogService;
     private readonly IUserProfileService _userProfileService;
+    private readonly string _readersFilePath;
+    private readonly string _receiptsFilePath;
 
     // Danh sách 49 sinh viên K65.CLCCNTT1 chuẩn từ CSDL QLThuVienUTC_TiengViet.sql
     private static readonly (string MaSV, string HoTen)[] RawStudents = new[]
@@ -85,10 +90,19 @@ public class ReaderService : IReaderService
         ("242630991", "Nguyễn Quốc Vương")
     };
 
-    public ReaderService(IBookCatalogService catalogService, IUserProfileService userProfileService)
+    public ReaderService(IBookCatalogService catalogService, IUserProfileService userProfileService, IWebHostEnvironment env)
     {
         _catalogService = catalogService;
         _userProfileService = userProfileService;
+
+        var dataDir = Path.Combine(env.ContentRootPath, "App_Data");
+        if (!Directory.Exists(dataDir))
+        {
+            Directory.CreateDirectory(dataDir);
+        }
+        _readersFilePath = Path.Combine(dataDir, "readers_data.json");
+        _receiptsFilePath = Path.Combine(dataDir, "financial_receipts.json");
+
         EnsureData();
     }
 
@@ -108,6 +122,31 @@ public class ReaderService : IReaderService
         return sb.ToString().Normalize(System.Text.NormalizationForm.FormC).Replace('đ', 'd').Replace('Đ', 'D');
     }
 
+    private void SaveDataToFile()
+    {
+        try
+        {
+            lock (_initLock)
+            {
+                var options = new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    Encoder = JavaScriptEncoder.Create(UnicodeRanges.All)
+                };
+
+                var readersJson = JsonSerializer.Serialize(_readers, options);
+                File.WriteAllText(_readersFilePath, readersJson, Encoding.UTF8);
+
+                var receiptsJson = JsonSerializer.Serialize(_financialReceipts, options);
+                File.WriteAllText(_receiptsFilePath, receiptsJson, Encoding.UTF8);
+            }
+        }
+        catch
+        {
+            // Bỏ qua lỗi ghi disk nếu môi trường giới hạn
+        }
+    }
+
     private void EnsureData()
     {
         if (_initialized) return;
@@ -115,9 +154,52 @@ public class ReaderService : IReaderService
         lock (_initLock)
         {
             if (_initialized) return;
-            _readers.Clear();
 
-            // Khởi tạo 49 sinh viên của lớp K65.CLCCNTT1
+            bool loadedFromDisk = false;
+            try
+            {
+                if (File.Exists(_readersFilePath))
+                {
+                    var json = File.ReadAllText(_readersFilePath, Encoding.UTF8);
+                    var list = JsonSerializer.Deserialize<List<ReaderRecord>>(json);
+                    if (list != null && list.Count > 0)
+                    {
+                        _readers.Clear();
+                        _readers.AddRange(list);
+                        loadedFromDisk = true;
+                    }
+                }
+
+                if (File.Exists(_receiptsFilePath))
+                {
+                    var json = File.ReadAllText(_receiptsFilePath, Encoding.UTF8);
+                    var list = JsonSerializer.Deserialize<List<FinancialReceiptViewModel>>(json);
+                    if (list != null)
+                    {
+                        _financialReceipts.Clear();
+                        _financialReceipts.AddRange(list);
+                    }
+                }
+            }
+            catch
+            {
+                // Fallback nếu file lỗi
+            }
+
+            if (!loadedFromDisk)
+            {
+                InitDefaultData();
+                SaveDataToFile();
+            }
+
+            _initialized = true;
+        }
+    }
+
+    private void InitDefaultData()
+    {
+        _readers.Clear();
+        // Khởi tạo 49 sinh viên của lớp K65.CLCCNTT1
             foreach (var s in RawStudents)
             {
                 var r = new ReaderRecord
@@ -265,9 +347,6 @@ public class ReaderService : IReaderService
                     GhiChu = "Làm ướt sách. Bạn đọc tự mua và nộp lại 01 cuốn sách mới tương đương"
                 });
             }
-
-            _initialized = true;
-        }
     }
 
     public ReaderIndexViewModel GetReaders(string? searchKeyword, string? selectedGroup)
@@ -343,6 +422,7 @@ public class ReaderService : IReaderService
         reader.QuyenSuDung = model.QuyenSuDung ?? reader.QuyenSuDung;
         reader.GioiHanSach = model.GioiHanSach ?? reader.GioiHanSach;
         reader.HieuLucQuyen = model.HieuLucQuyen ?? reader.HieuLucQuyen;
+        SaveDataToFile();
         return true;
     }
 
@@ -562,6 +642,7 @@ public class ReaderService : IReaderService
         };
 
         reader.BorrowTransactions.Insert(0, newTx);
+        SaveDataToFile();
 
         // Đồng bộ sang UserProfileService của Cổng Bạn đọc
         try
