@@ -1,4 +1,4 @@
-@model BTL_LTWEB.Areas.Reader.Models.BookSearchViewModel
+﻿@model BTL_LTWEB.Areas.Reader.Models.BookSearchViewModel
 
 @{
     ViewData["Title"] = "Tra cứu học liệu OPAC";
@@ -179,11 +179,14 @@
                     <div class="utc-catalog-cards-grid">
                         @foreach (var book in Model.Items)
                         {
+                            var bookCover = string.IsNullOrWhiteSpace(book.CoverImage)
+                                ? "/images/covers/sach_01.jpg"
+                                : (book.CoverImage.StartsWith("/") ? book.CoverImage : "/" + book.CoverImage.TrimStart('~').TrimStart('/'));
                             <a href="/Reader/Document/Details/@book.Id" class="utc-catalog-book-card">
-                                @if (!string.IsNullOrEmpty(book.CoverImage))
+                                @if (!string.IsNullOrEmpty(bookCover))
                                 {
                                     <div class="utc-book-cover-wrap">
-                                        <img src="~/@book.CoverImage" alt="@book.Title" class="utc-book-cover-img" />
+                                        <img src="@bookCover" alt="@book.Title" class="utc-book-cover-img" onerror="this.src='/images/covers/sach_01.jpg'" />
                                     </div>
                                 }
                                 else

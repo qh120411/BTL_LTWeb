@@ -1,14 +1,20 @@
 @model dynamic
 
 @{
-    string? coverImg = Model?.CoverImage != null ? (string)Model.CoverImage : (Model?.AnhBia != null ? (string)Model.AnhBia : null);
+    string? rawCover = Model?.CoverImage != null ? (string)Model.CoverImage : (Model?.AnhBia != null ? (string)Model.AnhBia : null);
+    string? coverImg = null;
+    if (!string.IsNullOrWhiteSpace(rawCover))
+    {
+        var clean = rawCover.Trim().TrimStart('~');
+        coverImg = clean.StartsWith("/") ? clean : "/" + clean;
+    }
 }
 
 <a href="/Reader/Document/Details/@(Model?.Id ?? 1)" class="utc-catalog-book-card">
-    @if (!string.IsNullOrEmpty((string)coverImg))
+    @if (!string.IsNullOrEmpty(coverImg))
     {
         <div class="utc-book-cover-wrap">
-            <img src="~/@coverImg" alt="@(Model?.Title ?? "Học liệu")" class="utc-book-cover-img" />
+            <img src="@coverImg" alt="@(Model?.Title ?? "Học liệu")" class="utc-book-cover-img" onerror="this.src='/images/covers/sach_01.jpg'" />
         </div>
     }
     else

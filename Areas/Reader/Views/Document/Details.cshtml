@@ -28,10 +28,18 @@
         <!-- Layout 2 cột: Bìa sách + Thông tin chi tiết -->
         <div class="utc-detail-main-layout">
             <!-- Cột trái: Bìa sách thật hoặc Typographic -->
-            @if (!string.IsNullOrEmpty(Model?.CoverImage))
+            @{
+                string? detailCover = null;
+                if (!string.IsNullOrWhiteSpace(Model?.CoverImage))
+                {
+                    var clean = Model.CoverImage.Trim().TrimStart('~');
+                    detailCover = clean.StartsWith("/") ? clean : "/" + clean;
+                }
+            }
+            @if (!string.IsNullOrEmpty(detailCover))
             {
                 <div class="utc-detail-cover-card-img-wrap">
-                    <img src="~/@Model.CoverImage" alt="@Model.Title" class="utc-detail-cover-card-img" />
+                    <img src="@detailCover" alt="@(Model?.Title ?? "Học liệu")" class="utc-detail-cover-card-img" onerror="this.src='/images/covers/sach_01.jpg'" />
                 </div>
             }
             else
