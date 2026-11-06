@@ -27,16 +27,23 @@
   </div>
 
   <!-- Main navigation -->
+  @{
+    var currentPath = Context.Request.Path.Value ?? "";
+    var isHome = currentPath.Equals("/Reader", StringComparison.OrdinalIgnoreCase) || currentPath.Equals("/Reader/Home", StringComparison.OrdinalIgnoreCase) || currentPath == "/" || currentPath.Equals("/Reader/Home/Index", StringComparison.OrdinalIgnoreCase);
+    var isSearch = currentPath.StartsWith("/Reader/Search", StringComparison.OrdinalIgnoreCase);
+    var isGuide = currentPath.StartsWith("/Reader/Guide", StringComparison.OrdinalIgnoreCase);
+    var isNews = currentPath.StartsWith("/Reader/News", StringComparison.OrdinalIgnoreCase);
+  }
   <nav class="navbar">
     <div class="container nav-inner">
-      <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-list" aria-label="M&#7903; menu">
+      <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-list" aria-label="Mở menu">
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-list" id="nav-list">
-        <li><a href="/Reader" class="active">Trang chủ</a></li>
-        <li><a href="/Reader/Search">Tra cứu học liệu</a></li>
-        <li><a href="/Reader/Guide">Dịch vụ</a></li>
-        <li><a href="/Reader/News">Tin tức & thông báo</a></li>
+        <li><a href="/Reader" class="@(isHome ? "active" : "")">Trang chủ</a></li>
+        <li><a href="/Reader/Search" class="@(isSearch ? "active" : "")">Tra cứu học liệu</a></li>
+        <li><a href="/Reader/Guide" class="@(isGuide ? "active" : "")">Dịch vụ</a></li>
+        <li><a href="/Reader/News" class="@(isNews ? "active" : "")">Tin tức &amp; thông báo</a></li>
         <li><a href="/Reader/Guide#about">Giới thiệu</a></li>
       </ul>
     </div>

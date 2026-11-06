@@ -1,0 +1,243 @@
+@model BTL_LTWEB.Areas.Reader.ViewModels.SearchIndexViewModel
+@{
+    ViewData["Title"] = "Tra cứu học liệu - Thư viện UTC";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/search/search.css" asp-append-version="true" />
+}
+
+<div class="search-page-wrapper">
+    <div class="container search-container">
+
+        <!-- 1. Breadcrumb điều hướng -->
+        <div class="search-breadcrumb">
+            <a href="/Reader" class="breadcrumb-link">TRANG CHỦ</a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-current">TRA CỨU HỌC LIỆU</span>
+        </div>
+
+        <!-- 2. Tiêu đề trang & Giới thiệu -->
+        <div class="search-hero-header">
+            <h1 class="search-display-title">Tìm tài liệu bạn cần</h1>
+            <p class="search-display-sub">
+                Tra cứu sách và giáo trình trước khi đến thư viện. Bạn không cần đăng nhập để tìm kiếm.
+            </p>
+        </div>
+
+        <!-- 3. Thanh tìm kiếm từ khóa chính -->
+        <form method="get" action="/Reader/Search" class="search-primary-bar">
+            <!-- Giữ lại các bộ lọc hiện tại nếu có -->
+            @if (!string.IsNullOrEmpty(Model.SelectedLoai))
+            {
+                <input type="hidden" name="type" value="@Model.SelectedLoai" />
+            }
+            @if (!string.IsNullOrEmpty(Model.SelectedTheLoai))
+            {
+                <input type="hidden" name="theloai" value="@Model.SelectedTheLoai" />
+            }
+            @if (!string.IsNullOrEmpty(Model.SelectedNgonNgu))
+            {
+                <input type="hidden" name="lang" value="@Model.SelectedNgonNgu" />
+            }
+            @if (!string.IsNullOrEmpty(Model.SelectedTinhTrang))
+            {
+                <input type="hidden" name="status" value="@Model.SelectedTinhTrang" />
+            }
+
+            <div class="search-main-input-box">
+                <svg class="search-input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text"
+                       name="q"
+                       class="search-main-input"
+                       placeholder="Tìm theo tên sách, tác giả, nhà xuất bản hoặc mã tài liệu…"
+                       value="@Model.Keyword"
+                       autocomplete="off" />
+            </div>
+            <button type="submit" class="btn-search-primary">Tìm kiếm →</button>
+        </form>
+
+        <!-- 4. Khu vực chính: Bộ lọc bên trái + Kết quả bên phải -->
+        <div class="search-layout-grid">
+
+            <!-- CỘT TRÁI: BỘ LỌC TÌM KIẾM (Sidebar) -->
+            <aside class="search-sidebar-filter">
+                <div class="filter-panel-card">
+                    <div class="filter-header-row">
+                        <h2 class="filter-panel-title">Lọc kết quả</h2>
+                        @if (!string.IsNullOrEmpty(Model.Keyword) || !string.IsNullOrEmpty(Model.SelectedLoai) || !string.IsNullOrEmpty(Model.SelectedTheLoai) || !string.IsNullOrEmpty(Model.SelectedNgonNgu) || !string.IsNullOrEmpty(Model.SelectedTinhTrang))
+                        {
+                            <a href="/Reader/Search" class="filter-clear-link">Xóa bộ lọc</a>
+                        }
+                    </div>
+
+                    <form method="get" action="/Reader/Search" class="filter-form">
+                        @if (!string.IsNullOrEmpty(Model.Keyword))
+                        {
+                            <input type="hidden" name="q" value="@Model.Keyword" />
+                        }
+
+                        <!-- Lọc 1: Loại học liệu -->
+                        <div class="filter-field-group">
+                            <label class="filter-label">Loại học liệu</label>
+                            <select name="type" class="filter-select" onchange="this.form.submit()">
+                                @foreach (var opt in Model.LoaiOptions)
+                                {
+                                    if (opt == Model.SelectedLoai || (string.IsNullOrEmpty(Model.SelectedLoai) && opt == "Tất cả loại học liệu"))
+                                    {
+                                        <option value="@opt" selected="selected">@opt</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@opt">@opt</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <!-- Lọc 2: Chuyên ngành / Lĩnh vực -->
+                        <div class="filter-field-group">
+                            <label class="filter-label">Chuyên ngành</label>
+                            <select name="theloai" class="filter-select" onchange="this.form.submit()">
+                                @foreach (var opt in Model.TheLoaiOptions)
+                                {
+                                    if (opt == Model.SelectedTheLoai || (string.IsNullOrEmpty(Model.SelectedTheLoai) && opt == "Tất cả chuyên ngành"))
+                                    {
+                                        <option value="@opt" selected="selected">@opt</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@opt">@opt</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <!-- Lọc 3: Ngôn ngữ -->
+                        <div class="filter-field-group">
+                            <label class="filter-label">Ngôn ngữ</label>
+                            <select name="lang" class="filter-select" onchange="this.form.submit()">
+                                @foreach (var opt in Model.NgonNguOptions)
+                                {
+                                    if (opt == Model.SelectedNgonNgu || (string.IsNullOrEmpty(Model.SelectedNgonNgu) && opt == "Tất cả ngôn ngữ"))
+                                    {
+                                        <option value="@opt" selected="selected">@opt</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@opt">@opt</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <!-- Lọc 4: Tình trạng -->
+                        <div class="filter-field-group">
+                            <label class="filter-label">Tình trạng tài liệu</label>
+                            <select name="status" class="filter-select" onchange="this.form.submit()">
+                                @foreach (var opt in Model.TinhTrangOptions)
+                                {
+                                    if (opt == Model.SelectedTinhTrang || (string.IsNullOrEmpty(Model.SelectedTinhTrang) && opt == "Tất cả trạng thái"))
+                                    {
+                                        <option value="@opt" selected="selected">@opt</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@opt">@opt</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn-filter-apply">Áp dụng lọc</button>
+                    </form>
+
+                    <!-- Ghi chú chân bộ lọc -->
+                    <p class="filter-notice-text">
+                        Tra cứu công khai. Quyền mượn phụ thuộc nhóm bạn đọc.
+                    </p>
+                </div>
+            </aside>
+
+            <!-- CỘT PHẢI: KẾT QUẢ DANH MỤC HỌC LIỆU -->
+            <main class="search-results-col">
+                <div class="results-header-bar">
+                    <p class="results-count-text">
+                        <strong>@Model.TotalItems</strong> tài liệu trong danh mục
+                        @if (!string.IsNullOrEmpty(Model.Keyword))
+                        {
+                            <span>với từ khóa "<strong>@Model.Keyword</strong>"</span>
+                        }
+                    </p>
+                </div>
+
+                @if (Model.Results.Count > 0)
+                {
+                    <div class="search-books-grid">
+                        @foreach (var book in Model.Results)
+                        {
+                            <a href="/Reader/Document/Detail/@book.MaTL" class="search-book-card">
+                                <div class="book-card-top">
+                                    <p class="search-book-tag">@book.TheLoai</p>
+                                    <h3 class="search-book-title">@book.TenTL</h3>
+                                    <p class="search-book-author">@book.TacGia</p>
+                                </div>
+
+                                <div class="book-card-meta">
+                                    <span class="meta-pill">@book.DinhDang</span>
+                                    <span class="meta-pill">@book.NgonNgu</span>
+                                </div>
+
+                                <div class="book-card-bottom">
+                                    @if (book.SoBanSanCo > 0)
+                                    {
+                                        <div class="availability-badge available">
+                                            <span class="status-dot"></span>
+                                            <span>@book.SoBanSanCo bản sẵn có</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="availability-badge unavailable">
+                                            <span class="status-dot"></span>
+                                            <span>Đang mượn hết</span>
+                                        </div>
+                                    }
+                                    <span class="card-action-link">Xem chi tiết →</span>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="search-empty-box">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="empty-icon">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <h3 class="empty-title">Không tìm thấy tài liệu phù hợp</h3>
+                        <p class="empty-desc">
+                            Vui lòng thử lại với từ khóa khác hoặc xóa bớt tiêu chí lọc.
+                        </p>
+                        <a href="/Reader/Search" class="btn-figma-secondary">Xem tất cả tài liệu</a>
+                    </div>
+                }
+
+                <!-- Banner thông báo cuối danh mục (Xem tình trạng trước khi đến thư viện) -->
+                <div class="search-info-banner">
+                    <h3 class="banner-title">Xem tình trạng trước khi đến thư viện</h3>
+                    <p class="banner-desc">
+                        Mở chi tiết học liệu để xem số bản sẵn có, vị trí giá sách và hướng dẫn sử dụng tài liệu tại chỗ hoặc mượn về nhà.
+                    </p>
+                </div>
+            </main>
+
+        </div>
+
+    </div>
+</div>
+
