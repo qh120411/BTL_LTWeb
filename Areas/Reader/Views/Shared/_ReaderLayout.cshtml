@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="utf-8" />
@@ -22,7 +22,7 @@
 
 <body class="reader-body">
     <!-- Header Bạn đọc & OPAC -->
-    <partial name="_ReaderHeader" />
+    <partial name="~/Views/Shared/Reader/_ReaderHeader.cshtml" />
 
     <!-- Main Content -->
     <main role="main">
@@ -30,8 +30,9 @@
     </main>
 
     <!-- Footer Bạn đọc -->
-    <partial name="_ReaderFooter" />
+    <partial name="~/Views/Shared/Reader/_ReaderFooter.cshtml" />
 
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/reader-opac.js" asp-append-version="true"></script>

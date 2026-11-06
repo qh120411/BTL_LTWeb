@@ -1,4 +1,4 @@
-﻿using BTL_LTWEB.Areas.Admin.Services;
+using BTL_LTWEB.Areas.Admin.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BTL_LTWEB.Areas.Admin.Controllers;
@@ -17,6 +17,6 @@ public class DashboardController : AdminBaseController
     {
         ViewBag.ActiveMenu = "Dashboard";
         var model = _readerService.GetDashboardStatistics();
-        return View(model);
+        return View("~/Views/Home/Admin/Index.cshtml", model);
     }
 }

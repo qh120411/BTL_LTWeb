@@ -23,7 +23,7 @@
         "HanTra": "2027-11-05T00:00:00+07:00",
         "IsQuaHan": false,
         "SoNgayQuaHan": 0,
-        "SoNgayConLai": 365,
+        "SoNgayConLai": 364,
         "TrangThaiText": "\u0110ang m\u01B0\u1EE3n (C\u00F2n h\u1EA1n)",
         "TienPhat": 0
       },
@@ -37,7 +37,7 @@
         "HanTra": "2027-03-12T00:00:00",
         "IsQuaHan": false,
         "SoNgayQuaHan": 0,
-        "SoNgayConLai": 127,
+        "SoNgayConLai": 126,
         "TrangThaiText": "\u0110ang m\u01B0\u1EE3n (C\u00F2n h\u1EA1n)",
         "TienPhat": 0
       },
@@ -50,7 +50,7 @@
         "NgayMuon": "2025-07-23T00:00:00",
         "HanTra": "2026-07-23T00:00:00",
         "IsQuaHan": true,
-        "SoNgayQuaHan": 105,
+        "SoNgayQuaHan": 106,
         "SoNgayConLai": 0,
         "TrangThaiText": "\u0110ang qu\u00E1 h\u1EA1n",
         "TienPhat": 100000
@@ -65,7 +65,7 @@
         "HanTra": "2027-02-18T00:00:00",
         "IsQuaHan": false,
         "SoNgayQuaHan": 0,
-        "SoNgayConLai": 105,
+        "SoNgayConLai": 104,
         "TrangThaiText": "\u0110ang m\u01B0\u1EE3n (C\u00F2n h\u1EA1n)",
         "TienPhat": 0
       },
@@ -78,7 +78,7 @@
         "NgayMuon": "2025-05-06T00:00:00",
         "HanTra": "2026-05-06T00:00:00",
         "IsQuaHan": true,
-        "SoNgayQuaHan": 183,
+        "SoNgayQuaHan": 184,
         "SoNgayConLai": 0,
         "TrangThaiText": "\u0110ang qu\u00E1 h\u1EA1n",
         "TienPhat": 100000
@@ -88,6 +88,25 @@
     "SoSachConHan": 3,
     "SoSachQuaHan": 2,
     "TongTienPhaiThanhToan": 200000
+  },
+  {
+    "MaSinhVien": "NV26-02",
+    "HoTen": "Tr\u1EA7n V\u0103n Minh",
+    "NgaySinh": "15/09/2006",
+    "SoCCCD": "033206006-02",
+    "NganhHoc": "CLC C\u00F4ng ngh\u1EC7 th\u00F4ng tin Vi\u1EC7t - Anh",
+    "LopQuanLy": "CLC C\u00F4ng ngh\u1EC7 th\u00F4ng tin - Anh 1 K65",
+    "AvatarUrl": null,
+    "SoDienThoai": "0986123456",
+    "DiaChiNha": "S\u1ED1 3 Ph\u1ED1 C\u1EA7u Gi\u1EA5y, L\u00E1ng Th\u01B0\u1EE3ng, \u0110\u1ED1ng \u0110a, H\u00E0 N\u1ED9i",
+    "SoTaiKhoanNganHang": "1028374659",
+    "TenNganHang": "Vietcombank",
+    "Email": "NV26-02@utc.edu.vn",
+    "BorrowedBooks": [],
+    "TongSoSachDangMuon": 0,
+    "SoSachConHan": 0,
+    "SoSachQuaHan": 0,
+    "TongTienPhaiThanhToan": 0
   },
   {
     "MaSinhVien": "GV001",
@@ -113,7 +132,7 @@
         "HanTra": "2027-11-05T00:00:00+07:00",
         "IsQuaHan": false,
         "SoNgayQuaHan": 0,
-        "SoNgayConLai": 365,
+        "SoNgayConLai": 364,
         "TrangThaiText": "\u0110ang m\u01B0\u1EE3n (C\u00F2n h\u1EA1n)",
         "TienPhat": 0
       },
@@ -127,7 +146,7 @@
         "HanTra": "2027-11-05T00:00:00+07:00",
         "IsQuaHan": false,
         "SoNgayQuaHan": 0,
-        "SoNgayConLai": 365,
+        "SoNgayConLai": 364,
         "TrangThaiText": "\u0110ang m\u01B0\u1EE3n (C\u00F2n h\u1EA1n)",
         "TienPhat": 0
       },
@@ -141,7 +160,7 @@
         "HanTra": "2027-03-09T00:00:00",
         "IsQuaHan": false,
         "SoNgayQuaHan": 0,
-        "SoNgayConLai": 124,
+        "SoNgayConLai": 123,
         "TrangThaiText": "\u0110ang m\u01B0\u1EE3n (C\u00F2n h\u1EA1n)",
         "TienPhat": 0
       },
@@ -154,7 +173,7 @@
         "NgayMuon": "2025-03-20T00:00:00",
         "HanTra": "2026-03-20T00:00:00",
         "IsQuaHan": true,
-        "SoNgayQuaHan": 230,
+        "SoNgayQuaHan": 231,
         "SoNgayConLai": 0,
         "TrangThaiText": "\u0110ang qu\u00E1 h\u1EA1n",
         "TienPhat": 100000
@@ -169,7 +188,7 @@
         "HanTra": "2027-08-20T00:00:00",
         "IsQuaHan": false,
         "SoNgayQuaHan": 0,
-        "SoNgayConLai": 288,
+        "SoNgayConLai": 287,
         "TrangThaiText": "\u0110ang m\u01B0\u1EE3n (C\u00F2n h\u1EA1n)",
         "TienPhat": 0
       },
@@ -182,7 +201,7 @@
         "NgayMuon": "2025-01-12T00:00:00",
         "HanTra": "2026-01-12T00:00:00",
         "IsQuaHan": true,
-        "SoNgayQuaHan": 297,
+        "SoNgayQuaHan": 298,
         "SoNgayConLai": 0,
         "TrangThaiText": "\u0110ang qu\u00E1 h\u1EA1n",
         "TienPhat": 100000
@@ -192,6 +211,25 @@
     "SoSachConHan": 4,
     "SoSachQuaHan": 2,
     "TongTienPhaiThanhToan": 200000
+  },
+  {
+    "MaSinhVien": "admin",
+    "HoTen": "Tr\u1EA7n V\u0103n Qu\u1EA3n Tr\u1ECB",
+    "NgaySinh": "15/09/2006",
+    "SoCCCD": "03320600dmin",
+    "NganhHoc": "CLC C\u00F4ng ngh\u1EC7 th\u00F4ng tin Vi\u1EC7t - Anh",
+    "LopQuanLy": "CLC C\u00F4ng ngh\u1EC7 th\u00F4ng tin - Anh 1 K65",
+    "AvatarUrl": null,
+    "SoDienThoai": "0986123456",
+    "DiaChiNha": "S\u1ED1 3 Ph\u1ED1 C\u1EA7u Gi\u1EA5y, L\u00E1ng Th\u01B0\u1EE3ng, \u0110\u1ED1ng \u0110a, H\u00E0 N\u1ED9i",
+    "SoTaiKhoanNganHang": "1028374659",
+    "TenNganHang": "Vietcombank",
+    "Email": "admin@utc.edu.vn",
+    "BorrowedBooks": [],
+    "TongSoSachDangMuon": 0,
+    "SoSachConHan": 0,
+    "SoSachQuaHan": 0,
+    "TongTienPhaiThanhToan": 0
   },
   {
     "MaSinhVien": "242630923",
@@ -217,7 +255,7 @@
         "HanTra": "2027-03-15T00:00:00",
         "IsQuaHan": false,
         "SoNgayQuaHan": 0,
-        "SoNgayConLai": 130,
+        "SoNgayConLai": 129,
         "TrangThaiText": "\u0110ang m\u01B0\u1EE3n (C\u00F2n h\u1EA1n)",
         "TienPhat": 0
       },
@@ -231,7 +269,7 @@
         "HanTra": "2027-05-20T00:00:00",
         "IsQuaHan": false,
         "SoNgayQuaHan": 0,
-        "SoNgayConLai": 196,
+        "SoNgayConLai": 195,
         "TrangThaiText": "\u0110ang m\u01B0\u1EE3n (C\u00F2n h\u1EA1n)",
         "TienPhat": 0
       },
@@ -244,7 +282,7 @@
         "NgayMuon": "2025-10-10T00:00:00",
         "HanTra": "2026-10-10T00:00:00",
         "IsQuaHan": true,
-        "SoNgayQuaHan": 26,
+        "SoNgayQuaHan": 27,
         "SoNgayConLai": 0,
         "TrangThaiText": "\u0110ang qu\u00E1 h\u1EA1n",
         "TienPhat": 100000
@@ -258,30 +296,16 @@
         "NgayMuon": "2025-08-25T00:00:00",
         "HanTra": "2026-08-25T00:00:00",
         "IsQuaHan": true,
-        "SoNgayQuaHan": 72,
-        "SoNgayConLai": 0,
-        "TrangThaiText": "\u0110ang qu\u00E1 h\u1EA1n",
-        "TienPhat": 100000
-      },
-      {
-        "MaGD": "GD251101-005",
-        "MaVach": "BS-00033",
-        "TenSach": "Gi\u00E1o tr\u00ECnh K\u1EF9 ngh\u1EC7 ph\u1EA7n m\u1EC1m",
-        "TacGia": "\u0110o\u00E0n V\u0103n Ban",
-        "CoverImage": "/images/covers/sach_09.jpg",
-        "NgayMuon": "2025-11-01T00:00:00",
-        "HanTra": "2026-11-01T00:00:00",
-        "IsQuaHan": true,
-        "SoNgayQuaHan": 4,
+        "SoNgayQuaHan": 73,
         "SoNgayConLai": 0,
         "TrangThaiText": "\u0110ang qu\u00E1 h\u1EA1n",
         "TienPhat": 100000
       }
     ],
-    "TongSoSachDangMuon": 5,
+    "TongSoSachDangMuon": 4,
     "SoSachConHan": 2,
-    "SoSachQuaHan": 3,
-    "TongTienPhaiThanhToan": 300000
+    "SoSachQuaHan": 2,
+    "TongTienPhaiThanhToan": 200000
   },
   {
     "MaSinhVien": "242630905",
@@ -307,7 +331,7 @@
         "HanTra": "2027-03-03T00:00:00",
         "IsQuaHan": false,
         "SoNgayQuaHan": 0,
-        "SoNgayConLai": 118,
+        "SoNgayConLai": 117,
         "TrangThaiText": "\u0110ang m\u01B0\u1EE3n (C\u00F2n h\u1EA1n)",
         "TienPhat": 0
       },
@@ -320,7 +344,7 @@
         "NgayMuon": "2025-06-27T00:00:00",
         "HanTra": "2026-06-27T00:00:00",
         "IsQuaHan": true,
-        "SoNgayQuaHan": 131,
+        "SoNgayQuaHan": 132,
         "SoNgayConLai": 0,
         "TrangThaiText": "\u0110ang qu\u00E1 h\u1EA1n",
         "TienPhat": 100000
@@ -335,7 +359,7 @@
         "HanTra": "2027-01-06T00:00:00",
         "IsQuaHan": false,
         "SoNgayQuaHan": 0,
-        "SoNgayConLai": 62,
+        "SoNgayConLai": 61,
         "TrangThaiText": "\u0110ang m\u01B0\u1EE3n (C\u00F2n h\u1EA1n)",
         "TienPhat": 0
       },
@@ -348,7 +372,7 @@
         "NgayMuon": "2025-09-16T00:00:00",
         "HanTra": "2026-09-16T00:00:00",
         "IsQuaHan": true,
-        "SoNgayQuaHan": 50,
+        "SoNgayQuaHan": 51,
         "SoNgayConLai": 0,
         "TrangThaiText": "\u0110ang qu\u00E1 h\u1EA1n",
         "TienPhat": 100000

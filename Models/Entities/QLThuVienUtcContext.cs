@@ -421,6 +421,7 @@ public partial class QLThuVienUtcContext : DbContext
             entity.Property(e => e.TrangThai)
                 .HasMaxLength(30)
                 .HasDefaultValue("Hoạt động");
+            entity.Property(e => e.VaiTro).HasMaxLength(50);
 
             entity.HasOne(d => d.MaBanDocNavigation).WithOne(p => p.TaiKhoan)
                 .HasForeignKey<TaiKhoan>(d => d.MaBanDoc)

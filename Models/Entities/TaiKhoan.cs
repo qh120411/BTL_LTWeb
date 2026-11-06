@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace BTL_LTWEB.Models.Entities;
@@ -22,6 +22,8 @@ public partial class TaiKhoan
     public DateTime NgayTao { get; set; }
 
     public DateTime? LanDangNhapCuoi { get; set; }
+
+    public string? VaiTro { get; set; }
 
     public virtual BanDoc? MaBanDocNavigation { get; set; }
 

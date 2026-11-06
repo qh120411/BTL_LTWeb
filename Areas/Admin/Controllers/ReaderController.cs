@@ -5,6 +5,7 @@ using BTL_LTWEB.Areas.Admin.ViewModels;
 namespace BTL_LTWEB.Areas.Admin.Controllers;
 
 [Area("Admin")]
+[BTL_LTWEB.Areas.Admin.Filters.AdminAuthorize(Roles = "ADMIN,QUANLY_BANDOC")]
 public class ReaderController : AdminBaseController
 {
     private readonly IReaderService _readerService;

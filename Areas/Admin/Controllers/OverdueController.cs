@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BTL_LTWEB.Areas.Admin.Controllers;
 
 [Area("Admin")]
+[BTL_LTWEB.Areas.Admin.Filters.AdminAuthorize(Roles = "ADMIN,QUANLY_BANDOC")]
 public class OverdueController : AdminBaseController
 {
     private readonly IReaderService _readerService;

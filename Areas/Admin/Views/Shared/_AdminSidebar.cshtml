@@ -1,36 +1,60 @@
-﻿@{
+@{
     string activeMenu = ViewBag.ActiveMenu as string ?? "";
+    bool isAdmin = User.IsInRole("Admin") || User.IsInRole("ADMIN");
+    bool isQuanLyBanDoc = User.IsInRole("QUANLY_BANDOC");
+    bool isQuanLyTaiLieu = User.IsInRole("QUANLY_TAILIEU");
+
+    // Phân quyền danh mục theo đúng yêu cầu:
+    // - Quản lý tài liệu: Khi đăng nhập sẽ KHÔNG có phần quản lý bạn đọc (bạn đọc, mượn trả, quá hạn, mất hỏng bồi thường)
+    // - Quản lý bạn đọc: Có phần quản lý bạn đọc, mượn trả, quá hạn, bồi thường (KHÔNG có quản lý tài liệu / học liệu)
+    // - Quản trị viên (Admin): Toàn bộ quyền (cả quản lý bạn đọc lẫn quản lý tài liệu & tài khoản phân quyền)
+    bool canViewCatalog = isAdmin || isQuanLyTaiLieu || User.IsInRole("Thuthu");
+    bool canViewReaderManagement = isAdmin || isQuanLyBanDoc;
+    bool canViewUserManagement = isAdmin;
 }
 
-<!-- THANH MENU BÊN TRÁI (SIDEBAR) CỐ ĐỊNH XUẤT HIỆN Ở TẤT CẢ CÁC TRANG QUẢN TRỊ -->
+<!-- THANH MENU BÊN TRÁI (SIDEBAR) TỰ ĐỘNG PHÂN QUYỀN THEO VAI TRÒ -->
 <aside class="admin-sidebar" id="adminSidebar">
     <div class="sidebar-category">QUẢN TRỊ THƯ VIỆN</div>
     
     <nav class="sidebar-nav">
         <a href="/Admin/Dashboard" class="sidebar-link @(activeMenu == "Dashboard" ? "active" : "")">
-            Tổng quan
+            <i class="bi bi-speedometer2 me-2"></i>Tổng quan
         </a>
-        <a href="/Admin/Catalog" class="sidebar-link @(activeMenu == "Catalog" ? "active" : "")">
-            Quản lý học liệu
-        </a>
-        <a href="/Admin/Reader" class="sidebar-link @(activeMenu == "Reader" ? "active" : "")">
-            Quản lý bạn đọc
-        </a>
-        <a href="/Admin/Circulation" class="sidebar-link @(activeMenu == "Circulation" ? "active" : "")">
-            Mượn trả
-        </a>
-        <a href="/Admin/Overdue" class="sidebar-link @(activeMenu == "Overdue" ? "active" : "")">
-            Quá hạn
-        </a>
-        <a href="/Admin/Incident" class="sidebar-link @(activeMenu == "Incident" ? "active" : "")">
-            Mất / hỏng &amp; bồi thường
-        </a>
+
+        @if (canViewCatalog)
+        {
+            <a href="/Admin/Catalog" class="sidebar-link @(activeMenu == "Catalog" ? "active" : "")">
+                <i class="bi bi-journal-bookmark-fill me-2"></i>Quản lý học liệu
+            </a>
+        }
+
+        @if (canViewReaderManagement)
+        {
+            <a href="/Admin/Reader" class="sidebar-link @(activeMenu == "Reader" ? "active" : "")">
+                <i class="bi bi-people-fill me-2"></i>Quản lý bạn đọc
+            </a>
+            <a href="/Admin/Circulation" class="sidebar-link @(activeMenu == "Circulation" ? "active" : "")">
+                <i class="bi bi-arrow-left-right me-2"></i>Mượn trả
+            </a>
+            <a href="/Admin/Overdue" class="sidebar-link @(activeMenu == "Overdue" ? "active" : "")">
+                <i class="bi bi-clock-history me-2"></i>Quá hạn
+            </a>
+            <a href="/Admin/Incident" class="sidebar-link @(activeMenu == "Incident" ? "active" : "")">
+                <i class="bi bi-exclamation-octagon-fill me-2"></i>Mất / hỏng &amp; bồi thường
+            </a>
+        }
+
         <a href="/Admin/Report" class="sidebar-link @(activeMenu == "Report" ? "active" : "")">
-            Báo cáo
+            <i class="bi bi-bar-chart-fill me-2"></i>Báo cáo
         </a>
-        <a href="/Admin/User" class="sidebar-link @(activeMenu == "User" ? "active" : "")">
-            Tài khoản &amp; phân quyền
-        </a>
+
+        @if (canViewUserManagement)
+        {
+            <a href="/Admin/User" class="sidebar-link @(activeMenu == "User" ? "active" : "")">
+                <i class="bi bi-shield-lock-fill me-2"></i>Tài khoản &amp; phân quyền
+            </a>
+        }
     </nav>
 
     <div class="sidebar-footer">

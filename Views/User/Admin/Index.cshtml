@@ -1,0 +1,94 @@
+@model BTL_LTWEB.Areas.Admin.ViewModels.UserManagementIndexViewModel
+@{
+    Layout = "~/Views/Shared/Admin/_AdminLayout.cshtml";
+    ViewData["Title"] = "Tài khoản & phân quyền";
+    ViewBag.ActiveMenu = "User";
+}
+
+<div class="admin-breadcrumb">THƯ VIỆN UTC / QUẢN TRỊ</div>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="admin-page-title mb-0">Tài khoản &amp; phân quyền</h1>
+    <button class="btn btn-utc-primary" type="button" onclick="alert('Tính năng: Cấp mới tài khoản cán bộ thư viện &amp; đồng bộ phân quyền bảo mật SQL Server.')">
+        + Thêm cán bộ
+    </button>
+</div>
+
+<!-- Khung giới thiệu nghiệp vụ (Đúng chuẩn thiết kế Figma) -->
+<div class="admin-info-box">
+    <div class="admin-info-title">Danh sách tài khoản cán bộ thư viện</div>
+    <div class="admin-info-desc">Phân quyền theo vai trò (Quản trị viên, Quản lý bạn đọc, Thủ thư mượn trả) để bảo đảm an toàn dữ liệu. Mật khẩu được mã hóa băm SHA-256 an toàn trong CSDL.</div>
+</div>
+
+<!-- Bộ lọc tìm kiếm & vai trò trực tiếp -->
+<form method="get" action="/Admin/User" class="row g-3 mb-4">
+    <div class="col-md-7">
+        <label class="form-label-utc">Tra cứu cán bộ</label>
+        <div class="input-group">
+            <input type="text" name="keyword" value="@Model.Keyword" class="form-control form-control-utc" placeholder="Mã cán bộ, họ tên, email..." />
+            <button class="btn btn-utc-primary" type="submit"><i class="bi bi-search"></i> Tìm</button>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <label class="form-label-utc">Vai trò</label>
+        <select name="role" class="form-select form-control-utc" onchange="this.form.submit()">
+            <option value="Tất cả vai trò" selected="@(string.IsNullOrEmpty(Model.SelectedRole) || Model.SelectedRole == "Tất cả vai trò")">Tất cả vai trò</option>
+            <option value="ADMIN" selected="@(Model.SelectedRole == "ADMIN")">Quản trị viên (QTV)</option>
+            <option value="QUANLY_BANDOC" selected="@(Model.SelectedRole == "QUANLY_BANDOC")">Quản lý bạn đọc (QLB)</option>
+            <option value="QUANLY_TAILIEU" selected="@(Model.SelectedRole == "QUANLY_TAILIEU")">Thủ thư mượn trả (TTM)</option>
+        </select>
+    </div>
+</form>
+
+<!-- Bảng danh sách cán bộ chuẩn từ CSDL SQL Server -->
+<div class="admin-table-card">
+    <table class="table-utc">
+        <thead>
+            <tr>
+                <th style="width: 14%;">Mã NV</th>
+                <th style="width: 22%;">Họ tên</th>
+                <th style="width: 26%;">Tên đăng nhập</th>
+                <th style="width: 20%;">Vai trò</th>
+                <th style="width: 10%;">Trạng thái</th>
+                <th style="width: 8%;">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.StaffList != null && Model.StaffList.Any())
+            {
+                @foreach (var s in Model.StaffList)
+                {
+                    <tr>
+                        <td class="fw-bold text-dark">@s.MaNV</td>
+                        <td>@s.HoTen</td>
+                        <td>@s.TenDangNhap</td>
+                        <td>
+                            @if (s.VaiTroCode == "ADMIN")
+                            {
+                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle">@s.VaiTroText</span>
+                            }
+                            else if (s.VaiTroCode == "QUANLY_BANDOC")
+                            {
+                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle">@s.VaiTroText</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success-subtle text-success border border-success-subtle">@s.VaiTroText</span>
+                            }
+                        </td>
+                        <td><span class="badge bg-light text-dark border">@s.TrangThai</span></td>
+                        <td>
+                            <a href="javascript:void(0)" class="action-link" onclick="alert('Chỉnh sửa quyền cán bộ: @s.HoTen (@s.MaNV)')">Sửa quyền</a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-4">Không tìm thấy cán bộ nào phù hợp.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
