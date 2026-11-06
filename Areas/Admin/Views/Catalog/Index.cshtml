@@ -1,0 +1,87 @@
+@model BTL_LTWEB.Areas.Admin.ViewModels.CatalogIndexViewModel
+@{ViewData["Title"]="Quản lý học liệu";}
+<h1>Quản lý học liệu</h1>
+<form method="get" class="inline-controls">
+<label>Tìm nhan đề, tác giả, ISBN<input name="search" value="@Model.SearchKeyword" type="search">
+</label>
+<button class="button primary">Tìm kiếm</button>
+</form>
+<details class="form-card">
+<summary>+ Thêm học liệu</summary>
+<form asp-action="Create" method="post" class="stack">
+<div class="field-grid">
+<label>Tên tài liệu<input name="title" required maxlength="500">
+</label>
+<label>Tác giả (cách nhau dấu phẩy)<input name="authors" required maxlength="500">
+</label>
+<label>Nhà xuất bản<input name="publisher" required>
+</label>
+<label>Chuyên ngành<select name="major">
+<option value="cntt">Công nghệ thông tin</option>
+<option value="xaydung">Xây dựng & Giao thông</option>
+<option value="kinhte">Kinh tế & Logistics</option>
+</select>
+</label>
+<label>Năm xuất bản<input name="year" type="number" value="@DateTime.Today.Year" min="1000" max="@(DateTime.Today.Year+1)" required>
+</label>
+<label>Số trang<input name="pages" type="number" min="1" value="300" required>
+</label>
+<label>ISBN<input name="isbn">
+</label>
+<label>Vị trí kệ<input name="shelf" value="Tầng 6 · Nhà A8" required>
+</label>
+<label>Số bản nhập<input name="copiesCount" type="number" value="4" min="1" max="200" required>
+</label>
+</div>
+<button class="button primary">Lưu học liệu</button>
+</form>
+</details>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Mã</th>
+<th>Nhan đề / Tác giả</th>
+<th>Tổng</th>
+<th>Sẵn có</th>
+<th>Thao tác</th>
+</tr>
+</thead>
+<tbody>
+@foreach(var b in Model.Books){<tr>
+<td>@b.MaHocLieu</td>
+<td>
+<a href="/Reader/Document/Details/@b.Id">@b.TenHocLieu</a>
+<p class="small muted">@b.TacGia</p>
+<details>
+<summary>Sửa thông tin</summary>
+<form asp-action="Update" method="post" class="stack">
+<input type="hidden" name="id" value="@b.Id">
+<label>Nhan đề<input name="title" value="@b.TenHocLieu" required>
+</label>
+<label>Tác giả<input name="authors" value="@b.TacGia" required>
+</label>
+<input type="hidden" name="publisher" value="@b.NhaXuatBan">
+<input type="hidden" name="major" value="@b.MajorCode">
+<input type="hidden" name="year" value="@b.NamXuatBan">
+<input type="hidden" name="pages" value="@b.SoTrang">
+<input type="hidden" name="shelf" value="@b.ViTriKe">
+<input type="hidden" name="coverImage" value="@b.CoverImage">
+<input type="hidden" name="description" value="@b.MoTa">
+<label>ISBN<input name="isbn" value="@b.ISBN">
+</label>
+<button class="button">Lưu thay đổi</button>
+</form>
+</details>
+</td>
+<td>@b.TongBan</td>
+<td>@b.SanCo</td>
+<td>
+<form asp-action="Delete" method="post" data-confirm="Xóa học liệu chưa có lịch sử mượn?">
+<input type="hidden" name="id" value="@b.Id">
+<button class="button danger">Xóa</button>
+</form>
+</td>
+</tr>}</tbody>
+</table>
+</div>

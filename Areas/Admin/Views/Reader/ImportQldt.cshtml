@@ -1,0 +1,9 @@
+@{ViewData["Title"]="Nhập bạn đọc";}<h1>Nhập danh sách bạn đọc</h1>
+<p>Mỗi dòng gồm 3 cột, cách nhau bằng Tab: Mã sinh viên, Họ tên, Email. Có thể sao chép từ Excel. Tối đa 200 dòng/lần.</p>
+<p class="small muted">Chỉ nhập người mới; cả lô bị từ chối nếu mã/email trùng hoặc dữ liệu sai. Không tự cấp tài khoản đăng nhập.</p>
+<form method="post" asp-action="ImportTsv" class="form-card stack">
+<label>Danh sách TSV<textarea name="rows" rows="12" required>
+</textarea>
+</label>
+<button class="button primary">Kiểm tra và nhập danh sách</button>
+</form>

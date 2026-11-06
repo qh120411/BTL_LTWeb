@@ -1,0 +1,31 @@
+@model BTL_LTWEB.Areas.Reader.Models.BookSearchViewModel
+@{ViewData["Title"]="Tra cứu học liệu";}
+<section class="page-section">
+<p class="eyebrow">TRANG CHỦ / TRA CỨU HỌC LIỆU</p>
+<h1 class="page-title">Tìm tài liệu bạn cần</h1>
+<form method="get" class="stack">
+<label>Tên sách, tác giả hoặc ISBN<input name="keyword" type="search" value="@Model.Keyword" placeholder="Nhập từ khóa…">
+</label>
+<div class="field-grid">
+<label>Loại học liệu<select name="category">
+@foreach(var (key,label) in new[]{("all","Tất cả học liệu"),("books","Sách & giáo trình"),("thesis","Luận văn, luận án"),("journal","Báo & tạp chí")}){<option value="@key" selected="@(Model.Category==key)">@label</option>}</select>
+</label>
+<label>Tình trạng<select name="availability">
+<option value="all">Tất cả</option>
+<option value="available" selected="@(Model.Availability=="available")">Có bản sẵn có</option>
+<option value="unavailable" selected="@(Model.Availability=="unavailable")">Hết bản sẵn có</option>
+</select>
+</label>
+</div>
+<button class="button primary">Tìm kiếm</button>
+</form>
+<h2 class="results-heading">@Model.TotalCount tài liệu</h2>
+<div class="catalog-grid">
+@foreach(var b in Model.Items){<a class="catalog-card" href="/Reader/Document/Details/@b.Id">
+<img src="@b.CoverImage" alt="Bìa @b.Title" loading="lazy">
+<p class="eyebrow">@b.MajorName</p>
+<h3>@b.Title</h3>
+<p class="small">@b.Authors</p>
+<p class="badge">@b.AvailableCopies / @b.TotalCopies bản sẵn có</p>
+</a>}</div>
+@if(Model.TotalCount==0){<p class="empty">Không tìm thấy tài liệu phù hợp. Thử từ khóa khác.</p>}</section>

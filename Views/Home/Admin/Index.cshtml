@@ -1,0 +1,37 @@
+@model BTL_LTWEB.Areas.Admin.ViewModels.DashboardViewModel
+@{ ViewData["Title"] = "Tổng quan"; }
+<section class="dashboard">
+<div class="admin-title">
+<div><h1>Tổng quan thư viện</h1><p class="muted">Theo dõi học liệu, bạn đọc và hoạt động mượn trả.</p></div>
+<a class="button primary" href="/Admin/Report">Xem báo cáo →</a>
+</div>
+<div class="stats dashboard-stats">
+<a class="stat" href="/Admin/Catalog"><p>Đầu sách</p><strong>@Model.TongDauSach.ToString("N0")</strong><small>@Model.TongBanSao.ToString("N0") bản sách trong kho</small></a>
+<a class="stat" href="/Admin/Catalog"><p>Bản sẵn có</p><strong>@Model.BanSanCo.ToString("N0")</strong><small>Sẵn sàng cho mượn</small></a>
+<a class="stat" href="/Admin/Circulation"><p>Đang mượn</p><strong>@Model.DangMuon.ToString("N0")</strong><small>Lượt mượn chưa trả</small></a>
+<a class="stat" href="/Admin/Overdue"><p>Lượt quá hạn</p><strong>@Model.LuotQuaHan.ToString("N0")</strong><small>Cần theo dõi và nhắc trả</small></a>
+</div>
+<section class="dashboard-panel">
+<div class="dashboard-panel-heading"><h2>Công việc cần theo dõi</h2></div>
+<div class="table-wrap"><table>
+<thead><tr><th>Nội dung</th><th>Số lượng</th><th>Thao tác</th></tr></thead>
+<tbody>
+<tr><td>Lượt mượn quá hạn</td><td>@Model.LuotQuaHan</td><td><a href="/Admin/Overdue">Xem quá hạn →</a></td></tr>
+<tr><td>Bản sách mất</td><td>@Model.MatChoBoiThuong</td><td><a href="/Admin/Incident">Xem sự cố →</a></td></tr>
+<tr><td>Bạn đọc</td><td>@Model.TongBanDoc</td><td><a href="/Admin/Reader">Xem bạn đọc →</a></td></tr>
+</tbody></table></div>
+</section>
+<section class="dashboard-panel">
+<div class="dashboard-panel-heading"><div><h2>Giao dịch đang mượn</h2><p class="muted">Hiển thị tối đa 8 lượt mượn chưa trả.</p></div><a href="/Admin/Circulation">Xem tất cả →</a></div>
+<div class="table-wrap"><table>
+<thead><tr><th>Mã phiếu</th><th>Bạn đọc</th><th>Tài liệu</th><th>Hạn trả</th><th>Trạng thái</th></tr></thead>
+<tbody>
+@if (Model.RecentTransactions.Count == 0) {
+<tr><td colspan="5" class="empty-cell">Chưa có giao dịch mượn trả.</td></tr>
+}
+@foreach (var t in Model.RecentTransactions) {
+<tr><td>@t.MaGD</td><td>@t.HoTen</td><td>@t.TenSach</td><td>@t.HanTra</td><td><span class="dashboard-status @(t.IsQuaHan ? "is-overdue" : "")">@t.TrangThai</span></td></tr>
+}
+</tbody></table></div>
+</section>
+</section>

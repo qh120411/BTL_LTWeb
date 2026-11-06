@@ -1,0 +1,45 @@
+@model BTL_LTWEB.Areas.Reader.Models.BookItem
+@{ViewData["Title"]=Model.Title;}
+<section class="page-section">
+<a href="/Reader/Search">← Quay lại tra cứu</a>
+<div class="detail-grid">
+<img src="@Model.CoverImage" alt="Bìa @Model.Title">
+<div>
+<p class="eyebrow">@Model.MajorName</p>
+<h1 class="page-title">@Model.Title</h1>
+<p>@Model.Authors</p>
+<p class="badge">@Model.AvailableCopies / @Model.TotalCopies bản sẵn có</p>
+<p>@Model.Description</p>
+<dl>
+<dt>Nhà xuất bản</dt>
+<dd>@Model.Publisher</dd>
+<dt>Năm xuất bản</dt>
+<dd>@Model.Year</dd>
+<dt>Ngôn ngữ</dt>
+<dd>@Model.LanguageName</dd>
+</dl>
+<a class="button primary" href="/Reader/Guide#muon-tra">Hướng dẫn mượn tài liệu</a>
+</div>
+</div>
+<h2>Các bản sách</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Mã bản sách</th>
+<th>Vị trí</th>
+<th>Tình trạng</th>
+<th>Trạng thái</th>
+</tr>
+</thead>
+<tbody>
+@foreach(var c in Model.Copies){<tr>
+<td>@c.Barcode</td>
+<td>@c.Shelf</td>
+<td>@c.Condition</td>
+<td>@c.Status</td>
+</tr>}</tbody>
+</table>
+</div>
+<p class="small muted">Đến quầy thư viện với thẻ hợp lệ để mượn tài liệu.</p>
+</section>

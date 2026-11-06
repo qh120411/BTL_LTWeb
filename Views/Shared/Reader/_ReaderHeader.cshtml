@@ -1,0 +1,29 @@
+<div class="utility">
+<span>TRƯỜNG ĐẠI HỌC GIAO THÔNG VẬN TẢI</span>
+<span>
+<a href="/Reader/Guide#lien-he">Hỗ trợ bạn đọc</a> · VI / EN</span>
+</div>
+<header class="brand-header">
+<a class="brand" href="/Reader/Home">
+<img src="/utc/assets/images/logo.png" alt="Logo UTC" width="64" height="64">
+<span>
+<strong>THƯ VIỆN ĐẠI HỌC GIAO THÔNG VẬN TẢI</strong>
+<small>UNIVERSITY OF TRANSPORT AND COMMUNICATIONS LIBRARY</small>
+</span>
+</a>
+<div class="header-actions">
+<button type="button" class="button menu-toggle" data-menu aria-controls="main-nav" aria-expanded="false" aria-label="Mở menu">☰</button>
+<div class="header-account-actions">
+@if(User.Identity?.IsAuthenticated==true){@if(User.IsInRole("AdminStaff")){<a class="button primary" href="/Admin/Dashboard">Giao diện quản trị →</a>}else{<a class="button" href="/Reader/MyLibrary">Thư viện của tôi</a>}<form asp-area="" asp-controller="Account" asp-action="Logout" method="post">
+<button class="button">Đăng xuất</button>
+</form>}else{<a class="button" href="/Account/Login">Đăng nhập</a>}
+</div>
+</div>
+</header>
+<nav id="main-nav" class="main-nav" aria-label="Điều hướng chính">
+<a href="/Reader/Home">Trang chủ</a>
+<a href="/Reader/Search">Tra cứu học liệu</a>
+<a href="/Reader/Guide">Dịch vụ</a>
+<a href="/Reader/News">Tin tức & thông báo</a>
+<a href="/Reader/Guide#gioi-thieu">Giới thiệu</a>
+</nav>

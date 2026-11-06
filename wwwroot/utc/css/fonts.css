@@ -1,0 +1,4 @@
+/* Các phông được tải về thư mục assets/fonts; không cần CDN khi chạy. */
+@font-face{font-family:Inter;src:url('../assets/fonts/inter.ttf') format('truetype');font-style:normal;font-weight:100 900;font-display:swap}
+@font-face{font-family:Merriweather;src:url('../assets/fonts/merriweather.ttf') format('truetype');font-style:normal;font-weight:300 900;font-display:swap}
+@font-face{font-family:'Be Vietnam Pro';src:url('../assets/fonts/be-vietnam-pro.ttf') format('truetype');font-style:normal;font-weight:400;font-display:swap}

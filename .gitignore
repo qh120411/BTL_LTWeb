@@ -1,3 +1,29 @@
+## Visual Studio / VS Code
 .vs/
 .vs_backup/
+.vscode/
+*.user
+*.userosscache
+*.suo
+*.userprefs
 
+## Build results (.NET build artifacts)
+bin/
+obj/
+[Bb]in/
+[Oo]bj/
+
+## Publishing & Packages
+*.nupkg
+packages/
+
+## Logs
+*.log
+
+# Local demo database
+App_Data/*.db
+App_Data/*.db-shm
+App_Data/*.db-wal
+
+Tests/node_modules/
+Tests/artifacts/

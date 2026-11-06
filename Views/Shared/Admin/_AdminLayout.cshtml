@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>@ViewData["Title"] | Quản trị UTC</title>
+<link rel="stylesheet" href="~/utc/css/fonts.css">
+<link rel="stylesheet" href="~/utc/css/site.css">
+<link rel="stylesheet" href="~/utc/css/admin.css">
+<link rel="stylesheet" href="~/utc/css/mvc.css">@await RenderSectionAsync("Styles",false)</head>
+<body data-page="admin">
+<div class="utility">
+<span>TRƯỜNG ĐẠI HỌC GIAO THÔNG VẬN TẢI</span>
+<span>@User.Identity?.Name</span>
+</div>
+<header class="brand-header">
+<a class="brand" href="/Reader/Home">
+<img src="/utc/assets/images/logo.png" alt="Logo UTC">
+<span>
+<strong>THƯ VIỆN ĐẠI HỌC GIAO THÔNG VẬN TẢI</strong>
+<small>UNIVERSITY OF TRANSPORT AND COMMUNICATIONS LIBRARY</small>
+</span>
+</a>
+<div class="header-actions">
+<button type="button" class="button menu-toggle" data-menu aria-controls="admin-sidebar" aria-expanded="false" aria-label="Mở menu">☰</button>
+<div class="header-account-actions">
+<a class="button" href="/Reader/Home">Về website</a>
+<form asp-area="" asp-controller="Account" asp-action="Logout" method="post">
+<button class="button">Đăng xuất</button>
+</form>
+</div>
+</div>
+</header>
+<div class="admin-shell">
+<nav id="admin-sidebar" class="admin-sidebar" aria-label="Quản trị">
+<p>QUẢN TRỊ THƯ VIỆN</p>@{var active=ViewContext.RouteData.Values["controller"]?.ToString();var menus=new[]{("Dashboard","Tổng quan"),("Catalog","Quản lý học liệu"),("Reader","Quản lý bạn đọc"),("Circulation","Mượn trả"),("Overdue","Quá hạn"),("Incident","Bồi thường & thu phạt"),("Report","Báo cáo"),("User","Tài khoản & phân quyền")};}@foreach(var (id,label) in menus){if(id=="User"&&!User.IsInRole("ADMIN")){continue;}<a href="/Admin/@id" aria-current="@(active==id?"page":null)">@label</a>}</nav>
+<main class="admin-content admin-main">
+<p class="eyebrow">THƯ VIỆN UTC / QUẢN TRỊ</p>
+@if(TempData["SuccessMessage"]!=null){<p class="flash success" role="status">@TempData["SuccessMessage"]</p>}@if(TempData["ErrorMessage"]!=null){<p class="flash error" role="alert">@TempData["ErrorMessage"]</p>}@RenderBody()</main>
+</div>
+<script src="~/utc/js/mvc.js" defer>
+</script>@await RenderSectionAsync("Scripts",false)</body>
+</html>

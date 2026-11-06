@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Admin\\Desktop\\BTL_LTWeb\\BTL_LTWEB.csproj": {}
+    "C:\\Users\\Admin\\Desktop\\utc-library-mvc\\BTL_LTWEB.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Admin\\Desktop\\BTL_LTWeb\\BTL_LTWEB.csproj": {
+    "C:\\Users\\Admin\\Desktop\\utc-library-mvc\\BTL_LTWEB.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Admin\\Desktop\\BTL_LTWeb\\BTL_LTWEB.csproj",
+        "projectUniqueName": "C:\\Users\\Admin\\Desktop\\utc-library-mvc\\BTL_LTWEB.csproj",
         "projectName": "BTL_LTWEB",
-        "projectPath": "C:\\Users\\Admin\\Desktop\\BTL_LTWeb\\BTL_LTWEB.csproj",
+        "projectPath": "C:\\Users\\Admin\\Desktop\\utc-library-mvc\\BTL_LTWEB.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Admin\\Desktop\\BTL_LTWeb\\obj\\",
+        "outputPath": "C:\\Users\\Admin\\Desktop\\utc-library-mvc\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -52,6 +52,26 @@
           "framework": "net8.0",
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.11, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[8.0.11, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[8.0.11, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.11, )"
+            },
             "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
               "target": "Package",
               "version": "[1.22.1, )"

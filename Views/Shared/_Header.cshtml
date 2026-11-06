@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 <header class="site-header">
   <div class="topbar">
     <div class="container topbar-inner">
@@ -19,9 +20,29 @@
         </span>
       </a>
       <button type="button" class="btn btn-login">Đăng nhập</button>
-    </div>
-  </div>
+=======
+@{
+    string currentAction = ViewContext.RouteData.Values["Action"]?.ToString() ?? "Index";
+    string currentController = ViewContext.RouteData.Values["Controller"]?.ToString() ?? "Home";
+}
 
+<header class="utc-site-header">
+    <!-- 1. Utility Bar trên cùng -->
+    <div class="utc-utility-bar">
+        <div class="container utc-utility-inner">
+            <span class="utc-utility-school">TRƯỜNG ĐẠI HỌC GIAO THÔNG VẬN TẢI</span>
+            <div class="utc-utility-links">
+                <span>Hỗ trợ bạn đọc</span>
+                <span class="dot">·</span>
+                <a href="#lang-vi">VI</a>
+                <span>/</span>
+                <a href="#lang-en">EN</a>
+            </div>
+        </div>
+>>>>>>> Stashed changes
+    </div>
+
+<<<<<<< Updated upstream
   <nav class="navbar">
     <div class="container nav-inner">
       <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-list" aria-label="Mở menu">
@@ -41,4 +62,72 @@
     <span class="stripe-gold"></span>
     <span class="stripe-sky"></span>
   </div>
+=======
+    <!-- 2. Brand Bar (Logo + Tên thư viện + Nút thao tác) -->
+    <div class="utc-brand-bar">
+        <div class="container utc-brand-inner">
+            <a href="/" class="utc-brand-lockup">
+                <div class="utc-logo-wrapper">
+                    <img src="~/logo/utc.png" alt="Logo UTC" onerror="this.src='/images/logo.png'" />
+                </div>
+                <div class="utc-identity-text">
+                    <span class="utc-identity-title">THƯ VIỆN ĐẠI HỌC GIAO THÔNG VẬN TẢI</span>
+                    <span class="utc-identity-sub">UNIVERSITY OF TRANSPORT AND COMMUNICATIONS LIBRARY</span>
+                </div>
+            </a>
+
+            <div class="utc-account-actions">
+                <a href="/Admin/Dashboard" class="btn-utc-secondary" title="Vào phân hệ dành cho cán bộ thư viện">
+                    <i class="bi bi-gear-fill me-1"></i> Trang quản trị
+                </a>
+                <a href="/Home/Login" class="btn-utc-secondary">
+                    <i class="bi bi-person-circle me-1"></i> Đăng nhập
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Thanh điều hướng chính (Main Navigation) -->
+    <nav class="utc-main-nav">
+        <div class="container utc-nav-inner">
+            <button class="utc-mobile-nav-toggle" aria-label="Mở menu">
+                <i class="bi bi-list"></i>
+            </button>
+            <ul class="utc-nav-list" id="utcNavList">
+                <li>
+                    <a href="/" class="utc-nav-link @(currentAction == "Index" ? "active" : "")">
+                        Trang chủ
+                    </a>
+                </li>
+                <li>
+                    <a href="/Home/Search" class="utc-nav-link @(currentAction == "Search" || currentAction == "BookDetail" ? "active" : "")">
+                        Tra cứu học liệu
+                    </a>
+                </li>
+                <li>
+                    <a href="/Home/Services" class="utc-nav-link @(currentAction == "Services" ? "active" : "")">
+                        Dịch vụ
+                    </a>
+                </li>
+                <li>
+                    <a href="/Home/News" class="utc-nav-link @(currentAction == "News" ? "active" : "")">
+                        Tin tức &amp; thông báo
+                    </a>
+                </li>
+                <li>
+                    <a href="/Home/About" class="utc-nav-link @(currentAction == "About" ? "active" : "")">
+                        Giới thiệu
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 4. Dải màu thương hiệu UTC (Xanh navy - Vàng - Xanh dương) -->
+    <div class="utc-brand-stripes">
+        <span class="utc-stripe-navy"></span>
+        <span class="utc-stripe-gold"></span>
+        <span class="utc-stripe-sky"></span>
+    </div>
+>>>>>>> Stashed changes
 </header>

@@ -1,0 +1,24 @@
+@model List<BTL_LTWEB.Models.Entities.ChiTietMuon>
+@{ViewData["Title"]="Lịch sử mượn trả";}<section class="page-section">
+<h1>Lịch sử mượn trả</h1>
+<a class="button" href="/Reader/MyLibrary">Sách đang mượn</a>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Tài liệu</th>
+<th>Mã bản</th>
+<th>Ngày trả</th>
+<th>Trạng thái</th>
+</tr>
+</thead>
+<tbody>
+@foreach(var c in Model){<tr>
+<td>@c.MaBanSaoNavigation.MaTaiLieuNavigation.TenTaiLieu</td>
+<td>@c.MaBanSaoNavigation.MaVach</td>
+<td>@c.NgayTra?.ToString("dd/MM/yyyy")</td>
+<td>@c.TrangThai</td>
+</tr>}</tbody>
+</table>
+</div>
+</section>

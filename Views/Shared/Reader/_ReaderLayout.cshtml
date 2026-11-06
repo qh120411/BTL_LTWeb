@@ -1,0 +1,23 @@
+@{ var home=ViewContext.RouteData.Values["area"]?.ToString()=="Reader" && ViewContext.RouteData.Values["controller"]?.ToString()=="Home"; }
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>@ViewData["Title"] | Thư viện UTC</title>
+<link rel="icon" href="~/utc/assets/images/logo.png">
+<link rel="stylesheet" href="~/utc/css/fonts.css">
+<link rel="stylesheet" href="~/utc/css/site.css">
+<link rel="stylesheet" href="~/utc/css/mvc.css">
+@if(home){<link rel="stylesheet" href="~/utc/css/home.css">}@await RenderSectionAsync("Styles",false)</head>
+<body data-page="@(home?"home":"reader")">
+<a class="skip-link" href="#main">Đến nội dung chính</a>
+<div id="site-header">
+<partial name="~/Views/Shared/Reader/_ReaderHeader.cshtml" />
+</div>
+<main id="main">
+@if(TempData["SuccessMessage"]!=null){<p class="flash success" role="status">@TempData["SuccessMessage"]</p>}@if(TempData["ErrorMessage"]!=null){<p class="flash error" role="alert">@TempData["ErrorMessage"]</p>}@RenderBody()</main>
+<partial name="~/Views/Shared/Reader/_ReaderFooter.cshtml" />
+<script src="~/utc/js/mvc.js" defer>
+</script>@await RenderSectionAsync("Scripts",false)</body>
+</html>

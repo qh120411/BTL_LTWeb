@@ -1,0 +1,25 @@
+@model BTL_LTWEB.Areas.Admin.ViewModels.UserManagementIndexViewModel
+@{ViewData["Title"]="Tài khoản nhân viên";}<h1>Tài khoản & phân quyền</h1>
+<p class="muted">Vai trò lấy từ bảng liên kết TaiKhoan_VaiTro.</p>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Mã nhân viên</th>
+<th>Họ tên</th>
+<th>Tên đăng nhập</th>
+<th>Vai trò</th>
+<th>Trạng thái</th>
+</tr>
+</thead>
+<tbody>
+@foreach(var t in Model.StaffList){<tr>
+<td>@t.MaNV</td>
+<td>@t.HoTen</td>
+<td>@t.TenDangNhap</td>
+<td>@t.VaiTroText</td>
+<td>@t.TrangThai</td>
+</tr>}</tbody>
+</table>
+</div>
+<p class="small muted">Bản thử hiển thị danh sách; chức năng cấp và đặt lại mật khẩu chưa được đưa vào màn này.</p>

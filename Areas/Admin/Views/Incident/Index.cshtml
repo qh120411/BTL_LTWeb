@@ -1,0 +1,25 @@
+@model BTL_LTWEB.Areas.Admin.ViewModels.IncidentIndexViewModel
+@{ViewData["Title"]="Bồi thường & thu phạt";}<h1>Bồi thường & thu phạt</h1>
+<p>Tổng thu: @Model.TongThu.ToString("N0") đ</p>
+<p class="muted">Phiếu thu được ghi cùng transaction trả sách vào database.</p>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Mã phiếu</th>
+<th>Người nộp</th>
+<th>Nội dung</th>
+<th>Số tiền</th>
+<th>Ngày thu</th>
+</tr>
+</thead>
+<tbody>
+@foreach(var t in Model.Receipts){<tr>
+<td>@t.MaPhieuThu</td>
+<td>@t.MaBD · @t.NguoiNop</td>
+<td>@t.LoaiKhoanThu</td>
+<td>@t.SoTien.ToString("N0") đ</td>
+<td>@t.NgayThu</td>
+</tr>}</tbody>
+</table>
+</div>

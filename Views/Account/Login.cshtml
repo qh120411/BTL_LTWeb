@@ -1,0 +1,22 @@
+@{Layout="~/Views/Shared/Reader/_ReaderLayout.cshtml";ViewData["Title"]="Đăng nhập";}
+<section class="login-section">
+<div class="login-intro">
+<h1>Tài khoản thư viện<br>của bạn</h1>
+<p>Xem sách đang mượn, hạn trả và hồ sơ bạn đọc.</p>
+<p>
+<a href="/Reader/Search">← Tiếp tục tra cứu không cần đăng nhập</a>
+</p>
+</div>
+<form class="login-form" asp-controller="Account" asp-action="Login" method="post" asp-area="">
+<h2>Đăng nhập thư viện</h2>
+<p class="muted">Dùng tài khoản đã được thư viện cấp.</p>
+<input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl">
+<label>Tên đăng nhập / Email<input name="username" id="username" autocomplete="username" required>
+</label>
+<label>Mật khẩu<input name="password" id="password" type="password" autocomplete="current-password" required>
+</label>
+<p class="form-error" role="alert">@ViewBag.Error</p>
+<button class="button primary full">Đăng nhập</button>
+<p class="small muted">Quên mật khẩu? Liên hệ <a href="mailto:thuvien@utc.edu.vn">thuvien@utc.edu.vn</a>.</p>
+</form>
+</section>

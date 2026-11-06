@@ -1,0 +1,33 @@
+@model BTL_LTWEB.Areas.Admin.ViewModels.ReaderIndexViewModel
+@{ViewData["Title"]="Quản lý bạn đọc";}<h1>Quản lý bạn đọc</h1>
+<form method="get" class="inline-controls">
+<label>Mã sinh viên, họ tên<input name="search" type="search" value="@Model.SearchKeyword">
+</label>
+<button class="button primary">Tìm kiếm</button>
+</form>
+<a class="button" href="/Admin/Reader/ImportQldt">Nhập danh sách TSV</a>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Mã sinh viên</th>
+<th>Họ tên</th>
+<th>Lớp</th>
+<th>Thẻ thư viện</th>
+<th>Đang mượn</th>
+<th>Quá hạn</th>
+</tr>
+</thead>
+<tbody>
+@foreach(var b in Model.Readers){<tr>
+<td>
+<a href="/Admin/Reader/Details/@b.MaBD">@b.MaBD</a>
+</td>
+<td>@b.HoTen</td>
+<td>@b.LopKhoa</td>
+<td>@b.QuyenSuDung</td>
+<td>@b.SoSachDangMuon</td>
+<td>@b.SoSachQuaHan</td>
+</tr>}</tbody>
+</table>
+</div>

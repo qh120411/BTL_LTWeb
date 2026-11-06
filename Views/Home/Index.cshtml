@@ -1,4 +1,5 @@
 ﻿@{
+<<<<<<< Updated upstream
     ViewData["Title"] = "Trang chủ";
 }
 
@@ -8,3 +9,908 @@
         <p style="color: #888;">Nội dung trang</p>
     </main>
 </div>
+=======
+    ViewData["Title"] = "Cổng thông tin Thư viện & Học liệu số - UTC";
+    Layout = null;
+    string returnUrl = ViewBag.ReturnUrl ?? "";
+    string errorMsg = ViewBag.Error ?? "";
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng nhập - Cổng thông tin Thư viện UTC</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <style>
+        :root {
+            --utc-blue-dark: #072b61;
+            --utc-blue-mid: #0b4ea2;
+            --utc-blue-light: #1565c0;
+            --utc-accent: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #093778 0%, #062857 50%, #031838 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Subtle background effects */
+        .utc-bg-glow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(21, 101, 192, 0.4) 0%, transparent 40%),
+                radial-gradient(circle at 80% 30%, rgba(13, 71, 161, 0.5) 0%, transparent 45%),
+                radial-gradient(circle at 50% 80%, rgba(30, 136, 229, 0.25) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Light sparkles and bottom arc */
+        .utc-bg-ribbon {
+            position: absolute;
+            bottom: 40px;
+            left: -10%;
+            width: 120%;
+            height: 180px;
+            border-radius: 50%;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 -10px 40px rgba(0, 168, 255, 0.2);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .utc-main-container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 24px 20px 10px;
+        }
+
+        /* Header Bar */
+        .utc-top-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .utc-header-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+        }
+
+        .utc-header-logo {
+            width: 54px;
+            height: 54px;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+        }
+
+        .utc-header-school-name {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #ffcc00;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+
+        .utc-header-school-sub {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        .utc-header-portal-title {
+            text-align: center;
+            flex: 1;
+        }
+
+        .utc-portal-h1 {
+            font-size: 24px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .utc-portal-sub {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 400;
+        }
+
+        /* Main 2-Card Layout */
+        .utc-portal-grid {
+            display: grid;
+            grid-template-columns: 1.25fr 0.95fr;
+            gap: 32px;
+            align-items: stretch;
+            margin-bottom: 30px;
+        }
+
+        @@media (max-width: 991px) {
+            .utc-portal-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* White Rounded Cards */
+        .utc-white-card {
+            background-color: #ffffff;
+            border-radius: 24px;
+            padding: 36px 32px;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+            color: #1e293b;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Left Card - Welcome & Features */
+        .utc-welcome-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .utc-welcome-icon-circle {
+            width: 42px;
+            height: 42px;
+            background-color: #1565c0;
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(21, 101, 192, 0.3);
+        }
+
+        .utc-welcome-title {
+            font-size: 19px;
+            font-weight: 800;
+            color: #0b3b7b;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .utc-welcome-desc-main {
+            font-size: 13.5px;
+            line-height: 1.55;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+
+        .utc-welcome-desc-sub {
+            font-size: 13px;
+            line-height: 1.5;
+            color: #64748b;
+            margin-bottom: 24px;
+        }
+
+        /* 4 Library Function Boxes (2x2) */
+        .utc-lib-features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @@media (max-width: 575px) {
+            .utc-lib-features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .utc-feature-box {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .utc-feature-box:hover {
+            border-color: #1565c0;
+            box-shadow: 0 8px 18px rgba(21, 101, 192, 0.12);
+            transform: translateY(-2px);
+            color: inherit;
+        }
+
+        .utc-feature-icon-square {
+            width: 44px;
+            height: 44px;
+            background-color: #1565c0;
+            color: #ffffff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(21, 101, 192, 0.25);
+        }
+
+        .utc-feature-info {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .utc-feature-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 2px;
+        }
+
+        .utc-feature-sub {
+            font-size: 12px;
+            color: #64748b;
+            line-height: 1.35;
+        }
+
+        /* Right Card - Login Form */
+        .utc-login-card {
+            padding: 40px 32px 32px;
+            position: relative;
+        }
+
+        /* Floating Lock Badge */
+        .utc-floating-lock-badge {
+            position: absolute;
+            top: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%);
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 6px 16px rgba(13, 71, 161, 0.4);
+            border: 4px solid #ffffff;
+        }
+
+        .utc-login-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 800;
+            color: #0c3979;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-top: 6px;
+            margin-bottom: 22px;
+        }
+
+        /* Form Inputs */
+        .utc-input-group {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .utc-input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 17px;
+            pointer-events: none;
+        }
+
+        .utc-form-input {
+            width: 100%;
+            padding: 12px 16px 12px 42px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #1e293b;
+            outline: none;
+            transition: all 0.2s ease;
+            background-color: #ffffff;
+        }
+
+        .utc-form-input:focus {
+            border-color: #1565c0;
+            box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.15);
+        }
+
+        .utc-toggle-password {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 17px;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .utc-toggle-password:hover {
+            color: #1e293b;
+        }
+
+        .utc-login-help-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .utc-login-help-row a {
+            color: #0b4ea2;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .utc-login-help-row a:hover {
+            text-decoration: underline;
+        }
+
+        /* Primary Login Button */
+        .utc-btn-submit {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(180deg, #154e9e 0%, #0c3674 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(12, 54, 116, 0.35);
+        }
+
+        .utc-btn-submit:hover {
+            background: linear-gradient(180deg, #1a5bb8 0%, #0f4088 100%);
+            box-shadow: 0 6px 16px rgba(12, 54, 116, 0.45);
+            transform: translateY(-1px);
+        }
+
+        /* Divider */
+        .utc-divider-wrap {
+            display: flex;
+            align-items: center;
+            margin: 18px 0;
+            color: #94a3b8;
+            font-size: 12.5px;
+        }
+
+        .utc-divider-wrap::before,
+        .utc-divider-wrap::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background-color: #e2e8f0;
+        }
+
+        .utc-divider-wrap span {
+            padding: 0 12px;
+        }
+
+        /* Microsoft Login Button */
+        .utc-btn-microsoft {
+            width: 100%;
+            padding: 11px;
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            color: #334155;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .utc-btn-microsoft:hover {
+            background-color: #f8fafc;
+            border-color: #94a3b8;
+            color: #0f172a;
+        }
+
+        /* Microsoft 4-square icon */
+        .ms-grid-icon {
+            display: grid;
+            grid-template-columns: 8px 8px;
+            grid-gap: 2px;
+        }
+
+        .ms-sq { width: 8px; height: 8px; border-radius: 1px; }
+        .ms-sq-red { background-color: #f25022; }
+        .ms-sq-green { background-color: #7fba00; }
+        .ms-sq-blue { background-color: #00a4ef; }
+        .ms-sq-yellow { background-color: #ffb900; }
+
+        /* Quick Account Chips for Demo */
+        .utc-demo-chips {
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px dashed #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .utc-demo-title {
+            font-size: 11.5px;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .utc-chips-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .utc-chip {
+            background-color: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #0b4ea2;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.15s ease;
+        }
+
+        .utc-chip:hover {
+            background-color: #e0f2fe;
+            border-color: #38bdf8;
+        }
+
+        /* 4 Bottom Feature Badges */
+        .utc-bottom-features-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        @@media (max-width: 850px) {
+            .utc-bottom-features-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @@media (max-width: 480px) {
+            .utc-bottom-features-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .utc-badge-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .utc-badge-icon {
+            font-size: 24px;
+            color: #38bdf8;
+            flex-shrink: 0;
+        }
+
+        .utc-badge-text-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 1px;
+        }
+
+        .utc-badge-text-sub {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.3;
+        }
+
+        /* Continuous Running Marquee at the very bottom */
+        .utc-marquee-banner {
+            width: 100%;
+            background: rgba(3, 16, 38, 0.92);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 9px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            z-index: 10;
+        }
+
+        .utc-marquee-track {
+            display: inline-block;
+            white-space: nowrap;
+            animation: utcMarquee 26s linear infinite;
+        }
+
+        .utc-marquee-item {
+            display: inline-block;
+            color: rgba(255, 255, 255, 0.92);
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            padding-right: 50px;
+        }
+
+        .utc-marquee-item strong {
+            color: #ffcc00;
+            font-weight: 700;
+        }
+
+        @@keyframes utcMarquee {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="utc-bg-glow"></div>
+    <div class="utc-bg-ribbon"></div>
+
+    <div class="utc-main-container">
+        <!-- Top Header: Logo + Title -->
+        <header class="utc-top-header">
+            <div class="utc-header-brand">
+                <img src="~/logo/utc.png" alt="UTC Logo" class="utc-header-logo" onerror="this.src='/images/logo.png'" />
+                <div>
+                    <div class="utc-header-school-name">TRƯỜNG ĐẠI HỌC GIAO THÔNG VẬN TẢI</div>
+                    <div class="utc-header-school-sub">UNIVERSITY OF TRANSPORT AND COMMUNICATIONS</div>
+                </div>
+            </div>
+
+            <div class="utc-header-portal-title">
+                <h1 class="utc-portal-h1">CỔNG THÔNG TIN THƯ VIỆN &amp; HỌC LIỆU SỐ</h1>
+                <p class="utc-portal-sub">Tra cứu mục lục OPAC, mượn trả tài liệu và quản lý thẻ thư viện trực tuyến dễ dàng, nhanh chóng</p>
+            </div>
+        </header>
+
+        <!-- Main 2-Column Cards Grid -->
+        <main class="utc-portal-grid">
+            <!-- Left Card: Welcome & 4 Library Functions -->
+            <section class="utc-white-card">
+                <div>
+                    <div class="utc-welcome-header">
+                        <div class="utc-welcome-icon-circle">
+                            <i class="bi bi-mortarboard-fill"></i>
+                        </div>
+                        <h2 class="utc-welcome-title">CHÀO MỪNG ĐẾN VỚI CỔNG THÔNG TIN THƯ VIỆN</h2>
+                    </div>
+
+                    <p class="utc-welcome-desc-main">
+                        <strong>Trường Đại học Giao thông Vận tải</strong> — nơi đào tạo nguồn nhân lực chất lượng cao trong lĩnh vực Giao thông Vận tải, Kinh tế, Kỹ thuật và Công nghệ thông tin.
+                    </p>
+                    <p class="utc-welcome-desc-sub">
+                        Đăng nhập để tra cứu sách, theo dõi hạn mượn trả, quản lý thẻ bạn đọc và học liệu số cá nhân.
+                    </p>
+
+                    <!-- 4 Chức năng thư viện như người dùng yêu cầu -->
+                    <div class="utc-lib-features-grid">
+                        <!-- Chức năng 1: Tìm sách / tài liệu -->
+                        <div class="utc-feature-box">
+                            <div class="utc-feature-icon-square">
+                                <i class="bi bi-search"></i>
+                            </div>
+                            <div class="utc-feature-info">
+                                <span class="utc-feature-title">Tìm sách &amp; tài liệu</span>
+                                <span class="utc-feature-sub">Mục lục OPAC, giáo trình và tài liệu số</span>
+                            </div>
+                        </div>
+
+                        <!-- Chức năng 2: Tra cứu hạn mượn trả -->
+                        <div class="utc-feature-box">
+                            <div class="utc-feature-icon-square">
+                                <i class="bi bi-clock-history"></i>
+                            </div>
+                            <div class="utc-feature-info">
+                                <span class="utc-feature-title">Tra cứu hạn mượn trả</span>
+                                <span class="utc-feature-sub">Xem sách đang mượn &amp; hạn trả trực tuyến</span>
+                            </div>
+                        </div>
+
+                        <!-- Chức năng 3: Thẻ thư viện số -->
+                        <div class="utc-feature-box">
+                            <div class="utc-feature-icon-square">
+                                <i class="bi bi-person-vcard-fill"></i>
+                            </div>
+                            <div class="utc-feature-info">
+                                <span class="utc-feature-title">Thẻ thư viện số</span>
+                                <span class="utc-feature-sub">Thông tin thẻ bạn đọc &amp; lịch sử mượn</span>
+                            </div>
+                        </div>
+
+                        <!-- Chức năng 4: Đặt trước & Luận văn -->
+                        <div class="utc-feature-box">
+                            <div class="utc-feature-icon-square">
+                                <i class="bi bi-journal-bookmark-fill"></i>
+                            </div>
+                            <div class="utc-feature-info">
+                                <span class="utc-feature-title">Đặt trước &amp; Luận văn</span>
+                                <span class="utc-feature-sub">Đặt giữ sách quầy &amp; đọc luận án số</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-3 border-top d-flex justify-content-between align-items-center text-muted small">
+                    <span><i class="bi bi-geo-alt-fill text-danger me-1"></i> Tầng 4 - 7, Nhà A8, Số 3 Cầu Giấy, Hà Nội</span>
+                    <span><i class="bi bi-telephone-fill text-primary me-1"></i> 024 3766 4075</span>
+                </div>
+            </section>
+
+            <!-- Right Card: Login Form -->
+            <section class="utc-white-card utc-login-card">
+                <!-- Floating Lock Circle Badge -->
+                <div class="utc-floating-lock-badge">
+                    <i class="bi bi-lock-fill"></i>
+                </div>
+
+                                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <div class="p-3 mb-3 rounded-3" style="background-color: #ecfdf5; border: 1px solid #a7f3d0;">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-person-check-fill text-success fs-4 me-2"></i>
+                            <div>
+                                <div class="text-muted small" style="font-size: 12px;">Đang đăng nhập:</div>
+                                <div class="text-dark fw-bold" style="font-size: 15px;">@User.Identity.Name</div>
+                                <span class="badge @(User.IsInRole("Admin") ? "bg-danger" : "bg-primary")" style="font-size: 11px;">
+                                    @(User.IsInRole("Admin") ? "Quản trị viên (Admin)" : "Bạn đọc (Sinh viên)")
+                                </span>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2 mt-2">
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a href="/Admin/Dashboard" class="btn btn-sm btn-success w-100 fw-bold">
+                                    <i class="bi bi-speedometer2 me-1"></i> Vào Trang Quản trị &rarr;
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="/Reader/Home" class="btn btn-sm btn-primary w-100 fw-bold">
+                                    <i class="bi bi-house-door me-1"></i> Vào Cổng Bạn đọc &rarr;
+                                </a>
+                            }
+                            <a href="/Account/Logout" class="btn btn-sm btn-outline-danger" title="Đăng xuất khỏi tài khoản hiện tại">
+                                <i class="bi bi-box-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                }
+
+                <h2 class="utc-login-title">ĐĂNG NHẬP</h2>
+
+                @if (!string.IsNullOrEmpty(errorMsg))
+                {
+                    <div class="alert alert-danger py-2 px-3 small mb-3 border-0 rounded-3">
+                        <i class="bi bi-exclamation-triangle-fill me-1"></i> @errorMsg
+                    </div>
+                }
+
+                <form asp-controller="Account" asp-action="Login" method="post" id="loginForm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="returnUrl" value="@returnUrl" />
+
+                    <!-- Ô tài khoản / mã sinh viên -->
+                    <div class="utc-input-group">
+                        <i class="bi bi-person utc-input-icon"></i>
+                        <input type="text" 
+                               name="username" 
+                               id="loginUsername" 
+                               class="utc-form-input" 
+                               placeholder="Mã sinh viên (VD: 242630923) hoặc tài khoản admin" 
+                               required 
+                               autocomplete="username" />
+                    </div>
+
+                    <!-- Ô mật khẩu -->
+                    <div class="utc-input-group">
+                        <i class="bi bi-lock utc-input-icon"></i>
+                        <input type="password" 
+                               name="password" 
+                               id="loginPassword" 
+                               class="utc-form-input" 
+                               placeholder="Mật khẩu (VD: Dat242630923 hoặc Admin@123)" 
+                               required 
+                               autocomplete="current-password" />
+                        <button type="button" class="utc-toggle-password" id="togglePasswordBtn" title="Hiện/Ẩn mật khẩu">
+                            <i class="bi bi-eye" id="toggleEyeIcon"></i>
+                        </button>
+                    </div>
+
+                    <div class="utc-login-help-row">
+                        <a href="javascript:void(0)" onclick="alert('Vui lòng liên hệ Quầy thủ thư Tầng 5 - Nhà A8 hoặc gửi email tới thuvien@utc.edu.vn để được cấp lại mật khẩu.')">
+                            Quên mật khẩu?
+                        </a>
+                        <a href="javascript:void(0)" onclick="alert('QUY TẮC ĐĂNG NHẬP THƯ VIỆN UTC:\n\n1. Sinh viên (Bạn đọc):\n- Tài khoản: Mã sinh viên (VD: 242630923)\n- Mật khẩu: Tên + Mã sinh viên (VD: Đỗ Văn Đạt -> Dat242630923, Nguyễn Văn An -> An242630899)\n\n2. Quản trị viên (Admin):\n- Tài khoản: admin\n- Mật khẩu: Admin@123')">
+                            <i class="bi bi-question-circle me-1"></i> Trợ giúp!
+                        </a>
+                    </div>
+
+                    <!-- Nút Đăng nhập chính -->
+                    <button type="submit" class="utc-btn-submit">
+                        ĐĂNG NHẬP
+                    </button>
+                </form>
+
+                <div class="utc-divider-wrap">
+                    <span>hoặc đăng nhập</span>
+                </div>
+
+                <!-- Đăng nhập với Microsoft / Email UTC -->
+                <form asp-controller="Account" asp-action="LoginWithMicrosoft" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="utc-btn-microsoft">
+                        <div class="ms-grid-icon">
+                            <div class="ms-sq ms-sq-red"></div>
+                            <div class="ms-sq ms-sq-green"></div>
+                            <div class="ms-sq ms-sq-blue"></div>
+                            <div class="ms-sq ms-sq-yellow"></div>
+                        </div>
+                        <span>Đăng nhập với Microsoft / Email UTC</span>
+                    </button>
+                </form>
+
+                                <!-- Quick Fill Chips for Demo -->
+                <div class="utc-demo-chips">
+                    <span class="utc-demo-title"><i class="bi bi-lightning-charge-fill text-warning me-1"></i>Đăng nhập nhanh theo vai trò CSDL:</span>
+                    <div class="utc-chips-row">
+                        <button type="button" class="utc-chip" onclick="fillAccount('242630923', 'Dat242630923')">
+                            🎓 SV Đỗ Văn Đạt (Dat242630923)
+                        </button>
+                        <button type="button" class="utc-chip" onclick="fillAccount('admin', 'Admin@123')">
+                            🛡️ QTV Toàn quyền: admin (Admin@123)
+                        </button>
+                        <button type="button" class="utc-chip" onclick="fillAccount('NV26-02', 'MinhNV26-02')">
+                            📋 QL Bạn đọc: NV26-02 (MinhNV26-02)
+                        </button>
+                        <button type="button" class="utc-chip" onclick="fillAccount('NV26-03', 'HaNV26-03')">
+                            📚 QL Tài liệu: NV26-03 (HaNV26-03)
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 4 Bottom Feature Badges -->
+        <section class="utc-bottom-features-row">
+            <div class="utc-badge-card">
+                <i class="bi bi-shield-check utc-badge-icon"></i>
+                <div>
+                    <div class="utc-badge-text-title">Bảo mật tuyệt đối</div>
+                    <div class="utc-badge-text-sub">Thông tin bạn đọc được bảo mật an toàn tuyệt đối</div>
+                </div>
+            </div>
+
+            <div class="utc-badge-card">
+                <i class="bi bi-clock-history utc-badge-icon"></i>
+                <div>
+                    <div class="utc-badge-text-title">Dịch vụ tiện lợi</div>
+                    <div class="utc-badge-text-sub">Hệ thống tra cứu OPAC trực tuyến phục vụ 24/7</div>
+                </div>
+            </div>
+
+            <div class="utc-badge-card">
+                <i class="bi bi-headset utc-badge-icon"></i>
+                <div>
+                    <div class="utc-badge-text-title">Hỗ trợ 24/7</div>
+                    <div class="utc-badge-text-sub">Đội ngũ thủ thư luôn sẵn sàng giải đáp mọi thắc mắc</div>
+                </div>
+            </div>
+
+            <div class="utc-badge-card">
+                <i class="bi bi-check-circle-fill utc-badge-icon"></i>
+                <div>
+                    <div class="utc-badge-text-title">Xác nhận nhanh chóng</div>
+                    <div class="utc-badge-text-sub">Xử lý mượn trả và gia hạn tài liệu tức thì</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Dòng chữ nhỏ ở dưới cùng chạy liên tục như người dùng yêu cầu -->
+    <footer class="utc-marquee-banner">
+        <div class="utc-marquee-track">
+            <span class="utc-marquee-item">
+                ✦ <strong>Đơn vị phát triển :</strong> nhóm các sinh viên lớp CNTT Việt Anh 1 -  Đại học Giao thông Vận tải. Cảm ơn bạn vì đã sử dụng dịch vụ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                ✦ <strong>Đơn vị phát triển :</strong> nhóm các sinh viên lớp CNTT Việt Anh 1 -  Đại học Giao thông Vận tải. Cảm ơn bạn vì đã sử dụng dịch vụ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>
+            <span class="utc-marquee-item">
+                ✦ <strong>Đơn vị phát triển :</strong> nhóm các sinh viên lớp CNTT Việt Anh 1 -  Đại học Giao thông Vận tải. Cảm ơn bạn vì đã sử dụng dịch vụ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                ✦ <strong>Đơn vị phát triển :</strong> nhóm các sinh viên lớp CNTT Việt Anh 1 -  Đại học Giao thông Vận tải. Cảm ơn bạn vì đã sử dụng dịch vụ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle ẩn/hiện mật khẩu
+        const toggleBtn = document.getElementById('togglePasswordBtn');
+        const passwordInput = document.getElementById('loginPassword');
+        const eyeIcon = document.getElementById('toggleEyeIcon');
+
+        toggleBtn.addEventListener('click', function () {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.remove('bi-eye');
+                eyeIcon.classList.add('bi-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.remove('bi-eye-slash');
+                eyeIcon.classList.add('bi-eye');
+            }
+        });
+
+        // Điền nhanh tài khoản demo
+        function fillAccount(username, password) {
+            document.getElementById('loginUsername').value = username;
+            document.getElementById('loginPassword').value = password;
+        }
+    </script>
+</body>
+</html>
+>>>>>>> Stashed changes

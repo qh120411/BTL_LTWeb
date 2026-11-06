@@ -1,0 +1,4 @@
+@{ Layout="~/Views/Shared/Reader/_ReaderLayout.cshtml"; }
+@RenderBody()
+@section Styles { @await RenderSectionAsync("Styles",false) }
+@section Scripts { @await RenderSectionAsync("Scripts",false) }

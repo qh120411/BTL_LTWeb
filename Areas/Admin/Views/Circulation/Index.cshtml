@@ -1,0 +1,77 @@
+@model BTL_LTWEB.Areas.Admin.ViewModels.CirculationIndexViewModel
+@{ViewData["Title"]="Mượn trả";}
+<h1>Mượn trả tài liệu</h1>
+<details class="form-card">
+<summary>+ Lập phiếu mượn tại quầy</summary>
+<form method="post" asp-action="CreateBorrow" class="stack">
+<div class="field-grid">
+<label>Bạn đọc<select name="maBD" required>
+<option value="">Chọn bạn đọc</option>
+@foreach(var r in Model.AvailableReaders){<option value="@r.MaBD">@r.MaBD · @r.HoTen</option>}</select>
+</label>
+<label>Tài liệu<select name="bookId" required>
+<option value="">Chọn tài liệu</option>
+@foreach(var b in Model.AvailableBooks){<option value="@b.Id">@b.Title (@b.AvailableCopies bản sẵn có)</option>}</select>
+</label>
+</div>
+<p class="small muted">Hệ thống cấp một bản sẵn có. Kiểm tra mã bản trên phiếu sau khi lưu. Hạn mượn của bản thử: 1 năm.</p>
+<button class="button primary">Lập phiếu mượn</button>
+</form>
+</details>
+<form method="get" class="inline-controls">
+<label>Mã bạn đọc, nhan đề<input name="search" type="search" value="@Model.SearchKeyword">
+</label>
+<button class="button">Tìm kiếm</button>
+</form>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Giao dịch</th>
+<th>Bạn đọc</th>
+<th>Tài liệu / Mã bản</th>
+<th>Hạn trả</th>
+<th>Thao tác</th>
+</tr>
+</thead>
+<tbody>
+@foreach(var t in Model.Transactions){<tr>
+<td>@t.MaGD</td>
+<td>@t.MaBD<br>@t.HoTen</td>
+<td>@t.TenSach<br>
+<code>@t.MaBanSao</code>
+</td>
+<td>@t.HanTra<br>@t.TrangThai</td>
+<td>
+<details>
+<summary>Trả / Bồi thường</summary>
+<form method="post" asp-action="ProcessReturnOrCompensation" data-confirm="Xác nhận đã kiểm tra mã bản sách và các khoản thu?" class="stack">
+<input type="hidden" name="maBD" value="@t.MaBD">
+<input type="hidden" name="maGD" value="@t.MaGD">
+<label>Mã bản sách nhận lại<input name="copyBarcode" required placeholder="@t.MaBanSao">
+</label>
+<label>Xử lý<select name="actionType">
+<option value="NormalReturn">Trả bình thường</option>
+<option value="Compensation">Mất / hỏng</option>
+</select>
+</label>
+<label>Bồi thường<select name="compensationType">
+<option value="NewBook">Đã nhận sách thay thế</option>
+<option value="Money">Đền tiền</option>
+</select>
+</label>
+<label>Tiền bồi thường<input type="number" name="compensationAmount" min="0" max="100000000" value="150000">
+</label>
+<label>Thu phạt quá hạn<select name="payOverdue">
+<option value="false">Chưa thu / Không quá hạn</option>
+<option value="true">Đã thu 100.000 đ</option>
+</select>
+</label>
+<button class="button primary">Xác nhận xử lý</button>
+</form>
+</details>
+</td>
+</tr>}</tbody>
+</table>
+</div>
+@if(Model.Transactions.Count==0){<p class="empty">Chưa có giao dịch đang mượn.</p>}

@@ -1,0 +1,25 @@
+@model BTL_LTWEB.Areas.Admin.ViewModels.ReportViewModel
+@{ViewData["Title"]="Báo cáo";}<h1>Báo cáo tồn kho hiện tại</h1>
+<p>@Model.KyBaoCao · @Model.PhamVi</p>
+<a class="button primary" href="/Admin/Report/ExportExcel">Xuất CSV</a>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Đầu sách</th>
+<th>Tổng bản</th>
+<th>Sẵn có</th>
+<th>Đang mượn</th>
+<th>Mất / hỏng</th>
+</tr>
+</thead>
+<tbody>
+@foreach(var b in Model.ChiTietDauSach){<tr>
+<td>@b.DauSach</td>
+<td>@b.TongBan</td>
+<td>@b.SanCo</td>
+<td>@b.DangMuon</td>
+<td>@b.MatHong</td>
+</tr>}</tbody>
+</table>
+</div>

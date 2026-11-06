@@ -1,0 +1,25 @@
+@model BTL_LTWEB.Areas.Admin.ViewModels.OverdueIndexViewModel
+@{ViewData["Title"]="Quá hạn";}<h1>Sách quá hạn</h1>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Bạn đọc</th>
+<th>Tài liệu</th>
+<th>Hạn trả</th>
+<th>Số ngày</th>
+<th>Xử lý</th>
+</tr>
+</thead>
+<tbody>
+@foreach(var t in Model.OverdueList){<tr>
+<td>@t.MaBD<br>@t.HoTen</td>
+<td>@t.TenSach</td>
+<td>@t.HanTra</td>
+<td>@t.SoNgayQuaHan</td>
+<td>
+<a href="/Admin/Circulation?search=@t.MaGD">Mở giao dịch</a>
+</td>
+</tr>}</tbody>
+</table>
+</div>

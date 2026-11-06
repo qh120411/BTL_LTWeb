@@ -1,0 +1,32 @@
+@model BTL_LTWEB.Areas.Admin.ViewModels.ReaderDetailViewModel
+@{ViewData["Title"]="Hồ sơ bạn đọc";}<h1>@Model.HoTen</h1>
+<p>@Model.MaBD · @Model.LopKhoa</p>
+<form asp-action="UpdateProfile" method="post" class="form-card stack">
+<input type="hidden" name="MaBD" value="@Model.MaBD">
+<label>Trạng thái thẻ<select name="QuyenSuDung">
+@foreach(var status in new[]{"Hoạt động","Bị khóa","Tạm khóa"}){<option selected="@(Model.QuyenSuDung==status)">@status</option>}</select>
+</label>
+<label>Ngày hết hạn<input name="HieuLucQuyen" value="@Model.HieuLucQuyen" type="date" required>
+</label>
+<button class="button primary">Lưu quyền sử dụng</button>
+</form>
+<h2>Sách đang mượn</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Mã giao dịch</th>
+<th>Mã bản</th>
+<th>Tài liệu</th>
+<th>Hạn trả</th>
+</tr>
+</thead>
+<tbody>
+@foreach(var t in Model.BorrowTransactions){<tr>
+<td>@t.MaGD</td>
+<td>@t.MaSach</td>
+<td>@t.TenSach</td>
+<td>@t.NgayHenTra</td>
+</tr>}</tbody>
+</table>
+</div>

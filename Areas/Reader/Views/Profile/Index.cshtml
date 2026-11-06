@@ -1,0 +1,17 @@
+@model BTL_LTWEB.Areas.Reader.Models.UserProfileViewModel
+@{ViewData["Title"]="Hồ sơ bạn đọc";}
+<section class="page-section">
+<h1>Thông tin bạn đọc</h1>
+<p>@Model.HoTen · @Model.MaSinhVien</p>
+<form method="post" class="stack profile-form" asp-action="Index">
+<div asp-validation-summary="All" class="form-error">
+</div>
+<label>Email<input type="email" asp-for="Email" maxlength="150">
+</label>
+<label>Số điện thoại<input asp-for="SoDienThoai" maxlength="20">
+</label>
+<label>Địa chỉ<input asp-for="DiaChiNha" maxlength="250">
+</label>
+<button class="button primary">Lưu thông tin</button>
+</form>
+</section>

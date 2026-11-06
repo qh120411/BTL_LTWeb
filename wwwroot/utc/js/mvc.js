@@ -1,0 +1,3 @@
+document.querySelectorAll('[data-menu]').forEach(b=>b.addEventListener('click',()=>{const target=document.getElementById(b.getAttribute('aria-controls'));if(!target)return;const open=target.classList.toggle('open');b.setAttribute('aria-expanded',String(open));b.setAttribute('aria-label',open?'Đóng menu':'Mở menu');}));
+document.querySelectorAll('[data-category]').forEach(b=>b.addEventListener('click',()=>{document.getElementById('home-category').value=b.dataset.category;document.querySelectorAll('[data-category]').forEach(t=>t.setAttribute('aria-selected',String(t===b)));}));
+document.querySelectorAll('form[data-confirm]').forEach(f=>f.addEventListener('submit',e=>{if(!confirm(f.dataset.confirm))e.preventDefault();}));

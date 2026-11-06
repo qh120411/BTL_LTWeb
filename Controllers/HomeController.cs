@@ -13,9 +13,18 @@ namespace BTL_LTWEB.Controllers
             _logger = logger;
         }
 
+<<<<<<< Updated upstream
         public IActionResult Index()
         {
             return View();
+=======
+        // Mở ứng dụng: Nếu đã đăng nhập thì tự động vào ngay Admin hoặc Reader, nếu chưa thì hiển thị trang Đăng nhập
+        public IActionResult Index() => RedirectToAction("Index", "Home", new { area = "Reader" });
+
+        public IActionResult Login(string? returnUrl)
+        {
+            return RedirectToAction("Login", "Account", new { returnUrl });
+>>>>>>> Stashed changes
         }
 
         public IActionResult Privacy()

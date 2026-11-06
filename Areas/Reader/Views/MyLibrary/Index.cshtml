@@ -1,0 +1,34 @@
+@model BTL_LTWEB.Areas.Reader.Models.UserProfileViewModel
+@{ViewData["Title"]="Thư viện của tôi";}
+<section class="page-section">
+<h1>Thư viện của tôi</h1>
+<p>@Model.HoTen · @Model.MaSinhVien</p>
+<nav class="account-tabs">
+<a class="button primary" href="/Reader/MyLibrary">Đang mượn</a>
+<a class="button" href="/Reader/MyLibrary/BorrowHistory">Lịch sử</a>
+<a class="button" href="/Reader/Profile">Hồ sơ</a>
+</nav>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Tài liệu</th>
+<th>Mã bản</th>
+<th>Ngày mượn</th>
+<th>Hạn trả</th>
+<th>Trạng thái</th>
+</tr>
+</thead>
+<tbody>
+@foreach(var b in Model.BorrowedBooks){<tr>
+<td>@b.TenSach</td>
+<td>@b.MaVach</td>
+<td>@b.NgayMuon.ToString("dd/MM/yyyy")</td>
+<td>@b.HanTra.ToString("dd/MM/yyyy")</td>
+<td>
+<span class="badge @(b.IsQuaHan?"red":"")">@b.TrangThaiText</span>
+</td>
+</tr>}</tbody>
+</table>
+</div>
+@if(Model.BorrowedBooks.Count==0){<p class="empty">Bạn chưa có sách đang mượn.</p>}</section>
