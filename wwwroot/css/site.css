@@ -1,6 +1,7 @@
 /* ==========================================================================
-   UTC LIBRARY - GLOBAL STYLESHEET
-   Imports Modular CSS Files for easy maintenance
+   UTC LIBRARY - GLOBAL STYLESHEET (Refined Sky Blue & White Theme)
+   Thiết kế tinh tế, loại bỏ cảm giác thô cứng kiểu "AI"
+   Bo góc tròn mượt, đổ bóng đa tầng (diffuse blur), chuyển tab siêu mượt mà
    ========================================================================== */
 
 @import url('variables.css');
@@ -16,11 +17,12 @@ html, body {
     padding: 0;
     font-family: var(--utc-font-family);
     color: var(--utc-ink);
-    background-color: var(--utc-paper);
+    background-color: var(--utc-bg-soft);
     font-size: 15px;
-    line-height: 1.5;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
 }
 
 img, svg {
@@ -32,6 +34,7 @@ img, svg {
 a {
     color: inherit;
     text-decoration: none;
+    transition: var(--utc-transition);
 }
 
 /* Custom Standard Container */
@@ -61,47 +64,187 @@ a {
 .text-navy { color: var(--utc-navy) !important; }
 .text-brand { color: var(--utc-brand) !important; }
 .text-muted { color: var(--utc-muted) !important; }
-.bg-cream { background-color: var(--utc-blue-soft) !important; }
+.bg-cream { background-color: var(--utc-sky-soft) !important; }
 .bg-soft { background-color: var(--utc-bg-soft) !important; }
 .border-utc { border: 1px solid var(--utc-line) !important; }
-.rounded-utc { border-radius: var(--utc-radius-md) !important; }
+.rounded-utc { border-radius: var(--utc-radius-lg) !important; }
+.shadow-utc-sm { box-shadow: var(--utc-shadow-sm) !important; }
+.shadow-utc-md { box-shadow: var(--utc-shadow-md) !important; }
+.shadow-utc-lg { box-shadow: var(--utc-shadow-lg) !important; }
 
-/* Status Badges - Đảm bảo màu chữ và màu nền tương phản cao, không bao giờ bị trùng màu */
+/* Refined Card Component */
+.card, .utc-card {
+    background-color: var(--utc-paper);
+    border: 1px solid var(--utc-line);
+    border-radius: var(--utc-radius-xl);
+    box-shadow: var(--utc-shadow-sm);
+    transition: var(--utc-transition);
+}
+
+.card:hover, .utc-card:hover {
+    box-shadow: var(--utc-shadow-md);
+    border-color: #bae6fd;
+}
+
+/* Status Badges - Soft Semantic Colors (Màu nhận diện dịu, sang trọng) */
 .badge-available {
-    background-color: #dcfce7 !important;
-    color: #15803d !important;
-    border: 1px solid #bbf7d0 !important;
+    background-color: var(--utc-success-bg, #EDF4EF) !important;
+    color: var(--utc-success, #668D7B) !important;
+    border: 1px solid var(--utc-success-border, #D2E4D8) !important;
     font-size: 12px;
     font-weight: 600;
-    padding: 4px 10px;
-    border-radius: var(--utc-radius-sm);
+    padding: 5px 12px;
+    border-radius: var(--utc-radius-full);
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
 }
 
 .badge-borrowed {
-    background-color: #e0f2fe !important;
-    color: #0369a1 !important;
-    border: 1px solid #bae6fd !important;
+    background-color: var(--utc-info-bg, #EDF4F9) !important;
+    color: var(--utc-info, #537FA5) !important;
+    border: 1px solid var(--utc-info-border, #D0E1EE) !important;
     font-size: 12px;
     font-weight: 600;
-    padding: 4px 10px;
-    border-radius: var(--utc-radius-sm);
+    padding: 5px 12px;
+    border-radius: var(--utc-radius-full);
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
 }
 
 .badge-overdue {
-    background-color: #fee2e2 !important;
-    color: #b91c1c !important;
-    border: 1px solid #fca5a5 !important;
+    background-color: var(--utc-danger-bg, #F8EEEE) !important;
+    color: var(--utc-danger, #A96D72) !important;
+    border: 1px solid var(--utc-danger-border, #EACFD2) !important;
     font-size: 12px;
     font-weight: 600;
-    padding: 4px 10px;
-    border-radius: var(--utc-radius-sm);
+    padding: 5px 12px;
+    border-radius: var(--utc-radius-full);
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
+}
+
+/* Form Controls & Inputs - Bo góc 12px, vòng sáng Focus màu Sky Blue */
+.form-control, .form-select, input[type="text"], input[type="password"], input[type="search"] {
+    border-radius: var(--utc-radius-md) !important;
+    border: 1.5px solid var(--utc-line) !important;
+    padding: 10px 16px;
+    font-size: 14.5px;
+    color: var(--utc-ink);
+    background-color: #ffffff;
+    transition: var(--utc-transition);
+}
+
+.form-control:focus, .form-select:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="search"]:focus {
+    border-color: var(--utc-sky-primary) !important;
+    box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.15), var(--utc-shadow-sm) !important;
+    outline: none;
+    background-color: #ffffff !important;
+}
+
+/* Buttons - Bo góc mềm mại, đổ bóng ánh xanh tinh tế */
+.btn {
+    border-radius: var(--utc-radius-md);
+    font-weight: 600;
+    transition: var(--utc-transition);
+    padding: 9px 18px;
+}
+
+.btn-primary, .btn-utc-primary {
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+    border-color: #0284c7 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25) !important;
+}
+
+.btn-primary:hover, .btn-utc-primary:hover {
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(2, 132, 199, 0.35) !important;
+}
+
+.btn-secondary, .btn-utc-secondary {
+    background: #ffffff !important;
+    border: 1.5px solid #e0f2fe !important;
+    color: #0369a1 !important;
+    box-shadow: var(--utc-shadow-xs) !important;
+}
+
+.btn-secondary:hover, .btn-utc-secondary:hover {
+    background: #f0f9ff !important;
+    border-color: #bae6fd !important;
+    color: #0284c7 !important;
+    transform: translateY(-1px);
+    box-shadow: var(--utc-shadow-sm) !important;
+}
+
+/* ===== HIỆU ỨNG CHUYỂN TAB MƯỢT MÀ (SMOOTH TAB TRANSITIONS) ===== */
+.nav-tabs, .nav-pills {
+    border-bottom: none !important;
+    gap: 8px;
+}
+
+.nav-pills .nav-link {
+    border-radius: var(--utc-radius-full);
+    padding: 8px 20px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--utc-muted);
+    background: transparent;
+    transition: var(--utc-transition);
+    border: 1px solid transparent;
+}
+
+.nav-pills .nav-link:hover {
+    color: var(--utc-sky-primary);
+    background-color: var(--utc-sky-light);
+}
+
+.nav-pills .nav-link.active {
+    background: #ffffff !important;
+    color: var(--utc-sky-primary) !important;
+    box-shadow: var(--utc-shadow-sm);
+    border-color: var(--utc-line);
+}
+
+/* Tab panes animation mượt mà khi switch */
+.tab-content > .tab-pane {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1), transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tab-content > .tab-pane.active.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Tables with rounded corners & clean hover */
+.table-responsive {
+    border-radius: var(--utc-radius-lg);
+    border: 1px solid var(--utc-line);
+    background: #ffffff;
+    box-shadow: var(--utc-shadow-sm);
+    overflow: hidden;
+}
+
+table {
+    margin-bottom: 0 !important;
+}
+
+table th {
+    background-color: #f0f7ff !important;
+    color: #0369a1 !important;
+    font-weight: 600 !important;
+    border-bottom: 1.5px solid #e0f2fe !important;
+}
+
+table tr {
+    transition: background-color 0.18s ease;
+}
+
+table tbody tr:hover {
+    background-color: #f8fbff !important;
 }

@@ -1,9 +1,59 @@
+@model BTL_LTWEB.Areas.Reader.Models.UserProfileViewModel?
 @{
-    ViewData["Title"] = "Trang chủ";
+    Layout = "~/Views/Shared/Reader/_ReaderLayout.cshtml";
+    ViewData["Title"] = "Cổng Bạn đọc - Thư viện UTC";
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+}
+
+@if (Model != null)
+{
+    <!-- BANNER THÔNG TIN BẠN ĐỌC ĐÃ ĐĂNG NHẬP (TRUY VẤN TRỰC TIẾP TỪ SQL SERVER QLThuVienUTC) -->
+    <div style="background-color: var(--utc-page-bg, #EDF4FA); padding: 18px 0 0;">
+        <div class="container">
+            <div class="p-3 px-4 bg-white border shadow-sm" style="border-radius: 20px; border-color: var(--utc-border, #D7E4EF) !important;">
+                <div class="row align-items-center g-3">
+                <div class="col-lg-7 col-md-12">
+                    <div class="d-flex align-items-center gap-3">
+                        <div style="width: 54px; height: 54px; border-radius: 50%; background: linear-gradient(135deg, #0079ba 0%, #004c75 100%); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,121,186,0.3); flex-shrink: 0;">
+                            @(Model.HoTen.Split(' ').Last().Substring(0, 1))
+                        </div>
+                        <div>
+                            <div class="d-flex align-items-center gap-2 flex-wrap">
+                                <h4 class="mb-0 fw-bold" style="color: #0c3b6e; font-size: 19px;">
+                                    Xin chào, @Model.HoTen!
+                                </h4>
+                                
+                            </div>
+                            <div class="text-muted small mt-1">
+                                MSSV: <strong class="text-dark">@Model.MaSinhVien</strong> &middot; Lớp: <strong class="text-dark">@Model.LopQuanLy</strong> &middot; Khoa: <strong>Công nghệ thông tin</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-md-12">
+                    <div class="d-flex justify-content-lg-end gap-2 align-items-center flex-wrap">
+                        <div class="p-2 px-3 rounded bg-white border shadow-sm text-center" style="min-width: 100px;">
+                            <div class="text-muted" style="font-size: 11px; text-transform: uppercase;">Đang mượn</div>
+                            <div class="fw-bold fs-5 text-primary">@Model.TongSoSachDangMuon <span style="font-size: 12px; font-weight: normal;">cuốn</span></div>
+                        </div>
+                        <div class="p-2 px-3 rounded bg-white border shadow-sm text-center" style="min-width: 95px;">
+                            <div class="text-muted" style="font-size: 11px; text-transform: uppercase;">Quá hạn</div>
+                            <div class="fw-bold fs-5 @(Model.SoSachQuaHan > 0 ? "text-danger" : "text-success")">
+                                @Model.SoSachQuaHan <span style="font-size: 12px; font-weight: normal;">cuốn</span>
+                            </div>
+                        </div>
+                        <a href="/Reader/Profile" class="btn btn-utc-primary btn-sm py-2 px-3 fw-bold" style="white-space: nowrap;">
+                            <i class="bi bi-person-vcard me-1"></i> Hồ sơ sinh viên &rarr;
+                        </a>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
 <!-- 1. HERO SECTION & FLOATING SEARCH -->
@@ -34,8 +84,8 @@
             </form>
 
             <!-- Search Help Row -->
-            <div class="utc-search-help-row">
-                <span>Tra cứu và xem thông tin học liệu không cần đăng nhập</span>
+            <div class="utc-search-help-row d-flex justify-content-end">
+                
                 <a href="/Reader/Search" class="utc-adv-search-link">Tìm kiếm nâng cao &rarr;</a>
             </div>
         </div>
@@ -46,12 +96,12 @@
 <section class="utc-quick-access-section">
     <div class="container">
         <div class="utc-quick-grid">
-            <a href="/Reader/MyLibrary" class="utc-quick-card">
+            <a href="/Reader/Profile" class="utc-quick-card">
                 <div class="utc-quick-icon-bg">
-                    <img src="~/images/icon-my-library.svg" alt="Thư viện của tôi" />
+                    <i class="bi bi-person-vcard text-primary" style="font-size: 26px;"></i>
                 </div>
                 <div class="utc-quick-copy">
-                    <span class="utc-quick-title">Thư viện của tôi</span>
+                    <span class="utc-quick-title">Hồ sơ sinh viên</span>
                     <span class="utc-quick-sub">Sách đang mượn &amp; hạn trả</span>
                 </div>
             </a>

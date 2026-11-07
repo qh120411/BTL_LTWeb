@@ -1,4 +1,4 @@
-﻿@model BTL_LTWEB.Areas.Admin.ViewModels.CirculationIndexViewModel
+@model BTL_LTWEB.Areas.Admin.ViewModels.CirculationIndexViewModel
 @{
     ViewData["Title"] = "Quản lý mượn trả & Lưu thông";
     ViewBag.ActiveMenu = "Circulation";
@@ -11,7 +11,7 @@
 <!-- Thông báo thao tác thành công / thất bại -->
 @if (TempData["SuccessMessage"] != null)
 {
-    <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 mb-4" role="alert" style="background-color: #dcfce7; color: #166534; border-left: 4px solid #22c55e !important;">
+    <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 mb-4" role="alert" >
         <div class="d-flex align-items-center">
             <i class="bi bi-check-circle-fill fs-5 me-2 text-success"></i>
             <div>
@@ -24,7 +24,7 @@
 
 @if (TempData["ErrorMessage"] != null)
 {
-    <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0 mb-4" role="alert" style="background-color: #fee2e2; color: #991b1b; border-left: 4px solid #ef4444 !important;">
+    <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0 mb-4" role="alert" >
         <div class="d-flex align-items-center">
             <i class="bi bi-exclamation-triangle-fill fs-5 me-2 text-danger"></i>
             <div>
@@ -40,7 +40,7 @@
         <h1 class="admin-page-title mb-1">Quản lý lưu thông &amp; Mượn trả (@Model.Transactions.Count giao dịch)</h1>
         <div class="text-muted small">
             <i class="bi bi-clock-history me-1 text-primary"></i>
-            Thời hạn mượn quy định: <strong>1 năm</strong> &middot; Giới hạn: <strong>Tối đa 5 cuốn / sinh viên</strong> &middot; Cập nhật CSDL Thư viện UTC
+            Thời hạn mượn quy định: <strong>1 năm</strong> &middot; Giới hạn: <strong>Tối đa 5 cuốn (SV) / 10 cuốn (GV)</strong> &middot; Cập nhật CSDL Thư viện UTC
         </div>
     </div>
     <button class="btn btn-utc-primary d-inline-flex align-items-center gap-2 shadow-sm px-3 py-2" type="button" data-bs-toggle="modal" data-bs-target="#createBorrowModal">
@@ -212,7 +212,7 @@
                                         data-class="@reader.LopKhoa"
                                         data-count="@reader.SoSachDangMuon"
                                         data-quahan="@reader.SoSachQuaHan">
-                                    @reader.MaBD - @reader.HoTen (@reader.LopKhoa) [Đang mượn: @reader.SoSachDangMuon/5 cuốn]
+                                    @reader.MaBD - @reader.HoTen (@reader.LopKhoa) [Đang mượn: @reader.SoSachDangMuon/@(reader.Nhom == "Giảng viên" ? "10" : "5") cuốn]
                                 </option>
                             }
                         </select>
@@ -371,10 +371,13 @@
             infoReaderName.textContent = name;
             infoReaderId.textContent = mabd;
             infoReaderClass.textContent = lop;
-            infoReaderBadge.textContent = "Đang mượn " + count + "/5 cuốn";
+            var maxLimit = (mabd.toUpperCase().startsWith("GV") || mabd.toUpperCase().startsWith("CB")) ? 10 : 5;
+            infoReaderBadge.textContent = "Đang mượn " + count + "/" + maxLimit + " cuốn";
 
-            if (count >= 5) {
+            if (count >= maxLimit) {
                 infoReaderBadge.className = "badge bg-danger px-2 py-1";
+                var limitSpan = readerLimitAlert.querySelector("strong:nth-of-type(2)");
+                if (limitSpan) limitSpan.textContent = maxLimit + "/" + maxLimit + " cuốn sách";
                 readerLimitAlert.classList.remove("d-none");
                 selectBook.disabled = true;
                 selectBook.value = "";

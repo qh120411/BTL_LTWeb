@@ -179,9 +179,8 @@ public class ReaderService : IReaderService
         {
             var banDocs = _dbContext.BanDocs
                 .Include(b => b.MaLopNavigation)
-                .Include(b => b.TheBanDoc)
-                    .ThenInclude(t => t.PhieuMuons)
-                        .ThenInclude(p => p.ChiTietMuons)
+                .Include(b => b.PhieuMuons)
+                    .ThenInclude(p => p.ChiTietMuons)
                 .AsNoTracking()
                 .ToList();
 
@@ -194,7 +193,7 @@ public class ReaderService : IReaderService
                                  b.MaSinhVien.StartsWith("CB", StringComparison.OrdinalIgnoreCase);
                 var group = isLecturer ? "Giảng viên" : "Sinh viên";
 
-                var activeLoans = b.TheBanDoc?.PhieuMuons
+                var activeLoans = b.PhieuMuons
                     .SelectMany(p => p.ChiTietMuons)
                     .Where(c => c.NgayTra == null && 
                                 c.TrangThai != "Đã trả" && 
@@ -265,10 +264,9 @@ public class ReaderService : IReaderService
         {
             var b = _dbContext.BanDocs
                 .Include(b => b.MaLopNavigation)
-                .Include(b => b.TheBanDoc)
-                    .ThenInclude(t => t.PhieuMuons)
-                        .ThenInclude(p => p.ChiTietMuons)
-                            .ThenInclude(c => c.MaBanSaoNavigation)
+                .Include(b => b.PhieuMuons)
+                    .ThenInclude(p => p.ChiTietMuons)
+                        .ThenInclude(c => c.MaBanSaoNavigation)
                                 .ThenInclude(bs => bs.MaTaiLieuNavigation)
                                     .ThenInclude(tl => tl.TaiLieuTacGia)
                                         .ThenInclude(tg => tg.MaTacGiaNavigation)
@@ -281,7 +279,7 @@ public class ReaderService : IReaderService
             var isLecturer = b.MaSinhVien.StartsWith("GV", StringComparison.OrdinalIgnoreCase) ||
                              b.MaSinhVien.StartsWith("CB", StringComparison.OrdinalIgnoreCase);
 
-            var activeLoans = b.TheBanDoc?.PhieuMuons
+            var activeLoans = b.PhieuMuons
                 .SelectMany(p => p.ChiTietMuons)
                 .Where(c => c.NgayTra == null && 
                             c.TrangThai != "Đã trả" && 
@@ -300,7 +298,7 @@ public class ReaderService : IReaderService
 
                     return new BorrowTransactionViewModel
                     {
-                        MaGD = $"GD{c.MaPhieuMuonNavigation.NgayMuon:yyMMdd}-{c.MaChiTietMuon:D3}",
+                        MaGD = $"GD{(c.MaPhieuMuonNavigation != null ? c.MaPhieuMuonNavigation.NgayMuon : DateTime.Now):yyMMdd}-{c.MaChiTietMuon:D3}",
                         MaSach = c.MaBanSaoNavigation?.MaVach ?? $"BS-{c.MaBanSao:D5}",
                         TenSach = book?.TenTaiLieu ?? "Học liệu UTC",
                         TacGia = authors,
@@ -325,10 +323,10 @@ public class ReaderService : IReaderService
                 MaBD = b.MaSinhVien,
                 HoTen = b.HoTen,
                 LopKhoa = lopKhoa,
-                TrangThaiHocTap = "Đang học",
+                TrangThaiHocTap = isLecturer ? "Đang công tác" : "Đang học",
                 Nhom = isLecturer ? "Giảng viên" : "Sinh viên",
                 QuyenSuDung = b.TrangThai == "Hoạt động" ? "Hoạt động" : "Đang khóa",
-                GioiHanSach = isLecturer ? "8 cuốn" : "5 cuốn",
+                GioiHanSach = isLecturer ? "10 cuốn" : "5 cuốn",
                 HieuLucQuyen = "2028-06-30",
                 BorrowTransactions = activeLoans,
                 AvailableBooks = availableBooks
@@ -393,11 +391,10 @@ public class ReaderService : IReaderService
         {
             // 1. TRUY VẤN VÀ CẬP NHẬT TRỰC TIẾP VÀO SQL SERVER QLThuVienUTC
             var banDoc = _dbContext.BanDocs
-                .Include(b => b.TheBanDoc)
-                    .ThenInclude(t => t.PhieuMuons)
-                        .ThenInclude(p => p.ChiTietMuons)
-                            .ThenInclude(c => c.MaBanSaoNavigation)
-                                .ThenInclude(bs => bs.MaTaiLieuNavigation)
+                .Include(b => b.PhieuMuons)
+                    .ThenInclude(p => p.ChiTietMuons)
+                        .ThenInclude(c => c.MaBanSaoNavigation)
+                            .ThenInclude(bs => bs.MaTaiLieuNavigation)
                 .FirstOrDefault(b => b.MaSinhVien == maBD);
 
             if (banDoc == null)
@@ -407,7 +404,7 @@ public class ReaderService : IReaderService
             }
 
             // Tìm ChiTietMuon tương ứng
-            var activeLoans = banDoc.TheBanDoc?.PhieuMuons
+            var activeLoans = banDoc.PhieuMuons
                 .SelectMany(p => p.ChiTietMuons)
                 .Where(c => c.NgayTra == null && 
                             c.TrangThai != "Đã trả" && 
@@ -556,20 +553,17 @@ public class ReaderService : IReaderService
                 }
             }
 
-            // Xử lý nộp phạt trong bảng ViPham / TienPhat nếu có
+            // Xử lý nộp phạt trong bảng ViPham nếu có
             if (payOverdue)
             {
                 var viPhams = _dbContext.ViPhams
-                    .Include(v => v.TienPhat)
                     .Where(v => v.MaChiTietMuon == ctm.MaChiTietMuon)
                     .ToList();
 
                 foreach (var vp in viPhams)
                 {
-                    if (vp.TienPhat != null)
-                    {
-                        vp.TienPhat.TrangThai = "Đã thanh toán";
-                    }
+                    vp.TrangThaiNop = "Đã thanh toán";
+                    vp.NgayNop = DateTime.Now;
                 }
             }
 
@@ -616,10 +610,9 @@ public class ReaderService : IReaderService
         try
         {
             var banDoc = _dbContext.BanDocs
-                .Include(b => b.TheBanDoc)
-                    .ThenInclude(t => t.PhieuMuons)
-                        .ThenInclude(p => p.ChiTietMuons)
-                            .ThenInclude(c => c.MaBanSaoNavigation)
+                .Include(b => b.PhieuMuons)
+                    .ThenInclude(p => p.ChiTietMuons)
+                        .ThenInclude(c => c.MaBanSaoNavigation)
                 .FirstOrDefault(b => b.MaSinhVien == maBD);
 
             if (banDoc == null)
@@ -628,7 +621,7 @@ public class ReaderService : IReaderService
                 return false;
             }
 
-            var activeLoans = banDoc.TheBanDoc?.PhieuMuons
+            var activeLoans = banDoc.PhieuMuons
                 .SelectMany(p => p.ChiTietMuons)
                 .Where(c => c.NgayTra == null && 
                             c.TrangThai != "Đã trả" && 
@@ -636,9 +629,13 @@ public class ReaderService : IReaderService
                             c.TrangThai != "Đã đền tiền")
                 .ToList() ?? new List<ChiTietMuon>();
 
-            if (activeLoans.Count >= 5)
+            var isLecturer = banDoc.MaSinhVien.StartsWith("GV", StringComparison.OrdinalIgnoreCase) ||
+                             banDoc.MaSinhVien.StartsWith("CB", StringComparison.OrdinalIgnoreCase);
+            int maxAllowed = isLecturer ? 10 : 5;
+
+            if (activeLoans.Count >= maxAllowed)
             {
-                errorMessage = "Bạn đọc đã đạt giới hạn mượn tối đa (5 cuốn)! Vui lòng trả bớt sách trước khi mượn thêm.";
+                errorMessage = $"Bạn đọc đã đạt giới hạn mượn tối đa ({maxAllowed} cuốn)! Vui lòng trả bớt sách trước khi mượn thêm.";
                 return false;
             }
 
@@ -664,26 +661,21 @@ public class ReaderService : IReaderService
                 return false;
             }
 
-            if (banDoc.TheBanDoc == null)
+            if (string.IsNullOrEmpty(banDoc.SoThe))
             {
-                var the = new TheBanDoc
-                {
-                    MaBanDoc = banDoc.MaBanDoc,
-                    SoThe = $"THE-{banDoc.MaSinhVien}",
-                    NgayCap = DateOnly.FromDateTime(DateTime.Today),
-                    NgayHetHan = DateOnly.FromDateTime(DateTime.Today.AddYears(4)),
-                    TrangThai = "Hoạt động"
-                };
-                _dbContext.TheBanDocs.Add(the);
+                banDoc.SoThe = $"THE-{banDoc.MaSinhVien}";
+                banDoc.NgayCapThe = DateOnly.FromDateTime(DateTime.Today);
+                banDoc.NgayHetHanThe = DateOnly.FromDateTime(DateTime.Today.AddYears(4));
+                banDoc.TrangThaiThe = "Hoạt động";
                 _dbContext.SaveChanges();
             }
 
-            var phieuMuon = banDoc.TheBanDoc.PhieuMuons.FirstOrDefault(p => p.TrangThai == "Đang mượn");
+            var phieuMuon = banDoc.PhieuMuons.FirstOrDefault(p => p.TrangThai == "Đang mượn");
             if (phieuMuon == null)
             {
                 phieuMuon = new PhieuMuon
                 {
-                    MaTheBanDoc = banDoc.TheBanDoc.MaTheBanDoc,
+                    MaBanDoc = banDoc.MaBanDoc,
                     MaNhanVien = 1,
                     NgayMuon = DateTime.Now,
                     TrangThai = "Đang mượn",
@@ -747,8 +739,7 @@ public class ReaderService : IReaderService
             var today = DateTime.Today;
             var activeLoans = _dbContext.ChiTietMuons
                 .Include(c => c.MaPhieuMuonNavigation)
-                    .ThenInclude(p => p.MaTheBanDocNavigation)
-                        .ThenInclude(t => t.MaBanDocNavigation)
+                    .ThenInclude(p => p.MaBanDocNavigation)
                 .Include(c => c.MaBanSaoNavigation)
                     .ThenInclude(b => b.MaTaiLieuNavigation)
                         .ThenInclude(tl => tl.TaiLieuTacGia)
@@ -764,7 +755,7 @@ public class ReaderService : IReaderService
             foreach (var c in activeLoans)
             {
                 var book = c.MaBanSaoNavigation?.MaTaiLieuNavigation;
-                var banDoc = c.MaPhieuMuonNavigation?.MaTheBanDocNavigation?.MaBanDocNavigation;
+                var banDoc = c.MaPhieuMuonNavigation?.MaBanDocNavigation;
                 var hanTraDate = c.HanTra.ToDateTime(TimeOnly.MinValue);
                 var isOverdue = today > hanTraDate || c.TrangThai == "Quá hạn";
                 var daysOverdue = isOverdue ? Math.Max(1, (int)(today - hanTraDate).TotalDays) : 0;
@@ -775,7 +766,7 @@ public class ReaderService : IReaderService
 
                 list.Add(new CirculationTransactionItem
                 {
-                    MaGD = $"GD{c.MaPhieuMuonNavigation.NgayMuon:yyMMdd}-{c.MaChiTietMuon:D3}",
+                    MaGD = $"GD{(c.MaPhieuMuonNavigation != null ? c.MaPhieuMuonNavigation.NgayMuon : DateTime.Now):yyMMdd}-{c.MaChiTietMuon:D3}",
                     MaBD = banDoc?.MaSinhVien ?? "242630923",
                     HoTen = banDoc?.HoTen ?? "Đỗ Văn Đạt",
                     MaBanSao = c.MaBanSaoNavigation?.MaVach ?? $"BS-{c.MaBanSao:D5}",
@@ -802,18 +793,17 @@ public class ReaderService : IReaderService
         try
         {
             var banDocs = _dbContext.BanDocs
-                .Include(b => b.TheBanDoc)
-                    .ThenInclude(t => t.PhieuMuons)
-                        .ThenInclude(p => p.ChiTietMuons)
-                            .ThenInclude(c => c.MaBanSaoNavigation)
-                                .ThenInclude(bs => bs.MaTaiLieuNavigation)
+                .Include(b => b.PhieuMuons)
+                    .ThenInclude(p => p.ChiTietMuons)
+                        .ThenInclude(c => c.MaBanSaoNavigation)
+                            .ThenInclude(bs => bs.MaTaiLieuNavigation)
                 .AsNoTracking()
                 .ToList();
 
             var map = new Dictionary<string, List<string>>();
             foreach (var b in banDocs)
             {
-                var titles = b.TheBanDoc?.PhieuMuons
+                var titles = b.PhieuMuons
                     .SelectMany(p => p.ChiTietMuons)
                     .Where(c => c.NgayTra == null && 
                                 c.TrangThai != "Đã trả" && 

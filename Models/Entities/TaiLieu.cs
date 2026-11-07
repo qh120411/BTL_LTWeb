@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace BTL_LTWEB.Models.Entities;
@@ -13,11 +13,11 @@ public partial class TaiLieu
 
     public int? MaNhaXuatBan { get; set; }
 
-    public string? MaNgonNgu { get; set; }
+    public string? NgonNgu { get; set; }
 
     public int? MaTheLoai { get; set; }
 
-    public int? MaDinhDang { get; set; }
+    public string? DinhDang { get; set; }
 
     public short? NamXuatBan { get; set; }
 
@@ -34,10 +34,6 @@ public partial class TaiLieu
     public virtual ICollection<BanSao> BanSaos { get; set; } = new List<BanSao>();
 
     public virtual ICollection<DatTruoc> DatTruocs { get; set; } = new List<DatTruoc>();
-
-    public virtual DinhDang? MaDinhDangNavigation { get; set; }
-
-    public virtual NgonNgu? MaNgonNguNavigation { get; set; }
 
     public virtual NhaXuatBan? MaNhaXuatBanNavigation { get; set; }
 

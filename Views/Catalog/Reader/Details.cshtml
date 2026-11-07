@@ -9,18 +9,20 @@
 }
 
 <section class="utc-detail-section">
-    <div class="container">
+    <div class="container-xl px-3 px-md-4">
         <!-- Breadcrumb & Tiêu đề -->
         <div class="utc-detail-header-row">
-            <div class="utc-breadcrumb">
-                <a href="/Reader/Search" class="text-muted text-decoration-none">CỔNG BẠN ĐỌC</a> / 
-                <a href="/Reader/Search" class="text-muted text-decoration-none">TRA CỨU OPAC</a> / 
-                <span>CHI TIẾT HỌC LIỆU</span>
-            </div>
+            <nav class="utc-breadcrumb mb-2" aria-label="breadcrumb">
+                <a href="/Reader/Home" class="text-decoration-none" style="color: var(--utc-primary);">Trang chủ</a>
+                <span style="color: var(--utc-border);">&bull;</span>
+                <a href="/Reader/Search" class="text-decoration-none" style="color: var(--utc-text-muted);">Tra cứu OPAC</a>
+                <span style="color: var(--utc-border);">&bull;</span>
+                <span style="color: var(--utc-text-primary); font-weight: 700;">Chi tiết học liệu</span>
+            </nav>
             <h1 class="utc-page-title-main">@(Model?.Title ?? "Chi tiết học liệu")</h1>
-            <div class="text-muted fs-6">
-                <i class="bi bi-person-fill me-1"></i> Tác giả: <strong>@(Model?.Authors ?? "Nhiều tác giả")</strong> &middot; 
-                <i class="bi bi-building me-1 ms-2"></i> Nhà xuất bản: <strong>@(Model?.Publisher ?? "Đang cập nhật")</strong> &middot; 
+            <div class="text-muted" style="font-size: 14.5px;">
+                <i class="bi bi-person-fill me-1" style="color: var(--utc-primary);"></i> Tác giả: <strong>@(Model?.Authors ?? "Nhiều tác giả")</strong> &middot; 
+                <i class="bi bi-building me-1 ms-2" style="color: var(--utc-primary);"></i> Nhà xuất bản: <strong>@(Model?.Publisher ?? "Đang cập nhật")</strong> &middot; 
                 Năm xuất bản: <strong>@(Model?.Year ?? 2024)</strong>
             </div>
         </div>
@@ -48,7 +50,7 @@
                     <span class="utc-detail-cover-tag" style="color: @(Model?.Category == "thesis" ? "#92400e" : "var(--utc-navy)");">
                         UTC / @(Model?.Category == "thesis" ? "CÔNG TRÌNH NGHIÊN CỨU" : "HỌC LIỆU")
                     </span>
-                    <div class="utc-detail-cover-title" style="color: @(Model?.Category == "thesis" ? "#78350f" : "var(--utc-navy)"); font-size: 26px;">
+                    <div class="utc-detail-cover-title" style="color: @(Model?.Category == "thesis" ? "#78350f" : "var(--utc-navy)");">
                         @Model?.Title
                     </div>
                     <div class="utc-detail-cover-footer">
@@ -105,10 +107,10 @@
 
                 <!-- Tóm tắt số lượng kho -->
                 <div class="utc-stock-summary">
-                    <i class="bi bi-pie-chart-fill me-1 text-brand"></i> 
-                    Tổng số: <strong>@(Model?.TotalCopies ?? 4) bản</strong> &middot; 
-                    Sẵn có: <strong class="text-success">@(Model?.AvailableCopies ?? 4)</strong> &middot; 
-                    Đang mượn: <strong class="text-primary">@((Model?.TotalCopies ?? 4) - (Model?.AvailableCopies ?? 4))</strong>
+                    <i class="bi bi-pie-chart-fill text-primary"></i> 
+                    <span>Tổng số: <strong>@(Model?.TotalCopies ?? 4) bản</strong></span> &middot; 
+                    <span>Sẵn có: <strong class="text-success">@(Model?.AvailableCopies ?? 4)</strong></span> &middot; 
+                    <span>Đang mượn: <strong class="text-primary">@((Model?.TotalCopies ?? 4) - (Model?.AvailableCopies ?? 4))</strong></span>
                 </div>
 
                 <!-- Các nút thao tác -->
@@ -116,10 +118,10 @@
                     <a href="/Reader/Guide" class="btn-utc-primary">
                         <i class="bi bi-journal-arrow-down me-1"></i> Hướng dẫn mượn tại quầy
                     </a>
-                    <a href="/Reader/MyLibrary" class="btn-utc-secondary">
-                        <i class="bi bi-bookmark-plus me-1"></i> Lưu vào danh sách quan tâm
+                    <a href="/Reader/Profile" class="btn-utc-secondary">
+                        <i class="bi bi-person-vcard me-1"></i> Xem hồ sơ mượn sách
                     </a>
-                    <a href="/Reader/Search" class="btn-utc-secondary">
+                    <a href="/Reader/Search" class="btn-utc-outline">
                         &larr; Quay lại danh mục OPAC
                     </a>
                 </div>
@@ -127,10 +129,10 @@
                 <!-- Banner hướng dẫn bạn đọc -->
                 <div class="utc-borrow-guide-box">
                     <span class="utc-borrow-guide-title">
-                        <i class="bi bi-info-circle-fill me-1"></i> Bạn muốn mượn tài liệu này?
+                        <i class="bi bi-info-circle-fill"></i> Bạn muốn mượn tài liệu này?
                     </span>
                     <p class="utc-borrow-guide-desc">
-                        Bạn đọc chỉ cần mang Thẻ sinh viên hoặc Thẻ bạn đọc UTC đến <strong>Quầy thủ thư - Tầng 5 Nhà A8</strong>, cung cấp vị trí <strong>@(Model?.Shelf ?? "Kho sách")</strong> và mã vạch cuốn sách để làm thủ tục. Thời hạn mượn tiêu chuẩn là 14 ngày.
+                        Bạn đọc chỉ cần mang Thẻ sinh viên hoặc Thẻ bạn đọc UTC đến <strong>Quầy thủ thư - Tầng 5 Nhà A8</strong>, cung cấp vị trí <strong>@(Model?.Shelf ?? "Kho sách")</strong> và mã vạch cuốn sách để làm thủ tục. Thời hạn mượn tiêu chuẩn là 1 năm.
                     </p>
                 </div>
             </div>
@@ -138,41 +140,45 @@
 
         <!-- Bảng danh sách các bản sách đang lưu hành -->
         <div class="utc-copies-section">
-            <h3 class="utc-copies-title">Danh sách các bản sách cụ thể (Bản sao lưu hành trong thư viện)</h3>
-            <table class="utc-copies-table">
-                <thead>
-                    <tr>
-                        <th style="width: 20%;">Mã vạch bản sách</th>
-                        <th style="width: 25%;">Vị trí lưu kho</th>
-                        <th style="width: 20%;">Tình trạng vật lý</th>
-                        <th style="width: 20%;">Trạng thái lưu thông</th>
-                        <th style="width: 15%;">Hạn trả dự kiến</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (int i = 1; i <= (Model?.TotalCopies ?? 4); i++)
-                    {
-                        var barcode = $"UTC-{(Model?.Id ?? 1):D2}-{i:D2}";
-                        var isAvailable = i <= (Model?.AvailableCopies ?? 3);
+            <h3 class="utc-copies-title">
+                <i class="bi bi-layers-fill text-primary"></i> Danh sách các bản sách cụ thể (Bản sao lưu hành trong thư viện)
+            </h3>
+            <div class="table-responsive">
+                <table class="utc-copies-table">
+                    <thead>
                         <tr>
-                            <td><strong>@barcode</strong></td>
-                            <td>@(Model?.Shelf ?? "Kệ lưu trữ A1"), Thư viện A8</td>
-                            <td>@(i == 1 ? "Mới 98%" : "Tốt (90%)")</td>
-                            <td>
-                                @if (isAvailable)
-                                {
-                                    <span class="badge-status badge-available"><i class="bi bi-check-circle-fill"></i> Có sẵn tại giá</span>
-                                }
-                                else
-                                {
-                                    <span class="badge-status badge-borrowed"><i class="bi bi-clock-history"></i> Đang cho mượn</span>
-                                }
-                            </td>
-                            <td>@(isAvailable ? "-" : "28/11/2026")</td>
+                            <th style="width: 20%;">Mã vạch bản sách</th>
+                            <th style="width: 25%;">Vị trí lưu kho</th>
+                            <th style="width: 20%;">Tình trạng vật lý</th>
+                            <th style="width: 20%;">Trạng thái lưu thông</th>
+                            <th style="width: 15%;">Hạn trả dự kiến</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @for (int i = 1; i <= (Model?.TotalCopies ?? 4); i++)
+                        {
+                            var barcode = $"UTC-{(Model?.Id ?? 1):D2}-{i:D2}";
+                            var isAvailable = i <= (Model?.AvailableCopies ?? 3);
+                            <tr>
+                                <td><strong>@barcode</strong></td>
+                                <td>@(Model?.Shelf ?? "Kệ lưu trữ A1"), Thư viện A8</td>
+                                <td>@(i == 1 ? "Mới 98%" : "Tốt (90%)")</td>
+                                <td>
+                                    @if (isAvailable)
+                                    {
+                                        <span class="utc-badge utc-badge-success">Có sẵn tại giá</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="utc-badge utc-badge-warning">Đang cho mượn</span>
+                                    }
+                                </td>
+                                <td>@(isAvailable ? "-" : "28/11/2026")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </section>

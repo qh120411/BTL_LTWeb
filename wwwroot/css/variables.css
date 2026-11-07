@@ -1,43 +1,112 @@
-/* UTC Library Design Tokens - Trích xuất chính xác 100% từ Figma */
+/* ==========================================================================
+   MODERN BLUE ACADEMIC - PREMIUM UNIVERSITY LIBRARY DESIGN SYSTEM
+   Standardized Unified Tokens for UTC Library Platform
+   ========================================================================== */
 :root {
-    /* UTC Brand Colors */
-    --utc-navy: #174c7f;
-    --utc-navy-dark: #0f2a5c;
-    --utc-brand: #0079ba;
-    --utc-brand-hover: #00649c;
-    --utc-gold: #ffc72c;
-    --utc-sky: #0a9ddd;
-    --utc-blue: #e7f6ff;
-    --utc-blue-soft: #f1faff;
-    --utc-green: #24725b;
-    --utc-green-bg: #e9faf4;
-    --utc-warning: #8c5c00;
-    --utc-warning-bg: #fff5d9;
+    /* ===== 2.1. PRIMARY COLOR PALETTE (DEEP BLUE ACADEMIC - MODERN UNIVERSITY PORTAL) ===== */
+    --utc-deep-navy: #073B60;          /* Deep Navy (Institutional Topbar Tầng 1) */
+    --utc-primary-navy: #075985;       /* Primary Navy (Navigation Bar Tầng 3) */
+    --utc-primary: #087DBB;            /* Primary Academic Blue (Brand Header Tầng 2) */
+    --utc-primary-hover: #06699F;      /* Primary Hover */
+    --utc-primary-dark: #075985;       /* Primary Dark */
+    --utc-bright-blue: #1596D2;        /* Bright Blue Accent / Hover */
+    --utc-primary-light: #EAF4FC;      /* Soft Blue (Active Tabs, Pills, Soft Bg) */
+    --utc-soft-blue: #EAF4FC;          /* Soft Sky Blue */
+    
+    /* Surfaces & Layout Backgrounds */
+    --utc-page-bg: #EDF4FA;            /* Page Background: Nền xanh xám học thuật nhẹ nhàng */
+    --utc-bg-page: var(--utc-page-bg);
+    --utc-surface: #FFFFFF;            /* Card & Modal Surface: Trắng tinh khiết */
+    --utc-surface-secondary: #F8FAFC;  /* Secondary Surface: Xám xanh rất nhẹ */
+    --utc-border: #D7E4EF;             /* Subtle Academic Border */
+    --utc-border-light: #E5EEF6;       /* Ultra-soft Divider */
+    --utc-border-focus: #087DBB;       /* Focus Border */
+    
+    /* Typography Colors */
+    --utc-text-primary: #163B5C;       /* Text Primary: Xanh đen học thuật, tương phản cao */
+    --utc-text-secondary: #718096;     /* Text Secondary: Xám trung tính dịu mắt */
+    --utc-text-muted: #94A3B8;         /* Text Muted: Chú thích, metadata */
+    --utc-text-inverse: #FFFFFF;       /* Text Inverse: Chữ trắng trên nền đậm */
 
-    /* Neutrals */
-    --utc-paper: #ffffff;
-    --utc-bg-soft: #f2f6fa;
-    --utc-bg-card: #f8fafc;
-    --utc-ink: #203c58;
-    --utc-muted: #5c7187;
-    --utc-line: #deebf4;
-    --utc-line-dark: #c5d7e8;
+    /* ===== 2.1.2. SOFT SEMANTIC STATE COLORS ===== */
+    /* Success: #668D7B, Nền #EDF4EF (Sage green thanh lịch, hài hòa học thuật) */
+    --utc-success: #668D7B;
+    --utc-success-bg: #EDF4EF;
+    --utc-success-border: #D2E4D8;
+    
+    /* Warning: #B28A52, Nền #F8F3E9 (Warm Amber / Ochre dịu mắt) */
+    --utc-warning: #B28A52;
+    --utc-warning-bg: #F8F3E9;
+    --utc-warning-border: #EADDC7;
+    
+    /* Danger: #A96D72, Nền #F8EEEE (Dusty Rose / Muted Red không gắt) */
+    --utc-danger: #A96D72;
+    --utc-danger-bg: #F8EEEE;
+    --utc-danger-border: #EACFD2;
+    
+    /* Info: #537FA5, Nền #EDF4F9 (Soft Dusty Academic Blue) */
+    --utc-info: #537FA5;
+    --utc-info-bg: #EDF4F9;
+    --utc-info-border: #D0E1EE;
 
-    /* Typography */
-    --utc-font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    /* Legacy Alias Mapping for existing classes */
+    --utc-brand: var(--utc-primary);
+    --utc-brand-hover: var(--utc-primary-hover);
+    --utc-navy: var(--utc-text-primary);
+    --utc-navy-dark: var(--utc-primary-dark);
+    --utc-sky-primary: var(--utc-primary);
+    --utc-sky-hover: var(--utc-primary-hover);
+    --utc-sky-light: var(--utc-primary-light);
+    --utc-sky-soft: var(--utc-page-bg);
+    --utc-paper: var(--utc-surface);
+    --utc-bg-soft: var(--utc-page-bg);
+    --utc-ink: var(--utc-text-primary);
+    --utc-muted: var(--utc-text-secondary);
+    --utc-line: var(--utc-border);
 
-    /* Radii */
-    --utc-radius-sm: 4px;
-    --utc-radius-md: 6px;
-    --utc-radius-lg: 8px;
-    --utc-radius-xl: 12px;
+    /* ===== 2.2. TYPOGRAPHY (BE VIETNAM PRO) ===== */
+    --utc-font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    
+    --utc-fs-title: 26px;              /* Page Title: 24–28px, 700 */
+    --utc-fs-section: 20px;            /* Section Title: 18–20px, 600 */
+    --utc-fs-card: 16px;               /* Card Title: 15–17px, 600 */
+    --utc-fs-body: 14.5px;             /* Body: 14–15px, 400 */
+    --utc-fs-meta: 12.5px;             /* Metadata: 12–13px */
+    --utc-fs-btn: 14px;                /* Button: 14px, 600 */
+
+    /* ===== 2.3. BORDER RADIUS ===== */
+    --utc-radius-card: 14px;           /* Card: 12–16px */
+    --utc-radius-btn: 9px;             /* Button: 8–10px */
+    --utc-radius-input: 9px;           /* Input: 8–10px */
+    --utc-radius-badge: 9999px;        /* Badge / Pill */
+    --utc-radius-dialog: 16px;         /* Dialog / Modal: 14–18px */
+    --utc-radius-xs: 6px;
+    --utc-radius-sm: 8px;
+    --utc-radius-md: 10px;
+    --utc-radius-lg: 14px;
+    --utc-radius-xl: 18px;
+    --utc-radius-2xl: 20px;            /* Large Cards & Panels: 20px */
+    --utc-radius-3xl: 24px;            /* Hero & Modals: 24px */
     --utc-radius-full: 9999px;
 
-    /* Shadows */
-    --utc-shadow-sm: 0 1px 3px rgba(23, 76, 127, 0.08);
-    --utc-shadow-md: 0 4px 14px rgba(23, 76, 127, 0.10);
-    --utc-shadow-lg: 0 10px 25px rgba(23, 76, 127, 0.12);
+    /* ===== 2.4. SHADOWS ===== */
+    --utc-shadow-card: 0 4px 16px rgba(30, 80, 120, 0.06);
+    --utc-shadow-hover: 0 8px 24px rgba(30, 80, 120, 0.09);
+    --utc-shadow-sm: 0 2px 8px rgba(30, 80, 120, 0.04);
+    --utc-shadow-modal: 0 16px 40px rgba(22, 59, 92, 0.16);
 
-    /* Transitions */
+    /* ===== 2.5. SPACING (4px Multiples) ===== */
+    --utc-space-1: 4px;
+    --utc-space-2: 8px;
+    --utc-space-3: 12px;
+    --utc-space-4: 16px;
+    --utc-space-5: 20px;
+    --utc-space-6: 24px;
+    --utc-space-8: 32px;
+    --utc-space-10: 40px;
+    --utc-space-12: 48px;
+
+    /* Transition & Motion */
     --utc-transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    --utc-transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }

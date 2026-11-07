@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace BTL_LTWEB.Models.Entities;
@@ -19,7 +19,7 @@ public partial class ThanhToan
 
     public string TrangThai { get; set; } = null!;
 
-    public virtual ICollection<ChiTietThanhToan> ChiTietThanhToans { get; set; } = new List<ChiTietThanhToan>();
+    public string? NoiDung { get; set; }
 
     public virtual BanDoc MaBanDocNavigation { get; set; } = null!;
 

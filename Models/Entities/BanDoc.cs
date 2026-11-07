@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace BTL_LTWEB.Models.Entities;
@@ -23,6 +23,14 @@ public partial class BanDoc
 
     public string? MaLop { get; set; }
 
+    public string? SoThe { get; set; }
+
+    public DateOnly? NgayCapThe { get; set; }
+
+    public DateOnly? NgayHetHanThe { get; set; }
+
+    public string? TrangThaiThe { get; set; }
+
     public string TrangThai { get; set; } = null!;
 
     public DateTime NgayTao { get; set; }
@@ -35,7 +43,7 @@ public partial class BanDoc
 
     public virtual ICollection<ThanhToan> ThanhToans { get; set; } = new List<ThanhToan>();
 
-    public virtual TheBanDoc? TheBanDoc { get; set; }
+    public virtual ICollection<PhieuMuon> PhieuMuons { get; set; } = new List<PhieuMuon>();
 
     public virtual ICollection<ViPham> ViPhams { get; set; } = new List<ViPham>();
 }

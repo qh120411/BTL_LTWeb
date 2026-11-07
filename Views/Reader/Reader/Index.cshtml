@@ -94,15 +94,15 @@
                                     <div class="student-data-value">@Model.SoCCCD</div>
                                 </div>
                                 <div class="student-data-row">
-                                    <span class="student-data-label">MÃ SV</span>
+                                    <span class="student-data-label">@(Model.MaSinhVien.StartsWith("GV") ? "MÃ GV" : "MÃ SV")</span>
                                     <div class="student-data-value">@Model.MaSinhVien</div>
                                 </div>
                                 <div class="student-data-row">
-                                    <span class="student-data-label">NGÀNH HỌC</span>
+                                    <span class="student-data-label">@(Model.MaSinhVien.StartsWith("GV") ? "KHOA / ĐƠN VỊ" : "NGÀNH HỌC")</span>
                                     <div class="student-data-value">@Model.NganhHoc</div>
                                 </div>
                                 <div class="student-data-row">
-                                    <span class="student-data-label">LỚP QUẢN LÝ</span>
+                                    <span class="student-data-label">@(Model.MaSinhVien.StartsWith("GV") ? "BỘ MÔN / CHỨC DANH" : "LỚP QUẢN LÝ")</span>
                                     <div class="student-data-value">@Model.LopQuanLy</div>
                                 </div>
                             </div>
@@ -242,135 +242,161 @@
                     </div>
                 </div>
 
-                <!-- Bảng danh sách sách đang mượn -->
-                <div class="table-responsive">
-                    <table class="profile-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 5%; text-align: center;">STT</th>
-                                <th style="width: 10%; text-align: center;">Bìa sách</th>
-                                <th style="width: 35%;">Thông tin tài liệu / Sách</th>
-                                <th style="width: 13%;">Ngày mượn</th>
-                                <th style="width: 13%;">Hạn trả (1 năm)</th>
-                                <th style="width: 12%;">Trạng thái</th>
-                                <th style="width: 12%; text-align: right;">Tiền phạt quá hạn</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (Model.BorrowedBooks.Any())
-                            {
-                                int idx = 1;
-                                foreach (var book in Model.BorrowedBooks)
-                                {
-                                    <tr>
-                                        <td style="text-align: center; font-weight: 600; color: #64748b;">
-                                            @idx
-                                        </td>
-                                        <td style="text-align: center;">
-                                            <img src="@book.CoverImage" alt="@book.TenSach" class="profile-book-thumb" onerror="this.src='/images/covers/sach_01.jpg'" />
-                                        </td>
-                                        <td>
-                                            <div class="fw-bold text-navy mb-1" style="font-size: 0.92rem;">
-                                                @book.TenSach
-                                            </div>
-                                            <div class="text-muted small">
-                                                <i class="bi bi-person me-1"></i> Tác giả: <strong>@book.TacGia</strong>
-                                            </div>
-                                            <div class="text-secondary small mt-1">
-                                                <span class="badge bg-light text-dark border me-1">@book.MaVach</span>
-                                                <span class="text-muted">Mã GD: @book.MaGD</span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span class="fw-medium text-dark">@book.NgayMuon.ToString("dd/MM/yyyy")</span>
-                                        </td>
-                                        <td>
-                                            <span class="fw-bold @(book.IsQuaHan ? "text-danger" : "text-success")">
+                @{
+                    var soSachSapDenHan = Model.BorrowedBooks.Count(b => !b.IsQuaHan && b.SoNgayConLai <= 30);
+                }
+
+                <!-- Bộ lọc: Tất cả, Còn hạn, Sắp đến hạn, Quá hạn -->
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                    <div class="borrow-filter-tabs-wrapper mb-0">
+                        <button type="button" class="borrow-filter-tab is-active" data-filter="all">
+                            Tất cả <span class="badge-count">@Model.TongSoSachDangMuon</span>
+                        </button>
+                        <button type="button" class="borrow-filter-tab" data-filter="valid">
+                            Còn hạn <span class="badge-count">@Model.SoSachConHan</span>
+                        </button>
+                        <button type="button" class="borrow-filter-tab" data-filter="expiring">
+                            Sắp đến hạn <span class="badge-count">@soSachSapDenHan</span>
+                        </button>
+                        <button type="button" class="borrow-filter-tab" data-filter="overdue">
+                            Quá hạn <span class="badge-count">@Model.SoSachQuaHan</span>
+                        </button>
+                    </div>
+                    <div class="text-muted small">
+                        Hiển thị <strong>@Model.TongSoSachDangMuon</strong> tài liệu đang mượn
+                    </div>
+                </div>
+
+                <!-- DANH SÁCH HỌC LIỆU / SÁCH ĐANG MƯỢN (TRỰC QUAN - BÌA SÁCH TO RÕ) -->
+                <div class="borrowed-books-showcase">
+                    @if (Model.BorrowedBooks.Any())
+                    {
+                        int idx = 1;
+                        foreach (var book in Model.BorrowedBooks)
+                        {
+                            var isExpiring = !book.IsQuaHan && book.SoNgayConLai <= 30;
+                            var statusType = book.IsQuaHan ? "overdue" : (isExpiring ? "expiring" : "valid");
+
+                            <div class="book-showcase-card @(book.IsQuaHan ? "is-overdue" : "is-active")" data-status="@statusType">
+                                <!-- Cột 1: Bìa sách to rõ ràng, hiệu ứng gáy 3D -->
+                                <div class="book-showcase-cover-wrap">
+                                    <div class="book-cover-stage">
+                                        <img src="@(string.IsNullOrEmpty(book.CoverImage) ? "/images/covers/cover-placeholder.png" : (book.CoverImage.StartsWith("/") ? book.CoverImage : "/" + book.CoverImage))" 
+                                             alt="@book.TenSach" 
+                                             class="book-showcase-cover-img" 
+                                             onerror="this.onerror=null; this.src='/images/covers/cover-placeholder.png';" />
+                                        <span class="book-cover-spine"></span>
+                                    </div>
+                                    <span class="book-stt-pill">Bản sách #@idx</span>
+                                </div>
+
+                                <!-- Cột 2: Thông tin chi tiết tài liệu -->
+                                <div class="book-showcase-info">
+                                    <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                                        <span class="book-tag-vach">@book.MaVach</span>
+                                        <span class="book-tag-gd">Mã GD: @book.MaGD</span>
+                                    </div>
+                                    <h3 class="book-showcase-title">
+                                        @book.TenSach
+                                    </h3>
+                                    <div class="book-showcase-author">
+                                        Tác giả: <strong>@book.TacGia</strong>
+                                    </div>
+
+                                    <!-- Khung thời gian mượn & hạn trả 1 năm -->
+                                    <div class="book-date-timeline">
+                                        <div class="date-timeline-item">
+                                            <span class="date-label">Ngày mượn</span>
+                                            <span class="date-val fw-semibold">@book.NgayMuon.ToString("dd/MM/yyyy")</span>
+                                        </div>
+                                        <div class="date-timeline-arrow">&rarr;</div>
+                                        <div class="date-timeline-item">
+                                            <span class="date-label">Hạn trả (1 năm)</span>
+                                            <span class="date-val fw-bold @(book.IsQuaHan ? "text-danger" : "text-success")">
                                                 @book.HanTra.ToString("dd/MM/yyyy")
                                             </span>
-                                            <div class="text-muted" style="font-size: 0.74rem;">(Thời hạn 1 năm)</div>
-                                        </td>
-                                        <td>
-                                            @if (book.IsQuaHan)
-                                            {
-                                                <span class="badge-status-overdue" title="Đã quá hạn trả sách">
-                                                    <i class="bi bi-exclamation-triangle-fill"></i> Đang quá hạn
-                                                </span>
-                                                <div class="text-danger small mt-1" style="font-size: 0.74rem;">
-                                                    Quá hạn @book.SoNgayQuaHan ngày
-                                                </div>
-                                            }
-                                            else
-                                            {
-                                                <span class="badge-status-active" title="Sách vẫn còn hạn trả">
-                                                    <i class="bi bi-check-circle-fill"></i> Còn hạn
-                                                </span>
-                                                <div class="text-success small mt-1" style="font-size: 0.74rem;">
-                                                    Còn @book.SoNgayConLai ngày
-                                                </div>
-                                            }
-                                        </td>
-                                        <td style="text-align: right;">
-                                            @if (book.IsQuaHan)
-                                            {
-                                                <strong class="text-danger fs-6">@book.TienPhat.ToString("N0") đ</strong>
-                                                <div class="text-muted" style="font-size: 0.72rem;">(100.000 đ/cuốn)</div>
-                                            }
-                                            else
-                                            {
-                                                <span class="text-muted">0 đ</span>
-                                            }
-                                        </td>
-                                    </tr>
-                                    idx++;
-                                }
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td colspan="7" class="text-center py-4 text-muted">
-                                        <i class="bi bi-journal-check fs-2 d-block mb-2 text-secondary"></i>
-                                        Bạn hiện không mượn tài liệu nào từ thư viện.
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                        <!-- Dòng cuối cùng: Tính tổng cộng số tiền phải thanh toán -->
-                        <tfoot class="table-footer-total">
-                            <tr>
-                                <td colspan="5">
-                                    <div class="d-flex flex-column gap-1">
-                                        <div class="fw-bold text-dark">
-                                            <i class="bi bi-calculator me-1 text-primary"></i> Tổng số sách đang mượn: 
-                                            <span class="text-navy">@Model.TongSoSachDangMuon cuốn</span> 
-                                            (@Model.SoSachConHan cuốn còn hạn, <span class="text-danger">@Model.SoSachQuaHan cuốn quá hạn</span>)
-                                        </div>
-                                        <div class="text-muted small">
-                                            * Quy định: Các cuốn sách quá hạn chịu mức phí nộp phạt 100.000 đ/cuốn theo quy định thư viện Đại học GTVT.
                                         </div>
                                     </div>
-                                </td>
-                                <td colspan="2">
-                                    <div class="total-due-box">
-                                        <div class="total-due-label">TỔNG PHẢI THANH TOÁN:</div>
-                                        <div class="total-due-amount">
-                                            @Model.TongTienPhaiThanhToan.ToString("N0") VNĐ
-                                        </div>
+                                </div>
+
+                                <!-- Cột 3: Trạng thái (KHÔNG DÙNG ICON) & Tiền phạt -->
+                                <div class="book-showcase-status-box">
+                                    <div class="status-badge-wrap">
+                                        @if (book.IsQuaHan)
+                                        {
+                                            <span class="status-pill-overdue">Đang quá hạn</span>
+                                            <div class="status-sub-overdue">Quá hạn @book.SoNgayQuaHan ngày</div>
+                                        }
+                                        else if (isExpiring)
+                                        {
+                                            <span class="status-pill-expiring">Sắp đến hạn</span>
+                                            <div class="status-sub-expiring">Còn @book.SoNgayConLai ngày</div>
+                                        }
+                                        else
+                                        {
+                                            <span class="status-pill-active">Còn hạn</span>
+                                            <div class="status-sub-active">Còn @book.SoNgayConLai ngày</div>
+                                        }
                                     </div>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
+
+                                    <div class="fine-due-block">
+                                        <div class="fine-due-label">Tiền phạt quá hạn</div>
+                                        @if (book.IsQuaHan)
+                                        {
+                                            <div class="fine-due-val is-fine">@book.TienPhat.ToString("N0") đ</div>
+                                            <div class="fine-due-note">(100.000 đ/cuốn)</div>
+                                        }
+                                        else
+                                        {
+                                            <div class="fine-due-val is-zero">0 đ</div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            idx++;
+                        }
+                    }
+                    else
+                    {
+                        <div class="empty-showcase-card">
+                            Bạn hiện không mượn tài liệu nào từ thư viện.
+                        </div>
+                    }
+
+                    <div id="borrowFilterEmptyMsg" class="empty-showcase-card" style="display: none;">
+                        Không có cuốn sách nào phù hợp với bộ lọc đã chọn.
+                    </div>
+                </div>
+
+                <!-- Tổng kết & Tính tổng thanh toán -->
+                <div class="profile-summary-bar mt-3">
+                    <div class="profile-summary-left">
+                        <div class="profile-summary-title">
+                            Tổng số sách đang mượn: <strong class="text-primary">@Model.TongSoSachDangMuon cuốn</strong> 
+                            (@Model.SoSachConHan cuốn còn hạn, <span class="text-danger fw-bold">@Model.SoSachQuaHan cuốn quá hạn</span>)
+                        </div>
+                        <div class="profile-summary-sub">
+                            * Quy định: Các cuốn sách quá hạn chịu mức phí nộp phạt 100.000 đ/cuốn theo quy định thư viện Đại học GTVT.
+                        </div>
+                    </div>
+                    <div class="profile-summary-right">
+                        <div class="total-due-box">
+                            <div class="total-due-label">TỔNG PHẢI THANH TOÁN:</div>
+                            <div class="total-due-amount">
+                                @Model.TongTienPhaiThanhToan.ToString("N0") VNĐ
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 @if (Model.SoSachQuaHan > 0)
                 {
-                    <div class="mt-3 p-3 bg-light rounded border d-flex justify-content-between align-items-center flex-wrap gap-2">
-                        <div class="small text-muted">
-                            <i class="bi bi-info-circle text-primary me-1"></i>
-                            Bạn có <strong>@Model.SoSachQuaHan cuốn sách đang quá hạn</strong>. Vui lòng mang sách đến quầy phục vụ tầng 5 Nhà A8 để trả sách hoặc thanh toán tiền phạt.
+                    <div class="mt-3 p-3 bg-white rounded border d-flex justify-content-between align-items-center flex-wrap gap-2" style="border-left: 4px solid var(--utc-danger, #A96D72) !important; border-color: var(--utc-border, #E2EAF2);">
+                        <div class="small" style="color: var(--utc-text-primary, #163B5C);">
+                            <i class="bi bi-info-circle me-1" style="color: var(--utc-danger, #A96D72);"></i>
+                            Bạn có <strong style="color: var(--utc-danger, #A96D72);">@Model.SoSachQuaHan cuốn sách đang quá hạn</strong>. Vui lòng mang sách đến quầy phục vụ tầng 5 Nhà A8 để trả sách hoặc thanh toán tiền phạt.
                         </div>
-                        <a href="/Reader/Guide" class="btn btn-outline-danger btn-sm">
+                        <a href="/Reader/Guide" class="btn btn-sm" style="background-color: var(--utc-danger-bg, #F8EEEE); color: var(--utc-danger, #A96D72); border: 1px solid var(--utc-danger-border, #EACFD2); font-weight: 600; border-radius: var(--utc-radius-btn);">
                             <i class="bi bi-question-circle me-1"></i> Xem hướng dẫn nộp phạt &amp; hoàn trả
                         </a>
                     </div>
@@ -379,3 +405,49 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const filterTabs = document.querySelectorAll('.borrow-filter-tab');
+            const cards = document.querySelectorAll('.book-showcase-card');
+            const emptyMsg = document.getElementById('borrowFilterEmptyMsg');
+
+            filterTabs.forEach(tab => {
+                tab.addEventListener('click', function () {
+                    filterTabs.forEach(t => t.classList.remove('is-active'));
+                    this.classList.add('is-active');
+
+                    const filter = this.getAttribute('data-filter');
+                    let visibleCount = 0;
+
+                    cards.forEach(card => {
+                        const status = card.getAttribute('data-status');
+                        let show = false;
+
+                        if (filter === 'all') {
+                            show = true;
+                        } else if (filter === 'valid') {
+                            show = (status === 'valid' || status === 'expiring');
+                        } else if (filter === 'expiring') {
+                            show = (status === 'expiring');
+                        } else if (filter === 'overdue') {
+                            show = (status === 'overdue');
+                        }
+
+                        if (show) {
+                            card.style.display = 'flex';
+                            visibleCount++;
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+
+                    if (emptyMsg) {
+                        emptyMsg.style.display = (visibleCount === 0 && cards.length > 0) ? 'block' : 'none';
+                    }
+                });
+            });
+        });
+    </script>
+}

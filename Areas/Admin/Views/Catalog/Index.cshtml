@@ -19,33 +19,33 @@
     </button>
 </div>
 
-<!-- 4 Thẻ KPI Thống kê Kho học liệu -->
+<!-- 4 Thẻ KPI Thống kê Kho học liệu (Soft Semantic Colors) -->
 <div class="row g-3 mb-4">
     <div class="col-md-3 col-sm-6">
-        <div class="kpi-card shadow-sm" style="background-color: #e7f5ff; border: 1px solid #d4ebf9;">
-            <div class="kpi-title" style="color: var(--utc-text-muted);">Tổng đầu sách CSDL</div>
-            <div class="kpi-value" style="color: #0079ba;">@Model.TongDauSach</div>
+        <div class="kpi-card kpi-card-primary">
+            <div class="kpi-title">Tổng đầu sách CSDL</div>
+            <div class="kpi-value" style="color: var(--utc-primary);">@Model.TongDauSach</div>
             <div class="small text-muted mt-1">Đầu sách danh mục giáo trình, tài liệu</div>
         </div>
     </div>
     <div class="col-md-3 col-sm-6">
-        <div class="kpi-card shadow-sm" style="background-color: #f3e8ff; border: 1px solid #e9d5ff;">
-            <div class="kpi-title" style="color: #7e22ce;">Tổng bản sao vật lý</div>
-            <div class="kpi-value" style="color: #7e22ce;">@Model.TongBanSao</div>
+        <div class="kpi-card kpi-card-info">
+            <div class="kpi-title">Tổng bản sao vật lý</div>
+            <div class="kpi-value" style="color: var(--utc-info);">@Model.TongBanSao</div>
             <div class="small text-muted mt-1">Gắn mã vạch lưu thông tại các tầng kho</div>
         </div>
     </div>
     <div class="col-md-3 col-sm-6">
-        <div class="kpi-card shadow-sm" style="background-color: #e9faf4; border: 1px solid #c8f0e0;">
+        <div class="kpi-card kpi-card-success">
             <div class="kpi-title text-success">Bản sẵn có trong kho</div>
             <div class="kpi-value text-success">@Model.TongSanCo</div>
             <div class="small text-muted mt-1">Sẵn sàng phục vụ sinh viên mượn đọc</div>
         </div>
     </div>
     <div class="col-md-3 col-sm-6">
-        <div class="kpi-card shadow-sm" style="background-color: #edf2ff; border: 1px solid #d9e2fc;">
-            <div class="kpi-title text-primary">Đang mượn ngoài kho</div>
-            <div class="kpi-value text-primary">@Model.TongDangMuon</div>
+        <div class="kpi-card kpi-card-warning">
+            <div class="kpi-title text-warning">Đang mượn ngoài kho</div>
+            <div class="kpi-value text-warning">@Model.TongDangMuon</div>
             <div class="small text-muted mt-1">Bản sách đang được sinh viên mượn đọc</div>
         </div>
     </div>

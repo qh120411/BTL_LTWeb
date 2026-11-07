@@ -14,7 +14,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <div>
                 <h1 class="utc-page-title-main mb-1">Thư viện của tôi</h1>
-                <div class="text-muted small">Bạn đọc: <strong>@studentName</strong> (Mã SV: <strong>@studentId</strong> - CLC Công nghệ thông tin - Anh 1 K65)</div>
+                <div class="text-muted small">Bạn đọc: <strong>@studentName</strong> (@(studentId.StartsWith("GV") ? "Mã GV" : "Mã SV"): <strong>@studentId</strong> &middot; @(Model?.LopQuanLy ?? "Bạn đọc UTC"))</div>
             </div>
             <div class="d-flex gap-2">
                 <a href="/Reader/Profile" class="btn btn-outline-primary">

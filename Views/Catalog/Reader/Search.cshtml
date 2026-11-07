@@ -1,4 +1,4 @@
-﻿@model BTL_LTWEB.Areas.Reader.Models.BookSearchViewModel
+@model BTL_LTWEB.Areas.Reader.Models.BookSearchViewModel
 
 @{
     ViewData["Title"] = "Tra cứu học liệu OPAC";
@@ -20,9 +20,16 @@
 }
 
 <section class="utc-search-page-section">
-    <div class="container">
+    <div class="container-xl px-3 px-md-4">
         <!-- Breadcrumb -->
-        <div class="utc-breadcrumb">CỔNG BẠN ĐỌC / TRA CỨU OPAC</div>
+        <nav class="utc-breadcrumb mb-2" aria-label="breadcrumb">
+            <a href="/Reader/Home" class="text-decoration-none" style="color: var(--utc-primary);">Trang chủ</a>
+            <span style="color: var(--utc-border);">&bull;</span>
+            <span style="color: var(--utc-text-muted);">Cổng bạn đọc</span>
+            <span style="color: var(--utc-border);">&bull;</span>
+            <span style="color: var(--utc-text-primary); font-weight: 700;">Tra cứu OPAC</span>
+        </nav>
+
         <h1 class="utc-page-title-main">
             @if (category == "thesis")
             {
@@ -38,7 +45,7 @@
             }
         </h1>
         <p class="utc-page-subtitle-main">
-            Hệ thống tra cứu mục lục trực tuyến OPAC dành cho sinh viên, giảng viên trường Đại học GTVT.
+            Hệ thống tra cứu mục lục trực tuyến OPAC dành cho sinh viên, giảng viên trường Đại học Giao thông Vận tải.
         </p>
 
         <!-- Search Bar -->
@@ -57,13 +64,13 @@
                        value="@keyword" 
                        placeholder="Nhập từ khóa tìm kiếm (Ví dụ: Python, Cấu trúc dữ liệu, Giải tích, Cầu đường, Triết học...)" />
             </div>
-            <button type="submit" class="btn-utc-primary" style="padding: 13px 28px;">
+            <button type="submit" class="btn-utc-primary">
                 <i class="bi bi-search me-1"></i> Tra cứu OPAC
             </button>
             @if (!string.IsNullOrEmpty(keyword))
             {
                 <a href="/Reader/Search?category=@category&major=@major&language=@language&availability=@availability" 
-                   class="btn btn-outline-secondary" style="padding: 13px 20px; border-radius: var(--utc-radius-sm);">
+                   class="btn-utc-secondary">
                     <i class="bi bi-x-lg me-1"></i> Xóa từ khóa
                 </a>
             }
@@ -73,11 +80,13 @@
         <div class="utc-catalog-layout">
             <!-- Sidebar: Bộ lọc kết quả -->
             <aside class="utc-filter-sidebar">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h3 class="utc-filter-title mb-0">Lọc kết quả</h3>
+                <div class="utc-filter-header">
+                    <h3 class="utc-filter-title">
+                        <i class="bi bi-funnel-fill text-primary"></i> Lọc kết quả
+                    </h3>
                     @if (hasActiveFilter)
                     {
-                        <a href="/Reader/Search" class="small text-danger text-decoration-none">
+                        <a href="/Reader/Search" class="btn-utc-ghost text-danger p-0" style="font-size: 13px;">
                             <i class="bi bi-arrow-counterclockwise"></i> Đặt lại
                         </a>
                     }
@@ -135,13 +144,13 @@
 
                     @if (hasActiveFilter)
                     {
-                        <a href="/Reader/Search" class="btn btn-outline-secondary w-100">
+                        <a href="/Reader/Search" class="btn-utc-outline w-100 text-center text-decoration-none">
                             <i class="bi bi-x-circle me-1"></i> Xóa tất cả bộ lọc
                         </a>
                     }
                 </form>
 
-                <p class="utc-filter-note mt-3">
+                <p class="utc-filter-note">
                     <i class="bi bi-info-circle me-1"></i> Tra cứu mở công khai. Đăng nhập để sử dụng tính năng mượn về và gia hạn.
                 </p>
             </aside>
@@ -150,25 +159,25 @@
             <div class="utc-catalog-results">
                 <div class="utc-catalog-results-header">
                     <div class="utc-results-count">
-                        Tìm thấy <span class="text-primary fw-bold">@Model.TotalCount</span> học liệu phù hợp
+                        Tìm thấy <span>@Model.TotalCount</span> học liệu phù hợp
                     </div>
                     <div class="text-muted small">
-                        Dữ liệu kho thư viện UTC
+                        Dữ liệu CSDL Thư viện UTC
                     </div>
                 </div>
 
                 @if (!Model.Items.Any())
                 {
-                    <div class="card p-5 text-center border-0 shadow-sm" style="background-color: var(--utc-paper); border-radius: var(--utc-radius-md);">
-                        <div class="mb-3">
-                            <i class="bi bi-search text-muted" style="font-size: 48px;"></i>
+                    <div class="utc-empty-state">
+                        <div class="utc-empty-state-icon">
+                            <i class="bi bi-search"></i>
                         </div>
-                        <h4 class="fw-bold text-dark mb-2">Không tìm thấy tài liệu phù hợp</h4>
-                        <p class="text-muted mb-4">
-                            Không có kết quả nào khớp với các tiêu chí tìm kiếm hoặc bộ lọc hiện tại của bạn.
+                        <h4 class="utc-empty-state-title">Không tìm thấy tài liệu phù hợp</h4>
+                        <p class="utc-empty-state-desc">
+                            Không có kết quả nào khớp với các tiêu chí tìm kiếm hoặc bộ lọc hiện tại của bạn. Vui lòng thử từ khóa khác hoặc xóa bộ lọc.
                         </p>
                         <div>
-                            <a href="/Reader/Search" class="btn btn-utc-primary">
+                            <a href="/Reader/Search" class="btn-utc-primary text-decoration-none">
                                 <i class="bi bi-arrow-counterclockwise me-1"></i> Đặt lại tất cả bộ lọc
                             </a>
                         </div>
@@ -208,7 +217,7 @@
                                 <div class="text-muted small text-truncate">
                                     <i class="bi bi-person me-1"></i>@book.Authors
                                 </div>
-                                <span class="utc-book-meta-badge" style="@(book.IsOnline ? "background-color: #fef3c7; color: #92400e;" : "")">
+                                <span class="utc-book-meta-badge @(book.IsOnline ? "is-online" : "is-available")">
                                     <i class="bi @(book.IsOnline ? "bi-file-earmark-pdf-fill" : "bi-check2-circle") me-1"></i>
                                     @book.StockBadgeText
                                 </span>

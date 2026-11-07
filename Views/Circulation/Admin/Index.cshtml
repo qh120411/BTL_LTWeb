@@ -212,7 +212,7 @@
                                         data-class="@reader.LopKhoa"
                                         data-count="@reader.SoSachDangMuon"
                                         data-quahan="@reader.SoSachQuaHan">
-                                    @reader.MaBD - @reader.HoTen (@reader.LopKhoa) [Đang mượn: @reader.SoSachDangMuon/5 cuốn]
+                                    @reader.MaBD - @reader.HoTen (@reader.LopKhoa) [Đang mượn: @reader.SoSachDangMuon/@(reader.Nhom == "Giảng viên" ? "10" : "5") cuốn]
                                 </option>
                             }
                         </select>
@@ -371,10 +371,13 @@
             infoReaderName.textContent = name;
             infoReaderId.textContent = mabd;
             infoReaderClass.textContent = lop;
-            infoReaderBadge.textContent = "Đang mượn " + count + "/5 cuốn";
+            var maxLimit = (mabd.toUpperCase().startsWith("GV") || mabd.toUpperCase().startsWith("CB")) ? 10 : 5;
+            infoReaderBadge.textContent = "Đang mượn " + count + "/" + maxLimit + " cuốn";
 
-            if (count >= 5) {
+            if (count >= maxLimit) {
                 infoReaderBadge.className = "badge bg-danger px-2 py-1";
+                var limitSpan = readerLimitAlert.querySelector("strong:nth-of-type(2)");
+                if (limitSpan) limitSpan.textContent = maxLimit + "/" + maxLimit + " cuốn sách";
                 readerLimitAlert.classList.remove("d-none");
                 selectBook.disabled = true;
                 selectBook.value = "";

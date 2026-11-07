@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace BTL_LTWEB.Models.Entities;
@@ -7,7 +7,7 @@ public partial class PhieuMuon
 {
     public int MaPhieuMuon { get; set; }
 
-    public int MaTheBanDoc { get; set; }
+    public int? MaBanDoc { get; set; }
 
     public int MaNhanVien { get; set; }
 
@@ -21,5 +21,5 @@ public partial class PhieuMuon
 
     public virtual NhanVien MaNhanVienNavigation { get; set; } = null!;
 
-    public virtual TheBanDoc MaTheBanDocNavigation { get; set; } = null!;
+    public virtual BanDoc? MaBanDocNavigation { get; set; }
 }

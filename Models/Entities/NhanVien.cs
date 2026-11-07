@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace BTL_LTWEB.Models.Entities;
@@ -30,4 +30,6 @@ public partial class NhanVien
     public virtual TaiKhoan? TaiKhoan { get; set; }
 
     public virtual ICollection<ThanhToan> ThanhToans { get; set; } = new List<ThanhToan>();
+
+    public virtual ICollection<ViPham> ViPhams { get; set; } = new List<ViPham>();
 }

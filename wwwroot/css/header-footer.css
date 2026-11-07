@@ -1,375 +1,781 @@
-/* ==========================================================================
-   UTC LIBRARY - HEADER & FOOTER STYLES (Chuẩn Figma)
-   ========================================================================== */
-
-/* ===== TOP UTILITY BAR ===== */
-.utc-utility-bar {
-    background-color: var(--utc-navy);
-    color: var(--utc-paper);
-    font-size: 12px;
-    line-height: 1.45;
-    padding: 10px 0;
-}
-
-.utc-utility-inner {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-}
-
-.utc-utility-school {
-    font-weight: 500;
-    letter-spacing: 0.3px;
-}
-
-.utc-utility-links {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 400;
-}
-
-.utc-utility-links a {
-    color: var(--utc-paper);
-    text-decoration: none;
-    opacity: 0.9;
-    transition: var(--utc-transition);
-}
-
-.utc-utility-links a:hover {
-    opacity: 1;
-    text-decoration: underline;
-}
-
-.utc-utility-links .dot {
-    margin: 0 4px;
-    opacity: 0.6;
-}
-
-/* ===== BRAND BAR ===== */
-.utc-brand-bar {
-    background-color: var(--utc-paper);
-    padding: 20px 0;
-    border-bottom: 1px solid var(--utc-line);
-}
-
-.utc-brand-inner {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 24px;
-}
-
-.utc-brand-lockup {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    text-decoration: none;
-}
-
-.utc-logo-wrapper {
-    width: 60px;
-    height: 60px;
-    flex-shrink: 0;
-    border-radius: 30px;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.utc-logo-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
-.utc-identity-text {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.utc-identity-title {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--utc-navy);
-    line-height: 1.3;
-    letter-spacing: -0.2px;
-}
-
-.utc-identity-sub {
-    font-size: 11.5px;
-    font-weight: 400;
-    color: var(--utc-muted);
-    letter-spacing: 0.3px;
-    text-transform: uppercase;
-}
-
-/* Account & Quick Action Buttons */
-.utc-account-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.btn-utc-secondary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--utc-paper);
-    border: 1px solid var(--utc-line);
-    color: var(--utc-navy);
-    font-size: 14px;
-    font-weight: 500;
-    padding: 10px 20px;
-    border-radius: var(--utc-radius-md);
-    text-decoration: none;
-    transition: var(--utc-transition);
-    cursor: pointer;
-    line-height: 1.45;
-}
-
-.btn-utc-secondary:hover {
-    background-color: var(--utc-blue-soft);
-    border-color: var(--utc-brand);
-    color: var(--utc-brand);
-}
-
-.btn-utc-primary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--utc-brand);
-    border: 1px solid var(--utc-brand);
-    color: var(--utc-paper);
-    font-size: 14px;
-    font-weight: 500;
-    padding: 10px 22px;
-    border-radius: var(--utc-radius-md);
-    text-decoration: none;
-    transition: var(--utc-transition);
-    cursor: pointer;
-    line-height: 1.45;
-}
-
-.btn-utc-primary:hover {
-    background-color: var(--utc-brand-hover);
-    border-color: var(--utc-brand-hover);
-    color: var(--utc-paper);
-    box-shadow: 0 4px 10px rgba(0, 121, 186, 0.25);
-}
-
-/* ===== MAIN NAVIGATION BAR ===== */
-.utc-main-nav {
-    background-color: var(--utc-paper);
-    border-bottom: 1px solid var(--utc-line);
-}
-
-.utc-nav-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.utc-nav-list {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    gap: 32px;
-    overflow-x: auto;
-}
-
-.utc-nav-link {
-    display: inline-flex;
-    align-items: center;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--utc-navy);
-    text-decoration: none;
-    padding: 16px 0;
-    border-bottom: 3px solid transparent;
-    transition: var(--utc-transition);
-    white-space: nowrap;
-}
-
-.utc-nav-link:hover,
-.utc-nav-link.active {
-    color: var(--utc-brand);
-    border-bottom-color: var(--utc-brand);
-}
-
-.utc-mobile-nav-toggle {
-    display: none;
-    background: none;
-    border: 1px solid var(--utc-line);
-    border-radius: var(--utc-radius-sm);
-    padding: 8px 12px;
-    color: var(--utc-navy);
-    font-size: 20px;
-    cursor: pointer;
-}
-
-/* ===== UTC BRAND STRIPE (3 LINES: NAVY - GOLD - SKY) ===== */
-.utc-brand-stripes {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    width: 100%;
-}
-
-.utc-stripe-navy {
-    height: 3px;
-    background-color: var(--utc-navy);
-    width: 100%;
-}
-
-.utc-stripe-gold {
-    height: 3px;
-    background-color: var(--utc-gold);
-    width: 100%;
-}
-
-.utc-stripe-sky {
-    height: 2px;
-    background-color: var(--utc-sky);
-    width: 100%;
-}
-
-/* ===== FOOTER ===== */
-.utc-site-footer {
-    background-color: var(--utc-navy);
-    color: var(--utc-paper);
-    margin-top: 48px;
-    position: relative;
-}
-
-.utc-footer-columns {
-    display: grid;
-    grid-template-columns: 1.5fr 1.6fr 1fr 1fr;
-    gap: 48px;
-    padding: 60px 0 40px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-.utc-footer-identity .utc-footer-brand-title {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 16px;
-}
-
-.utc-footer-logo {
-    width: 48px;
-    height: 48px;
-    border-radius: 24px;
-    object-fit: contain;
-}
-
-.utc-footer-brand-name {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--utc-paper);
-    letter-spacing: -0.2px;
-}
-
-.utc-footer-desc {
-    font-size: 14.5px;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.85);
-    margin-bottom: 0;
-}
-
-.utc-footer-col h4 {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--utc-paper);
-    margin-bottom: 18px;
-    letter-spacing: 0.2px;
-}
-
-.utc-footer-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.utc-footer-list li,
-.utc-footer-list a {
-    font-size: 13.5px;
-    line-height: 1.5;
-    color: rgba(255, 255, 255, 0.82);
-    text-decoration: none;
-    transition: var(--utc-transition);
-}
-
-.utc-footer-list a:hover {
-    color: var(--utc-gold);
-    padding-left: 3px;
-}
-
-.utc-footer-bottom {
-    padding: 24px 0 32px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 12.5px;
-    color: rgba(255, 255, 255, 0.7);
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 992px) {
-    .utc-footer-columns {
-        grid-template-columns: 1fr 1fr;
-        gap: 32px;
-    }
-
-    .utc-mobile-nav-toggle {
-        display: block;
-    }
-
-    .utc-nav-list {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        gap: 0;
-        padding: 12px 0;
-    }
-
-    .utc-nav-list.show {
-        display: flex;
-    }
-
-    .utc-nav-link {
-        padding: 10px 0;
-        border-bottom: 1px solid var(--utc-line);
-    }
-}
-
-@media (max-width: 768px) {
-    .utc-brand-inner {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .utc-account-actions {
-        width: 100%;
-        justify-content: flex-start;
-    }
-
-    .utc-footer-columns {
-        grid-template-columns: 1fr;
-        gap: 28px;
-    }
-
-    .utc-footer-bottom {
-        flex-direction: column;
-        gap: 12px;
-        text-align: center;
-    }
-}
+/* ==========================================================================
+   UTC LIBRARY - HEADER & FOOTER STYLES (MODERN BLUE ACADEMIC / UTC PORTAL)
+   Light Sky Blue Header with Frosted Glass Sticky Menu & UTC Academic Footer
+   ========================================================================== */
+
+/* ==========================================================================
+   GLOBAL HEADER WRAPPER
+   Header tầng 1 & 2 cuộn tự nhiên, Tầng 3 (Menu) cố định trên đỉnh khi cuộn
+   ========================================================================== */
+.utc-site-header {
+    position: relative;
+    width: 100%;
+    z-index: 1020;
+}
+
+/* ==========================================================================
+   TẦNG 1: INSTITUTIONAL TOPBAR
+   Background: #DCECF8 (Xanh da trời nhạt trang nhã) | Height: 32px
+   ========================================================================== */
+.utc-institutional-topbar,
+.utc-utility-bar {
+    background-color: #DCECF8;
+    color: #073B60;
+    font-size: 12px;
+    height: 32px;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(8, 125, 187, 0.15);
+}
+
+.utc-topbar-inner,
+.utc-utility-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 16px;
+}
+
+.utc-topbar-left,
+.utc-utility-school {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-size: 11.5px;
+    color: #073B60;
+    white-space: nowrap;
+}
+
+.utc-topbar-right,
+.utc-utility-links {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.utc-topbar-link {
+    color: #075985 !important;
+    text-decoration: none;
+    transition: var(--utc-transition);
+    display: inline-flex;
+    align-items: center;
+}
+
+.utc-topbar-link:hover {
+    color: #087DBB !important;
+    text-decoration: underline;
+}
+
+.utc-topbar-divider,
+.utc-utility-links .dot {
+    color: rgba(7, 89, 133, 0.35);
+    margin: 0 2px;
+}
+
+.utc-lang-selector {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11.5px;
+    font-weight: 600;
+}
+
+.utc-lang-item {
+    color: #537FA5;
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--utc-transition);
+}
+
+.utc-lang-item:hover,
+.utc-lang-item.active {
+    color: #087DBB;
+    font-weight: 700;
+}
+
+.utc-lang-sep {
+    color: rgba(7, 89, 133, 0.35);
+}
+
+/* ==========================================================================
+   TẦNG 2: BRAND HEADER
+   Background: Tone xanh da trời thanh lịch, tươi sáng có texture trang nhã
+   Logo + Slogan + Divider + Titles + Account Actions (Hoàn toàn không dùng màu vàng chói)
+   ========================================================================== */
+.utc-brand-header,
+.utc-brand-bar {
+    background: linear-gradient(90deg, rgba(235, 244, 252, 0.98) 0%, rgba(222, 238, 250, 0.94) 50%, rgba(212, 233, 248, 0.9) 100%), 
+                url('../images/utc-header-bg.jpg') right center / cover no-repeat;
+    position: relative;
+    overflow: hidden;
+    min-height: 86px;
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(8, 125, 187, 0.14);
+}
+
+.utc-brand-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    width: 100%;
+}
+
+.utc-brand-lockup {
+    display: flex;
+    align-items: center;
+    text-decoration: none !important;
+}
+
+.utc-logo-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+.utc-logo-container,
+.utc-logo-wrapper {
+    width: 58px;
+    height: 58px;
+    flex-shrink: 0;
+    background: #FFFFFF;
+    border-radius: 50%;
+    padding: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 10px rgba(7, 59, 96, 0.12);
+    border: 1.5px solid rgba(8, 125, 187, 0.25);
+    transition: var(--utc-transition);
+}
+
+.utc-brand-lockup:hover .utc-logo-container {
+    transform: scale(1.03);
+    box-shadow: 0 4px 14px rgba(7, 59, 96, 0.18);
+}
+
+.utc-brand-slogan {
+    font-size: 10px;
+    font-style: italic;
+    font-weight: 600;
+    color: #075985;
+    letter-spacing: 0.3px;
+    line-height: 1.2;
+    margin-top: 2px;
+    white-space: nowrap;
+}
+
+.utc-brand-divider {
+    display: inline-block;
+    width: 1.5px;
+    height: 48px;
+    background: rgba(7, 89, 133, 0.25);
+    margin: 0 16px;
+    flex-shrink: 0;
+    border-radius: 2px;
+}
+
+.utc-logo-img,
+.utc-logo-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.utc-brand-titles,
+.utc-identity-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.utc-brand-school-top {
+    font-size: 13px;
+    font-weight: 700;
+    color: #075985;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    line-height: 1.2;
+}
+
+.utc-brand-name,
+.utc-identity-title {
+    margin: 0;
+    font-size: 21px;
+    font-weight: 800;
+    color: #073B60 !important;
+    line-height: 1.25;
+    letter-spacing: -0.2px;
+    font-family: var(--utc-font-family);
+}
+
+.utc-brand-sub,
+.utc-identity-sub {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #087DBB !important;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    line-height: 1.35;
+}
+
+/* Header Account & Quick Action Buttons */
+.utc-header-account-actions,
+.utc-account-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.utc-header-btn-admin {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: rgba(8, 125, 187, 0.10);
+    border: 1px solid rgba(8, 125, 187, 0.28);
+    border-radius: var(--utc-radius-sm, 8px);
+    color: #075985 !important;
+    font-size: 13.5px;
+    font-weight: 600;
+    text-decoration: none !important;
+    transition: var(--utc-transition);
+}
+
+.utc-header-btn-admin:hover {
+    background: rgba(8, 125, 187, 0.18);
+    border-color: #087DBB;
+    color: #064b70 !important;
+    transform: translateY(-1px);
+}
+
+.utc-header-btn-user {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    background: #FFFFFF;
+    border: 1.5px solid #087DBB;
+    border-radius: var(--utc-radius-sm, 8px);
+    color: #075985 !important;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none !important;
+    box-shadow: 0 2px 8px rgba(8, 125, 187, 0.12);
+    transition: var(--utc-transition);
+}
+
+.utc-header-btn-user:hover {
+    background: var(--utc-primary-light, #EAF4FC);
+    color: #064b70 !important;
+    border-color: #06699F;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(8, 125, 187, 0.18);
+}
+
+.utc-header-btn-logout {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 15px;
+    background: #FFFFFF;
+    border: 1.5px solid var(--utc-danger, #A96D72);
+    border-radius: var(--utc-radius-sm, 8px);
+    color: var(--utc-danger, #A96D72) !important;
+    font-size: 13.5px;
+    font-weight: 600;
+    text-decoration: none !important;
+    transition: var(--utc-transition);
+}
+
+.utc-header-btn-logout:hover {
+    background: var(--utc-danger-bg, #F8EEEE);
+    color: #8c4c52 !important;
+    transform: translateY(-1px);
+}
+
+.utc-header-btn-login {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 22px;
+    background: var(--utc-primary, #087DBB);
+    border: 1px solid var(--utc-primary, #087DBB);
+    border-radius: var(--utc-radius-sm, 8px);
+    color: #FFFFFF !important;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none !important;
+    box-shadow: 0 2px 8px rgba(8, 125, 187, 0.25);
+    transition: var(--utc-transition);
+}
+
+.utc-header-btn-login:hover {
+    background: var(--utc-primary-hover, #06699F);
+    color: #FFFFFF !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(8, 125, 187, 0.35);
+}
+
+/* ==========================================================================
+   TẦNG 3: NAVIGATION BAR
+   Background: Màu xanh da trời nhạt TRONG SUỐT | Hiệu ứng Blur mờ nội dung khi cuộn
+   Active tab: Nền xanh dương #087DBB, chữ trắng
+   ========================================================================== */
+.utc-navbar-sticky,
+.utc-sticky-navbar-wrap {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1050;
+    background: rgba(220, 238, 252, 0.85); /* Xanh da trời nhạt trong suốt mờ mượt mà */
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border-bottom: 1px solid rgba(186, 230, 253, 0.85);
+    box-shadow: 0 4px 16px rgba(7, 59, 96, 0.08);
+    transition: var(--utc-transition);
+}
+
+.utc-main-navbar,
+.utc-main-nav {
+    background-color: transparent;
+    border-bottom: none;
+}
+
+.utc-navbar-inner,
+.utc-nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.utc-navbar-menu,
+.utc-nav-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 6px 0;
+    gap: 8px;
+    align-items: center;
+    overflow-x: auto;
+    width: 100%;
+}
+
+.utc-navbar-item {
+    margin: 0;
+    padding: 0;
+}
+
+.utc-navbar-link,
+.utc-nav-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--utc-font-family);
+    font-size: 14px;
+    font-weight: 600;
+    color: #075985 !important;
+    text-decoration: none !important;
+    padding: 9px 18px;
+    border-radius: var(--utc-radius-sm, 8px);
+    transition: var(--utc-transition);
+    white-space: nowrap;
+}
+
+.utc-navbar-link i,
+.utc-nav-link i {
+    font-size: 15px;
+    color: #087DBB;
+    transition: var(--utc-transition);
+}
+
+.utc-navbar-link:hover,
+.utc-nav-link:hover {
+    color: #064b70 !important;
+    background-color: rgba(8, 125, 187, 0.12);
+}
+
+.utc-navbar-link:hover i,
+.utc-nav-link:hover i {
+    color: #075985;
+}
+
+.utc-navbar-link.active,
+.utc-nav-link.active {
+    background-color: #087DBB !important;
+    color: #FFFFFF !important;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(8, 125, 187, 0.28);
+}
+
+.utc-navbar-link.active i,
+.utc-nav-link.active i {
+    color: #FFFFFF !important;
+}
+
+.utc-navbar-toggler,
+.utc-mobile-nav-toggle {
+    display: none;
+    background: rgba(8, 125, 187, 0.12);
+    border: 1px solid rgba(8, 125, 187, 0.3);
+    border-radius: var(--utc-radius-sm, 8px);
+    color: #075985;
+    padding: 7px 14px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 6px 0;
+    transition: var(--utc-transition);
+}
+
+.utc-navbar-toggler:hover,
+.utc-mobile-nav-toggle:hover {
+    background: rgba(8, 125, 187, 0.2);
+    color: #073B60;
+}
+
+/* ==========================================================================
+   ACADEMIC FOOTER - UTC ROYAL BLUE (#0B4DA2) WITH GOLD ACCENTS & INTERACTIVE MAP
+   ========================================================================== */
+.utc-brand-stripes {
+    display: flex;
+    width: 100%;
+    height: 4px;
+}
+
+.utc-stripe-navy {
+    flex: 1;
+    background-color: #1E2875;
+}
+
+.utc-stripe-gold {
+    flex: 1;
+    background-color: #EEC90C;
+}
+
+.utc-stripe-sky {
+    flex: 1;
+    background-color: #38B6FF;
+}
+
+.utc-site-footer {
+    background-color: #0B4DA2;
+    color: #FFFFFF;
+    margin-top: 48px;
+    position: relative;
+    font-family: var(--utc-font-family);
+}
+
+.utc-footer-columns {
+    display: grid;
+    grid-template-columns: 1.5fr 0.9fr 1fr 1.3fr;
+    gap: 36px;
+    padding: 46px 0 32px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.utc-footer-brand-lockup {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.utc-footer-logo {
+    width: 54px;
+    height: 54px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
+}
+
+.utc-footer-school-titles {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+}
+
+.utc-footer-school-top {
+    font-size: 15px;
+    font-weight: 800;
+    color: #EEC90C;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+}
+
+.utc-footer-school-bottom {
+    font-size: 17px;
+    font-weight: 900;
+    color: #EEC90C;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+}
+
+.utc-footer-lib-sub {
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
+    margin-top: 3px;
+    letter-spacing: 0.3px;
+}
+
+.utc-footer-contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.utc-footer-contact-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.utc-footer-contact-row a {
+    color: #FFFFFF;
+    text-decoration: none;
+    transition: var(--utc-transition);
+}
+
+.utc-footer-contact-row a:hover {
+    color: #EEC90C;
+    text-decoration: underline;
+}
+
+.utc-footer-icon-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, 0.85);
+    font-size: 11px;
+    color: #FFFFFF;
+    margin-top: 2px;
+}
+
+.utc-footer-title,
+.utc-footer-col h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 16px;
+    letter-spacing: 0.2px;
+}
+
+.utc-footer-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.utc-footer-list li,
+.utc-footer-list a {
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.88);
+    text-decoration: none;
+    transition: var(--utc-transition);
+}
+
+.utc-footer-list a:hover {
+    color: #EEC90C;
+    padding-left: 4px;
+}
+
+/* Map Column */
+.utc-footer-map-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: #FFFFFF;
+}
+
+.utc-footer-map-iframe {
+    width: 100%;
+    height: 135px;
+    border: none;
+    display: block;
+}
+
+.utc-footer-map-overlay-bar {
+    background: rgba(7, 59, 96, 0.95);
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.utc-footer-map-btn {
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: var(--utc-transition);
+}
+
+.utc-footer-map-btn:hover {
+    color: #EEC90C;
+    text-decoration: underline;
+}
+
+.utc-footer-bottom {
+    padding: 20px 0 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12.5px;
+    color: rgba(255, 255, 255, 0.78);
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (Desktop, Tablet, Mobile)
+   ========================================================================== */
+@media (max-width: 991px) {
+    .utc-navbar-toggler,
+    .utc-mobile-nav-toggle {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .utc-navbar-menu,
+    .utc-nav-list {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        padding: 8px 0 12px;
+        gap: 4px;
+    }
+
+    .utc-navbar-menu.show,
+    .utc-nav-list.show {
+        display: flex;
+    }
+
+    .utc-navbar-link,
+    .utc-nav-link {
+        width: 100%;
+        padding: 10px 14px;
+    }
+
+    .utc-brand-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .utc-header-account-actions,
+    .utc-account-actions {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .utc-footer-columns {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+    }
+}
+
+@media (max-width: 768px) {
+    .utc-brand-school-top {
+        font-size: 11px;
+    }
+
+    .utc-brand-name,
+    .utc-identity-title {
+        font-size: 18px;
+    }
+
+    .utc-brand-sub,
+    .utc-identity-sub {
+        font-size: 10px;
+    }
+
+    .utc-logo-container,
+    .utc-logo-wrapper {
+        width: 50px;
+        height: 50px;
+    }
+
+    .utc-brand-divider {
+        height: 38px;
+        margin: 0 10px;
+    }
+
+    .utc-footer-columns {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+
+    .utc-footer-bottom {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .utc-topbar-school,
+    .utc-utility-school {
+        font-size: 10px;
+    }
+
+    .utc-brand-school-top {
+        font-size: 10px;
+    }
+
+    .utc-brand-name,
+    .utc-identity-title {
+        font-size: 16px;
+    }
+
+    .utc-brand-sub,
+    .utc-identity-sub {
+        font-size: 9px;
+    }
+
+    .utc-logo-container,
+    .utc-logo-wrapper {
+        width: 44px;
+        height: 44px;
+        padding: 2px;
+    }
+
+    .utc-brand-slogan {
+        font-size: 9px;
+    }
+
+    .utc-header-btn-admin,
+    .utc-header-btn-user,
+    .utc-header-btn-logout,
+    .utc-header-btn-login {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+}

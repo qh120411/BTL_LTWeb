@@ -28,6 +28,4 @@ public partial class TaiKhoan
     public virtual BanDoc? MaBanDocNavigation { get; set; }
 
     public virtual NhanVien? MaNhanVienNavigation { get; set; }
-
-    public virtual ICollection<VaiTro> MaVaiTros { get; set; } = new List<VaiTro>();
 }

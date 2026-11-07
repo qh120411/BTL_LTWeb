@@ -47,19 +47,29 @@ namespace BTL_LTWEB.Areas.Reader.Services
                 {
                     var banDoc = _dbContext.BanDocs
                         .Include(b => b.MaLopNavigation)
-                        .Include(b => b.TheBanDoc)
                         .FirstOrDefault(b => b.MaSinhVien == studentId);
 
                     if (banDoc != null)
                     {
+                        var isLecturer = banDoc.MaSinhVien.StartsWith("GV", StringComparison.OrdinalIgnoreCase) ||
+                                         banDoc.MaSinhVien.StartsWith("CB", StringComparison.OrdinalIgnoreCase);
+
+                        var nganhHoc = isLecturer
+                            ? (banDoc.MaLopNavigation != null ? banDoc.MaLopNavigation.TenLop : "Khoa Công nghệ thông tin")
+                            : "CLC Công nghệ thông tin Việt - Anh";
+
+                        var lopQuanLy = isLecturer
+                            ? (banDoc.MaLopNavigation != null ? (banDoc.MaLopNavigation.KhoaHoc ?? "Cán bộ / Giảng viên") : "Cán bộ / Giảng viên")
+                            : (banDoc.MaLopNavigation != null ? banDoc.MaLopNavigation.TenLop : "K65.CLCCNTT1");
+
                         var profile = new UserProfileViewModel
                         {
                             MaSinhVien = banDoc.MaSinhVien,
                             HoTen = banDoc.HoTen,
-                            NgaySinh = banDoc.NgaySinh.HasValue ? banDoc.NgaySinh.Value.ToString("dd/MM/yyyy") : "18/05/2006",
+                            NgaySinh = banDoc.NgaySinh.HasValue ? banDoc.NgaySinh.Value.ToString("dd/MM/yyyy") : (isLecturer ? "15/01/1982" : "18/05/2006"),
                             SoCCCD = $"03320600{studentId.Substring(Math.Max(0, studentId.Length - 4))}",
-                            NganhHoc = "CLC Công nghệ thông tin Việt - Anh",
-                            LopQuanLy = banDoc.MaLopNavigation != null ? banDoc.MaLopNavigation.TenLop : "K65.CLCCNTT1",
+                            NganhHoc = nganhHoc,
+                            LopQuanLy = lopQuanLy,
                             SoDienThoai = banDoc.SoDienThoai ?? "0986123456",
                             DiaChiNha = banDoc.DiaChi ?? "Số 3 Phố Cầu Giấy, Láng Thượng, Đống Đa, Hà Nội",
                             SoTaiKhoanNganHang = "1028374659",
@@ -72,12 +82,11 @@ namespace BTL_LTWEB.Areas.Reader.Services
                         // Đọc danh sách sách đang mượn từ bảng ChiTietMuon (chỉ lấy sách chưa trả: NgayTra == null)
                         var activeLoans = _dbContext.ChiTietMuons
                             .Include(c => c.MaPhieuMuonNavigation)
-                                .ThenInclude(p => p.MaTheBanDocNavigation)
                             .Include(c => c.MaBanSaoNavigation)
                                 .ThenInclude(b => b.MaTaiLieuNavigation)
                                     .ThenInclude(t => t.TaiLieuTacGia)
                                         .ThenInclude(tg => tg.MaTacGiaNavigation)
-                            .Where(c => c.MaPhieuMuonNavigation.MaTheBanDocNavigation.MaBanDoc == banDoc.MaBanDoc 
+                            .Where(c => c.MaPhieuMuonNavigation.MaBanDoc == banDoc.MaBanDoc 
                                      && c.NgayTra == null 
                                      && c.TrangThai != "Đã trả" 
                                      && c.TrangThai != "Đã đền sách mới" 
@@ -98,13 +107,17 @@ namespace BTL_LTWEB.Areas.Reader.Services
                                 ? string.Join(", ", book.TaiLieuTacGia.Select(tg => tg.MaTacGiaNavigation.HoTen))
                                 : "Nhiều tác giả";
 
+                            string coverPath = !string.IsNullOrWhiteSpace(book?.AnhBia)
+                                ? (book.AnhBia.StartsWith("/") ? book.AnhBia : "/" + book.AnhBia)
+                                : "/images/covers/cover-placeholder.png";
+
                             profile.BorrowedBooks.Add(new BorrowedBookItem
                             {
                                 MaGD = $"GD{ctm.MaPhieuMuonNavigation.NgayMuon:yyMMdd}-{ctm.MaChiTietMuon:D3}",
                                 MaVach = ctm.MaBanSaoNavigation?.MaVach ?? $"BS-{ctm.MaBanSao:D5}",
                                 TenSach = book?.TenTaiLieu ?? "Học liệu UTC",
                                 TacGia = authors,
-                                CoverImage = book?.AnhBia ?? "/images/covers/sach_01.jpg",
+                                CoverImage = coverPath,
                                 NgayMuon = ctm.MaPhieuMuonNavigation.NgayMuon,
                                 HanTra = hanTraDate,
                                 IsQuaHan = isOverdue,
