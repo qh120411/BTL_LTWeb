@@ -12,9 +12,7 @@
         <div class="text-muted small">Mã bạn đọc: <strong>@Model.MaBD</strong> &middot; @Model.HoTen</div>
     </div>
     <div class="d-flex gap-2">
-        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#opacBorrowModal">
-            <i class="bi bi-journal-plus me-1"></i> + Mượn thêm sách (Tra cứu OPAC)
-        </button>
+
         <a asp-action="Index" class="btn btn-outline-utc">
             <i class="bi bi-arrow-left me-1"></i> Danh sách bạn đọc
         </a>
@@ -380,7 +378,7 @@
 </div>
 
 <!-- MODAL DÙNG CHUNG: XÁC NHẬN TRẢ SÁCH HOẶC BỒI THƯỜNG MẤT/HỎNG -->
-<partial name="_ReturnAndCompensationModal" />
+<!-- Modal dùng chung đã được nhúng tại _AdminLayout -->
 
 @section Scripts {
     <script>

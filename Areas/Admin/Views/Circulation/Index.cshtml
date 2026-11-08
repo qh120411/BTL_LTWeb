@@ -195,7 +195,7 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <form asp-action="CreateBorrow" method="post" id="formCreateBorrow">
+            <form action="/Admin/Circulation/CreateBorrow" method="post" id="formCreateBorrow">
                 @Html.AntiForgeryToken()
                 <div class="modal-body p-4">
                     <!-- Bước 1: Chọn bạn đọc -->
@@ -323,7 +323,7 @@
 <!-- ========================================== -->
 <!-- MODAL 2: XÁC NHẬN TRẢ SÁCH & BỒI THƯỜNG DÙNG CHUNG -->
 <!-- ========================================== -->
-<partial name="_ReturnAndCompensationModal" />
+<!-- Modal dùng chung đã được nhúng tại _AdminLayout -->
 
 @section Scripts {
 <script>
@@ -452,8 +452,10 @@
 
             // Kiểm tra nút xác nhận
             var selectedReaderOpt = selectReader.options[selectReader.selectedIndex];
-            var count = parseInt(selectedReaderOpt.getAttribute("data-count") || "0");
-            btnConfirmBorrow.disabled = (count >= 5);
+            var mabd = selectReader.value;
+            var count = parseInt(selectedReaderOpt ? selectedReaderOpt.getAttribute("data-count") || "0" : "0");
+            var maxLimit = (mabd.toUpperCase().startsWith("GV") || mabd.toUpperCase().startsWith("CB")) ? 10 : 5;
+            btnConfirmBorrow.disabled = (!bookId || count >= maxLimit);
         });
     });
 </script>

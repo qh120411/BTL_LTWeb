@@ -433,7 +433,7 @@ GO
 -- Dữ liệu bảng [TaiKhoan] (73 bản ghi)
 SET IDENTITY_INSERT dbo.[TaiKhoan] ON;
 INSERT INTO dbo.[TaiKhoan] ([MaTaiKhoan], [TenDangNhap], [EmailDangNhap], [MatKhauHash], [MaBanDoc], [MaNhanVien], [TrangThai], [NgayTao], [LanDangNhapCuoi], [VaiTro]) VALUES
-(1, N'admin', N'admin@utc.edu.vn', N'E86F78A8A3CAF0B60D8E74E5942AA6D86DC150CD3C03338AEF25B7D2D7E3ACC7', NULL, 1, N'Hoạt động', '2026-11-06 01:43:53.868', '2026-11-07 10:29:41.138', N'ADMIN'),
+(1, N'admin', N'admin@utc.edu.vn', N'E86F78A8A3CAF0B60D8E74E5942AA6D86DC150CD3C03338AEF25B7D2D7E3ACC7', NULL, 1, N'Hoạt động', '2026-11-06 01:43:53.868', '2026-11-08 12:28:26.877', N'ADMIN'),
 (2, N'242630899', N'242630899@utc.edu.vn', N'F5A7A5A53F54429EB3E2A689270AF812CE1905736B78DE405389413E03F2963C', 1, NULL, N'Hoạt động', '2026-11-06 01:43:53.887', '2026-11-06 21:21:28.881', N'READER'),
 (3, N'242624495', N'242624495@utc.edu.vn', N'EA126ECCCA35151173100CDFEEFFB379654D8B2B80E967F14D85A0D5DDFF6A03', 2, NULL, N'Hoạt động', '2026-11-06 01:43:53.887', NULL, N'READER'),
 (4, N'242630904', N'242630904@utc.edu.vn', N'90866B3FEB101F90ADCA220751D815D4A401A810D8A9AF4777955BE2FE85008A', 3, NULL, N'Hoạt động', '2026-11-06 01:43:53.887', NULL, N'READER'),
@@ -448,7 +448,7 @@ INSERT INTO dbo.[TaiKhoan] ([MaTaiKhoan], [TenDangNhap], [EmailDangNhap], [MatKh
 (13, N'242603895', N'242603895@utc.edu.vn', N'C6AB3BFBDC407CE8C6F5F326224862EB60692F95D17F48C97383BC1E2800E385', 12, NULL, N'Hoạt động', '2026-11-06 01:43:53.887', NULL, N'READER'),
 (14, N'242630922', N'242630922@utc.edu.vn', N'DD0909C98D288DEB2ADA8B7C67C829E0D25AFAC3F1AABB5700299BD4A75714AE', 13, NULL, N'Hoạt động', '2026-11-06 01:43:53.887', NULL, N'READER'),
 (15, N'242630924', N'242630924@utc.edu.vn', N'FE281C00D8C46BB238A0049647D5D9ABA9194ADEFF0A56E12B3D969F08A39A37', 14, NULL, N'Hoạt động', '2026-11-06 01:43:53.887', NULL, N'READER'),
-(16, N'242630923', N'242630923@utc.edu.vn', N'3F79DF17B5F2B19028B6CF39034E3D5E18D6E9896D1883229F7DD6B5946A4F1E', 15, NULL, N'Hoạt động', '2026-11-06 01:43:53.887', '2026-11-07 11:14:48.952', N'READER'),
+(16, N'242630923', N'242630923@utc.edu.vn', N'3F79DF17B5F2B19028B6CF39034E3D5E18D6E9896D1883229F7DD6B5946A4F1E', 15, NULL, N'Hoạt động', '2026-11-06 01:43:53.887', '2026-11-08 12:28:50.202', N'READER'),
 (17, N'242630926', N'242630926@utc.edu.vn', N'4C399ED42A632501E8A11F08F2AC9B9AA7CDE03FE17E0A41DA6434977C172CB6', 16, NULL, N'Hoạt động', '2026-11-06 01:43:53.887', NULL, N'READER'),
 (18, N'242630928', N'242630928@utc.edu.vn', N'765E27D6AC72B0AF0163008FB83B50C8EE4B1156073FC87054F8B289E3001F1B', 17, NULL, N'Hoạt động', '2026-11-06 01:43:53.887', NULL, N'READER'),
 (19, N'242603896', N'242603896@utc.edu.vn', N'AAB741E90B3D260AD73B7AA36EAB047404771F8ECEBF72CB75711681AF1F4D6C', 18, NULL, N'Hoạt động', '2026-11-06 01:43:53.887', NULL, N'READER'),
@@ -487,7 +487,7 @@ INSERT INTO dbo.[TaiKhoan] ([MaTaiKhoan], [TenDangNhap], [EmailDangNhap], [MatKh
 (51, N'NV26-01', N'lan.demo@utc.edu.vn', N'34D0A98D93BC56782E18FEE57B31E0D04F31B5952595E71BFB6677A833AF8339', NULL, 3, N'Hoạt động', '2026-11-06 15:40:13.372', NULL, N'ADMIN'),
 (52, N'NV26-02', N'bandoc.demo@utc.edu.vn', N'22F7BF1DF664FEDA8BD8306969A06B2A2F13FCB83F06BA1FA060D66F6FB999A7', NULL, 4, N'Hoạt động', '2026-11-06 15:40:13.392', '2026-11-06 21:22:34.680', N'QUANLY_BANDOC'),
 (53, N'NV26-03', N'thuthu.demo@utc.edu.vn', N'2273A4C844A2F9CF4D8950FE46728688F175CDB54524FA0E48DBC7D045DE9E67', NULL, 5, N'Hoạt động', '2026-11-06 15:40:13.407', '2026-11-06 21:23:27.861', N'QUANLY_TAILIEU'),
-(54, N'GV01', N'tuan.nv@utc.edu.vn', N'0A187109F3D1B0907E92E249CFE90F99AEE7A4E247982008C0862F9D5E52EC32', 50, NULL, N'Đang hoạt động', '2026-11-06 17:02:39.333', '2026-11-06 21:18:58.477', N'Reader'),
+(54, N'GV01', N'tuan.nv@utc.edu.vn', N'0A187109F3D1B0907E92E249CFE90F99AEE7A4E247982008C0862F9D5E52EC32', 50, NULL, N'Đang hoạt động', '2026-11-06 17:02:39.333', '2026-11-08 12:30:33.875', N'Reader'),
 (55, N'GV02', N'mai.tt@utc.edu.vn', N'FAFB959218CB47525AF8E0FF7D0260275472F1F4FF5B1085667452598C37300B', 51, NULL, N'Đang hoạt động', '2026-11-06 17:02:39.333', '2026-11-07 19:26:47.539', N'Reader'),
 (56, N'GV03', N'nam.lh@utc.edu.vn', N'B5A3E46F6AA4C4A7959FCF4F0670ECAD5D8A9B4203C66510D1C25ED0A791F21A', 52, NULL, N'Đang hoạt động', '2026-11-06 17:02:39.333', NULL, N'Reader'),
 (57, N'GV04', N'hung.pq@utc.edu.vn', N'E3B2D64C0023440BB9747E2C38858A1CBBD6F274096FDC20E8C130669DAF97A5', 53, NULL, N'Đang hoạt động', '2026-11-06 17:02:39.336', NULL, N'Reader'),
@@ -565,19 +565,19 @@ INSERT INTO dbo.[TaiLieu_TacGia] ([MaTaiLieu], [MaTacGia], [VaiTroTacGia]) VALUE
 (30, 37, N'Chủ biên');
 GO
 
--- Dữ liệu bảng [BanSao] (120 bản ghi)
+-- Dữ liệu bảng [BanSao] (180 bản ghi)
 SET IDENTITY_INSERT dbo.[BanSao] ON;
 INSERT INTO dbo.[BanSao] ([MaBanSao], [MaTaiLieu], [MaVach], [ViTriKe], [TinhTrang], [TrangThai], [NgayNhap]) VALUES
 (1, 1, N'UTC-01-01', N'Kệ IT-01', N'Mới', N'Đang mượn', '2024-01-15'),
 (2, 1, N'UTC-01-02', N'Kệ IT-01', N'Tốt', N'Đang mượn', '2024-01-15'),
-(3, 1, N'UTC-01-03', N'Kệ IT-01', N'Tốt', N'Đang mượn', '2024-02-20'),
-(4, 1, N'UTC-01-04', N'Kệ IT-01', N'Tốt', N'Đang mượn', '2024-02-20'),
-(5, 2, N'UTC-02-01', N'Kệ IT-01', N'Tốt', N'Có sẵn', '2024-01-15'),
-(6, 2, N'UTC-02-02', N'Kệ IT-01', N'Tốt', N'Đang mượn', '2024-01-15'),
-(7, 2, N'UTC-02-03', N'Kệ IT-01', N'Tốt', N'Đang mượn', '2024-02-20'),
-(8, 2, N'UTC-02-04', N'Kệ IT-01', N'Tốt', N'Đang mượn', '2024-02-20'),
+(3, 1, N'UTC-01-03', N'Kệ IT-01', N'Tốt', N'Äang mÆ°á»£n', '2024-02-20'),
+(4, 1, N'UTC-01-04', N'Kệ IT-01', N'Tá»‘t', N'CĂ³ sáºµn', '2024-02-20'),
+(5, 2, N'UTC-02-01', N'Kệ IT-01', N'Tốt', N'Đang mượn', '2024-01-15'),
+(6, 2, N'UTC-02-02', N'Kệ IT-01', N'Tốt', N'Äang mÆ°á»£n', '2024-01-15'),
+(7, 2, N'UTC-02-03', N'Kệ IT-01', N'Tá»‘t', N'CĂ³ sáºµn', '2024-02-20'),
+(8, 2, N'UTC-02-04', N'Kệ IT-01', N'Tá»‘t', N'CĂ³ sáºµn', '2024-02-20'),
 (9, 3, N'UTC-03-01', N'Kệ IT-02', N'Mới', N'Đang mượn', '2024-01-15'),
-(10, 3, N'UTC-03-02', N'Kệ IT-02', N'Tốt', N'Đang mượn', '2024-01-15'),
+(10, 3, N'UTC-03-02', N'Kệ IT-02', N'Tốt', N'Äang mÆ°á»£n', '2024-01-15'),
 (11, 3, N'UTC-03-03', N'Kệ IT-02', N'Tốt', N'Đang mượn', '2024-02-20'),
 (12, 3, N'UTC-03-04', N'Kệ IT-02', N'Tốt', N'Đang mượn', '2024-02-20'),
 (13, 4, N'UTC-04-01', N'Kệ IT-02', N'Tốt', N'Đang mượn', '2024-01-15'),
@@ -600,7 +600,7 @@ INSERT INTO dbo.[BanSao] ([MaBanSao], [MaTaiLieu], [MaVach], [ViTriKe], [TinhTra
 (30, 8, N'UTC-08-02', N'Kệ IT-04', N'Tốt', N'Đang mượn', '2024-01-15'),
 (31, 8, N'UTC-08-03', N'Kệ IT-04', N'Tốt', N'Đang mượn', '2024-02-20'),
 (32, 8, N'UTC-08-04', N'Kệ IT-04', N'Tốt', N'Đang mượn', '2024-02-20'),
-(33, 9, N'UTC-09-01', N'Kệ IT-05', N'Mới', N'Đang mượn', '2024-01-15'),
+(33, 9, N'UTC-09-01', N'Kệ IT-05', N'Tốt', N'Có sẵn', '2024-01-15'),
 (34, 9, N'UTC-09-02', N'Kệ IT-05', N'Tốt', N'Đang mượn', '2024-01-15'),
 (35, 9, N'UTC-09-03', N'Kệ IT-05', N'Tốt', N'Đang mượn', '2024-02-20'),
 (36, 9, N'UTC-09-04', N'Kệ IT-05', N'Tốt', N'Đang mượn', '2024-02-20'),
@@ -641,7 +641,7 @@ INSERT INTO dbo.[BanSao] ([MaBanSao], [MaTaiLieu], [MaVach], [ViTriKe], [TinhTra
 (70, 18, N'UTC-18-02', N'Kệ GT-01', N'Tốt', N'Có sẵn', '2024-01-15'),
 (71, 18, N'UTC-18-03', N'Kệ GT-01', N'Tốt', N'Có sẵn', '2024-02-20'),
 (72, 18, N'UTC-18-04', N'Kệ GT-01', N'Tốt', N'Có sẵn', '2024-02-20'),
-(73, 19, N'UTC-19-01', N'Kệ GT-02', N'Mới', N'Có sẵn', '2024-01-15'),
+(73, 19, N'UTC-19-01', N'Kệ GT-02', N'Mới', N'Đang mượn', '2024-01-15'),
 (74, 19, N'UTC-19-02', N'Kệ GT-02', N'Tốt', N'Có sẵn', '2024-01-15'),
 (75, 19, N'UTC-19-03', N'Kệ GT-02', N'Tốt', N'Có sẵn', '2024-02-20'),
 (76, 19, N'UTC-19-04', N'Kệ GT-02', N'Tốt', N'Có sẵn', '2024-02-20'),
@@ -666,7 +666,7 @@ INSERT INTO dbo.[BanSao] ([MaBanSao], [MaTaiLieu], [MaVach], [ViTriKe], [TinhTra
 (94, 24, N'UTC-24-02', N'Kệ KT-01', N'Tốt', N'Có sẵn', '2024-01-15'),
 (95, 24, N'UTC-24-03', N'Kệ KT-01', N'Tốt', N'Có sẵn', '2024-02-20'),
 (96, 24, N'UTC-24-04', N'Kệ KT-01', N'Tốt', N'Có sẵn', '2024-02-20'),
-(97, 25, N'UTC-25-01', N'Kệ KT-01', N'Mới', N'Có sẵn', '2024-01-15'),
+(97, 25, N'UTC-25-01', N'Kệ KT-01', N'Tốt', N'Có sẵn', '2024-01-15'),
 (98, 25, N'UTC-25-02', N'Kệ KT-01', N'Tốt', N'Có sẵn', '2024-01-15'),
 (99, 25, N'UTC-25-03', N'Kệ KT-01', N'Tốt', N'Có sẵn', '2024-02-20'),
 (100, 25, N'UTC-25-04', N'Kệ KT-01', N'Tốt', N'Có sẵn', '2024-02-20'),
@@ -690,32 +690,98 @@ INSERT INTO dbo.[BanSao] ([MaBanSao], [MaTaiLieu], [MaVach], [ViTriKe], [TinhTra
 (118, 30, N'UTC-30-02', N'Kệ LL-02', N'Tốt', N'Có sẵn', '2024-01-15'),
 (119, 30, N'UTC-30-03', N'Kệ LL-02', N'Tốt', N'Có sẵn', '2024-02-20'),
 (120, 30, N'UTC-30-04', N'Kệ LL-02', N'Tốt', N'Có sẵn', '2024-02-20');
+INSERT INTO dbo.[BanSao] ([MaBanSao], [MaTaiLieu], [MaVach], [ViTriKe], [TinhTrang], [TrangThai], [NgayNhap]) VALUES
+(121, 1, N'UTC-01-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(122, 1, N'UTC-01-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(123, 18, N'UTC-18-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(124, 18, N'UTC-18-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(125, 6, N'UTC-06-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Äang mÆ°á»£n', '2026-11-08'),
+(126, 6, N'UTC-06-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(127, 4, N'UTC-04-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Äang mÆ°á»£n', '2026-11-08'),
+(128, 4, N'UTC-04-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(129, 2, N'UTC-02-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Đang mượn', '2026-11-08'),
+(130, 2, N'UTC-02-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(131, 22, N'UTC-22-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(132, 22, N'UTC-22-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(133, 8, N'UTC-08-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(134, 8, N'UTC-08-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(135, 29, N'UTC-29-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(136, 29, N'UTC-29-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(137, 25, N'UTC-25-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(138, 25, N'UTC-25-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(139, 26, N'UTC-26-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(140, 26, N'UTC-26-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(141, 9, N'UTC-09-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(142, 9, N'UTC-09-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(143, 5, N'UTC-05-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Äang mÆ°á»£n', '2026-11-08'),
+(144, 5, N'UTC-05-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(145, 10, N'UTC-10-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(146, 10, N'UTC-10-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(147, 3, N'UTC-03-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Đang mượn', '2026-11-08'),
+(148, 3, N'UTC-03-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(149, 19, N'UTC-19-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(150, 19, N'UTC-19-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(151, 27, N'UTC-27-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(152, 27, N'UTC-27-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(153, 23, N'UTC-23-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(154, 23, N'UTC-23-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(155, 17, N'UTC-17-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(156, 17, N'UTC-17-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(157, 30, N'UTC-30-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(158, 30, N'UTC-30-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(159, 20, N'UTC-20-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(160, 20, N'UTC-20-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08');
+INSERT INTO dbo.[BanSao] ([MaBanSao], [MaTaiLieu], [MaVach], [ViTriKe], [TinhTrang], [TrangThai], [NgayNhap]) VALUES
+(161, 7, N'UTC-07-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Äang mÆ°á»£n', '2026-11-08'),
+(162, 7, N'UTC-07-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(163, 28, N'UTC-28-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(164, 28, N'UTC-28-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(165, 14, N'UTC-14-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(166, 14, N'UTC-14-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(167, 21, N'UTC-21-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(168, 21, N'UTC-21-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(169, 24, N'UTC-24-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(170, 24, N'UTC-24-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(171, 11, N'UTC-11-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(172, 11, N'UTC-11-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(173, 12, N'UTC-12-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(174, 12, N'UTC-12-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(175, 13, N'UTC-13-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(176, 13, N'UTC-13-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(177, 15, N'UTC-15-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(178, 15, N'UTC-15-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(179, 16, N'UTC-16-05', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08'),
+(180, 16, N'UTC-16-06', N'Kệ lưu thông Tầng 2', N'Tốt', N'Có sẵn', '2026-11-08');
 SET IDENTITY_INSERT dbo.[BanSao] OFF;
 GO
 
--- Dữ liệu bảng [PhieuMuon] (9 bản ghi)
+-- Dữ liệu bảng [PhieuMuon] (13 bản ghi)
 SET IDENTITY_INSERT dbo.[PhieuMuon] ON;
 INSERT INTO dbo.[PhieuMuon] ([MaPhieuMuon], [MaNhanVien], [NgayMuon], [TrangThai], [GhiChu], [MaBanDoc]) VALUES
-(1, 1, '2025-08-25 08:30:00.000', N'Đang mượn', N'Mượn học phần kỳ 1 năm học 2025-2026', 15),
+(1, 1, '2025-08-25 08:30:00.000', N'Đã trả', N'Mượn học phần kỳ 1 năm học 2025-2026', 15),
 (2, 1, '2026-03-15 10:00:00.000', N'Đang mượn', N'Mượn học phần kỳ 2 năm học 2026', 15),
 (3, 1, '2025-09-10 14:00:00.000', N'Đang mượn', N'Mượn sách chuyên ngành', 1),
 (4, 1, '2026-11-06 14:13:15.929', N'Đang mượn', N'Mượn tại quầy lưu thông thư viện', 2),
-(5, 3, '2026-02-15 00:00:00.000', N'Đang mượn', N'Giảng viên mượn nghiên cứu & soạn bài giảng (Hạn 1 năm)', 50),
+(5, 3, '2026-09-01 08:30:00.000', N'QuĂ¡ háº¡n', N'MÆ°á»£n tĂ i liá»‡u phá»¥c vá»¥ giáº£ng dáº¡y Há»c ká»³ 1 (Äang quĂ¡ háº¡n)', 50),
 (6, 3, '2025-10-15 00:00:00.000', N'Đang mượn', N'Giảng viên mượn đề tài NCKH cấp Bộ', 51),
 (7, 3, '2025-09-20 00:00:00.000', N'Đang mượn', N'Giảng viên mượn tối đa 10 cuốn (hạn mức cao nhất)', 52),
 (8, 3, '2026-04-10 00:00:00.000', N'Đang mượn', N'Giảng viên mượn hướng dẫn luận văn thạc sĩ', 53),
-(9, 3, '2025-10-01 00:00:00.000', N'Đang mượn', N'Giảng viên Khoa Vận tải - Kinh tế mượn tài liệu', 55);
+(9, 3, '2025-10-01 00:00:00.000', N'Đang mượn', N'Giảng viên Khoa Vận tải - Kinh tế mượn tài liệu', 55),
+(10, 1, '2026-11-08 12:12:32.167', N'Đã trả', N'Mượn tại quầy lưu thông thư viện UTC', 15),
+(11, 1, '2026-11-08 12:26:44.449', N'Đang mượn', N'Mượn tại quầy lưu thông thư viện UTC', 15),
+(12, 1, '2026-11-08 12:28:04.044', N'Đang mượn', N'Mượn tại quầy lưu thông thư viện UTC', 15),
+(13, 1, '2026-11-08 12:28:44.868', N'Đang mượn', N'Mượn tại quầy lưu thông thư viện UTC', 15);
 SET IDENTITY_INSERT dbo.[PhieuMuon] OFF;
 GO
 
--- Dữ liệu bảng [ChiTietMuon] (49 bản ghi)
+-- Dữ liệu bảng [ChiTietMuon] (55 bản ghi)
 SET IDENTITY_INSERT dbo.[ChiTietMuon] ON;
 INSERT INTO dbo.[ChiTietMuon] ([MaChiTietMuon], [MaPhieuMuon], [MaBanSao], [HanTra], [NgayTra], [TinhTrangKhiTra], [TrangThai]) VALUES
 (1, 2, 1, '2027-03-15', NULL, NULL, N'Đang mượn'),
 (2, 2, 37, '2027-05-20', NULL, NULL, N'Đang mượn'),
 (3, 1, 5, '2026-10-10', '2026-11-06 01:55:45.458', N'Bình thường', N'Đã trả'),
 (4, 1, 21, '2026-08-25', '2026-11-06 15:03:40.653', N'Bình thường', N'Đã trả'),
-(5, 1, 33, '2026-11-01', NULL, NULL, N'Quá hạn'),
+(5, 1, 33, '2026-11-01', '2026-11-08 12:12:32.515', N'Bình thường', N'Đã trả'),
 (6, 3, 9, '2026-09-10', NULL, NULL, N'Quá hạn'),
 (7, 3, 13, '2027-04-10', '2026-11-06 15:25:21.694', N'Bình thường', N'Đã trả'),
 (8, 4, 22, '2027-11-06', NULL, NULL, N'Đang mượn'),
@@ -724,12 +790,12 @@ INSERT INTO dbo.[ChiTietMuon] ([MaChiTietMuon], [MaPhieuMuon], [MaBanSao], [HanT
 (11, 3, 5, '2027-11-06', '2026-11-06 21:17:59.131', N'Bình thường', N'Đã trả'),
 (12, 3, 2, '2027-11-06', NULL, NULL, N'Đang mượn'),
 (13, 3, 18, '2027-11-06', NULL, NULL, N'Đang mượn'),
-(14, 5, 3, '2027-02-15', NULL, NULL, N'Đang mượn'),
-(15, 5, 4, '2027-02-15', NULL, NULL, N'Đang mượn'),
-(16, 5, 6, '2027-02-15', NULL, NULL, N'Đang mượn'),
-(17, 5, 7, '2027-02-15', NULL, NULL, N'Đang mượn'),
-(18, 5, 8, '2027-02-15', NULL, NULL, N'Đang mượn'),
-(19, 5, 10, '2027-02-15', NULL, NULL, N'Đang mượn'),
+(14, 5, 3, '2026-10-15', NULL, NULL, N'QuĂ¡ háº¡n'),
+(15, 5, 6, '2026-10-18', NULL, NULL, N'QuĂ¡ háº¡n'),
+(16, 5, 10, '2026-10-22', NULL, NULL, N'QuĂ¡ háº¡n'),
+(17, 5, 127, '2026-10-25', NULL, NULL, N'QuĂ¡ háº¡n'),
+(18, 5, 143, '2026-10-28', NULL, NULL, N'QuĂ¡ háº¡n'),
+(19, 5, 125, '2026-11-01', NULL, NULL, N'QuĂ¡ háº¡n'),
 (20, 6, 11, '2026-10-15', NULL, NULL, N'Quá hạn'),
 (21, 6, 12, '2026-10-15', NULL, NULL, N'Quá hạn'),
 (22, 6, 13, '2027-03-20', NULL, NULL, N'Đang mượn'),
@@ -760,7 +826,13 @@ INSERT INTO dbo.[ChiTietMuon] ([MaChiTietMuon], [MaPhieuMuon], [MaBanSao], [HanT
 (46, 9, 43, '2027-06-15', NULL, NULL, N'Đang mượn'),
 (47, 9, 44, '2027-06-15', NULL, NULL, N'Đang mượn'),
 (48, 9, 45, '2027-06-15', NULL, NULL, N'Đang mượn'),
-(49, 9, 46, '2027-06-15', NULL, NULL, N'Đang mượn');
+(49, 9, 46, '2027-06-15', NULL, NULL, N'Đang mượn'),
+(50, 3, 5, '2027-11-08', NULL, NULL, N'Đang mượn'),
+(51, 10, 97, '2027-11-08', '2026-11-08 12:15:26.109', N'Bình thường', N'Đã trả'),
+(52, 11, 147, '2027-11-08', NULL, NULL, N'Đang mượn'),
+(53, 12, 129, '2027-11-08', NULL, NULL, N'Đang mượn'),
+(54, 13, 73, '2027-11-08', NULL, NULL, N'Đang mượn'),
+(55, 5, 161, '2026-11-04', NULL, NULL, N'QuĂ¡ háº¡n');
 SET IDENTITY_INSERT dbo.[ChiTietMuon] OFF;
 GO
 
@@ -775,16 +847,17 @@ SET IDENTITY_INSERT dbo.[ViPham] ON;
 INSERT INTO dbo.[ViPham] ([MaViPham], [MaBanDoc], [MaChiTietMuon], [LoaiViPham], [MoTa], [NgayViPham], [SoTienPhat], [TrangThaiNop], [NgayNop], [MaNhanVienThu]) VALUES
 (1, 15, 3, N'Mượn quá hạn', N'Quá hạn trả sách Cơ sở dữ liệu quan hệ (thời hạn 1 năm)', '2026-10-11 00:00:00.000', 100000.00, N'Đã thanh toán', NULL, NULL),
 (2, 15, 4, N'Mượn quá hạn', N'Quá hạn trả sách C++ và Lập trình hướng đối tượng (thời hạn 1 năm)', '2026-08-26 00:00:00.000', 100000.00, N'Đã thanh toán', NULL, NULL),
-(3, 15, 5, N'Mượn quá hạn', N'Quá hạn trả sách Kỹ nghệ phần mềm (thời hạn 1 năm)', '2026-11-02 00:00:00.000', 100000.00, N'Chưa thanh toán', NULL, NULL),
+(3, 15, 5, N'Mượn quá hạn', N'Quá hạn trả sách Kỹ nghệ phần mềm (thời hạn 1 năm)', '2026-11-02 00:00:00.000', 100000.00, N'Đã thanh toán', '2026-11-08 12:12:32.586', NULL),
 (4, 1, 6, N'Mượn quá hạn', N'Quá hạn sách Mạng máy tính', '2026-09-11 00:00:00.000', 100000.00, N'Chưa thanh toán', NULL, NULL);
 SET IDENTITY_INSERT dbo.[ViPham] OFF;
 GO
 
--- Dữ liệu bảng [ThanhToan] (2 bản ghi)
+-- Dữ liệu bảng [ThanhToan] (3 bản ghi)
 SET IDENTITY_INSERT dbo.[ThanhToan] ON;
 INSERT INTO dbo.[ThanhToan] ([MaThanhToan], [MaBanDoc], [MaNhanVien], [NgayThanhToan], [TongTien], [PhuongThuc], [TrangThai], [NoiDung]) VALUES
 (1, 15, 1, '2026-11-06 01:55:45.556', 100000.00, N'Tiền mặt', N'Thành công', NULL),
-(2, 15, 1, '2026-11-06 15:03:40.727', 100000.00, N'Tiền mặt', N'Thành công', NULL);
+(2, 15, 1, '2026-11-06 15:03:40.727', 100000.00, N'Tiền mặt', N'Thành công', NULL),
+(3, 15, 1, '2026-11-08 12:12:32.586', 100000.00, N'Tiền mặt', N'Thành công', N'Thu phí lưu thông: GD250825-005 (Giáo trình Kỹ nghệ phần mềm (Công nghệ phần mềm))');
 SET IDENTITY_INSERT dbo.[ThanhToan] OFF;
 GO
 

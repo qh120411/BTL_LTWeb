@@ -182,7 +182,9 @@
         var modalEl = document.getElementById("returnAndCompensationModal");
         if (!modalEl) return;
 
-        var rcModal = new bootstrap.Modal(modalEl);
+        var rcModal = (typeof bootstrap !== 'undefined' && bootstrap.Modal) 
+            ? bootstrap.Modal.getOrCreateInstance(modalEl) 
+            : null;
 
         var rcInputMaBD = document.getElementById("rcInputMaBD");
         var rcInputMaGD = document.getElementById("rcInputMaGD");
@@ -217,120 +219,142 @@
         var currentIsOverdue = false;
 
         function updateFinancialCalculation() {
+            if (!radioCompensation || !compCash) return;
             var isComp = radioCompensation.checked;
             var isCash = compCash.checked;
             var isOverdue = currentIsOverdue;
-            var willPayOverdue = isOverdue && (radioNormalReturn.checked || rcPayOverdueCheck.checked);
+            var willPayOverdue = isOverdue && (radioNormalReturn.checked || (rcPayOverdueCheck && rcPayOverdueCheck.checked));
 
             var overdueFee = willPayOverdue ? 100000 : 0;
             var compFee = (isComp && isCash) ? parseFloat(inputCompensationAmount.value || "0") : 0;
             var total = overdueFee + compFee;
 
-            rcOverdueAmount.textContent = overdueFee.toLocaleString("vi-VN") + " VNĐ";
-            rcCompensationAmount.textContent = compFee.toLocaleString("vi-VN") + " VNĐ";
-            rcTotalAmount.textContent = total.toLocaleString("vi-VN") + " VNĐ";
+            if (rcOverdueAmount) rcOverdueAmount.textContent = overdueFee.toLocaleString("vi-VN") + " VNĐ";
+            if (rcCompensationAmount) rcCompensationAmount.textContent = compFee.toLocaleString("vi-VN") + " VNĐ";
+            if (rcTotalAmount) rcTotalAmount.textContent = total.toLocaleString("vi-VN") + " VNĐ";
         }
 
-        // Bắt sự kiện chuyển đổi giữa Trả thường và Bồi thường
         function updateOptionUI() {
+            if (!radioNormalReturn) return;
             if (radioNormalReturn.checked) {
-                cardNormalReturn.classList.add("active");
-                cardNormalReturn.style.borderColor = "#0079ba";
-                cardNormalReturn.style.backgroundColor = "#f0f9ff";
-
-                cardCompensation.classList.remove("active");
-                cardCompensation.style.borderColor = "#cbd5e1";
-                cardCompensation.style.backgroundColor = "#fff";
-
-                compensationDetailSection.classList.add("d-none");
+                if (cardNormalReturn) {
+                    cardNormalReturn.classList.add("active");
+                    cardNormalReturn.style.borderColor = "#0079ba";
+                    cardNormalReturn.style.backgroundColor = "#f0f9ff";
+                }
+                if (cardCompensation) {
+                    cardCompensation.classList.remove("active");
+                    cardCompensation.style.borderColor = "#cbd5e1";
+                    cardCompensation.style.backgroundColor = "#fff";
+                }
+                if (compensationDetailSection) compensationDetailSection.classList.add("d-none");
             } else {
-                cardCompensation.classList.add("active");
-                cardCompensation.style.borderColor = "#ef4444";
-                cardCompensation.style.backgroundColor = "#fff5f5";
-
-                cardNormalReturn.classList.remove("active");
-                cardNormalReturn.style.borderColor = "#cbd5e1";
-                cardNormalReturn.style.backgroundColor = "#fff";
-
-                compensationDetailSection.classList.remove("d-none");
+                if (cardCompensation) {
+                    cardCompensation.classList.add("active");
+                    cardCompensation.style.borderColor = "#ef4444";
+                    cardCompensation.style.backgroundColor = "#fff5f5";
+                }
+                if (cardNormalReturn) {
+                    cardNormalReturn.classList.remove("active");
+                    cardNormalReturn.style.borderColor = "#cbd5e1";
+                    cardNormalReturn.style.backgroundColor = "#fff";
+                }
+                if (compensationDetailSection) compensationDetailSection.classList.remove("d-none");
             }
 
-            if (compCash.checked && radioCompensation.checked) {
-                cashAmountSection.classList.remove("d-none");
+            if (compCash && radioCompensation && compCash.checked && radioCompensation.checked) {
+                if (cashAmountSection) cashAmountSection.classList.remove("d-none");
             } else {
-                cashAmountSection.classList.add("d-none");
+                if (cashAmountSection) cashAmountSection.classList.add("d-none");
             }
 
-            if (currentIsOverdue && radioCompensation.checked) {
-                overdueCheckboxSection.classList.remove("d-none");
+            if (currentIsOverdue && radioCompensation && radioCompensation.checked) {
+                if (overdueCheckboxSection) overdueCheckboxSection.classList.remove("d-none");
             } else {
-                overdueCheckboxSection.classList.add("d-none");
+                if (overdueCheckboxSection) overdueCheckboxSection.classList.add("d-none");
             }
 
             updateFinancialCalculation();
         }
 
-        radioNormalReturn.addEventListener("change", updateOptionUI);
-        radioCompensation.addEventListener("change", updateOptionUI);
-        cardNormalReturn.addEventListener("click", function(e) {
-            if (e.target.tagName !== "INPUT") {
-                radioNormalReturn.checked = true;
-                updateOptionUI();
-            }
-        });
-        cardCompensation.addEventListener("click", function(e) {
-            if (e.target.tagName !== "INPUT") {
-                radioCompensation.checked = true;
-                updateOptionUI();
-            }
-        });
-
-        compNewBook.addEventListener("change", updateOptionUI);
-        compCash.addEventListener("change", updateOptionUI);
-        inputCompensationAmount.addEventListener("input", updateFinancialCalculation);
-        rcPayOverdueCheck.addEventListener("change", updateFinancialCalculation);
-
-        // Mở modal từ bất kỳ nút nào có class btn-return-trigger
-        document.querySelectorAll(".btn-return-trigger").forEach(function(btn) {
-            btn.addEventListener("click", function() {
-                var magd = this.getAttribute("data-magd");
-                var mabd = this.getAttribute("data-mabd");
-                var hoten = this.getAttribute("data-hoten");
-                var tensach = this.getAttribute("data-tensach");
-                var quahan = this.getAttribute("data-quahan") === "true";
-                var returnUrl = this.getAttribute("data-returnurl") || window.location.pathname;
-
-                rcInputMaBD.value = mabd;
-                rcInputMaGD.value = magd;
-                rcInputReturnUrl.value = returnUrl;
-
-                rcDisplayMaGD.textContent = magd;
-                rcDisplayHoTen.textContent = hoten;
-                rcDisplayMaBD.textContent = mabd;
-                rcDisplayTenSach.textContent = tensach;
-
-                currentIsOverdue = quahan;
-
-                if (quahan) {
-                    rcOverdueBadge.classList.remove("d-none");
-                    rcOnTimeBadge.classList.add("d-none");
-                } else {
-                    rcOverdueBadge.classList.add("d-none");
-                    rcOnTimeBadge.classList.remove("d-none");
+        if (radioNormalReturn) radioNormalReturn.addEventListener("change", updateOptionUI);
+        if (radioCompensation) radioCompensation.addEventListener("change", updateOptionUI);
+        if (cardNormalReturn) {
+            cardNormalReturn.addEventListener("click", function(e) {
+                if (e.target.tagName !== "INPUT") {
+                    radioNormalReturn.checked = true;
+                    updateOptionUI();
                 }
-
-                // Reset mặc định về Trả sách bình thường
-                radioNormalReturn.checked = true;
-                compNewBook.checked = true;
-                inputCompensationAmount.value = "150000";
-                rcPayOverdueCheck.checked = true;
-                inputNote.value = "";
-
-                updateOptionUI();
-                rcModal.show();
             });
+        }
+        if (cardCompensation) {
+            cardCompensation.addEventListener("click", function(e) {
+                if (e.target.tagName !== "INPUT") {
+                    radioCompensation.checked = true;
+                    updateOptionUI();
+                }
+            });
+        }
+
+        if (compNewBook) compNewBook.addEventListener("change", updateOptionUI);
+        if (compCash) compCash.addEventListener("change", updateOptionUI);
+        if (inputCompensationAmount) inputCompensationAmount.addEventListener("input", updateFinancialCalculation);
+        if (rcPayOverdueCheck) rcPayOverdueCheck.addEventListener("change", updateFinancialCalculation);
+
+        // Sử dụng event delegation để bắt click từ bất kỳ nút nào có class btn-return-trigger
+        document.addEventListener("click", function(e) {
+            var btn = e.target.closest(".btn-return-trigger");
+            if (!btn) return;
+
+            e.preventDefault();
+
+            var magd = btn.getAttribute("data-magd") || "";
+            var mabd = btn.getAttribute("data-mabd") || "";
+            var hoten = btn.getAttribute("data-hoten") || "";
+            var tensach = btn.getAttribute("data-tensach") || "";
+            var quahan = btn.getAttribute("data-quahan") === "true";
+            var returnUrl = btn.getAttribute("data-returnurl") || window.location.pathname;
+
+            if (rcInputMaBD) rcInputMaBD.value = mabd;
+            if (rcInputMaGD) rcInputMaGD.value = magd;
+            if (rcInputReturnUrl) rcInputReturnUrl.value = returnUrl;
+
+            if (rcDisplayMaGD) rcDisplayMaGD.textContent = magd;
+            if (rcDisplayHoTen) rcDisplayHoTen.textContent = hoten;
+            if (rcDisplayMaBD) rcDisplayMaBD.textContent = mabd;
+            if (rcDisplayTenSach) rcDisplayTenSach.textContent = tensach;
+
+            currentIsOverdue = quahan;
+
+            if (quahan) {
+                if (rcOverdueBadge) rcOverdueBadge.classList.remove("d-none");
+                if (rcOnTimeBadge) rcOnTimeBadge.classList.add("d-none");
+            } else {
+                if (rcOverdueBadge) rcOverdueBadge.classList.add("d-none");
+                if (rcOnTimeBadge) rcOnTimeBadge.classList.remove("d-none");
+            }
+
+            // Reset mặc định về Trả sách bình thường
+            if (radioNormalReturn) radioNormalReturn.checked = true;
+            if (compNewBook) compNewBook.checked = true;
+            if (inputCompensationAmount) inputCompensationAmount.value = "150000";
+            if (rcPayOverdueCheck) rcPayOverdueCheck.checked = true;
+            if (inputNote) inputNote.value = "";
+
+            updateOptionUI();
+
+            if (!rcModal && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                rcModal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            }
+            if (rcModal) {
+                rcModal.show();
+            }
         });
     }
 
-    document.addEventListener("DOMContentLoaded", initReturnAndCompensationModal);
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initReturnAndCompensationModal);
+    } else {
+        initReturnAndCompensationModal();
+    }
 </script>

@@ -111,14 +111,16 @@ namespace BTL_LTWEB.Areas.Reader.Services
                                 ? (book.AnhBia.StartsWith("/") ? book.AnhBia : "/" + book.AnhBia)
                                 : "/images/covers/cover-placeholder.png";
 
+                            var loanDate = ctm.MaPhieuMuonNavigation != null ? ctm.MaPhieuMuonNavigation.NgayMuon : DateTime.Now;
+
                             profile.BorrowedBooks.Add(new BorrowedBookItem
                             {
-                                MaGD = $"GD{ctm.MaPhieuMuonNavigation.NgayMuon:yyMMdd}-{ctm.MaChiTietMuon:D3}",
+                                MaGD = $"GD{loanDate:yyMMdd}-{ctm.MaChiTietMuon:D3}",
                                 MaVach = ctm.MaBanSaoNavigation?.MaVach ?? $"BS-{ctm.MaBanSao:D5}",
                                 TenSach = book?.TenTaiLieu ?? "Học liệu UTC",
                                 TacGia = authors,
                                 CoverImage = coverPath,
-                                NgayMuon = ctm.MaPhieuMuonNavigation.NgayMuon,
+                                NgayMuon = loanDate,
                                 HanTra = hanTraDate,
                                 IsQuaHan = isOverdue,
                                 SoNgayQuaHan = daysOverdue,
@@ -128,8 +130,9 @@ namespace BTL_LTWEB.Areas.Reader.Services
                             });
                         }
 
-                        // Cập nhật lại cache bộ nhớ
+                        // Cập nhật lại cache bộ nhớ và lưu file đệm
                         _profiles[studentId] = profile;
+                        try { SaveProfilesToFile(); } catch { }
                         return profile;
                     }
                 }

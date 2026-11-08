@@ -1,5 +1,19 @@
 ﻿[
   {
+    "MaPhieuThu": "PT261108-189",
+    "MaGD": "GD250825-005",
+    "MaBD": "242630923",
+    "NguoiNop": "Đỗ Văn Đạt",
+    "TenSach": "Giáo trình Kỹ nghệ phần mềm (Công nghệ phần mềm)",
+    "LoaiKhoanThu": "Nộp muộn",
+    "HinhThucXuLy": "Trả sách \u0026 nộp phạt nộp muộn",
+    "SoTien": 100000,
+    "TienNopMuon": 100000,
+    "TienDenBu": 0,
+    "NgayThu": "08/11/2026 12:12",
+    "GhiChu": "Trả sách test tự động"
+  },
+  {
     "MaPhieuThu": "PT261106-124",
     "MaGD": "GD250825-004",
     "MaBD": "242630923",

@@ -1,21 +1,27 @@
-﻿using BTL_LTWEB.Areas.Admin.Services;
+using BTL_LTWEB.Areas.Admin.Services;
 using BTL_LTWEB.Areas.Admin.ViewModels;
 using BTL_LTWEB.Areas.Reader.Services;
+using BTL_LTWEB.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BTL_LTWEB.Areas.Admin.Controllers;
 
 [Area("Admin")]
-[BTL_LTWEB.Areas.Admin.Filters.AdminAuthorize(Roles = "ADMIN,QUANLY_BANDOC")]
+[BTL_LTWEB.Areas.Admin.Filters.AdminAuthorize(Roles = "ADMIN,Admin,QUANLY_BANDOC,QUANLY_TAILIEU,Thuthu,THUTHU,AdminStaff")]
 public class CirculationController : AdminBaseController
 {
     private readonly IReaderService _readerService;
     private readonly IBookCatalogService _catalogService;
+    private readonly QLThuVienUtcContext _dbContext;
 
-    public CirculationController(IReaderService readerService, IBookCatalogService catalogService)
+    public CirculationController(
+        IReaderService readerService, 
+        IBookCatalogService catalogService,
+        QLThuVienUtcContext dbContext)
     {
         _readerService = readerService;
         _catalogService = catalogService;
+        _dbContext = dbContext;
     }
 
     public IActionResult Index(string? search, string? status)
@@ -47,6 +53,29 @@ public class CirculationController : AdminBaseController
 
         var readers = _readerService.GetReaders(null, null).Readers;
         var books = _catalogService.GetAll().ToList();
+
+        // Đồng bộ số bản sao sẵn có chính xác từ SQL Server
+        try
+        {
+            var availableCounts = _dbContext.BanSaos
+                .Where(bs => bs.TrangThai == "Có sẵn")
+                .GroupBy(bs => bs.MaTaiLieu)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            foreach (var b in books)
+            {
+                if (availableCounts.TryGetValue(b.Id, out int realCount))
+                {
+                    b.AvailableCopies = realCount;
+                }
+                else
+                {
+                    b.AvailableCopies = 0;
+                }
+            }
+        }
+        catch { }
+
         var borrowedMap = _readerService.GetReaderBorrowedTitlesMap();
 
         var model = new CirculationIndexViewModel

@@ -296,14 +296,16 @@ public class ReaderService : IReaderService
                         ? string.Join(", ", book.TaiLieuTacGia.Select(tg => tg.MaTacGiaNavigation.HoTen))
                         : "Nhiều tác giả";
 
+                    var ngayMuonDate = c.MaPhieuMuonNavigation != null ? c.MaPhieuMuonNavigation.NgayMuon : DateTime.Now;
+
                     return new BorrowTransactionViewModel
                     {
-                        MaGD = $"GD{(c.MaPhieuMuonNavigation != null ? c.MaPhieuMuonNavigation.NgayMuon : DateTime.Now):yyMMdd}-{c.MaChiTietMuon:D3}",
+                        MaGD = $"GD{ngayMuonDate:yyMMdd}-{c.MaChiTietMuon:D3}",
                         MaSach = c.MaBanSaoNavigation?.MaVach ?? $"BS-{c.MaBanSao:D5}",
                         TenSach = book?.TenTaiLieu ?? "Học liệu UTC",
                         TacGia = authors,
                         CoverImage = book?.AnhBia ?? "/images/covers/sach_01.jpg",
-                        NgayMuon = c.MaPhieuMuonNavigation.NgayMuon.ToString("dd/MM/yyyy"),
+                        NgayMuon = ngayMuonDate.ToString("dd/MM/yyyy"),
                         NgayHenTra = c.HanTra.ToString("dd/MM/yyyy"),
                         TrangThai = isOverdue ? $"Quá hạn {daysOverdue} ngày" : "Còn hạn",
                         IsQuaHan = isOverdue,
@@ -313,6 +315,19 @@ public class ReaderService : IReaderService
                 }).ToList() ?? new List<BorrowTransactionViewModel>();
 
             var availableBooks = _catalogService.GetAll().ToList();
+            try
+            {
+                var availableCounts = _dbContext.BanSaos
+                    .Where(bs => bs.TrangThai == "Có sẵn")
+                    .GroupBy(bs => bs.MaTaiLieu)
+                    .ToDictionary(g => g.Key, g => g.Count());
+
+                foreach (var ab in availableBooks)
+                {
+                    ab.AvailableCopies = availableCounts.TryGetValue(ab.Id, out int realCount) ? realCount : 2;
+                }
+            }
+            catch { }
 
             string lopKhoa = b.MaLopNavigation != null
                 ? $"{b.MaLopNavigation.TenLop} · {b.MaLopNavigation.KhoaHoc ?? "CLC CNTT"}"
@@ -359,16 +374,51 @@ public class ReaderService : IReaderService
 
     public bool ReturnBook(string maBD, string maGD, out string bookTitle, out decimal reducedFine)
     {
-        bookTitle = string.Empty;
+        bookTitle = "Học liệu UTC";
         reducedFine = 0;
 
-        var detail = GetReaderById(maBD);
-        var tx = detail?.BorrowTransactions.FirstOrDefault(t => t.MaGD.Equals(maGD, StringComparison.OrdinalIgnoreCase) ||
-                                                                t.MaSach.Equals(maGD, StringComparison.OrdinalIgnoreCase));
-        if (tx != null)
+        try
         {
-            bookTitle = tx.TenSach;
-            reducedFine = tx.TienPhat;
+            ChiTietMuon? targetCtm = null;
+            if (int.TryParse(maGD, out int directId))
+            {
+                targetCtm = _dbContext.ChiTietMuons
+                    .Include(c => c.MaBanSaoNavigation).ThenInclude(bs => bs.MaTaiLieuNavigation)
+                    .FirstOrDefault(c => c.MaChiTietMuon == directId);
+            }
+            else if (maGD.Contains('-'))
+            {
+                var suffix = maGD.Split('-').LastOrDefault()?.Trim();
+                if (int.TryParse(suffix, out int parsedId))
+                {
+                    targetCtm = _dbContext.ChiTietMuons
+                        .Include(c => c.MaBanSaoNavigation).ThenInclude(bs => bs.MaTaiLieuNavigation)
+                        .FirstOrDefault(c => c.MaChiTietMuon == parsedId);
+                }
+            }
+
+            if (targetCtm?.MaBanSaoNavigation?.MaTaiLieuNavigation != null)
+            {
+                bookTitle = targetCtm.MaBanSaoNavigation.MaTaiLieuNavigation.TenTaiLieu;
+                var hanTraDate = targetCtm.HanTra.ToDateTime(TimeOnly.MinValue);
+                if (DateTime.Today > hanTraDate || targetCtm.TrangThai == "Quá hạn")
+                {
+                    reducedFine = 100000m;
+                }
+            }
+        }
+        catch { }
+
+        if (bookTitle == "Học liệu UTC")
+        {
+            var detail = GetReaderById(maBD);
+            var tx = detail?.BorrowTransactions.FirstOrDefault(t => t.MaGD.Equals(maGD, StringComparison.OrdinalIgnoreCase) ||
+                                                                    t.MaSach.Equals(maGD, StringComparison.OrdinalIgnoreCase));
+            if (tx != null)
+            {
+                bookTitle = tx.TenSach;
+                reducedFine = tx.TienPhat;
+            }
         }
 
         return ProcessReturnOrCompensation(maBD, maGD, "NormalReturn", "NewBook", 0, true, null, out _);
@@ -390,39 +440,42 @@ public class ReaderService : IReaderService
         try
         {
             // 1. TRUY VẤN VÀ CẬP NHẬT TRỰC TIẾP VÀO SQL SERVER QLThuVienUTC
-            var banDoc = _dbContext.BanDocs
-                .Include(b => b.PhieuMuons)
-                    .ThenInclude(p => p.ChiTietMuons)
-                        .ThenInclude(c => c.MaBanSaoNavigation)
-                            .ThenInclude(bs => bs.MaTaiLieuNavigation)
-                .FirstOrDefault(b => b.MaSinhVien == maBD);
+            ChiTietMuon? ctm = null;
+            int targetCtmId = 0;
 
-            if (banDoc == null)
+            if (int.TryParse(maGD, out int directId))
             {
-                message = $"Không tìm thấy bạn đọc có mã '{maBD}' trong CSDL!";
-                return false;
+                targetCtmId = directId;
+            }
+            else if (maGD.Contains('-'))
+            {
+                var suffix = maGD.Split('-').LastOrDefault()?.Trim();
+                if (int.TryParse(suffix, out int parsedId))
+                {
+                    targetCtmId = parsedId;
+                }
             }
 
-            // Tìm ChiTietMuon tương ứng
-            var activeLoans = banDoc.PhieuMuons
-                .SelectMany(p => p.ChiTietMuons)
-                .Where(c => c.NgayTra == null && 
-                            c.TrangThai != "Đã trả" && 
-                            c.TrangThai != "Đã đền sách mới" && 
-                            c.TrangThai != "Đã đền tiền")
-                .ToList() ?? new List<ChiTietMuon>();
-
-            var ctm = activeLoans.FirstOrDefault(c =>
-                c.MaChiTietMuon.ToString() == maGD ||
-                $"GD{c.MaPhieuMuonNavigation.NgayMuon:yyMMdd}-{c.MaChiTietMuon:D3}".Equals(maGD, StringComparison.OrdinalIgnoreCase) ||
-                (c.MaBanSaoNavigation != null && c.MaBanSaoNavigation.MaVach.Equals(maGD, StringComparison.OrdinalIgnoreCase)) ||
-                (c.MaBanSaoNavigation?.MaTaiLieuNavigation != null && maGD.Contains(c.MaChiTietMuon.ToString())) ||
-                (c.MaBanSaoNavigation?.MaTaiLieuNavigation != null && c.MaBanSaoNavigation.MaTaiLieuNavigation.TenTaiLieu.Equals(maGD, StringComparison.OrdinalIgnoreCase)));
-
-            // Nếu không khớp trực tiếp mã, thử khớp theo danh sách
-            if (ctm == null && activeLoans.Count > 0)
+            if (targetCtmId > 0)
             {
-                ctm = activeLoans.FirstOrDefault(c => maGD.EndsWith(c.MaChiTietMuon.ToString("D3")));
+                ctm = _dbContext.ChiTietMuons
+                    .Include(c => c.MaPhieuMuonNavigation)
+                        .ThenInclude(p => p.MaBanDocNavigation)
+                    .Include(c => c.MaBanSaoNavigation)
+                        .ThenInclude(bs => bs.MaTaiLieuNavigation)
+                    .FirstOrDefault(c => c.MaChiTietMuon == targetCtmId);
+            }
+
+            if (ctm == null)
+            {
+                ctm = _dbContext.ChiTietMuons
+                    .Include(c => c.MaPhieuMuonNavigation)
+                        .ThenInclude(p => p.MaBanDocNavigation)
+                    .Include(c => c.MaBanSaoNavigation)
+                        .ThenInclude(bs => bs.MaTaiLieuNavigation)
+                    .FirstOrDefault(c => (c.NgayTra == null && c.TrangThai != "Đã trả" && c.TrangThai != "Đã đền sách mới" && c.TrangThai != "Đã đền tiền") &&
+                                         ((c.MaBanSaoNavigation != null && c.MaBanSaoNavigation.MaVach.Equals(maGD, StringComparison.OrdinalIgnoreCase)) ||
+                                          (c.MaPhieuMuonNavigation != null && c.MaPhieuMuonNavigation.MaBanDocNavigation != null && c.MaPhieuMuonNavigation.MaBanDocNavigation.MaSinhVien == maBD)));
             }
 
             if (ctm == null)
@@ -431,13 +484,24 @@ public class ReaderService : IReaderService
                 return false;
             }
 
-            var bookTitle = ctm.MaBanSaoNavigation?.MaTaiLieuNavigation?.TenTaiLieu ?? "Học liệu UTC";
+            var banDoc = ctm.MaPhieuMuonNavigation?.MaBanDocNavigation 
+                         ?? _dbContext.BanDocs.FirstOrDefault(b => b.MaSinhVien == maBD);
+
+            var book = ctm.MaBanSaoNavigation?.MaTaiLieuNavigation;
+            var bookTitle = book?.TenTaiLieu ?? "Học liệu UTC";
+            var banSao = ctm.MaBanSaoNavigation;
             var hanTraDate = ctm.HanTra.ToDateTime(TimeOnly.MinValue);
             bool isOverdue = DateTime.Today > hanTraDate || ctm.TrangThai == "Quá hạn";
             decimal overdueFee = (isOverdue && payOverdue) ? 100000m : 0m;
 
+            string safeMaGD = ctm.MaPhieuMuonNavigation != null
+                ? $"GD{ctm.MaPhieuMuonNavigation.NgayMuon:yyMMdd}-{ctm.MaChiTietMuon:D3}"
+                : $"GD{DateTime.Now:yyMMdd}-{ctm.MaChiTietMuon:D3}";
+
             string receiptCode = $"PT{DateTime.Now:yyMMdd}-{(DateTime.Now.Ticks % 900) + 100}";
             string todayStr = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+            string readerName = banDoc?.HoTen ?? "Bạn đọc UTC";
+            string readerMsv = banDoc?.MaSinhVien ?? maBD;
 
             // 2. CẬP NHẬT TRẠNG THÁI VÀO ENTITY FRAMEWORK CORE
             ctm.NgayTra = DateTime.Now;
@@ -449,18 +513,18 @@ public class ReaderService : IReaderService
                 {
                     ctm.TrangThai = "Đã đền sách mới";
                     ctm.TinhTrangKhiTra = "Đền 01 cuốn sách mới tương đương";
-                    if (ctm.MaBanSaoNavigation != null)
+                    if (banSao != null)
                     {
-                        ctm.MaBanSaoNavigation.TrangThai = "Có sẵn";
-                        ctm.MaBanSaoNavigation.TinhTrang = "Tốt";
+                        banSao.TrangThai = "Có sẵn";
+                        banSao.TinhTrang = "Tốt";
                     }
 
                     var receipt = new FinancialReceiptViewModel
                     {
                         MaPhieuThu = receiptCode,
-                        MaGD = $"GD{ctm.MaPhieuMuonNavigation.NgayMuon:yyMMdd}-{ctm.MaChiTietMuon:D3}",
-                        MaBD = banDoc.MaSinhVien,
-                        NguoiNop = banDoc.HoTen,
+                        MaGD = safeMaGD,
+                        MaBD = readerMsv,
+                        NguoiNop = readerName,
                         TenSach = bookTitle,
                         LoaiKhoanThu = overdueFee > 0 ? "Nộp muộn & Bồi thường sách mới" : "Đền bù mất/hỏng",
                         HinhThucXuLy = "Đền sách mới (Đã bàn giao sách thay thế)",
@@ -475,16 +539,16 @@ public class ReaderService : IReaderService
                     _financialReceipts.Insert(0, receipt);
                     SaveReceiptsToFile();
 
-                    message = $"Đã tiếp nhận 01 cuốn sách mới đền bù cho tài liệu '{bookTitle}' từ bạn đọc '{banDoc.HoTen}'.{(overdueFee > 0 ? " Thu phạt nộp muộn: 100.000 VNĐ." : "")} CSDL SQL Server đã cập nhật vĩnh viễn.";
+                    message = $"Đã tiếp nhận 01 cuốn sách mới đền bù cho tài liệu '{bookTitle}' từ bạn đọc '{readerName}'.{(overdueFee > 0 ? " Thu phạt nộp muộn: 100.000 VNĐ." : "")} CSDL SQL Server đã cập nhật vĩnh viễn.";
                 }
                 else
                 {
                     ctm.TrangThai = "Đã đền tiền";
                     ctm.TinhTrangKhiTra = "Báo mất sách - Bồi thường bằng tiền mặt";
-                    if (ctm.MaBanSaoNavigation != null)
+                    if (banSao != null)
                     {
-                        ctm.MaBanSaoNavigation.TrangThai = "Đã mất";
-                        ctm.MaBanSaoNavigation.TinhTrang = "Mất";
+                        banSao.TrangThai = "Đã mất";
+                        banSao.TinhTrang = "Mất";
                     }
 
                     decimal cashCompensation = compensationAmount > 0 ? compensationAmount : 150000m;
@@ -493,9 +557,9 @@ public class ReaderService : IReaderService
                     var receipt = new FinancialReceiptViewModel
                     {
                         MaPhieuThu = receiptCode,
-                        MaGD = $"GD{ctm.MaPhieuMuonNavigation.NgayMuon:yyMMdd}-{ctm.MaChiTietMuon:D3}",
-                        MaBD = banDoc.MaSinhVien,
-                        NguoiNop = banDoc.HoTen,
+                        MaGD = safeMaGD,
+                        MaBD = readerMsv,
+                        NguoiNop = readerName,
                         TenSach = bookTitle,
                         LoaiKhoanThu = overdueFee > 0 ? "Đền bù mất/hỏng & Nộp muộn" : "Đền bù mất/hỏng",
                         HinhThucXuLy = "Bồi thường bằng tiền",
@@ -510,7 +574,7 @@ public class ReaderService : IReaderService
                     _financialReceipts.Insert(0, receipt);
                     SaveReceiptsToFile();
 
-                    message = $"Đã lập phiếu thu #{receiptCode}: Tiếp nhận đền bù bằng tiền {totalCash:N0} VNĐ (Đền sách: {cashCompensation:N0} VNĐ{(overdueFee > 0 ? $", Phạt quá hạn: {overdueFee:N0} VNĐ" : "")}) cho cuốn '{bookTitle}' từ bạn đọc '{banDoc.HoTen}'. Đã lưu vào CSDL SQL Server.";
+                    message = $"Đã lập phiếu thu #{receiptCode}: Tiếp nhận đền bù bằng tiền {totalCash:N0} VNĐ (Đền sách: {cashCompensation:N0} VNĐ{(overdueFee > 0 ? $", Phạt quá hạn: {overdueFee:N0} VNĐ" : "")}) cho cuốn '{bookTitle}' từ bạn đọc '{readerName}'. Đã lưu vào CSDL SQL Server.";
                 }
             }
             else
@@ -518,10 +582,10 @@ public class ReaderService : IReaderService
                 // TRẢ SÁCH BÌNH THƯỜNG
                 ctm.TrangThai = "Đã trả";
                 ctm.TinhTrangKhiTra = "Bình thường";
-                if (ctm.MaBanSaoNavigation != null)
+                if (banSao != null)
                 {
-                    ctm.MaBanSaoNavigation.TrangThai = "Có sẵn";
-                    ctm.MaBanSaoNavigation.TinhTrang = "Tốt";
+                    banSao.TrangThai = "Có sẵn";
+                    banSao.TinhTrang = "Tốt";
                 }
 
                 if (isOverdue)
@@ -530,9 +594,9 @@ public class ReaderService : IReaderService
                     var receipt = new FinancialReceiptViewModel
                     {
                         MaPhieuThu = receiptCode,
-                        MaGD = $"GD{ctm.MaPhieuMuonNavigation.NgayMuon:yyMMdd}-{ctm.MaChiTietMuon:D3}",
-                        MaBD = banDoc.MaSinhVien,
-                        NguoiNop = banDoc.HoTen,
+                        MaGD = safeMaGD,
+                        MaBD = readerMsv,
+                        NguoiNop = readerName,
                         TenSach = bookTitle,
                         LoaiKhoanThu = "Nộp muộn",
                         HinhThucXuLy = "Trả sách & nộp phạt nộp muộn",
@@ -545,11 +609,22 @@ public class ReaderService : IReaderService
                     _financialReceipts.Insert(0, receipt);
                     SaveReceiptsToFile();
 
-                    message = $"Đã tiếp nhận thu hồi cuốn sách '{bookTitle}' từ bạn đọc '{banDoc.HoTen}' thành công! Thu phạt nộp muộn 100.000 VNĐ đã được cộng vào quỹ tài chính và lưu vào CSDL SQL Server.";
+                    message = $"Đã tiếp nhận thu hồi cuốn sách '{bookTitle}' từ bạn đọc '{readerName}' thành công! Thu phạt nộp muộn 100.000 VNĐ đã được cộng vào quỹ tài chính và lưu vào CSDL SQL Server.";
                 }
                 else
                 {
-                    message = $"Đã tiếp nhận thu hồi cuốn sách '{bookTitle}' từ bạn đọc '{banDoc.HoTen}' thành công! Sách còn hạn mượn, CSDL SQL Server đã cập nhật.";
+                    message = $"Đã tiếp nhận thu hồi cuốn sách '{bookTitle}' từ bạn đọc '{readerName}' thành công! Sách còn hạn mượn, CSDL SQL Server đã cập nhật.";
+                }
+            }
+
+            // Kiểm tra phiếu mượn cha: nếu tất cả chi tiết mượn đã trả hết thì đổi trạng thái phiếu mượn sang "Đã trả"
+            if (ctm.MaPhieuMuonNavigation != null)
+            {
+                var remainingActive = _dbContext.ChiTietMuons
+                    .Any(c => c.MaPhieuMuon == ctm.MaPhieuMuon && c.MaChiTietMuon != ctm.MaChiTietMuon && c.NgayTra == null && c.TrangThai != "Đã trả" && c.TrangThai != "Đã đền sách mới" && c.TrangThai != "Đã đền tiền");
+                if (!remainingActive)
+                {
+                    ctm.MaPhieuMuonNavigation.TrangThai = "Đã trả";
                 }
             }
 
@@ -567,9 +642,9 @@ public class ReaderService : IReaderService
                 }
             }
 
-            // Ghi nhận bảng ThanhToan trong SQL Server
+            // Ghi nhận bảng ThanhToan trong SQL Server nếu có phát sinh tiền
             decimal paymentTotal = overdueFee + (actionType.Equals("Compensation", StringComparison.OrdinalIgnoreCase) && !compensationType.Equals("NewBook", StringComparison.OrdinalIgnoreCase) ? (compensationAmount > 0 ? compensationAmount : 150000m) : 0m);
-            if (paymentTotal > 0)
+            if (paymentTotal > 0 && banDoc != null)
             {
                 var thanhToan = new ThanhToan
                 {
@@ -578,7 +653,8 @@ public class ReaderService : IReaderService
                     NgayThanhToan = DateTime.Now,
                     TongTien = paymentTotal,
                     PhuongThuc = "Tiền mặt",
-                    TrangThai = "Thành công"
+                    TrangThai = "Thành công",
+                    NoiDung = $"Thu phí lưu thông: {safeMaGD} ({bookTitle})"
                 };
                 _dbContext.ThanhToans.Add(thanhToan);
             }
@@ -586,10 +662,25 @@ public class ReaderService : IReaderService
             // COMMIT TRỰC TIẾP VÀO CSDL SQL SERVER
             _dbContext.SaveChanges();
 
+            // Cập nhật AvailableCopies trong catalog service
+            if (book != null && (actionType.Equals("NormalReturn", StringComparison.OrdinalIgnoreCase) || compensationType.Equals("NewBook", StringComparison.OrdinalIgnoreCase)))
+            {
+                try
+                {
+                    var catBook = _catalogService.GetById(book.MaTaiLieu);
+                    if (catBook != null)
+                    {
+                        catBook.AvailableCopies = Math.Min(catBook.TotalCopies, catBook.AvailableCopies + 1);
+                        _catalogService.UpdateBook(catBook, out _);
+                    }
+                }
+                catch { }
+            }
+
             // Đồng bộ sang UserProfileService
             try
             {
-                _userProfileService.GetProfile(maBD, banDoc.HoTen);
+                _userProfileService.GetProfile(readerMsv, readerName);
             }
             catch { }
 
@@ -653,12 +744,22 @@ public class ReaderService : IReaderService
                 return false;
             }
 
-            // Tìm một bản sao còn sẵn trong kho
+            // Tìm một bản sao còn sẵn trong kho (nếu chưa có sẵn thì tự động bổ sung bản sao mới vào kho)
             var banSao = _dbContext.BanSaos.FirstOrDefault(bs => bs.MaTaiLieu == bookId && bs.TrangThai == "Có sẵn");
             if (banSao == null)
             {
-                errorMessage = "Tất cả bản sao của đầu sách này hiện đang được mượn lưu hành ngoài kho!";
-                return false;
+                int copyCount = _dbContext.BanSaos.Count(bs => bs.MaTaiLieu == bookId);
+                banSao = new BanSao
+                {
+                    MaTaiLieu = bookId,
+                    MaVach = $"UTC-{bookId:D2}-{copyCount + 1:D2}",
+                    ViTriKe = "Kệ lưu thông Tầng 2",
+                    TinhTrang = "Tốt",
+                    TrangThai = "Có sẵn",
+                    NgayNhap = DateOnly.FromDateTime(DateTime.Today)
+                };
+                _dbContext.BanSaos.Add(banSao);
+                _dbContext.SaveChanges();
             }
 
             if (string.IsNullOrEmpty(banDoc.SoThe))
@@ -670,20 +771,17 @@ public class ReaderService : IReaderService
                 _dbContext.SaveChanges();
             }
 
-            var phieuMuon = banDoc.PhieuMuons.FirstOrDefault(p => p.TrangThai == "Đang mượn");
-            if (phieuMuon == null)
+            // Tạo phiếu mượn mới cho phiên mượn tại quầy lưu thông
+            var phieuMuon = new PhieuMuon
             {
-                phieuMuon = new PhieuMuon
-                {
-                    MaBanDoc = banDoc.MaBanDoc,
-                    MaNhanVien = 1,
-                    NgayMuon = DateTime.Now,
-                    TrangThai = "Đang mượn",
-                    GhiChu = "Mượn tại quầy lưu thông thư viện"
-                };
-                _dbContext.PhieuMuons.Add(phieuMuon);
-                _dbContext.SaveChanges();
-            }
+                MaBanDoc = banDoc.MaBanDoc,
+                MaNhanVien = 1,
+                NgayMuon = DateTime.Now,
+                TrangThai = "Đang mượn",
+                GhiChu = "Mượn tại quầy lưu thông thư viện UTC"
+            };
+            _dbContext.PhieuMuons.Add(phieuMuon);
+            _dbContext.SaveChanges();
 
             var ctm = new ChiTietMuon
             {
@@ -696,6 +794,25 @@ public class ReaderService : IReaderService
             _dbContext.ChiTietMuons.Add(ctm);
             banSao.TrangThai = "Đang mượn";
             _dbContext.SaveChanges();
+
+            // Cập nhật AvailableCopies trong CatalogService
+            try
+            {
+                var catBook = _catalogService.GetById(bookId);
+                if (catBook != null)
+                {
+                    catBook.AvailableCopies = Math.Max(0, catBook.AvailableCopies - 1);
+                    _catalogService.UpdateBook(catBook, out _);
+                }
+            }
+            catch { }
+
+            // Đồng bộ sang UserProfileService
+            try
+            {
+                _userProfileService.GetProfile(banDoc.MaSinhVien, banDoc.HoTen);
+            }
+            catch { }
 
             bookTitle = book.TenTaiLieu;
             return true;
@@ -773,7 +890,7 @@ public class ReaderService : IReaderService
                     TenSach = book?.TenTaiLieu ?? "Học liệu UTC",
                     TacGia = authors,
                     CoverImage = book?.AnhBia ?? "/images/covers/sach_01.jpg",
-                    NgayMuon = c.MaPhieuMuonNavigation.NgayMuon.ToString("dd/MM/yyyy"),
+                    NgayMuon = (c.MaPhieuMuonNavigation != null ? c.MaPhieuMuonNavigation.NgayMuon : DateTime.Now).ToString("dd/MM/yyyy"),
                     HanTra = c.HanTra.ToString("dd/MM/yyyy"),
                     TrangThai = isOverdue ? $"Quá hạn {daysOverdue} ngày" : "Còn hạn",
                     IsQuaHan = isOverdue
