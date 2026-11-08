@@ -61,15 +61,15 @@
 
 /* Plan Banner */
 .profile-plan-box {
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    background: var(--utc-primary-light, #f0f7fc);
     border: 1px solid #bae6fd;
-    border-radius: 14px;
+    border-radius: var(--utc-radius-card, 10px);
     padding: 12px 20px;
     display: flex;
     align-items: center;
     gap: 14px;
     margin-bottom: 24px;
-    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.08);
+    box-shadow: none;
 }
 
 .profile-plan-label {
@@ -95,8 +95,8 @@
 .profile-portal-card {
     background: #ffffff;
     border: 1px solid #e2eef8;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px -5px rgba(2, 132, 199, 0.08);
+    border-radius: var(--utc-radius-card, 10px);
+    box-shadow: var(--utc-shadow-card);
     overflow: hidden;
     margin-bottom: 28px;
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -104,7 +104,7 @@
 
 /* Section Header Bar */
 .profile-section-bar {
-    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    background: var(--utc-primary, #0079ba);
     color: #ffffff;
     padding: 14px 22px;
     display: flex;
@@ -165,12 +165,12 @@
     margin: 0 auto 24px;
     background-color: #f0f9ff;
     border: 2px solid #bae6fd;
-    border-radius: 16px;
+    border-radius: var(--utc-radius-card, 10px);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: visible;
-    box-shadow: 0 6px 18px rgba(2, 132, 199, 0.12);
+    box-shadow: var(--utc-shadow-sm);
 }
 
 .avatar-icon-placeholder {
@@ -268,7 +268,7 @@
 .profile-input-field {
     width: 100%;
     border: 1px solid #e2e8f0;
-    border-radius: 12px;
+    border-radius: var(--utc-radius-input, 6px);
     padding: 9px 16px;
     font-size: 0.88rem;
     color: #0f172a;
@@ -333,9 +333,9 @@
    ======================================================== */
 
 .profile-rule-banner {
-    background: linear-gradient(135deg, #f0fdf4 0%, #edf4ef 100%);
+    background: var(--utc-primary-light, #f0f7fc);
     border: 1px solid #bbf7d0;
-    border-radius: 14px;
+    border-radius: var(--utc-radius-card, 10px);
     padding: 12px 20px;
     margin-bottom: 20px;
     display: flex;
@@ -343,7 +343,7 @@
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 10px;
-    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.08);
+    box-shadow: none;
 }
 
 .profile-rule-text {
@@ -363,7 +363,7 @@
 .rule-pill-item {
     font-size: 0.76rem;
     padding: 3px 10px;
-    border-radius: 12px;
+    border-radius: var(--utc-radius-input, 6px);
     font-weight: 600;
 }
 
@@ -399,7 +399,7 @@
     color: #a96d72;
     border: 1px solid #eacfd2;
     padding: 5px 14px;
-    border-radius: 9999px;
+    border-radius: var(--utc-radius-badge, 4px);
     font-size: 0.78rem;
     font-weight: 600;
     display: inline-flex;
@@ -414,7 +414,7 @@
     color: #668d7b;
     border: 1px solid #d2e4d8;
     padding: 5px 14px;
-    border-radius: 9999px;
+    border-radius: var(--utc-radius-badge, 4px);
     font-size: 0.78rem;
     font-weight: 600;
     display: inline-flex;
@@ -477,7 +477,7 @@
     align-items: center;
     gap: 24px;
     padding: 18px 24px;
-    border-radius: 16px;
+    border-radius: var(--utc-radius-card, 10px);
     background: #ffffff;
     border: 1px solid #e2e8f0;
     box-shadow: 0 4px 16px rgba(15, 61, 110, 0.05);
@@ -739,7 +739,7 @@
     gap: 16px;
     background: #f8fafc;
     border: 1px solid #e2e8f0;
-    border-radius: 14px;
+    border-radius: var(--utc-radius-card, 10px);
     padding: 16px 22px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
@@ -758,7 +758,7 @@
 .empty-showcase-card {
     background: #f8fafc;
     border: 1px dashed #cbd5e1;
-    border-radius: 14px;
+    border-radius: var(--utc-radius-card, 10px);
     padding: 40px 20px;
     text-align: center;
     color: #64748b;
@@ -826,7 +826,7 @@
     flex-wrap: wrap;
     background: #f1f6fa;
     padding: 6px;
-    border-radius: 12px;
+    border-radius: var(--utc-radius-input, 6px);
     width: fit-content;
     border: 1px solid var(--utc-border, #e2eaf2);
 }
@@ -860,7 +860,7 @@
 .borrow-filter-tab .badge-count {
     font-size: 11.5px;
     padding: 2px 7px;
-    border-radius: 9999px;
+    border-radius: var(--utc-radius-badge, 4px);
     background-color: var(--utc-primary-light, #eaf4fc);
     color: var(--utc-primary, #087dbb);
 }

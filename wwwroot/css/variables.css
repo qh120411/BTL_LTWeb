@@ -1,55 +1,55 @@
 /* ==========================================================================
-   MODERN BLUE ACADEMIC - PREMIUM UNIVERSITY LIBRARY DESIGN SYSTEM
-   Standardized Unified Tokens for UTC Library Platform
+   UTC LIBRARY DESIGN SYSTEM - FIGMA CLEAN THEME
+   Unified Tokens matching Figma design style (Be Vietnam Pro · Navy / Slate / Ice Blue)
    ========================================================================== */
 :root {
-    /* ===== 2.1. PRIMARY COLOR PALETTE (DEEP BLUE ACADEMIC - MODERN UNIVERSITY PORTAL) ===== */
-    --utc-deep-navy: #073B60;          /* Deep Navy (Institutional Topbar Tầng 1) */
-    --utc-primary-navy: #075985;       /* Primary Navy (Navigation Bar Tầng 3) */
-    --utc-primary: #087DBB;            /* Primary Academic Blue (Brand Header Tầng 2) */
-    --utc-primary-hover: #06699F;      /* Primary Hover */
-    --utc-primary-dark: #075985;       /* Primary Dark */
-    --utc-bright-blue: #1596D2;        /* Bright Blue Accent / Hover */
-    --utc-primary-light: #EAF4FC;      /* Soft Blue (Active Tabs, Pills, Soft Bg) */
-    --utc-soft-blue: #EAF4FC;          /* Soft Sky Blue */
+    /* ===== PRIMARY BRAND PALETTE (FIGMA CLEAN UTC BLUE) ===== */
+    --utc-primary: #0079BA;            /* Figma Primary Action Blue */
+    --utc-primary-hover: #00679E;      /* Figma Primary Hover */
+    --utc-primary-dark: #005B8C;       /* Primary Dark */
+    --utc-bright-blue: #0284C7;        /* Bright Blue Accent */
+    --utc-primary-light: #F0F7FC;      /* Figma Soft Ice-Blue Container */
+    --utc-soft-blue: #F0F7FC;          /* Soft Sky Tint */
+    --utc-gold: #F59E0B;               /* Muted Gold Accent */
+    
+    /* Header & Footer Institutional */
+    --utc-deep-navy: #0B2E4F;          /* Deep Navy */
+    --utc-primary-navy: #0F5999;       /* Primary Navy */
+    --utc-footer-bg: #176A9E;          /* Figma Exact Footer Blue */
     
     /* Surfaces & Layout Backgrounds */
-    --utc-page-bg: #EDF4FA;            /* Page Background: Nền xanh xám học thuật nhẹ nhàng */
+    --utc-page-bg: #F8FAFC;            /* Clean light background */
     --utc-bg-page: var(--utc-page-bg);
-    --utc-surface: #FFFFFF;            /* Card & Modal Surface: Trắng tinh khiết */
-    --utc-surface-secondary: #F8FAFC;  /* Secondary Surface: Xám xanh rất nhẹ */
-    --utc-border: #D7E4EF;             /* Subtle Academic Border */
-    --utc-border-light: #E5EEF6;       /* Ultra-soft Divider */
-    --utc-border-focus: #087DBB;       /* Focus Border */
+    --utc-surface: #FFFFFF;            /* Card & Modal Surface: White */
+    --utc-surface-secondary: #F0F7FC;  /* Secondary / Highlight Surface */
+    --utc-border: #E2E8F0;             /* Crisp clean border */
+    --utc-border-light: #EDF2F7;       /* Ultra-soft Divider */
+    --utc-border-focus: #0079BA;       /* Focus Border */
     
     /* Typography Colors */
-    --utc-text-primary: #163B5C;       /* Text Primary: Xanh đen học thuật, tương phản cao */
-    --utc-text-secondary: #718096;     /* Text Secondary: Xám trung tính dịu mắt */
-    --utc-text-muted: #94A3B8;         /* Text Muted: Chú thích, metadata */
-    --utc-text-inverse: #FFFFFF;       /* Text Inverse: Chữ trắng trên nền đậm */
+    --utc-text-primary: #0B2E4F;       /* Headings: Deep Navy, high contrast */
+    --utc-text-secondary: #334E68;     /* Body: Slate academic */
+    --utc-text-muted: #627D98;         /* Muted Metadata / Subtitle */
+    --utc-text-inverse: #FFFFFF;       /* White text */
 
-    /* ===== 2.1.2. SOFT SEMANTIC STATE COLORS ===== */
-    /* Success: #668D7B, Nền #EDF4EF (Sage green thanh lịch, hài hòa học thuật) */
-    --utc-success: #668D7B;
-    --utc-success-bg: #EDF4EF;
-    --utc-success-border: #D2E4D8;
+    /* Soft Semantic State Colors */
+    --utc-success: #059669;
+    --utc-success-bg: #ECFDF5;
+    --utc-success-border: #A7F3D0;
     
-    /* Warning: #B28A52, Nền #F8F3E9 (Warm Amber / Ochre dịu mắt) */
-    --utc-warning: #B28A52;
-    --utc-warning-bg: #F8F3E9;
-    --utc-warning-border: #EADDC7;
+    --utc-warning: #D97706;
+    --utc-warning-bg: #FFFBEB;
+    --utc-warning-border: #FDE68A;
     
-    /* Danger: #A96D72, Nền #F8EEEE (Dusty Rose / Muted Red không gắt) */
-    --utc-danger: #A96D72;
-    --utc-danger-bg: #F8EEEE;
-    --utc-danger-border: #EACFD2;
+    --utc-danger: #DC2626;
+    --utc-danger-bg: #FEF2F2;
+    --utc-danger-border: #FECACA;
     
-    /* Info: #537FA5, Nền #EDF4F9 (Soft Dusty Academic Blue) */
-    --utc-info: #537FA5;
-    --utc-info-bg: #EDF4F9;
-    --utc-info-border: #D0E1EE;
+    --utc-info: #0284C7;
+    --utc-info-bg: #F0F7FC;
+    --utc-info-border: #BAE6FD;
 
-    /* Legacy Alias Mapping for existing classes */
+    /* Legacy Alias Mapping */
     --utc-brand: var(--utc-primary);
     --utc-brand-hover: var(--utc-primary-hover);
     --utc-navy: var(--utc-text-primary);
@@ -64,38 +64,39 @@
     --utc-muted: var(--utc-text-secondary);
     --utc-line: var(--utc-border);
 
-    /* ===== 2.2. TYPOGRAPHY (BE VIETNAM PRO) ===== */
+    /* Typography */
     --utc-font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     
-    --utc-fs-title: 26px;              /* Page Title: 24–28px, 700 */
-    --utc-fs-section: 20px;            /* Section Title: 18–20px, 600 */
-    --utc-fs-card: 16px;               /* Card Title: 15–17px, 600 */
-    --utc-fs-body: 14.5px;             /* Body: 14–15px, 400 */
-    --utc-fs-meta: 12.5px;             /* Metadata: 12–13px */
-    --utc-fs-btn: 14px;                /* Button: 14px, 600 */
+    --utc-fs-title: 26px;
+    --utc-fs-section: 20px;
+    --utc-fs-card: 16px;
+    --utc-fs-body: 14.5px;
+    --utc-fs-meta: 12.5px;
+    --utc-fs-btn: 14px;
 
-    /* ===== 2.3. BORDER RADIUS ===== */
-    --utc-radius-card: 14px;           /* Card: 12–16px */
-    --utc-radius-btn: 9px;             /* Button: 8–10px */
-    --utc-radius-input: 9px;           /* Input: 8–10px */
-    --utc-radius-badge: 9999px;        /* Badge / Pill */
-    --utc-radius-dialog: 16px;         /* Dialog / Modal: 14–18px */
-    --utc-radius-xs: 6px;
-    --utc-radius-sm: 8px;
-    --utc-radius-md: 10px;
-    --utc-radius-lg: 14px;
-    --utc-radius-xl: 18px;
-    --utc-radius-2xl: 20px;            /* Large Cards & Panels: 20px */
-    --utc-radius-3xl: 24px;            /* Hero & Modals: 24px */
+    /* Figma Border Radius (Gọn gàng, thanh thoát 6-10px) */
+    --utc-radius-card: 10px;           /* Clean Card: 10px */
+    --utc-radius-btn: 6px;             /* Figma Clean Button: 6px */
+    --utc-radius-input: 6px;           /* Input: 6px */
+    --utc-radius-badge: 4px;           /* Status Badge: 4px */
+    --utc-radius-dialog: 12px;         /* Modal: 12px */
+    --utc-radius-xs: 4px;
+    --utc-radius-sm: 6px;
+    --utc-radius-md: 6px;
+    --utc-radius-lg: 10px;
+    --utc-radius-xl: 12px;
+    --utc-radius-2xl: 14px;
+    --utc-radius-3xl: 16px;
     --utc-radius-full: 9999px;
 
-    /* ===== 2.4. SHADOWS ===== */
-    --utc-shadow-card: 0 4px 16px rgba(30, 80, 120, 0.06);
-    --utc-shadow-hover: 0 8px 24px rgba(30, 80, 120, 0.09);
-    --utc-shadow-sm: 0 2px 8px rgba(30, 80, 120, 0.04);
-    --utc-shadow-modal: 0 16px 40px rgba(22, 59, 92, 0.16);
+    /* Figma Clean Flat Shadows (Không đổ bóng nặng nề) */
+    --utc-shadow-card: 0 1px 3px rgba(11, 46, 79, 0.05), 0 1px 2px rgba(11, 46, 79, 0.03);
+    --utc-shadow-hover: 0 4px 12px rgba(11, 46, 79, 0.08);
+    --utc-shadow-sm: 0 1px 2px rgba(11, 46, 79, 0.04);
+    --utc-shadow-btn: 0 1px 2px rgba(0, 121, 186, 0.15);
+    --utc-shadow-modal: 0 12px 32px rgba(11, 46, 79, 0.15);
 
-    /* ===== 2.5. SPACING (4px Multiples) ===== */
+    /* Spacing */
     --utc-space-1: 4px;
     --utc-space-2: 8px;
     --utc-space-3: 12px;
@@ -106,7 +107,7 @@
     --utc-space-10: 40px;
     --utc-space-12: 48px;
 
-    /* Transition & Motion */
-    --utc-transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    --utc-transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    /* Motion */
+    --utc-transition: all 0.2s ease;
+    --utc-transition-smooth: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }

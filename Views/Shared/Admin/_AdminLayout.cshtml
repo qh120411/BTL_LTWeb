@@ -55,6 +55,67 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <!-- Script điều khiển Responsive Menu Drawer trên mobile / tablet -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleBtn = document.getElementById("adminSidebarToggle");
+            const closeBtn = document.getElementById("adminSidebarClose");
+            const sidebar = document.getElementById("adminSidebar");
+            const backdrop = document.getElementById("adminSidebarBackdrop");
+
+            function openSidebar() {
+                if (sidebar) sidebar.classList.add("show");
+                if (backdrop) backdrop.classList.add("show");
+                document.body.classList.add("sidebar-open");
+            }
+
+            function closeSidebar() {
+                if (sidebar) sidebar.classList.remove("show");
+                if (backdrop) backdrop.classList.remove("show");
+                document.body.classList.remove("sidebar-open");
+            }
+
+            if (toggleBtn) {
+                toggleBtn.addEventListener("click", function (e) {
+                    e.stopPropagation();
+                    if (sidebar && sidebar.classList.contains("show")) {
+                        closeSidebar();
+                    } else {
+                        openSidebar();
+                    }
+                });
+            }
+
+            if (closeBtn) {
+                closeBtn.addEventListener("click", closeSidebar);
+            }
+
+            if (backdrop) {
+                backdrop.addEventListener("click", closeSidebar);
+            }
+
+            // Tự động đóng menu khi bấm chọn 1 liên kết trên mobile
+            if (sidebar) {
+                const links = sidebar.querySelectorAll(".sidebar-link, .btn-back-web");
+                links.forEach(l => {
+                    l.addEventListener("click", function () {
+                        if (window.innerWidth <= 992) {
+                            closeSidebar();
+                        }
+                    });
+                });
+            }
+
+            // Phím ESC để đóng nhanh menu
+            document.addEventListener("keydown", function (e) {
+                if (e.key === "Escape" && sidebar && sidebar.classList.contains("show")) {
+                    closeSidebar();
+                }
+            });
+        });
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
