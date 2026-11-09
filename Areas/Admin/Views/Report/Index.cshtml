@@ -1,0 +1,104 @@
+@model ReportViewModel
+@{
+    ViewData["Title"] = "Báo cáo & thống kê";
+}
+
+<div class="admin-breadcrumb">THƯ VIỆN UTC / QUẢN TRỊ</div>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="admin-page-title mb-0">Báo cáo &amp; thống kê</h1>
+    <a asp-action="ExportExcel" asp-route-period="@Model.KyBaoCao" asp-route-scope="@Model.PhamVi" class="btn btn-utc-primary">
+        Xuất báo cáo Excel
+    </a>
+</div>
+
+<!-- Bộ lọc Kỳ báo cáo & Phạm vi -->
+<form method="get" asp-action="Index" class="mb-4">
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label class="form-label-utc">Kỳ báo cáo</label>
+            <select name="period" class="form-select form-control-utc" onchange="this.form.submit()">
+                @foreach (var k in Model.DanhSachKyBaoCao)
+                {
+                    <option value="@k" selected="@(k == Model.KyBaoCao)">@k</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label-utc">Phạm vi</label>
+            <select name="scope" class="form-select form-control-utc" onchange="this.form.submit()">
+                @foreach (var p in Model.DanhSachPhamVi)
+                {
+                    <option value="@p" selected="@(p == Model.PhamVi)">@p</option>
+                }
+            </select>
+        </div>
+    </div>
+</form>
+
+<!-- 4 Card KPI -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3 col-sm-6">
+        <div class="kpi-card">
+            <div class="kpi-title">Lượt mượn trong tháng</div>
+            <div class="kpi-value">@Model.LuotMuonTrongThang</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="kpi-card">
+            <div class="kpi-title">Lượt trả trong tháng</div>
+            <div class="kpi-value">@Model.LuotTraTrongThang</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="kpi-card">
+            <div class="kpi-title">Quá hạn hiện tại</div>
+            <div class="kpi-value">@Model.QuaHanHienTai</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="kpi-card">
+            <div class="kpi-title">Tổng bản sách</div>
+            <div class="kpi-value">@Model.TongBanSach</div>
+        </div>
+    </div>
+</div>
+
+<!-- Bảng chi tiết lưu thông theo đầu sách -->
+<div class="admin-table-card">
+    <table class="table-utc">
+        <thead>
+            <tr>
+                <th style="width: 38%;">Đầu sách</th>
+                <th style="width: 15%;">Tổng bản</th>
+                <th style="width: 15%;">Sẵn có</th>
+                <th style="width: 16%;">Đang mượn</th>
+                <th style="width: 16%;">Mất / hỏng</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var book in Model.ChiTietDauSach)
+            {
+                <tr>
+                    <td>@book.DauSach</td>
+                    <td>@book.TongBan</td>
+                    <td>@book.SanCo</td>
+                    <td>@book.DangMuon</td>
+                    <td>@book.MatHong</td>
+                </tr>
+            }
+            <tr class="fw-bold">
+                <td>TỔNG</td>
+                <td>@Model.TongCongSoBan</td>
+                <td>@Model.TongCongSanCo</td>
+                <td>@Model.TongCongDangMuon</td>
+                <td>@Model.TongCongMatHong</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="admin-table-note">
+    Báo cáo gồm lượt mượn / trả theo tháng, đầu sách và trạng thái từng bản sách. Số liệu minh họa.
+</div>
+

@@ -1,0 +1,240 @@
+@model BTL_LTWEB.Areas.Reader.Models.UserProfileViewModel?
+@{
+    Layout = "~/Views/Shared/Reader/_ReaderLayout.cshtml";
+    ViewData["Title"] = "Trang chủ - Thư viện Đại học Giao thông Vận tải";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+}
+
+<div class="utc-home-wrapper">
+    <div class="container-xl">
+        <!-- 1. FLOATING SEARCH BOX -->
+        <section class="utc-search-panel-box">
+            <!-- Search Bar Form -->
+            <form action="/Reader/Search" method="get" class="utc-search-bar-row mb-0" id="utcSearchForm">
+                <input type="hidden" name="category" id="searchCategory" value="all" />
+                <div class="utc-search-input-field">
+                    <input type="text" 
+                           name="keyword" 
+                           id="utcSearchInput"
+                           class="utc-figma-search-input" 
+                           placeholder="Tìm tên sách, tác giả hoặc chủ đề bạn quan tâm…" 
+                           autocomplete="off" />
+                </div>
+                <button type="submit" class="utc-figma-search-btn">
+                    Tìm học liệu &rarr;
+                </button>
+            </form>
+        </section>
+
+        <!-- 2. QUICK ACCESS CARDS (4 THẺ NỀN XANH NHẠT #F1FAFF CHUẨN FIGMA) -->
+        <section class="utc-quick-access-bar">
+            <a href="/Reader/Profile" class="utc-quick-pill">
+                <div class="utc-quick-pill-icon">
+                    <i class="bi bi-person"></i>
+                </div>
+                <div class="utc-quick-pill-text">
+                    <div class="utc-quick-pill-title">Thư viện của tôi</div>
+                    <div class="utc-quick-pill-sub">Theo dõi sách đang mượn và hạn trả</div>
+                </div>
+            </a>
+
+            <a href="/Reader/Guide" class="utc-quick-pill">
+                <div class="utc-quick-pill-icon">
+                    <i class="bi bi-book"></i>
+                </div>
+                <div class="utc-quick-pill-text">
+                    <div class="utc-quick-pill-title">Hướng dẫn mượn trả</div>
+                    <div class="utc-quick-pill-sub">Điều kiện mượn và cách trả sách</div>
+                </div>
+            </a>
+
+            <a href="/Reader/Guide" class="utc-quick-pill">
+                <div class="utc-quick-pill-icon">
+                    <i class="bi bi-clock"></i>
+                </div>
+                <div class="utc-quick-pill-text">
+                    <div class="utc-quick-pill-title">Giờ phục vụ</div>
+                    <div class="utc-quick-pill-sub">Lịch mở cửa các phòng</div>
+                </div>
+            </a>
+
+            <a href="/Reader/Guide" class="utc-quick-pill">
+                <div class="utc-quick-pill-icon">
+                    <i class="bi bi-chat-dots"></i>
+                </div>
+                <div class="utc-quick-pill-text">
+                    <div class="utc-quick-pill-title">Hỗ trợ bạn đọc</div>
+                    <div class="utc-quick-pill-sub">Liên hệ cán bộ thư viện</div>
+                </div>
+            </a>
+        </section>
+
+        <!-- 3. NEWS & EDITORIAL (3 CỘT PHẲNG CHUẨN FIGMA) -->
+        <section class="utc-editorial-grid-section">
+            <!-- Cột 1: Học liệu đáng chú ý -->
+            <div class="utc-col-highlights">
+                <h3 class="utc-column-main-heading">Học liệu đáng chú ý</h3>
+
+                <a href="/Reader/Document/Details/1" class="utc-highlight-row">
+                    <span class="utc-tag-cyan">CÔNG NGHỆ THÔNG TIN · GIẢI THUẬT</span>
+                    <h4 class="utc-highlight-row-title">Cấu trúc dữ liệu và giải thuật (Python: Thuật toán &amp; Cấu trúc dữ liệu)</h4>
+                    <span class="utc-highlight-row-author">Bùi Việt Hà</span>
+                </a>
+
+                <a href="/Reader/Document/Details/2" class="utc-highlight-row">
+                    <span class="utc-tag-cyan">CƠ SỞ DỮ LIỆU · SQL</span>
+                    <h4 class="utc-highlight-row-title">Giáo trình Cơ sở dữ liệu quan hệ - Lý thuyết và Thực hành</h4>
+                    <span class="utc-highlight-row-author">Phạm Minh Chuẩn, Trịnh Thị Nhị, Nguyễn Văn Quyết</span>
+                </a>
+
+                <a href="/Reader/Document/Details/3" class="utc-highlight-row">
+                    <span class="utc-tag-cyan">MẠNG MÁY TÍNH · VIỄN THÔNG</span>
+                    <h4 class="utc-highlight-row-title">Giáo trình Mạng máy tính</h4>
+                    <span class="utc-highlight-row-author">Nguyễn Thế Lộc, Nguyễn Hồng Phương</span>
+                </a>
+            </div>
+
+            <!-- Cột 2: Bài viết tiêu điểm -->
+            <div class="utc-col-feature">
+                <span class="utc-tag-cyan fw-bold mb-2 d-inline-block">THƯ VIỆN &amp; BẠN ĐỌC</span>
+                <div class="utc-feature-image-wrapper">
+                    <img src="~/images/featured-article.png" alt="Thư viện UTC: Không gian học tập" />
+                </div>
+                <h2 class="utc-feature-article-title">
+                    Thư viện UTC: Không gian học tập, kết nối và khám phá tri thức
+                </h2>
+                <p class="utc-feature-article-desc">
+                    Khám phá nguồn học liệu và các dịch vụ hỗ trợ học tập, nghiên cứu dành cho sinh viên, giảng viên và bạn đọc.
+                </p>
+            </div>
+
+            <!-- Cột 3: Thông báo & Tra cứu nhanh -->
+            <div class="utc-col-notices">
+                <h3 class="utc-column-main-heading">Thông báo</h3>
+
+                <a href="/Reader/News" class="utc-notice-link-row">
+                    <span class="utc-tag-muted">DỊCH VỤ BẠN ĐỌC</span>
+                    <div class="utc-notice-text">Bắt đầu hành trình sử dụng thư viện &rarr;</div>
+                </a>
+
+                <a href="/Reader/News" class="utc-notice-link-row">
+                    <span class="utc-tag-muted">HỌC LIỆU NỔI BẬT</span>
+                    <div class="utc-notice-text">Giới thiệu học liệu mới trong học kỳ &rarr;</div>
+                </a>
+
+                <a href="/Reader/News" class="utc-notice-link-row">
+                    <span class="utc-tag-muted">KẾT NỐI THƯ VIỆN</span>
+                    <div class="utc-notice-text">Lắng nghe ý kiến của bạn đọc &rarr;</div>
+                </a>
+
+                <!-- Tra cứu nhanh -->
+                <div class="utc-quick-nav-block">
+                    <h5 class="utc-quick-nav-title">Tra cứu nhanh</h5>
+                    <a href="/Reader/Search" class="utc-quick-nav-item">Danh mục tài liệu &rarr;</a>
+                    <a href="/Reader/Guide" class="utc-quick-nav-item">Hướng dẫn mượn trả &rarr;</a>
+                    <a href="/Reader/Guide" class="utc-quick-nav-item">Giờ phục vụ thư viện &rarr;</a>
+                    <a href="/Reader/Guide" class="utc-quick-nav-item">Liên hệ thủ thư &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+        <hr class="utc-figma-divider" />
+
+        <!-- 4. NGUỒN HỌC LIỆU (4 CỘT PHẲNG CHUẨN FIGMA) -->
+        <section class="utc-collections-section">
+            <h4 class="utc-section-tag-heading">NGUỒN HỌC LIỆU</h4>
+            <div class="utc-collections-grid">
+                <a href="/Reader/Search?category=books" class="utc-collection-flat-item">
+                    <h5 class="utc-collection-flat-title">Sách &amp; giáo trình</h5>
+                    <p class="utc-collection-flat-desc">Tra cứu sách theo tên, tác giả, chủ đề &rarr;</p>
+                </a>
+
+                <a href="/Reader/Search?category=thesis" class="utc-collection-flat-item">
+                    <h5 class="utc-collection-flat-title">Luận văn, luận án</h5>
+                    <p class="utc-collection-flat-desc">Khám phá công trình học thuật tại UTC &rarr;</p>
+                </a>
+
+                <a href="/Reader/Search?category=thesis" class="utc-collection-flat-item">
+                    <h5 class="utc-collection-flat-title">Đề tài nghiên cứu</h5>
+                    <p class="utc-collection-flat-desc">Tìm tài liệu theo lĩnh vực nghiên cứu &rarr;</p>
+                </a>
+
+                <a href="/Reader/Search?category=journal" class="utc-collection-flat-item">
+                    <h5 class="utc-collection-flat-title">Báo &amp; tạp chí</h5>
+                    <p class="utc-collection-flat-desc">Đọc và tìm hiểu thông tin chuyên ngành &rarr;</p>
+                </a>
+            </div>
+        </section>
+
+        <hr class="utc-figma-divider" />
+
+        <!-- 5. SÁCH & GIÁO TRÌNH (4 THẺ VIỀN MỎNG NỀN TRẮNG CHUẨN FIGMA) -->
+        <section class="utc-books-shelf-section">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="utc-section-tag-heading mb-0">SÁCH &amp; GIÁO TRÌNH</h4>
+                <a href="/Reader/Search?category=books" class="utc-btn-see-all">
+                    Xem tất cả &rarr;
+                </a>
+            </div>
+
+            <div class="utc-books-shelf-grid">
+                <a href="/Reader/Document/Details/1" class="utc-shelf-card">
+                    <span class="utc-tag-cyan">CÔNG NGHỆ THÔNG TIN · LẬP TRÌNH</span>
+                    <h5 class="utc-shelf-card-title">Cấu trúc dữ liệu và giải thuật (Python: Thuật toán &amp; Cấu trúc dữ liệu)</h5>
+                    <span class="utc-shelf-card-author">Bùi Việt Hà</span>
+                </a>
+
+                <a href="/Reader/Document/Details/2" class="utc-shelf-card">
+                    <span class="utc-tag-cyan">CƠ SỞ DỮ LIỆU · PHẦN MỀM</span>
+                    <h5 class="utc-shelf-card-title">Giáo trình Cơ sở dữ liệu quan hệ - Lý thuyết và Thực hành</h5>
+                    <span class="utc-shelf-card-author">Phạm Minh Chuẩn, Trịnh Thị Nhị, Nguyễn Văn Quyết</span>
+                </a>
+
+                <a href="/Reader/Document/Details/3" class="utc-shelf-card">
+                    <span class="utc-tag-cyan">MẠNG MÁY TÍNH · HỆ THỐNG</span>
+                    <h5 class="utc-shelf-card-title">Giáo trình Mạng máy tính</h5>
+                    <span class="utc-shelf-card-author">Nguyễn Thế Lộc, Nguyễn Hồng Phương</span>
+                </a>
+
+                <a href="/Reader/Document/Details/4" class="utc-shelf-card">
+                    <span class="utc-tag-cyan">AN TOÀN THÔNG TIN · BẢO MẬT</span>
+                    <h5 class="utc-shelf-card-title">Giáo trình Cơ sở An toàn thông tin</h5>
+                    <span class="utc-shelf-card-author">Học viện Công nghệ Bưu chính Viễn thông</span>
+                </a>
+            </div>
+        </section>
+
+        <hr class="utc-figma-divider" />
+
+        <!-- 6. DỊCH VỤ BẠN ĐỌC (3 THẺ NỀN #F1FAFF CHUẨN FIGMA) -->
+        <section class="utc-services-shelf-section">
+            <h4 class="utc-section-tag-heading">DỊCH VỤ BẠN ĐỌC</h4>
+
+            <div class="utc-services-shelf-grid">
+                <a href="/Reader/Guide" class="utc-service-card-figma">
+                    <span class="utc-tag-muted">TẠI THƯ VIỆN</span>
+                    <h3 class="utc-service-card-title">Đọc tại chỗ</h3>
+                    <span class="utc-service-card-link">Tìm hiểu phòng đọc và hướng dẫn &rarr;</span>
+                </a>
+
+                <a href="/Reader/Guide" class="utc-service-card-figma">
+                    <span class="utc-tag-muted">MƯỢN TÀI LIỆU</span>
+                    <h3 class="utc-service-card-title">Mượn về nhà</h3>
+                    <span class="utc-service-card-link">Quy định và thủ tục mượn trả &rarr;</span>
+                </a>
+
+                <a href="/Reader/Guide" class="utc-service-card-figma">
+                    <span class="utc-tag-muted">CẦN TRỢ GIÚP?</span>
+                    <h3 class="utc-service-card-title">Hỗ trợ tra cứu</h3>
+                    <span class="utc-service-card-link">Kết nối với cán bộ thư viện &rarr;</span>
+                </a>
+            </div>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+}

@@ -1,0 +1,295 @@
+﻿@model BTL_LTWEB.Areas.Admin.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Tổng quan";
+    ViewBag.ActiveMenu = "Dashboard";
+}
+
+<!-- Breadcrumb -->
+<div class="admin-breadcrumb">THƯ VIỆN UTC / QUẢN TRỊ</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h1 class="admin-page-title mb-1">Tổng quan Thư viện</h1>
+        <div class="text-muted" style="font-size: 14.5px;">
+            Ngày cập nhật: @DateTime.Now.ToString("dd/MM/yyyy")
+        </div>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="/Admin/Report" class="btn btn-utc-primary">
+            <i class="bi bi-file-earmark-bar-graph me-1"></i> Xem báo cáo tháng
+        </a>
+    </div>
+</div>
+
+<!-- 4 Card Thống kê chuẩn theo CSDL Thật (Soft Semantic Colors) -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3 col-sm-6">
+        <div class="kpi-card kpi-card-primary">
+            <div class="kpi-title">Đầu sách CSDL</div>
+            <div class="kpi-value" style="color: var(--utc-primary);">@Model.TongDauSach</div>
+            <div class="small text-muted mt-1">Đầu sách trong danh mục (@Model.TongBanSao bản sao)</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="kpi-card kpi-card-success">
+            <div class="kpi-title">Bản sẵn có</div>
+            <div class="kpi-value" style="color: var(--utc-success);">@Model.BanSanCo</div>
+            <div class="small text-muted mt-1">Sẵn sàng phục vụ bạn đọc tại quầy</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="kpi-card kpi-card-info">
+            <div class="kpi-title">Đang mượn</div>
+            <div class="kpi-value" style="color: var(--utc-info);">@Model.DangMuon</div>
+            <div class="small text-muted mt-1">Bản sách đang lưu hành ngoài kho</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="kpi-card kpi-card-danger">
+            <div class="kpi-title" style="color: var(--utc-danger);">Quá hạn quy định</div>
+            <div class="kpi-value" style="color: var(--utc-danger);">@Model.LuotQuaHan</div>
+            <div class="small text-muted mt-1">Phạt 100k/cuốn</div>
+        </div>
+    </div>
+</div>
+
+<!-- Bảng Công việc cần theo dõi (Chuẩn bảng Figma) -->
+<div class="mb-4">
+    <h3 class="fw-bold mb-3" style="color: var(--utc-navy); font-size: 20px;">
+        Công việc cần theo dõi
+    </h3>
+    <div class="admin-table-card">
+        <table class="table-utc">
+            <thead>
+                <tr>
+                    <th style="width: 40%;">Nội dung nghiệp vụ</th>
+                    <th style="width: 30%;">Số lượng ghi nhận</th>
+                    <th style="width: 30%;">Thao tác xử lý</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="fw-medium text-navy">
+                        <i class="bi bi-clock-history text-danger me-2"></i> Lượt mượn quá hạn (quy định 1 năm)
+                    </td>
+                    <td>
+                        <span class="badge-status badge-overdue" style="font-size: 12.5px;">
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i> @Model.LuotQuaHan lượt
+                        </span>
+                    </td>
+                    <td>
+                        <a href="/Admin/Overdue" class="text-brand fw-medium">Xem danh sách quá hạn &rarr;</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="fw-medium text-navy">
+                        <i class="bi bi-exclamation-octagon text-warning me-2"></i> Sách mất / chờ hoàn tất bồi thường
+                    </td>
+                    <td>
+                        <span class="badge-status badge-warning" style="font-size: 12.5px;">
+                            @Model.MatChoBoiThuong hồ sơ
+                        </span>
+                    </td>
+                    <td>
+                        <a href="/Admin/Incident" class="text-brand fw-medium">Mở hồ sơ sự cố &rarr;</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="fw-medium text-navy">
+                        <i class="bi bi-journal-bookmark-fill text-brand me-2"></i> Học liệu và bản sách trong kho
+                    </td>
+                    <td><strong>@Model.TongBanSao bản / @Model.TongDauSach đầu sách</strong></td>
+                    <td>
+                        <a href="/Admin/Catalog" class="text-brand fw-medium">Xem quản lý học liệu &rarr;</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="fw-medium text-navy">
+                        <i class="bi bi-people-fill text-primary me-2"></i> Bạn đọc lớp K65.CLCCNTT1
+                    </td>
+                    <td><strong>@Model.TongBanDoc bạn đọc (49 sinh viên)</strong></td>
+                    <td>
+                        <a href="/Admin/Reader" class="text-brand fw-medium">Xem quản lý bạn đọc &rarr;</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- KHỐI THỐNG KÊ TÀI CHÍNH & QUỸ THƯ VIỆN (MỚI) -->
+<div class="mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h3 class="fw-bold mb-0" style="color: var(--utc-navy); font-size: 20px;">
+                <i class="bi bi-cash-coin text-success me-2"></i> Thống kê tài chính &amp; Quỹ thư viện
+            </h3>
+            
+        </div>
+        <a href="/Admin/Incident" class="btn btn-sm btn-outline-primary shadow-sm">
+            <i class="bi bi-receipt-cutoff me-1"></i> Xem chi tiết sổ quỹ tài chính &rarr;
+        </a>
+    </div>
+
+    <!-- 3 Card Thống kê Quỹ tài chính (Soft Semantic Colors) -->
+    <div class="row g-3 mb-3">
+        <div class="col-md-4">
+            <div class="kpi-card kpi-card-success">
+                <div class="kpi-title text-success fw-bold">Tổng quỹ tiền đã thu</div>
+                <div class="kpi-value text-success">@Model.TongQuyTaiChinh.ToString("N0") đ</div>
+                <div class="small text-muted mt-1">Tổng cộng các khoản thu nộp muộn &amp; đền bù</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="kpi-card kpi-card-warning">
+                <div class="kpi-title text-warning fw-bold">Thu từ phạt nộp muộn</div>
+                <div class="kpi-value text-warning">@Model.TienThuNopMuon.ToString("N0") đ</div>
+                <div class="small text-muted mt-1">Phạt quá hạn 100.000 đ/cuốn theo quy chế</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="kpi-card kpi-card-danger">
+                <div class="kpi-title text-danger fw-bold">Thu từ đền bù mất / hỏng</div>
+                <div class="kpi-value text-danger">@Model.TienThuDenBu.ToString("N0") đ</div>
+                <div class="small text-muted mt-1">Khoản bồi hoàn tài liệu hư hại hoặc làm mất</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bảng Giao dịch thu tiền gần đây -->
+    <div class="admin-table-card shadow-sm border" style="border-radius: 8px; overflow: hidden;">
+        <div class="p-3 bg-white border-bottom d-flex justify-content-between align-items-center">
+            <span class="fw-bold" style="color: var(--utc-navy); font-size: 15px;">
+                <i class="bi bi-receipt me-1 text-success"></i> Giao dịch thu tiền gần đây (Từ CSDL)
+            </span>
+            <a href="/Admin/Incident" class="small text-brand fw-medium">Xem tất cả (@Model.RecentReceipts.Count phiếu) &rarr;</a>
+        </div>
+        <div class="table-responsive">
+            <table class="table-utc mb-0">
+                <thead>
+                    <tr style="background-color: #f8fafc;">
+                        <th style="width: 14%;">Mã phiếu</th>
+                        <th style="width: 22%;">Người nộp tiền</th>
+                        <th style="width: 26%;">Tài liệu liên quan</th>
+                        <th style="width: 15%;">Khoản thu</th>
+                        <th style="width: 13%;">Hình thức</th>
+                        <th style="width: 10%; text-align: right;">Số tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.RecentReceipts.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="6" class="py-3 text-center text-muted">Chưa ghi nhận phiếu thu tài chính nào.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var r in Model.RecentReceipts)
+                        {
+                            <tr>
+                                <td>
+                                    <strong class="font-monospace text-primary">@r.MaPhieuThu</strong>
+                                    <div class="text-muted" style="font-size: 11px;">@r.NgayThu</div>
+                                </td>
+                                <td>
+                                    <div class="fw-bold text-navy">@r.NguoiNop</div>
+                                    <div class="text-muted small">MSV/GV: <code>@r.MaBD</code></div>
+                                </td>
+                                <td>
+                                    <div class="fw-medium text-dark text-truncate" style="max-width: 240px;" title="@r.TenSach">
+                                        @r.TenSach
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (r.LoaiKhoanThu.Contains("Nộp muộn"))
+                                    {
+                                        <span class="badge bg-warning text-dark px-2 py-1" style="font-size: 11px;">
+                                            Nộp muộn
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger text-white px-2 py-1" style="font-size: 11px;">
+                                            Đền bù mất/hỏng
+                                        </span>
+                                    }
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-dark border px-2 py-1" style="font-size: 11px;">
+                                        @r.HinhThucXuLy
+                                    </span>
+                                </td>
+                                <td style="text-align: right;">
+                                    @if (r.SoTien > 0)
+                                    {
+                                        <strong class="text-success font-monospace">@r.SoTien.ToString("N0") đ</strong>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">0 đ (Sách mới)</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Bảng Giao dịch lưu thông gần đây (Dữ liệu thật từ CSDL) -->
+<div class="admin-table-card mb-4">
+    <div class="p-3 bg-white border-bottom d-flex justify-content-between align-items-center">
+        <span class="fw-bold" style="color: var(--utc-navy); font-size: 16px;">
+            <i class="bi bi-arrow-left-right me-1 text-primary"></i> Giao dịch mượn trả gần đây (Từ CSDL)
+        </span>
+        <a href="/Admin/Circulation" class="small text-brand fw-medium">Xem tất cả (@Model.DangMuon giao dịch) &rarr;</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table-utc">
+            <thead>
+                <tr>
+                    <th style="width: 14%;">Mã GD</th>
+                    <th style="width: 24%;">Bạn đọc</th>
+                    <th style="width: 28%;">Tài liệu / Sách</th>
+                    <th style="width: 15%;">Hạn trả (1 năm)</th>
+                    <th style="width: 19%;">Trạng thái</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var t in Model.RecentTransactions)
+                {
+                    <tr>
+                        <td><strong>@t.MaGD</strong></td>
+                        <td>
+                            <div class="fw-bold text-navy">@t.HoTen</div>
+                            <div class="text-muted small">MSV: @t.MaBD</div>
+                        </td>
+                        <td>
+                            <div class="fw-medium">@t.TenSach</div>
+                        </td>
+                        <td>
+                            <span class="@(t.IsQuaHan ? "text-danger fw-bold" : "text-dark")">@t.HanTra</span>
+                        </td>
+                        <td>
+                            @if (t.IsQuaHan)
+                            {
+                                <span class="badge bg-danger text-white px-2 py-1" style="font-weight: 600; font-size: 12px; display: inline-flex; align-items: center; gap: 4px;">
+                                    <i class="bi bi-exclamation-triangle-fill"></i> @t.TrangThai
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success text-white px-2 py-1" style="font-weight: 600; font-size: 12px; display: inline-flex; align-items: center; gap: 4px;">
+                                    <i class="bi bi-check-circle-fill"></i> Đang mượn (Còn hạn)
+                                </span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

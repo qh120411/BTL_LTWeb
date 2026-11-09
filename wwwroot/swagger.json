@@ -1,0 +1,281 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "UTC Library Project",
+    "version": "1.0",
+    "description": "The UTC library management API description"
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "paths": {
+    "/api/system/health": {
+      "get": {
+        "tags": ["default"],
+        "summary": "Check system and SQL Server connection health",
+        "responses": {
+          "200": {
+            "description": "System health status"
+          }
+        }
+      }
+    },
+    "/api/auth/profile": {
+      "get": {
+        "tags": ["default"],
+        "summary": "Get current logged in user session and claims",
+        "responses": {
+          "200": {
+            "description": "User profile"
+          }
+        }
+      }
+    },
+    "/api/catalog/books": {
+      "get": {
+        "tags": ["default"],
+        "summary": "Search and filter book catalog",
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "Java"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of books"
+          }
+        }
+      }
+    },
+    "/api/catalog/books/{id}": {
+      "get": {
+        "tags": ["default"],
+        "summary": "Get book details by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Book details"
+          },
+          "404": {
+            "description": "Book not found"
+          }
+        }
+      }
+    },
+    "/api/catalog/books/{id}/copies": {
+      "get": {
+        "tags": ["default"],
+        "summary": "Get physical copies and barcodes of a book",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Physical copies"
+          }
+        }
+      }
+    },
+    "/api/circulation/transactions": {
+      "get": {
+        "tags": ["default"],
+        "summary": "Get all circulation borrow/return transactions",
+        "parameters": [
+          {
+            "name": "maBD",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "242630923"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transactions list"
+          }
+        }
+      }
+    },
+    "/api/circulation/borrow": {
+      "post": {
+        "tags": ["default"],
+        "summary": "Borrow a book for a reader",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "maBD": {
+                    "type": "string",
+                    "example": "242630923"
+                  },
+                  "bookId": {
+                    "type": "integer",
+                    "example": 1
+                  }
+                },
+                "required": ["maBD", "bookId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Borrow successful"
+          },
+          "400": {
+            "description": "Validation or quota error"
+          }
+        }
+      }
+    },
+    "/api/circulation/return": {
+      "post": {
+        "tags": ["default"],
+        "summary": "Return a book for a reader",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "maBD": {
+                    "type": "string",
+                    "example": "242630923"
+                  },
+                  "maGD": {
+                    "type": "string",
+                    "example": ""
+                  }
+                },
+                "required": ["maBD"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return successful"
+          },
+          "400": {
+            "description": "Transaction not found"
+          }
+        }
+      }
+    },
+    "/api/readers": {
+      "get": {
+        "tags": ["default"],
+        "summary": "Get all reader cards",
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "group",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of readers"
+          }
+        }
+      }
+    },
+    "/api/readers/{id}": {
+      "get": {
+        "tags": ["default"],
+        "summary": "Get reader detail by Student ID (MaSinhVien)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "242630923"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reader details"
+          },
+          "404": {
+            "description": "Reader not found"
+          }
+        }
+      }
+    },
+    "/api/dashboard/stats": {
+      "get": {
+        "tags": ["default"],
+        "summary": "Get dashboard summary statistics",
+        "responses": {
+          "200": {
+            "description": "Statistics data"
+          }
+        }
+      }
+    }
+  }
+}

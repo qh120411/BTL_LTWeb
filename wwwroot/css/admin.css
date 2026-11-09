@@ -1,0 +1,2159 @@
+/* ==========================================================================
+
+   UTC LIBRARY - ADMIN THEME (Modern Blue Academic – Premium University Library)
+
+   Hệ thống thiết kế chuẩn hóa:
+
+   - Màu chủ đạo: Primary #087DBB, Hover #06699F, Dark #075985, Light #EAF4FC
+
+   - Nền & Bề mặt: Page Background #F4F8FC, Surface #FFFFFF, Surface Secondary #F8FAFC, Border #E2EAF2
+
+   - Chữ: Text Primary #163B5C, Text Secondary #718096, Text Muted #94A3B8
+
+   - Trạng thái: Success #668D7B, Warning #B28A52, Danger #A96D72, Info #537FA5, Info #087DBB
+
+   - Typography: Be Vietnam Pro, phân cấp rõ ràng
+
+   - Bo góc: Card 14px, Button 9px, Input 9px, Badge 9999px
+
+   ========================================================================== */
+
+:root {
+
+    --utc-primary: #0079ba;
+
+    --utc-primary-hover: #00679e;
+
+    --utc-primary-dark: #005b8c;
+
+    --utc-primary-light: #f0f7fc;
+
+    --utc-primary-pale: #eaf4fc;
+
+    --utc-primary-soft: #f4f8fc;
+
+    --utc-navy-dark: #163b5c;
+
+    --utc-sidebar-bg: #ffffff;
+
+    --utc-sidebar-active-text: #0079ba;
+
+    --utc-blue: #0079ba;
+
+    --utc-blue-hover: #00679e;
+
+    --utc-bg-body: #f8fafc;
+
+    --utc-card-bg: #ffffff;
+
+    --utc-info-bg: #eaf4fc;
+
+    --utc-table-th-bg: #f8fafc;
+
+    --utc-text-dark: #163b5c;
+
+    --utc-text-navy: #163b5c;
+
+    --utc-text-muted: #94a3b8;
+
+    --utc-text-secondary: #718096;
+
+    --utc-border-color: #e2eaf2;
+
+    --utc-border-card: #e2eaf2;
+
+    --utc-success: #668d7b;
+
+    --utc-success-bg: #edf4ef;
+
+    --utc-warning: #b28a52;
+
+    --utc-warning-bg: #f8f3e9;
+
+    --utc-danger: #a96d72;
+
+    --utc-danger-bg: #f8eeee;
+
+    --utc-shadow-sm: 0 2px 8px rgba(30, 80, 120, 0.04);
+
+    --utc-shadow-md: 0 4px 16px rgba(30, 80, 120, 0.06);
+
+    --utc-shadow-lg: 0 8px 24px rgba(30, 80, 120, 0.09);
+
+    --utc-shadow-xl: 0 16px 36px rgba(30, 80, 120, 0.12);
+
+    --utc-shadow-btn: 0 1px 2px rgba(0, 121, 186, 0.15);
+
+    --utc-shadow-btn-hover: 0 3px 8px rgba(0, 121, 186, 0.25);
+
+    --utc-radius-sm: 4px;
+
+    --utc-radius-md: 6px;
+
+    --utc-radius-lg: 10px;
+
+    --utc-radius-xl: 12px;
+
+    --utc-radius-full: 9999px;
+
+    --utc-transition: all 0.2s ease;
+
+}
+
+html, body {
+
+    height: 100%;
+
+}
+
+body.admin-body {
+
+    background-color: var(--utc-bg-body);
+
+    font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+    color: var(--utc-text-dark);
+
+    margin: 0;
+
+    padding: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    min-height: 100vh;
+
+    -webkit-font-smoothing: antialiased;
+
+}
+
+/* ================= HEADER ================= */
+
+.admin-main-header {
+
+    background-color: #ffffff;
+
+    border-bottom: 1px solid var(--utc-border-card);
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 1030;
+
+    box-shadow: 0 2px 10px rgba(30, 80, 120, 0.04);
+
+}
+
+.admin-topbar {
+
+    background: linear-gradient(90deg, var(--utc-primary-dark) 0%, var(--utc-primary) 100%);
+
+    color: #ffffff;
+
+    font-size: 11.5px;
+
+    padding: 5px 0;
+
+    letter-spacing: 0.3px;
+
+    font-weight: 500;
+
+}
+
+.topbar-title {
+
+    font-weight: 600;
+
+}
+
+.topbar-links {
+
+    font-weight: 400;
+
+    color: rgba(255, 255, 255, 0.85);
+
+}
+
+.admin-navbar {
+
+    padding: 10px 0;
+
+}
+
+.admin-logo {
+
+    height: 44px;
+
+    width: 44px;
+
+    object-fit: contain;
+
+}
+
+.brand-vi {
+
+    color: var(--utc-text-dark);
+
+    font-weight: 700;
+
+    font-size: 16px;
+
+    letter-spacing: -0.01em;
+
+    line-height: 1.25;
+
+}
+
+.brand-en {
+
+    color: var(--utc-text-secondary);
+
+    font-size: 10.5px;
+
+    font-weight: 500;
+
+    letter-spacing: 0.3px;
+
+    line-height: 1.2;
+
+    margin-top: 2px;
+
+}
+
+/* ================= NÚT BẤM ================= */
+
+.btn-utc-primary {
+
+    background-color: var(--utc-primary);
+
+    border: 1px solid var(--utc-primary);
+
+    color: #ffffff !important;
+
+    font-size: 13.5px;
+
+    font-weight: 600;
+
+    padding: 8px 18px;
+
+    border-radius: var(--utc-radius-md);
+
+    box-shadow: var(--utc-shadow-btn);
+
+    transition: var(--utc-transition);
+
+    text-decoration: none;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+}
+
+.btn-utc-primary:hover, .btn-utc-primary:focus {
+
+    background-color: var(--utc-primary-hover);
+
+    border-color: var(--utc-primary-hover);
+
+    color: #ffffff !important;
+
+    box-shadow: var(--utc-shadow-btn-hover);
+
+}
+
+.btn-outline-utc {
+
+    background-color: #ffffff;
+
+    border: 1px solid var(--utc-border-card);
+
+    color: var(--utc-primary);
+
+    font-size: 13.5px;
+
+    font-weight: 600;
+
+    padding: 8px 18px;
+
+    border-radius: var(--utc-radius-md);
+
+    box-shadow: var(--utc-shadow-sm);
+
+    transition: var(--utc-transition);
+
+    text-decoration: none;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+}
+
+.btn-outline-utc:hover {
+
+    background-color: var(--utc-primary-light);
+
+    border-color: var(--utc-primary);
+
+    color: var(--utc-primary-dark);
+
+}
+
+.user-btn {
+
+    border: 1px solid var(--utc-border-card);
+
+    color: var(--utc-text-dark);
+
+    background-color: var(--utc-card-bg);
+
+    border-radius: var(--utc-radius-full);
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    padding: 6px 14px;
+
+    box-shadow: var(--utc-shadow-sm);
+
+    transition: var(--utc-transition);
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+}
+
+.user-btn:hover {
+
+    background-color: var(--utc-primary-light);
+
+    color: var(--utc-primary);
+
+    border-color: var(--utc-primary);
+
+}
+
+/* ================= CẤU TRÚC LAYOUT ================= */
+
+.admin-wrapper {
+
+    display: flex;
+
+    flex: 1;
+
+    min-height: calc(100vh - 78px);
+
+    position: relative;
+
+    background-color: var(--utc-bg-body);
+
+}
+
+/* SIDEBAR: Nền trắng, Nút xanh nhạt, khi kích vào / active đổi sang màu xanh đậm hơn */
+
+.admin-sidebar {
+
+    width: 256px;
+
+    min-width: 256px;
+
+    max-width: 256px;
+
+    background: #ffffff;
+
+    border-right: 1px solid var(--utc-border-card, #e2eaf2);
+
+    padding: 20px 12px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    position: sticky;
+
+    top: 78px;
+
+    height: calc(100vh - 78px);
+
+    overflow-y: auto;
+
+    z-index: 1020;
+
+    box-shadow: 2px 0 12px rgba(30, 80, 120, 0.04);
+
+}
+
+.sidebar-category {
+
+    color: var(--utc-text-muted, #64748b);
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.8px;
+
+    margin-bottom: 12px;
+
+    padding-left: 10px;
+
+}
+
+.sidebar-nav {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+
+    flex: 1;
+
+}
+
+/* Nút bình thường: Nền xanh nhạt thanh lịch */
+
+.sidebar-link {
+
+    color: #075985;
+
+    background-color: #EDF4FA;
+
+    border: 1px solid rgba(8, 125, 187, 0.14);
+
+    text-decoration: none;
+
+    padding: 10px 14px;
+
+    border-radius: var(--utc-radius-md, 8px);
+
+    font-size: 13.5px;
+
+    font-weight: 600;
+
+    transition: var(--utc-transition);
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+}
+
+/* Nút khi hover: Xanh nhạt đậm hơn một chút */
+
+.sidebar-link:hover {
+
+    color: #064b70;
+
+    background-color: #DFEEFA;
+
+    border-color: rgba(8, 125, 187, 0.3);
+
+}
+
+/* Nút khi kích vào / active: Chuyển sang màu xanh đậm hơn */
+
+.sidebar-link.active,
+
+.sidebar-link:active {
+
+    background-color: #087DBB !important;
+
+    border-color: #087DBB !important;
+
+    color: #FFFFFF !important;
+
+    font-weight: 700;
+
+    box-shadow: 0 2px 8px rgba(8, 125, 187, 0.28);
+
+}
+
+.sidebar-link i {
+
+    font-size: 16px;
+
+    color: #087DBB;
+
+    transition: var(--utc-transition);
+
+}
+
+.sidebar-link:hover i {
+
+    color: #075985;
+
+}
+
+.sidebar-link.active i,
+
+.sidebar-link:active i {
+
+    color: #FFFFFF !important;
+
+}
+
+.sidebar-footer {
+
+    margin-top: 16px;
+
+    padding-top: 12px;
+
+    border-top: 1px solid var(--utc-border-card, #e2eaf2);
+
+}
+
+.btn-back-web {
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    border-radius: var(--utc-radius-md, 8px);
+
+    background-color: #EDF4FA;
+
+    color: #075985;
+
+    border: 1px solid rgba(8, 125, 187, 0.16);
+
+    padding: 9px 14px;
+
+    transition: var(--utc-transition);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    text-decoration: none;
+
+}
+
+.btn-back-web:hover {
+
+    background-color: #DFEEFA;
+
+    color: #064b70;
+
+    border-color: #087DBB;
+
+}
+
+/* ================= MAIN CONTENT ================= */
+
+.admin-content {
+
+    flex: 1;
+
+    padding: 28px 36px;
+
+    background-color: var(--utc-bg-body);
+
+    overflow-x: auto;
+
+}
+
+.admin-breadcrumb {
+
+    font-size: 11.5px;
+
+    color: var(--utc-text-muted);
+
+    text-transform: uppercase;
+
+    font-weight: 600;
+
+    letter-spacing: 0.8px;
+
+    margin-bottom: 10px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+}
+
+.admin-breadcrumb::before {
+
+    content: "";
+
+    display: inline-block;
+
+    width: 6px;
+
+    height: 6px;
+
+    border-radius: 50%;
+
+    background-color: var(--utc-primary);
+
+}
+
+.admin-page-title {
+
+    font-size: 24px;
+
+    font-weight: 700;
+
+    color: var(--utc-text-dark);
+
+    margin-bottom: 18px;
+
+    line-height: 1.3;
+
+    letter-spacing: -0.02em;
+
+}
+
+/* Info Box */
+
+.admin-info-box {
+
+    background-color: var(--utc-primary-light);
+
+    border: 1px solid rgba(8, 125, 187, 0.2);
+
+    border-left: 4px solid var(--utc-primary);
+
+    border-radius: var(--utc-radius-lg);
+
+    padding: 16px 20px;
+
+    margin-bottom: 24px;
+
+    box-shadow: var(--utc-shadow-sm);
+
+}
+
+.admin-info-title {
+
+    font-size: 14.5px;
+
+    font-weight: 700;
+
+    color: var(--utc-primary-dark);
+
+    margin-bottom: 4px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+}
+
+.admin-info-desc {
+
+    font-size: 13.5px;
+
+    color: var(--utc-text-dark);
+
+    margin: 0;
+
+    line-height: 1.55;
+
+}
+
+/* ================= FORM CONTROLS ================= */
+
+.form-label-utc {
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color: var(--utc-text-dark);
+
+    margin-bottom: 6px;
+
+    display: block;
+
+}
+
+.form-control-utc {
+
+    border: 1.5px solid var(--utc-border-card);
+
+    border-radius: var(--utc-radius-md);
+
+    padding: 8px 14px;
+
+    font-size: 13.5px;
+
+    background-color: #ffffff !important;
+
+    color: var(--utc-text-dark) !important;
+
+    height: 40px;
+
+    box-shadow: var(--utc-shadow-sm);
+
+    transition: var(--utc-transition);
+
+}
+
+.form-control-utc:focus {
+
+    border-color: var(--utc-primary);
+
+    box-shadow: 0 0 0 3px rgba(8, 125, 187, 0.12);
+
+    outline: none;
+
+}
+
+.form-control-utc[readonly], 
+
+.form-control-utc:disabled {
+
+    background-color: var(--utc-primary-soft) !important;
+
+    color: var(--utc-text-muted) !important;
+
+    border-color: var(--utc-border-card);
+
+    cursor: default;
+
+}
+
+/* ================= KPI CARDS ================= */
+
+.kpi-card {
+
+    background: #ffffff;
+
+    border-radius: var(--utc-radius-lg);
+
+    padding: 18px 20px;
+
+    border: 1px solid var(--utc-border-card);
+
+    box-shadow: var(--utc-shadow-md);
+
+    transition: var(--utc-transition);
+
+    height: 100%;
+
+}
+
+.kpi-card:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow: var(--utc-shadow-lg);
+
+    border-color: #b9dcf2;
+
+}
+
+.kpi-title {
+
+    font-size: 12.5px;
+
+    color: var(--utc-text-secondary);
+
+    font-weight: 600;
+
+    margin-bottom: 6px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+
+}
+
+.kpi-value {
+
+    font-size: 28px;
+
+    font-weight: 700;
+
+    color: var(--utc-primary);
+
+    line-height: 1.15;
+
+    letter-spacing: -0.02em;
+
+}
+
+/* ================= BẢNG DỮ LIỆU CHÍNH ================= */
+
+.admin-table-card {
+
+    background-color: #ffffff;
+
+    border-radius: var(--utc-radius-lg);
+
+    border: 1px solid var(--utc-border-card);
+
+    box-shadow: var(--utc-shadow-md);
+
+    overflow: hidden;
+
+    transition: var(--utc-transition);
+
+}
+
+.table-utc {
+
+    width: 100%;
+
+    margin-bottom: 0;
+
+    border-collapse: separate;
+
+    border-spacing: 0;
+
+}
+
+.table-utc thead th {
+
+    background-color: var(--utc-table-th-bg);
+
+    color: var(--utc-text-dark);
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    padding: 12px 18px;
+
+    border-bottom: 1.5px solid var(--utc-border-card);
+
+    text-align: left;
+
+    letter-spacing: 0.3px;
+
+}
+
+.table-utc tbody tr {
+
+    transition: var(--utc-transition);
+
+}
+
+.table-utc tbody tr:hover td {
+
+    background-color: #f4f8fc;
+
+}
+
+.table-utc tbody td {
+
+    padding: 13px 18px;
+
+    font-size: 13.5px;
+
+    color: var(--utc-text-dark);
+
+    border-bottom: 1px solid var(--utc-border-card);
+
+    vertical-align: middle;
+
+    text-align: left;
+
+    background-color: transparent;
+
+}
+
+.table-utc tbody tr:last-child td {
+
+    border-bottom: none;
+
+}
+
+.table-utc tfoot td {
+
+    background-color: var(--utc-table-th-bg);
+
+    font-weight: 700;
+
+    padding: 13px 18px;
+
+    border-top: 1.5px solid var(--utc-border-card);
+
+    color: var(--utc-text-dark);
+
+    text-align: left;
+
+}
+
+/* Nút hành động trong bảng */
+
+.action-link {
+
+    color: var(--utc-primary);
+
+    background-color: var(--utc-primary-light);
+
+    border: 1px solid rgba(8, 125, 187, 0.15);
+
+    padding: 5px 12px;
+
+    border-radius: var(--utc-radius-sm);
+
+    font-weight: 600;
+
+    font-size: 12.5px;
+
+    text-decoration: none;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 4px;
+
+    transition: var(--utc-transition);
+
+}
+
+.action-link:hover {
+
+    background: var(--utc-primary);
+
+    color: #ffffff;
+
+    border-color: var(--utc-primary);
+
+    text-decoration: none;
+
+}
+
+/* Ghi chú dưới bảng */
+
+.admin-table-note {
+
+    font-size: 12.5px;
+
+    color: var(--utc-text-muted);
+
+    margin-top: 14px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+}
+
+/* ================= STATUS BADGES ================= */
+
+.badge-status {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 4px 12px;
+
+    border-radius: var(--utc-radius-full);
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    line-height: 1.3;
+
+    white-space: nowrap;
+
+}
+
+.badge-status.badge-overdue,
+
+.badge-overdue {
+
+    background: var(--utc-danger-bg) !important;
+
+    color: var(--utc-danger) !important;
+
+    border: 1px solid #fecaca !important;
+
+    padding: 4px 12px;
+
+    border-radius: var(--utc-radius-full);
+
+    font-weight: 600;
+
+    font-size: 12px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+}
+
+.badge-status.badge-overdue::before,
+
+.badge-overdue::before {
+
+    content: "";
+
+    display: inline-block;
+
+    width: 6px;
+
+    height: 6px;
+
+    border-radius: 50%;
+
+    background-color: var(--utc-danger);
+
+}
+
+.badge-status.badge-borrowed,
+
+.badge-borrowed {
+
+    background: var(--utc-primary-light) !important;
+
+    color: var(--utc-primary) !important;
+
+    border: 1px solid #bae6fd !important;
+
+    padding: 4px 12px;
+
+    border-radius: var(--utc-radius-full);
+
+    font-weight: 600;
+
+    font-size: 12px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+}
+
+.badge-status.badge-borrowed::before,
+
+.badge-borrowed::before {
+
+    content: "";
+
+    display: inline-block;
+
+    width: 6px;
+
+    height: 6px;
+
+    border-radius: 50%;
+
+    background-color: var(--utc-primary);
+
+}
+
+.badge-status.badge-available,
+
+.badge-available {
+
+    background: var(--utc-success-bg) !important;
+
+    color: var(--utc-success) !important;
+
+    border: 1px solid #a7f3d0 !important;
+
+    padding: 4px 12px;
+
+    border-radius: var(--utc-radius-full);
+
+    font-weight: 600;
+
+    font-size: 12px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+}
+
+.badge-status.badge-available::before,
+
+.badge-available::before {
+
+    content: "";
+
+    display: inline-block;
+
+    width: 6px;
+
+    height: 6px;
+
+    border-radius: 50%;
+
+    background-color: var(--utc-success);
+
+}
+
+/* Badge role */
+
+.badge-role-admin {
+
+    background: #fdf2f8 !important;
+
+    color: #be185d !important;
+
+    border: 1px solid #fbcfe8 !important;
+
+    border-radius: var(--utc-radius-full);
+
+    padding: 4px 12px;
+
+    font-weight: 600;
+
+    font-size: 12px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+}
+
+.badge-role-reader {
+
+    background: #eff6ff !important;
+
+    color: #1d4ed8 !important;
+
+    border: 1px solid #bfdbfe !important;
+
+    border-radius: var(--utc-radius-full);
+
+    padding: 4px 12px;
+
+    font-weight: 600;
+
+    font-size: 12px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+}
+
+.badge-role-catalog {
+
+    background: #f0fdf4 !important;
+
+    color: #15803d !important;
+
+    border: 1px solid #bbf7d0 !important;
+
+    border-radius: var(--utc-radius-full);
+
+    padding: 4px 12px;
+
+    font-weight: 600;
+
+    font-size: 12px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+}
+
+/* ================= SUBNAV PILLS ================= */
+
+.admin-subnav-pills {
+
+    display: inline-flex;
+
+    padding: 4px;
+
+    background-color: #edf4fa;
+
+    border: 1px solid var(--utc-border-card);
+
+    border-radius: var(--utc-radius-full);
+
+    gap: 4px;
+
+    margin-bottom: 22px;
+
+}
+
+.admin-subnav-link {
+
+    padding: 7px 18px;
+
+    border-radius: var(--utc-radius-full);
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color: var(--utc-text-secondary);
+
+    text-decoration: none;
+
+    transition: var(--utc-transition);
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+}
+
+.admin-subnav-link:hover {
+
+    color: var(--utc-primary);
+
+}
+
+.admin-subnav-link.active {
+
+    background-color: #ffffff;
+
+    color: var(--utc-primary);
+
+    box-shadow: 0 2px 8px rgba(8, 125, 187, 0.12);
+
+}
+
+/* Modal styling */
+
+.modal-content {
+
+    border-radius: var(--utc-radius-xl) !important;
+
+    border: 1px solid var(--utc-border-card) !important;
+
+    box-shadow: var(--utc-shadow-xl) !important;
+
+    overflow: hidden;
+
+}
+
+.modal-header {
+
+    background: #ffffff;
+
+    border-bottom: 1px solid var(--utc-border-card, #e2eaf2);
+
+}
+
+/* ===== RESPONSIVE ADMIN SIDEBAR (OFF-CANVAS DRAWER) ===== */
+.admin-sidebar-toggler {
+    background-color: #ffffff;
+    border: 1px solid var(--utc-border-card, #DEEBF4);
+    color: var(--utc-primary, #0079BA);
+    padding: 6px 10px;
+    border-radius: var(--utc-radius-btn, 6px);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.admin-sidebar-toggler:hover,
+.admin-sidebar-toggler:focus {
+    background-color: var(--utc-primary, #0079BA);
+    color: #ffffff;
+    border-color: var(--utc-primary, #0079BA);
+}
+
+.admin-sidebar-backdrop {
+    display: none;
+}
+
+@media (max-width: 992px) {
+    body.sidebar-open {
+        overflow: hidden !important;
+    }
+
+    .admin-wrapper {
+        flex-direction: column;
+        min-height: calc(100vh - 78px);
+        position: relative;
+    }
+
+    /* Biến sidebar thành ngăn kéo trượt (Off-canvas Drawer) mượt mà trên Mobile & Tablet */
+    .admin-sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+        width: 290px !important;
+        min-width: 290px !important;
+        max-width: 85vw !important;
+        height: 100vh !important;
+        max-height: 100vh !important;
+        z-index: 1060 !important;
+        background: #ffffff !important;
+        box-shadow: 4px 0 24px rgba(15, 23, 42, 0.22) !important;
+        padding: 20px 16px !important;
+        overflow-y: auto !important;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        border-right: 1px solid var(--utc-border-card, #DEEBF4) !important;
+        border-bottom: none !important;
+    }
+
+    .admin-sidebar.show {
+        transform: translateX(0) !important;
+    }
+
+    /* Màn mờ đen phía sau khi mở menu */
+    .admin-sidebar-backdrop {
+        display: block !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        background-color: rgba(15, 23, 42, 0.5) !important;
+        backdrop-filter: blur(2px);
+        z-index: 1050 !important;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+
+    .admin-sidebar-backdrop.show {
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    .admin-content {
+        padding: 18px 14px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .admin-brand-text .brand-vi {
+        font-size: 13.5px !important;
+        line-height: 1.25;
+    }
+}
+
+@media (max-width: 576px) {
+    .admin-logo {
+        height: 38px !important;
+        width: auto !important;
+    }
+
+    .admin-brand-text .brand-vi {
+        font-size: 12px !important;
+        max-width: 180px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .admin-topbar .topbar-title {
+        font-size: 10px;
+    }
+
+    .admin-topbar .topbar-links {
+        display: none;
+    }
+}
+
+/* ==========================================================================
+
+   SOFT SEMANTIC STATE SYSTEM FOR ADMIN
+
+   - Success: #668D7B, Nền #EDF4EF, Viền #D2E4D8
+
+   - Warning: #B28A52, Nền #F8F3E9, Viền #EADDC7
+
+   - Danger: #A96D72, Nền #F8EEEE, Viền #EACFD2
+
+   - Info: #537FA5, Nền #EDF4F9, Viền #D0E1EE
+
+   ========================================================================== */
+
+/* Status Badges */
+
+.badge-status.badge-available,
+
+.badge-available {
+
+    background-color: var(--utc-success-bg, #edf4ef) !important;
+
+    color: var(--utc-success, #668d7b) !important;
+
+    border: 1px solid var(--utc-success-border, #d2e4d8) !important;
+
+    box-shadow: none !important;
+
+}
+
+.badge-status.badge-available::before,
+
+.badge-available::before {
+
+    background-color: var(--utc-success, #668d7b) !important;
+
+}
+
+.badge-status.badge-borrowed,
+
+.badge-borrowed {
+
+    background-color: var(--utc-info-bg, #edf4f9) !important;
+
+    color: var(--utc-info, #537fa5) !important;
+
+    border: 1px solid var(--utc-info-border, #d0e1ee) !important;
+
+    box-shadow: none !important;
+
+}
+
+.badge-status.badge-borrowed::before,
+
+.badge-borrowed::before {
+
+    background-color: var(--utc-info, #537fa5) !important;
+
+}
+
+.badge-status.badge-overdue,
+
+.badge-overdue {
+
+    background-color: var(--utc-danger-bg, #f8eeee) !important;
+
+    color: var(--utc-danger, #a96d72) !important;
+
+    border: 1px solid var(--utc-danger-border, #eacfd2) !important;
+
+    box-shadow: none !important;
+
+}
+
+.badge-status.badge-overdue::before,
+
+.badge-overdue::before {
+
+    background-color: var(--utc-danger, #a96d72) !important;
+
+}
+
+.badge-status.badge-warning {
+
+    background-color: var(--utc-warning-bg, #f8f3e9) !important;
+
+    color: var(--utc-warning, #b28a52) !important;
+
+    border: 1px solid var(--utc-warning-border, #eaddc7) !important;
+
+    box-shadow: none !important;
+
+}
+
+/* Bootstrap Badge overrides */
+
+.badge.bg-success,
+
+.badge.bg-success-subtle {
+
+    background-color: var(--utc-success-bg, #edf4ef) !important;
+
+    color: var(--utc-success, #668d7b) !important;
+
+    border: 1px solid var(--utc-success-border, #d2e4d8) !important;
+
+    box-shadow: none !important;
+
+}
+
+.badge.bg-danger,
+
+.badge.bg-danger-subtle {
+
+    background-color: var(--utc-danger-bg, #f8eeee) !important;
+
+    color: var(--utc-danger, #a96d72) !important;
+
+    border: 1px solid var(--utc-danger-border, #eacfd2) !important;
+
+    box-shadow: none !important;
+
+}
+
+.badge.bg-warning,
+
+.badge.bg-warning-subtle {
+
+    background-color: var(--utc-warning-bg, #f8f3e9) !important;
+
+    color: var(--utc-warning, #b28a52) !important;
+
+    border: 1px solid var(--utc-warning-border, #eaddc7) !important;
+
+    box-shadow: none !important;
+
+}
+
+.badge.bg-info,
+
+.badge.bg-info-subtle {
+
+    background-color: var(--utc-info-bg, #edf4f9) !important;
+
+    color: var(--utc-info, #537fa5) !important;
+
+    border: 1px solid var(--utc-info-border, #d0e1ee) !important;
+
+    box-shadow: none !important;
+
+}
+
+.badge.bg-primary,
+
+.badge.bg-primary-subtle {
+
+    background-color: var(--utc-primary-light, #eaf4fc) !important;
+
+    color: var(--utc-primary, #087dbb) !important;
+
+    border: 1px solid rgba(8, 125, 187, 0.18) !important;
+
+    box-shadow: none !important;
+
+}
+
+/* Role Badges */
+
+.badge-role-admin {
+
+    background-color: var(--utc-danger-bg, #f8eeee) !important;
+
+    color: var(--utc-danger, #a96d72) !important;
+
+    border: 1px solid var(--utc-danger-border, #eacfd2) !important;
+
+}
+
+.badge-role-reader {
+
+    background-color: var(--utc-info-bg, #edf4f9) !important;
+
+    color: var(--utc-info, #537fa5) !important;
+
+    border: 1px solid var(--utc-info-border, #d0e1ee) !important;
+
+}
+
+.badge-role-catalog {
+
+    background-color: var(--utc-success-bg, #edf4ef) !important;
+
+    color: var(--utc-success, #668d7b) !important;
+
+    border: 1px solid var(--utc-success-border, #d2e4d8) !important;
+
+}
+
+/* Alert & Notice Cards: Nền trắng, chỉ sử dụng màu trạng thái ở icon và đường viền nhẹ */
+
+.alert {
+
+    background-color: #ffffff !important;
+
+    border: 1px solid var(--utc-border-card, #e2eaf2) !important;
+
+    border-radius: var(--utc-radius-card, 14px) !important;
+
+    box-shadow: var(--utc-shadow-sm) !important;
+
+    color: var(--utc-text-dark, #163b5c) !important;
+
+}
+
+.alert-success {
+
+    border-left: 4px solid var(--utc-success, #668d7b) !important;
+
+}
+
+.alert-success i {
+
+    color: var(--utc-success, #668d7b) !important;
+
+}
+
+.alert-danger {
+
+    border-left: 4px solid var(--utc-danger, #a96d72) !important;
+
+}
+
+.alert-danger i {
+
+    color: var(--utc-danger, #a96d72) !important;
+
+}
+
+.alert-warning {
+
+    border-left: 4px solid var(--utc-warning, #b28a52) !important;
+
+}
+
+.alert-warning i {
+
+    color: var(--utc-warning, #b28a52) !important;
+
+}
+
+.alert-info {
+
+    border-left: 4px solid var(--utc-info, #537fa5) !important;
+
+}
+
+.alert-info i {
+
+    color: var(--utc-info, #537fa5) !important;
+
+}
+
+/* Outline Buttons */
+
+.btn-outline-danger {
+
+    color: var(--utc-danger, #a96d72) !important;
+
+    border-color: var(--utc-danger-border, #eacfd2) !important;
+
+    background-color: transparent !important;
+
+}
+
+.btn-outline-danger:hover {
+
+    background-color: var(--utc-danger-bg, #f8eeee) !important;
+
+    border-color: var(--utc-danger, #a96d72) !important;
+
+    color: var(--utc-danger, #a96d72) !important;
+
+}
+
+.btn-outline-success {
+
+    color: var(--utc-success, #668d7b) !important;
+
+    border-color: var(--utc-success-border, #d2e4d8) !important;
+
+    background-color: transparent !important;
+
+}
+
+.btn-outline-success:hover {
+
+    background-color: var(--utc-success-bg, #edf4ef) !important;
+
+    border-color: var(--utc-success, #668d7b) !important;
+
+    color: var(--utc-success, #668d7b) !important;
+
+}
+
+.btn-outline-warning {
+
+    color: var(--utc-warning, #b28a52) !important;
+
+    border-color: var(--utc-warning-border, #eaddc7) !important;
+
+    background-color: transparent !important;
+
+}
+
+.btn-outline-warning:hover {
+
+    background-color: var(--utc-warning-bg, #f8f3e9) !important;
+
+    border-color: var(--utc-warning, #b28a52) !important;
+
+    color: var(--utc-warning, #b28a52) !important;
+
+}
+
+/* Text & Icons */
+
+.text-danger {
+
+    color: var(--utc-danger, #a96d72) !important;
+
+}
+
+.text-success {
+
+    color: var(--utc-success, #668d7b) !important;
+
+}
+
+.text-warning, .text-warning-emphasis {
+
+    color: var(--utc-warning, #b28a52) !important;
+
+}
+
+.text-info {
+
+    color: var(--utc-info, #537fa5) !important;
+
+}
+
+/* KPI Card Soft Semantic Styling (Nền trắng, viền mảnh, accent indicator nhẹ) */
+
+.kpi-card-success {
+
+    background: #ffffff !important;
+
+    border: 1px solid var(--utc-border-card) !important;
+
+    border-top: 3.5px solid var(--utc-success, #668d7b) !important;
+
+}
+
+.kpi-card-warning {
+
+    background: #ffffff !important;
+
+    border: 1px solid var(--utc-border-card) !important;
+
+    border-top: 3.5px solid var(--utc-warning, #b28a52) !important;
+
+}
+
+.kpi-card-danger {
+
+    background: #ffffff !important;
+
+    border: 1px solid var(--utc-border-card) !important;
+
+    border-top: 3.5px solid var(--utc-danger, #a96d72) !important;
+
+}
+
+.kpi-card-primary {
+
+    background: #ffffff !important;
+
+    border: 1px solid var(--utc-border-card) !important;
+
+    border-top: 3.5px solid var(--utc-primary, #087dbb) !important;
+
+}
+
+.kpi-card-info {
+
+    background: #ffffff !important;
+
+    border: 1px solid var(--utc-border-card) !important;
+
+    border-top: 3.5px solid var(--utc-info, #537fa5) !important;
+
+}
+
+/* ==========================================================================
+
+   TABLE STATUS / BADGE RESET: BO HOAN TOAN KHUNG & NEN TRONG MOI BANG BEN ADMIN
+
+   Yeu cau: "o tat ca cac bang, tat ca cac trang ben admin khong duoc su dung
+
+   cac chu dong trong khung nhu nay, sua lai chi text thoi mau chu giu nguyen"
+
+   ========================================================================== */
+
+/* 1. Reset khung, nen, vien, padding, do bong cho moi badge va status span trong bang */
+
+.admin-content table td .badge,
+
+.admin-content table th .badge,
+
+.admin-content table td [class*="badge-"],
+
+.admin-content table th [class*="badge-"],
+
+.admin-content table td .badge-status,
+
+.admin-table-card table td .badge,
+
+.admin-table-card table td [class*="badge-"],
+
+.admin-table-card table td .badge-status,
+
+.table-utc td .badge,
+
+.table-utc th .badge,
+
+.table-utc td [class*="badge-"],
+
+.table-utc td .badge-status,
+
+.table td .badge,
+
+.table th .badge,
+
+.table td [class*="badge-"],
+
+.table td .badge-status,
+
+table.table td .badge,
+
+table.table td [class*="badge-"],
+
+table.table td .badge-status,
+
+table td .badge,
+
+table td [class*="badge-"],
+
+table td .badge-status,
+
+table td .badge-available,
+
+table td .badge-borrowed,
+
+table td .badge-overdue,
+
+table td .badge-warning {
+
+    background: transparent !important;
+
+    background-color: transparent !important;
+
+    border: none !important;
+
+    border-color: transparent !important;
+
+    box-shadow: none !important;
+
+    padding: 0 !important;
+
+    border-radius: 0 !important;
+
+    font-size: 13px !important;
+
+    font-weight: 600 !important;
+
+    display: inline-flex !important;
+
+    align-items: center !important;
+
+    gap: 4px !important;
+
+    vertical-align: middle !important;
+
+    line-height: 1.4 !important;
+
+    white-space: nowrap !important;
+
+    text-shadow: none !important;
+
+}
+
+/* 2. An dau cham tron gia (pseudo-elements) cua badge-status ben trong bang */
+
+.admin-content table td .badge-status::before,
+
+.admin-table-card table td .badge-status::before,
+
+.table-utc td .badge-status::before,
+
+.table td .badge-status::before,
+
+table td .badge-status::before,
+
+table td .badge-available::before,
+
+table td .badge-borrowed::before,
+
+table td .badge-overdue::before {
+
+    display: none !important;
+
+    content: none !important;
+
+}
+
+/* 3. Giu nguyen mau chu va icon theo dung ngu nghia trang thai */
+
+/* Trang thai Thanh cong / San co / Dung han / Binh thuong: Soft Green #668D7B */
+
+.admin-content table td .badge.bg-success,
+
+.admin-content table td .badge.bg-success-subtle,
+
+.admin-content table td .badge-status.badge-available,
+
+.admin-content table td .badge-available,
+
+.admin-content table td .text-success,
+
+.admin-content table td .badge-role-catalog,
+
+.table-utc td .badge.bg-success,
+
+.table-utc td .badge.bg-success-subtle,
+
+.table-utc td .badge-status.badge-available,
+
+.table-utc td .badge-available,
+
+.table td .badge.bg-success,
+
+.table td .badge.bg-success-subtle,
+
+.table td .badge-status.badge-available,
+
+.table td .badge-available,
+
+table td .badge.bg-success,
+
+table td .badge.bg-success-subtle,
+
+table td .badge-status.badge-available,
+
+table td .badge-available,
+
+table td .badge-role-catalog {
+
+    color: var(--utc-success, #668d7b) !important;
+
+}
+
+/* Trang thai Canh bao / Qua han / Mat sach / Phat: Soft Red #A96D72 */
+
+.admin-content table td .badge.bg-danger,
+
+.admin-content table td .badge.bg-danger-subtle,
+
+.admin-content table td .badge-status.badge-overdue,
+
+.admin-content table td .badge-overdue,
+
+.admin-content table td .badge-role-admin,
+
+.table-utc td .badge.bg-danger,
+
+.table-utc td .badge.bg-danger-subtle,
+
+.table-utc td .badge-status.badge-overdue,
+
+.table-utc td .badge-overdue,
+
+.table td .badge.bg-danger,
+
+.table td .badge.bg-danger-subtle,
+
+.table td .badge-status.badge-overdue,
+
+.table td .badge-overdue,
+
+table td .badge.bg-danger,
+
+table td .badge.bg-danger-subtle,
+
+table td .badge-status.badge-overdue,
+
+table td .badge-overdue,
+
+table td .badge-role-admin {
+
+    color: var(--utc-danger, #a96d72) !important;
+
+}
+
+/* Trang thai Canh bao nhe / Nop muon / Cho boi thuong: Soft Amber #B28A52 */
+
+.admin-content table td .badge.bg-warning,
+
+.admin-content table td .badge.bg-warning-subtle,
+
+.admin-content table td .badge-status.badge-warning,
+
+.table-utc td .badge.bg-warning,
+
+.table-utc td .badge.bg-warning-subtle,
+
+.table-utc td .badge-status.badge-warning,
+
+.table td .badge.bg-warning,
+
+.table td .badge.bg-warning-subtle,
+
+.table td .badge-status.badge-warning,
+
+table td .badge.bg-warning,
+
+table td .badge.bg-warning-subtle,
+
+table td .badge-status.badge-warning {
+
+    color: var(--utc-warning, #b28a52) !important;
+
+}
+
+/* Trang thai Thong tin / Dang muon / Chuyen nganh / QLT: Soft Blue #087DBB */
+
+.admin-content table td .badge.bg-primary,
+
+.admin-content table td .badge.bg-primary-subtle,
+
+.admin-content table td .badge.text-primary,
+
+.admin-content table td .badge-status.badge-borrowed,
+
+.admin-content table td .badge-borrowed,
+
+.table-utc td .badge.bg-primary,
+
+.table-utc td .badge.bg-primary-subtle,
+
+.table-utc td .badge-status.badge-borrowed,
+
+.table-utc td .badge-borrowed,
+
+.table td .badge.bg-primary,
+
+.table td .badge.bg-primary-subtle,
+
+.table td .badge-status.badge-borrowed,
+
+.table td .badge-borrowed,
+
+table td .badge.bg-primary,
+
+table td .badge.bg-primary-subtle,
+
+table td .badge-status.badge-borrowed,
+
+table td .badge-borrowed {
+
+    color: var(--utc-primary, #087dbb) !important;
+
+}
+
+.admin-content table td .badge.bg-info,
+
+.admin-content table td .badge.bg-info-subtle,
+
+.admin-content table td .badge-role-reader,
+
+.table-utc td .badge.bg-info,
+
+.table-utc td .badge.bg-info-subtle,
+
+.table td .badge.bg-info,
+
+.table td .badge.bg-info-subtle,
+
+table td .badge.bg-info,
+
+table td .badge.bg-info-subtle,
+
+table td .badge-role-reader {
+
+    color: var(--utc-info, #537fa5) !important;
+
+}
+
+/* Nhan phu / Vi tri / Dinh dang / Secondary: Muted Slate #64748B */
+
+.admin-content table td .badge.bg-light,
+
+.admin-content table td .badge.bg-secondary,
+
+.admin-content table td .badge.bg-secondary-subtle,
+
+.table-utc td .badge.bg-light,
+
+.table-utc td .badge.bg-secondary,
+
+.table-utc td .badge.bg-secondary-subtle,
+
+.table td .badge.bg-light,
+
+.table td .badge.bg-secondary,
+
+.table td .badge.bg-secondary-subtle,
+
+table td .badge.bg-light,
+
+table td .badge.bg-secondary,
+
+table td .badge.bg-secondary-subtle {
+
+    color: var(--utc-text-muted, #64748b) !important;
+
+}
+
+/* Dam bao icon trong bang dong mau voi text */
+
+.admin-content table td .badge i,
+
+.admin-content table td .badge-status i,
+
+.admin-content table td [class*="badge-"] i,
+
+.table-utc td .badge i,
+
+.table-utc td .badge-status i,
+
+.table td .badge i,
+
+.table td .badge-status i,
+
+table td .badge i,
+
+table td .badge-status i {
+
+    color: inherit !important;
+
+    font-size: 13.5px !important;
+
+    margin-right: 2px !important;
+
+    display: inline-block !important;
+
+}
+

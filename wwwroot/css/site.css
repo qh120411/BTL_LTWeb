@@ -1,28 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
-
 /* ==========================================================================
-   UTC Library Design System Tokens (Figma Exact)
-   Node: 2:39 · fileKey: 4ul02l3jmMTv1gssiJbQyc
+   UTC LIBRARY - GLOBAL STYLESHEET (Figma Clean Style)
+   Phong cách chuẩn Figma: Tối giản, thanh lịch, phẳng, không đổ bóng rối mắt
+   Bo góc 6px - 10px chuẩn mực, bảng màu Navy - Slate - Ice Blue
    ========================================================================== */
-:root {
-    --utc-navy:         #174c7f;
-    --utc-brand:        #0079ba;
-    --utc-ink:          #203c58;
-    --utc-muted:        #5c7187;
-    --utc-cream:        #f1faff;
-    --utc-blue:         #e7f6ff;
-    --utc-line:         #deebf4;
-    --utc-gold:         #ffc72c;
-    --utc-sky:          #0a9ddd;
-    --utc-paper:        #ffffff;
-    --utc-bg-card:      #f2f6fa;
-    --utc-bg-service:   #f1f5f9;
-    --utc-border-service: #d8e2eb;
-}
 
-/* ==========================================================================
-   Global Reset — override Bootstrap defaults where needed
-   ========================================================================== */
+@import url('variables.css');
+@import url('header-footer.css');
+
+/* Global Reset & Base */
 *, *::before, *::after {
     box-sizing: border-box;
 }
@@ -30,444 +15,285 @@
 html, body {
     margin: 0;
     padding: 0;
-    font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-    color: var(--utc-ink);
-    background-color: var(--utc-paper);
-    font-size: 16px;
-    line-height: 1.45;
+    font-family: var(--utc-font-family);
+    color: var(--utc-text-secondary, #334E68);
+    background-color: var(--utc-page-bg, #F8FAFC);
+    font-size: 15px;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
 }
 
-/* Override Bootstrap link color globally */
-a {
-    color: inherit !important;
-    text-decoration: none !important;
-    transition: opacity 0.15s ease, color 0.15s ease;
+h1, h2, h3, h4, h5, h6 {
+    color: var(--utc-text-primary, #0B2E4F);
+    font-weight: 700;
 }
 
-img {
+img, svg {
     max-width: 100%;
     height: auto;
+    display: block;
 }
 
-/* Global heading reset — chỉ xóa margin mặc định của browser/Bootstrap.
-   font-weight, font-size, line-height để từng class tự kiểm soát.
-   Các class như .col-header-ink, .editorial-title... sẽ có specificity
-   cao hơn selector này và tự set đúng giá trị. */
-h1, h2, h3, h4, h5, h6 {
-    margin-top: 0;
-    margin-bottom: 0;
+a {
+    color: inherit;
+    text-decoration: none;
+    transition: var(--utc-transition);
 }
 
-.home-page-container p,
-.site-header p,
-.site-footer p {
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
-/* Override Bootstrap .container */
+/* Custom Standard Container */
 .container {
-    max-width: 1760px !important;
-    margin: 0 auto !important;
-    padding-left: 80px !important;
-    padding-right: 80px !important;
-    width: 100% !important;
+    width: 100%;
+    max-width: 1360px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 32px;
+    padding-right: 32px;
 }
 
-@media (max-width: 1400px) {
+@media (min-width: 1600px) {
     .container {
-        padding-left: 40px !important;
-        padding-right: 40px !important;
+        max-width: 1520px;
     }
 }
 
 @media (max-width: 768px) {
     .container {
-        padding-left: 20px !important;
-        padding-right: 20px !important;
+        padding-left: 20px;
+        padding-right: 20px;
     }
 }
 
-/* ==========================================================================
-   Shared Buttons
-   ========================================================================== */
-.btn-figma-primary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background-color: var(--utc-brand);
-    color: #ffffff !important;
-    border: none;
-    border-radius: 6px;
-    padding: 12px 24px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    text-decoration: none !important;
-    transition: background-color 0.15s ease;
-    font-family: inherit;
-    line-height: 1.45;
+/* Base Utility Classes */
+.text-navy { color: var(--utc-text-primary, #0B2E4F) !important; }
+.text-brand { color: var(--utc-primary, #0079BA) !important; }
+.text-muted { color: var(--utc-text-muted, #627D98) !important; }
+.bg-cream { background-color: var(--utc-primary-light, #F0F7FC) !important; }
+.bg-soft { background-color: var(--utc-page-bg, #F8FAFC) !important; }
+.border-utc { border: 1px solid var(--utc-border, #E2E8F0) !important; }
+.rounded-utc { border-radius: var(--utc-radius-card, 10px) !important; }
+.shadow-utc-sm { box-shadow: var(--utc-shadow-sm) !important; }
+.shadow-utc-md { box-shadow: var(--utc-shadow-card) !important; }
+.shadow-utc-lg { box-shadow: var(--utc-shadow-hover) !important; }
+
+/* Refined Card Component - Clean Flat with 1px border */
+.card, .utc-card {
+    background-color: var(--utc-surface, #FFFFFF);
+    border: 1px solid var(--utc-border, #E2E8F0);
+    border-radius: var(--utc-radius-card, 10px);
+    box-shadow: var(--utc-shadow-card);
+    transition: var(--utc-transition);
 }
 
-.btn-figma-primary:hover {
-    background-color: #00669e;
-    color: #ffffff !important;
+.card:hover, .utc-card:hover {
+    box-shadow: var(--utc-shadow-hover);
+    border-color: #BAE6FD;
 }
 
-.btn-figma-secondary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background-color: var(--utc-paper);
-    color: var(--utc-navy) !important;
-    border: 1px solid var(--utc-line);
-    border-radius: 6px;
-    padding: 12px 24px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    text-decoration: none !important;
-    transition: background-color 0.15s ease, border-color 0.15s ease;
-    font-family: inherit;
-    line-height: 1.45;
-}
-
-.btn-figma-secondary:hover {
-    background-color: #f7fafc;
-    border-color: #cbd5e1;
-    color: var(--utc-navy) !important;
-}
-
-/* ==========================================================================
-   Header
-   ========================================================================== */
-.site-header {
-    background: var(--utc-paper);
-    position: relative;
-    z-index: 100;
-}
-
-/* -- Top utility bar -- */
-.topbar {
-    background: var(--utc-navy);
-    color: var(--utc-paper);
+/* Status Badges - Gọn gàng, thanh thoát 4px bo góc */
+.badge-available {
+    background-color: var(--utc-success-bg, #ECFDF5) !important;
+    color: var(--utc-success, #059669) !important;
+    border: 1px solid var(--utc-success-border, #A7F3D0) !important;
     font-size: 12px;
-    padding: 12px 0;
-}
-
-.topbar-inner {
-    display: flex;
-    justify-content: space-between;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: var(--utc-radius-badge, 4px);
+    display: inline-flex;
     align-items: center;
-}
-
-.topbar-left {
-    font-weight: 400;
-    letter-spacing: 0.5px;
-    color: #ffffff;
-}
-
-.topbar-right {
-    color: #ffffff;
-}
-
-.topbar-right a {
-    color: #ffffff !important;
-    font-weight: 500;
-}
-
-.topbar-right a:hover {
-    text-decoration: underline !important;
-}
-
-/* -- Brand bar -- */
-.brandbar {
-    padding: 24px 0;
-    background: var(--utc-paper);
-}
-
-.brandbar-inner {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    text-decoration: none !important;
-}
-
-.brand-logo {
-    width: 64px;
-    height: 64px;
-    border-radius: 32px;
-    object-fit: contain;
-    flex-shrink: 0;
-}
-
-.brand-text {
-    display: flex;
-    flex-direction: column;
     gap: 4px;
 }
 
-.brand-title {
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--utc-navy);
-    line-height: 1.3;
-    display: block;
-}
-
-.brand-sub {
+.badge-borrowed {
+    background-color: var(--utc-info-bg, #F0F7FC) !important;
+    color: var(--utc-info, #0284C7) !important;
+    border: 1px solid var(--utc-info-border, #BAE6FD) !important;
     font-size: 12px;
-    font-weight: 400;
-    color: var(--utc-muted);
-    letter-spacing: 0.5px;
-    display: block;
-}
-
-.header-actions {
-    flex-shrink: 0;
-}
-
-.btn-header-login {
-    width: 220px;
-    height: 46px;
-}
-
-/* -- Main navigation -- */
-.navbar {
-    background: var(--utc-paper);
-    border-top: 1px solid var(--utc-line);
-    border-bottom: 1px solid var(--utc-line);
-    padding: 0;
-}
-
-/* Override Bootstrap navbar */
-.navbar .container {
-    display: flex !important;
-    align-items: center !important;
-}
-
-.nav-inner {
-    display: flex;
-    align-items: center;
-}
-
-.nav-list {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 16px 0;
-    gap: 32px;
-}
-
-.nav-list li {
-    margin: 0;
-    padding: 0;
-}
-
-.nav-list a {
-    color: var(--utc-navy) !important;
-    font-size: 14px;
-    font-weight: 500;
-    text-decoration: none !important;
-    line-height: 1.45;
-    display: block;
-}
-
-.nav-list a.active,
-.nav-list a:hover {
     font-weight: 600;
+    padding: 4px 10px;
+    border-radius: var(--utc-radius-badge, 4px);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
-.nav-toggle {
-    display: none;
-    flex-direction: column;
+.badge-overdue {
+    background-color: var(--utc-danger-bg, #FEF2F2) !important;
+    color: var(--utc-danger, #DC2626) !important;
+    border: 1px solid var(--utc-danger-border, #FECACA) !important;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: var(--utc-radius-badge, 4px);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Form Controls & Inputs - Bo góc 6px, phẳng, không viền lòe loẹt */
+.form-control, .form-select, input[type="text"], input[type="password"], input[type="search"] {
+    border-radius: var(--utc-radius-input, 6px) !important;
+    border: 1px solid var(--utc-border, #E2E8F0) !important;
+    padding: 10px 14px;
+    font-size: 14.5px;
+    color: var(--utc-text-primary, #0B2E4F);
+    background-color: #FFFFFF;
+    transition: var(--utc-transition);
+}
+
+.form-control:focus, .form-select:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="search"]:focus {
+    border-color: var(--utc-primary, #0079BA) !important;
+    box-shadow: 0 0 0 3px rgba(0, 121, 186, 0.15) !important;
+    outline: none;
+    background-color: #FFFFFF !important;
+}
+
+/* Buttons - Chuẩn Figma: Phẳng, màu xanh #0079BA, bo góc 6px, không gradient */
+.btn,
+.btn-utc-primary,
+.btn-utc-secondary,
+.btn-utc-outline,
+.btn-outline-utc {
+    border-radius: var(--utc-radius-btn, 6px) !important;
+    font-weight: 600;
+    transition: var(--utc-transition);
+    padding: 9px 18px;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
-    gap: 5px;
-    width: 40px;
-    height: 40px;
-    background: transparent;
-    border: 1px solid var(--utc-line);
-    border-radius: 4px;
-    cursor: pointer;
-    margin: 8px 0;
-    padding: 0;
 }
 
-.nav-toggle span {
-    display: block;
-    width: 20px;
-    height: 2px;
-    background: var(--utc-navy);
-    margin: 0 auto;
+.btn-primary, .btn-utc-primary {
+    border-radius: var(--utc-radius-btn, 6px) !important;
+    background: var(--utc-primary, #0079BA) !important;
+    background-color: var(--utc-primary, #0079BA) !important;
+    border: 1px solid var(--utc-primary, #0079BA) !important;
+    color: #FFFFFF !important;
+    box-shadow: var(--utc-shadow-btn) !important;
 }
 
-/* -- UTC Brand Stripes: navy / gold / sky -- */
-.utc-brand-stripes {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    width: 100%;
+.btn-primary:hover, .btn-utc-primary:hover {
+    background: var(--utc-primary-hover, #00679E) !important;
+    background-color: var(--utc-primary-hover, #00679E) !important;
+    border-color: var(--utc-primary-hover, #00679E) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(0, 121, 186, 0.25) !important;
+    color: #FFFFFF !important;
+}
+
+.btn-secondary, .btn-utc-secondary, .btn-outline-utc, .btn-utc-outline {
+    border-radius: var(--utc-radius-btn, 6px) !important;
+    background: #FFFFFF !important;
+    background-color: #FFFFFF !important;
+    border: 1px solid #D0E0EC !important;
+    color: var(--utc-primary, #0079BA) !important;
+    box-shadow: none !important;
+}
+
+.btn-secondary:hover, .btn-utc-secondary:hover, .btn-outline-utc:hover, .btn-utc-outline:hover {
+    background: var(--utc-primary-light, #F0F7FC) !important;
+    background-color: var(--utc-primary-light, #F0F7FC) !important;
+    border-color: var(--utc-primary, #0079BA) !important;
+    color: var(--utc-primary-hover, #00679E) !important;
+    transform: translateY(-1px);
+}
+
+.btn-outline-primary {
+    border-radius: var(--utc-radius-btn, 6px);
+    border-color: var(--utc-primary, #0079BA);
+    color: var(--utc-primary, #0079BA);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--utc-primary, #0079BA);
+    color: #FFFFFF;
+}
+
+/* Nav Tabs & Nav Pills - Phong cách Figma phẳng gọn gàng */
+.nav-tabs, .nav-pills {
+    border-bottom: none !important;
+    gap: 8px;
+}
+
+.nav-pills .nav-link {
+    border-radius: var(--utc-radius-btn, 6px);
+    padding: 8px 18px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--utc-text-secondary, #334E68);
+    background: #FFFFFF;
+    transition: var(--utc-transition);
+    border: 1px solid var(--utc-border, #E2E8F0);
+}
+
+.nav-pills .nav-link:hover {
+    color: var(--utc-primary, #0079BA);
+    background-color: var(--utc-primary-light, #F0F7FC);
+    border-color: #BAE6FD;
+}
+
+.nav-pills .nav-link.active {
+    background: var(--utc-primary, #0079BA) !important;
+    color: #FFFFFF !important;
+    border-color: var(--utc-primary, #0079BA) !important;
+    box-shadow: var(--utc-shadow-btn);
+}
+
+/* Tab panes animation mượt mà khi switch */
+.tab-content > .tab-pane {
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.tab-content > .tab-pane.active.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Tables with clean Figma styling */
+.table-responsive {
+    border-radius: var(--utc-radius-card, 10px);
+    border: 1px solid var(--utc-border, #E2E8F0);
+    background: #FFFFFF;
+    box-shadow: var(--utc-shadow-card);
     overflow: hidden;
 }
 
-.utc-brand-stripes .stripe-navy {
-    height: 3px;
-    background: var(--utc-navy);
-    display: block;
+table {
+    margin-bottom: 0 !important;
 }
 
-.utc-brand-stripes .stripe-gold {
-    height: 3px;
-    background: var(--utc-gold);
-    display: block;
+table th {
+    background-color: var(--utc-primary-light, #F0F7FC) !important;
+    color: var(--utc-text-primary, #0B2E4F) !important;
+    font-weight: 600 !important;
+    font-size: 13.5px !important;
+    border-bottom: 1px solid var(--utc-border, #E2E8F0) !important;
+    padding: 12px 16px !important;
 }
 
-.utc-brand-stripes .stripe-sky {
-    height: 2px;
-    background: var(--utc-sky);
-    display: block;
+table td {
+    padding: 12px 16px !important;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--utc-border-light, #EDF2F7);
 }
 
-/* ==========================================================================
-   Footer
-   ========================================================================== */
-.site-footer {
-    background: var(--utc-navy);
-    color: #ffffff;
-    padding: 80px 0;
+table tr {
+    transition: background-color 0.15s ease;
 }
 
-.footer-main {
-    display: grid !important;
-    grid-template-columns: 400px 1.2fr 1fr 1fr !important;
-    gap: 80px;
-    max-width: 1760px !important;
-    margin: 0 auto !important;
+table tbody tr:hover {
+    background-color: #F8FAFC !important;
 }
 
-.footer-brand-lockup {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 16px;
-}
-
-.footer-logo {
-    width: 52px;
-    height: 52px;
-    border-radius: 26px;
-    object-fit: contain;
-    flex-shrink: 0;
-}
-
-.footer-title {
-    font-size: 22px;
-    font-weight: 600;
-    color: #ffffff;
-    line-height: 1.45;
-}
-
-.footer-desc {
-    font-size: 16px;
-    color: #ffffff;
-    line-height: 1.45;
-    margin: 0 0 24px !important;
-    opacity: 0.95;
-}
-
-.footer-copyright {
-    font-size: 14px;
-    color: #ffffff;
-    opacity: 0.7;
-    margin: 0 !important;
-}
-
-.footer-col-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #ffffff;
-    margin: 0 0 16px !important;
-}
-
-.footer-links {
-    list-style: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.footer-links li,
-.footer-links a {
-    font-size: 14px;
-    color: #ffffff !important;
-    opacity: 0.85;
-    line-height: 1.5;
-    text-decoration: none !important;
-}
-
-.footer-links a:hover {
-    opacity: 1;
-    text-decoration: underline !important;
-}
-
-/* ==========================================================================
-   Responsive
-   ========================================================================== */
-@media (max-width: 1100px) {
-    .footer-main {
-        grid-template-columns: 1fr 1fr !important;
-        gap: 40px;
-    }
-}
-
-@media (max-width: 991px) {
-    .nav-toggle {
-        display: flex;
-    }
-
-    .nav-list {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        gap: 12px;
-        padding: 12px 0;
-    }
-
-    .nav-list.open {
-        display: flex;
-    }
-}
-
-@media (max-width: 768px) {
-    .topbar-inner {
-        flex-direction: column;
-        gap: 4px;
-        text-align: center;
-    }
-
-    .brandbar-inner {
-        flex-direction: column;
-        gap: 16px;
-        align-items: flex-start;
-    }
-
-    .btn-header-login {
-        width: 100%;
-    }
-
-    .footer-main {
-        grid-template-columns: 1fr !important;
-        gap: 32px;
-    }
+/* Alert Boxes & Notification Banners - Phong cách Figma Ice-Blue */
+.alert-utc-info, .utc-alert-box {
+    background-color: var(--utc-primary-light, #F0F7FC);
+    border: 1px solid #D0E2EC;
+    border-radius: var(--utc-radius-card, 10px);
+    padding: 16px 20px;
+    color: var(--utc-text-primary, #0B2E4F);
 }

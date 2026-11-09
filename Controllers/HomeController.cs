@@ -13,10 +13,23 @@ namespace BTL_LTWEB.Controllers
             _logger = logger;
         }
 
-        // Điều hướng mặc định về phân hệ Bạn đọc (Areas/Reader)
+        // Mở ứng dụng: Nếu đã đăng nhập thì tự động vào ngay Admin hoặc Reader, nếu chưa thì hiển thị trang Đăng nhập
         public IActionResult Index()
         {
-            return RedirectToAction("Index", "Home", new { area = "Reader" });
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                if (User.IsInRole("Admin") || User.IsInRole("Thuthu"))
+                {
+                    return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+                }
+                return RedirectToAction("Index", "Home", new { area = "Reader" });
+            }
+            return View("~/Views/Home/Index.cshtml");
+        }
+
+        public IActionResult Login(string? returnUrl)
+        {
+            return RedirectToAction("Login", "Account", new { returnUrl });
         }
 
         public IActionResult Privacy()

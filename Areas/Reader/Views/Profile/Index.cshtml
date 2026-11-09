@@ -1,0 +1,437 @@
+@model BTL_LTWEB.Areas.Reader.Models.UserProfileViewModel
+@{
+    ViewData["Title"] = "Hồ sơ cá nhân - Tự nhập hồ sơ";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/profile.css" asp-append-version="true" />
+}
+
+<div class="profile-page-wrapper">
+    <div class="container-xl px-3 px-md-4">
+        <!-- 1. Breadcrumb -->
+        <div class="utc-profile-breadcrumb">
+            <a href="/Reader/Home">Profile</a>
+            <span>&gt;</span>
+            <span class="active">Tự nhập hồ sơ</span>
+        </div>
+
+        <!-- 2. Tiêu đề với dải màu cam -->
+        <div class="profile-main-title">
+            <span class="profile-accent-bar"></span>
+            <h1>THÔNG TIN CÁ NHÂN</h1>
+        </div>
+
+        <!-- 3. Kế hoạch nhập hồ sơ banner -->
+        <div class="profile-plan-box">
+            <div class="profile-plan-label">
+                <i class="bi bi-file-earmark-check text-primary fs-5"></i>
+                <span>KẾ HOẠCH NHẬP HỒ SƠ</span>
+            </div>
+            <div class="profile-plan-tag">
+                Cập nhật thông tin sinh viên &amp; Ngân hàng
+            </div>
+        </div>
+
+        <!-- 4. Thông báo thành công nếu vừa lưu -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="profile-alert-success alert alert-dismissible fade show" role="alert">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-check-circle-fill fs-5"></i>
+                    <strong>@TempData["SuccessMessage"]</strong>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <!-- 5. Khung thông tin cá nhân chính (Chuẩn giao diện ảnh mẫu) -->
+        <div class="profile-portal-card">
+            <!-- Dải tiêu đề màu xanh đen I -->
+            <div class="profile-section-bar">
+                <div class="profile-section-bar-left">
+                    <div class="profile-section-icon">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    <div class="profile-section-text">
+                        I. PHẦN BẢN THÂN HỌC SINH, SINH VIÊN
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nội dung chính phần I -->
+            <div class="profile-body-content">
+                <form asp-area="Reader" asp-controller="Profile" asp-action="Index" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="MaSinhVien" />
+                    <input type="hidden" asp-for="HoTen" />
+                    <input type="hidden" asp-for="NgaySinh" />
+                    <input type="hidden" asp-for="SoCCCD" />
+                    <input type="hidden" asp-for="NganhHoc" />
+                    <input type="hidden" asp-for="LopQuanLy" />
+
+                    <div class="row g-4">
+                        <!-- Cột trái: Ảnh thẻ đại diện và thông tin cố định -->
+                        <div class="col-lg-3 col-md-4 profile-left-col">
+                            <div class="avatar-wrapper">
+                                <i class="bi bi-person-fill avatar-icon-placeholder"></i>
+
+                            </div>
+
+                            <div class="student-data-table">
+                                <div class="student-data-row">
+                                    <span class="student-data-label">HỌ VÀ TÊN</span>
+                                    <div class="student-data-value">@Model.HoTen</div>
+                                </div>
+                                <div class="student-data-row">
+                                    <span class="student-data-label">NGÀY SINH</span>
+                                    <div class="student-data-value">@Model.NgaySinh</div>
+                                </div>
+                                <div class="student-data-row">
+                                    <span class="student-data-label">@(Model.MaSinhVien.StartsWith("GV") ? "MÃ GV" : "MÃ SV")</span>
+                                    <div class="student-data-value">@Model.MaSinhVien</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cột phải: Bảng nhập thông tin (Số điện thoại, Địa chỉ nhà, Số tài khoản, Ngân hàng, Email) -->
+                        <div class="col-lg-9 col-md-8">
+                            <div class="table-responsive">
+                                <table class="profile-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 25%;">NHÓM</th>
+                                            <th style="width: 32%;">TÊN THÔNG TIN</th>
+                                            <th style="width: 43%;">DỮ LIỆU CẦN NHẬP</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- 1. Số điện thoại -->
+                                        <tr>
+                                            <td></td>
+                                            <td class="col-info-name">
+                                                <span>SĐT di động cá nhân</span>
+                                            </td>
+                                            <td>
+                                                <input type="tel" 
+                                                       asp-for="SoDienThoai" 
+                                                       class="profile-input-field" 
+                                                       placeholder="Nhập số điện thoại (VD: 0986123456)" />
+                                            </td>
+                                        </tr>
+
+                                        <!-- 2. Địa chỉ nhà (Người dùng yêu cầu bổ sung) -->
+                                        <tr>
+                                            <td></td>
+                                            <td class="col-info-name">
+                                                <span>Địa chỉ thường trú / Nơi ở hiện nay</span>
+                                            </td>
+                                            <td>
+                                                <input type="text" 
+                                                       asp-for="DiaChiNha" 
+                                                       class="profile-input-field" 
+                                                       placeholder="Nhập số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành" />
+                                            </td>
+                                        </tr>
+
+                                        <!-- 3. Số tài khoản ngân hàng -->
+                                        <tr>
+                                            <td class="col-group-title">SỐ TÀI KHOẢN NGÂN HÀNG</td>
+                                            <td class="col-info-name">
+                                                <span>Số tài khoản ngân hàng</span>
+                                            </td>
+                                            <td>
+                                                <input type="text" 
+                                                       asp-for="SoTaiKhoanNganHang" 
+                                                       class="profile-input-field" 
+                                                       placeholder="Nhập số tài khoản ngân hàng" />
+                                            </td>
+                                        </tr>
+
+                                        <!-- 4. Tên ngân hàng -->
+                                        <tr>
+                                            <td class="col-group-title">TÊN NGÂN HÀNG</td>
+                                            <td class="col-info-name">
+                                                <span>Tên ngân hàng</span>
+                                            </td>
+                                            <td>
+                                                <input type="text" 
+                                                       asp-for="TenNganHang" 
+                                                       class="profile-input-field" 
+                                                       placeholder="Ví dụ: Vietcombank, BIDV, Agribank, MB Bank..." />
+                                            </td>
+                                        </tr>
+
+                                        <!-- 5. Email liên hệ -->
+                                        <tr>
+                                            <td class="col-group-title">EMAIL LIÊN HỆ</td>
+                                            <td class="col-info-name">
+                                                <span>Email cá nhân / trường</span>
+                                            </td>
+                                            <td>
+                                                <input type="email" 
+                                                       asp-for="Email" 
+                                                       class="profile-input-field" 
+                                                       placeholder="Nhập địa chỉ email" />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Nút Lưu thông tin màu cam ở góc dưới bên phải -->
+                            <div class="d-flex justify-content-end mt-4 pt-2">
+                                <button type="submit" class="btn-orange-save">
+                                    Lưu thông tin <i class="bi bi-floppy-fill"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 6. PHẦN II: DANH SÁCH SÁCH ĐANG MƯỢN & HẠN TRẢ (QUY ĐỊNH 1 NĂM - PHẠT 100K/QUYỂN QUÁ HẠN) -->
+        <div class="profile-portal-card mt-4">
+            <!-- Dải tiêu đề màu xanh đen II -->
+            <div class="profile-section-bar">
+                <div class="profile-section-bar-left">
+                    <div class="profile-section-icon">
+                        <i class="bi bi-book-half"></i>
+                    </div>
+                    <div class="profile-section-text">
+                        II. DANH SÁCH TÀI LIỆU / SÁCH ĐANG MƯỢN (THỜI GIAN MƯỢN 1 NĂM)
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Nội dung phần II -->
+            <div class="profile-body-content">
+                <!-- Banner quy định mượn & thống kê nhanh -->
+                <div class="profile-rule-banner">
+                    <div class="profile-rule-text">
+                        <i class="bi bi-info-circle-fill text-success fs-5"></i>
+                        <span>
+                            Quy chế mượn: <strong>Thời gian mượn luôn là 1 năm</strong> kể từ ngày mượn. Nếu quá hạn, mức phạt quy định là <strong>100.000 đ / cuốn</strong>.
+                        </span>
+                    </div>
+                    <div class="profile-rule-pills">
+                        <span class="rule-pill-item rule-pill-total">Đang mượn: @Model.TongSoSachDangMuon cuốn</span>
+                        <span class="rule-pill-item rule-pill-valid">Còn hạn: @Model.SoSachConHan cuốn</span>
+                        @if (Model.SoSachQuaHan > 0)
+                        {
+                            <span class="rule-pill-item rule-pill-overdue">Đang quá hạn: @Model.SoSachQuaHan cuốn</span>
+                        }
+                    </div>
+                </div>
+
+                @{
+                    var soSachSapDenHan = Model.BorrowedBooks.Count(b => !b.IsQuaHan && b.SoNgayConLai <= 30);
+                }
+
+                <!-- Bộ lọc: Tất cả, Còn hạn, Sắp đến hạn, Quá hạn -->
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                    <div class="borrow-filter-tabs-wrapper mb-0">
+                        <button type="button" class="borrow-filter-tab is-active" data-filter="all">
+                            Tất cả <span class="badge-count">@Model.TongSoSachDangMuon</span>
+                        </button>
+                        <button type="button" class="borrow-filter-tab" data-filter="valid">
+                            Còn hạn <span class="badge-count">@Model.SoSachConHan</span>
+                        </button>
+                        <button type="button" class="borrow-filter-tab" data-filter="expiring">
+                            Sắp đến hạn <span class="badge-count">@soSachSapDenHan</span>
+                        </button>
+                        <button type="button" class="borrow-filter-tab" data-filter="overdue">
+                            Quá hạn <span class="badge-count">@Model.SoSachQuaHan</span>
+                        </button>
+                    </div>
+                    <div class="text-muted small">
+                        Hiển thị <strong>@Model.TongSoSachDangMuon</strong> tài liệu đang mượn
+                    </div>
+                </div>
+
+                <!-- DANH SÁCH HỌC LIỆU / SÁCH ĐANG MƯỢN (TRỰC QUAN - BÌA SÁCH TO RÕ) -->
+                <div class="borrowed-books-showcase">
+                    @if (Model.BorrowedBooks.Any())
+                    {
+                        int idx = 1;
+                        foreach (var book in Model.BorrowedBooks)
+                        {
+                            var isExpiring = !book.IsQuaHan && book.SoNgayConLai <= 30;
+                            var statusType = book.IsQuaHan ? "overdue" : (isExpiring ? "expiring" : "valid");
+
+                            <div class="book-showcase-card @(book.IsQuaHan ? "is-overdue" : "is-active")" data-status="@statusType">
+                                <!-- Cột 1: Bìa sách to rõ ràng, hiệu ứng gáy 3D -->
+                                <div class="book-showcase-cover-wrap">
+                                    <div class="book-cover-stage">
+                                        <img src="@(string.IsNullOrEmpty(book.CoverImage) ? "/images/covers/cover-placeholder.png" : (book.CoverImage.StartsWith("/") ? book.CoverImage : "/" + book.CoverImage))" 
+                                             alt="@book.TenSach" 
+                                             class="book-showcase-cover-img" 
+                                             onerror="this.onerror=null; this.src='/images/covers/cover-placeholder.png';" />
+                                        <span class="book-cover-spine"></span>
+                                    </div>
+                                    <span class="book-stt-pill">Bản sách #@idx</span>
+                                </div>
+
+                                <!-- Cột 2: Thông tin chi tiết tài liệu -->
+                                <div class="book-showcase-info">
+                                    <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                                        <span class="book-tag-vach">@book.MaVach</span>
+                                        <span class="book-tag-gd">Mã GD: @book.MaGD</span>
+                                    </div>
+                                    <h3 class="book-showcase-title">
+                                        @book.TenSach
+                                    </h3>
+                                    <div class="book-showcase-author">
+                                        Tác giả: <strong>@book.TacGia</strong>
+                                    </div>
+
+                                    <!-- Khung thời gian mượn & hạn trả 1 năm -->
+                                    <div class="book-date-timeline">
+                                        <div class="date-timeline-item">
+                                            <span class="date-label">Ngày mượn</span>
+                                            <span class="date-val fw-semibold">@book.NgayMuon.ToString("dd/MM/yyyy")</span>
+                                        </div>
+                                        <div class="date-timeline-arrow">&rarr;</div>
+                                        <div class="date-timeline-item">
+                                            <span class="date-label">Hạn trả (1 năm)</span>
+                                            <span class="date-val fw-bold @(book.IsQuaHan ? "text-danger" : "text-success")">
+                                                @book.HanTra.ToString("dd/MM/yyyy")
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Cột 3: Trạng thái (KHÔNG DÙNG ICON) & Tiền phạt -->
+                                <div class="book-showcase-status-box">
+                                    <div class="status-badge-wrap">
+                                        @if (book.IsQuaHan)
+                                        {
+                                            <span class="status-pill-overdue">Đang quá hạn</span>
+                                            <div class="status-sub-overdue">Quá hạn @book.SoNgayQuaHan ngày</div>
+                                        }
+                                        else if (isExpiring)
+                                        {
+                                            <span class="status-pill-expiring">Sắp đến hạn</span>
+                                            <div class="status-sub-expiring">Còn @book.SoNgayConLai ngày</div>
+                                        }
+                                        else
+                                        {
+                                            <span class="status-pill-active">Còn hạn</span>
+                                            <div class="status-sub-active">Còn @book.SoNgayConLai ngày</div>
+                                        }
+                                    </div>
+
+                                    <div class="fine-due-block">
+                                        <div class="fine-due-label">Tiền phạt quá hạn</div>
+                                        @if (book.IsQuaHan)
+                                        {
+                                            <div class="fine-due-val is-fine">@book.TienPhat.ToString("N0") đ</div>
+                                            <div class="fine-due-note">(100.000 đ/cuốn)</div>
+                                        }
+                                        else
+                                        {
+                                            <div class="fine-due-val is-zero">0 đ</div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            idx++;
+                        }
+                    }
+                    else
+                    {
+                        <div class="empty-showcase-card">
+                            Bạn hiện không mượn tài liệu nào từ thư viện.
+                        </div>
+                    }
+
+                    <div id="borrowFilterEmptyMsg" class="empty-showcase-card" style="display: none;">
+                        Không có cuốn sách nào phù hợp với bộ lọc đã chọn.
+                    </div>
+                </div>
+
+                <!-- Tổng kết & Tính tổng thanh toán -->
+                <div class="profile-summary-bar mt-3">
+                    <div class="profile-summary-left">
+                        <div class="profile-summary-title">
+                            Tổng số sách đang mượn: <strong class="text-primary">@Model.TongSoSachDangMuon cuốn</strong> 
+                            (@Model.SoSachConHan cuốn còn hạn, <span class="text-danger fw-bold">@Model.SoSachQuaHan cuốn quá hạn</span>)
+                        </div>
+                        <div class="profile-summary-sub">
+                            * Quy định: Các cuốn sách quá hạn chịu mức phí nộp phạt 100.000 đ/cuốn theo quy định thư viện Đại học GTVT.
+                        </div>
+                    </div>
+                    <div class="profile-summary-right">
+                        <div class="total-due-box">
+                            <div class="total-due-label">TỔNG PHẢI THANH TOÁN:</div>
+                            <div class="total-due-amount">
+                                @Model.TongTienPhaiThanhToan.ToString("N0") VNĐ
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @if (Model.SoSachQuaHan > 0)
+                {
+                    <div class="mt-3 p-3 bg-white rounded border d-flex justify-content-between align-items-center flex-wrap gap-2" style="border-left: 4px solid var(--utc-danger, #A96D72) !important; border-color: var(--utc-border, #E2EAF2);">
+                        <div class="small" style="color: var(--utc-text-primary, #163B5C);">
+                            <i class="bi bi-info-circle me-1" style="color: var(--utc-danger, #A96D72);"></i>
+                            Bạn có <strong style="color: var(--utc-danger, #A96D72);">@Model.SoSachQuaHan cuốn sách đang quá hạn</strong>. Vui lòng mang sách đến quầy phục vụ tầng 5 Nhà A8 để trả sách hoặc thanh toán tiền phạt.
+                        </div>
+                        <a href="/Reader/Guide" class="btn btn-sm" style="background-color: var(--utc-danger-bg, #F8EEEE); color: var(--utc-danger, #A96D72); border: 1px solid var(--utc-danger-border, #EACFD2); font-weight: 600; border-radius: var(--utc-radius-btn);">
+                            <i class="bi bi-question-circle me-1"></i> Xem hướng dẫn nộp phạt &amp; hoàn trả
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const filterTabs = document.querySelectorAll('.borrow-filter-tab');
+            const cards = document.querySelectorAll('.book-showcase-card');
+            const emptyMsg = document.getElementById('borrowFilterEmptyMsg');
+
+            filterTabs.forEach(tab => {
+                tab.addEventListener('click', function () {
+                    filterTabs.forEach(t => t.classList.remove('is-active'));
+                    this.classList.add('is-active');
+
+                    const filter = this.getAttribute('data-filter');
+                    let visibleCount = 0;
+
+                    cards.forEach(card => {
+                        const status = card.getAttribute('data-status');
+                        let show = false;
+
+                        if (filter === 'all') {
+                            show = true;
+                        } else if (filter === 'valid') {
+                            show = (status === 'valid' || status === 'expiring');
+                        } else if (filter === 'expiring') {
+                            show = (status === 'expiring');
+                        } else if (filter === 'overdue') {
+                            show = (status === 'overdue');
+                        }
+
+                        if (show) {
+                            card.style.display = 'flex';
+                            visibleCount++;
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+
+                    if (emptyMsg) {
+                        emptyMsg.style.display = (visibleCount === 0 && cards.length > 0) ? 'block' : 'none';
+                    }
+                });
+            });
+        });
+    </script>
+}

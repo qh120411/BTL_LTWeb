@@ -1,0 +1,546 @@
+/* ==========================================================================
+   UTC LIBRARY - HOME PAGE STYLES (Trang chủ Reader chuẩn Figma 100%)
+   ========================================================================== */
+
+:root {
+    --utc-blue: #0079BA;
+    --utc-blue-hover: #0068A0;
+    --utc-navy: #072B61;
+    --utc-ice-bg: #F1FAFF;
+    --utc-ice-hover: #EBF6FD;
+    --utc-border-light: #DEEBF4;
+    --utc-icon-box: #E2F2FE;
+    --utc-text-muted: #64748B;
+    --utc-text-body: #475569;
+}
+
+body {
+    background-color: #FFFFFF !important;
+    font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+.utc-home-wrapper {
+    background-color: #FFFFFF;
+    padding: 24px 0 60px;
+    min-height: 100vh;
+}
+
+.utc-home-wrapper .container-xl,
+.utc-home-wrapper .container {
+    max-width: 1480px;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+/* ===== 1. FLOATING SEARCH BOX (CHUẨN FIGMA) ===== */
+.utc-search-panel-box {
+    background: #FFFFFF;
+    border: 1px solid var(--utc-border-light);
+    border-radius: 4px;
+    padding: 24px 28px 20px;
+    margin-bottom: 24px;
+}
+
+.utc-catalog-tabs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.utc-tab-btn {
+    display: inline-block;
+    padding: 8px 22px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid var(--utc-border-light);
+    background-color: #FFFFFF;
+    color: var(--utc-navy);
+    transition: all 0.15s ease;
+}
+
+.utc-tab-btn:hover {
+    color: var(--utc-blue);
+    border-color: var(--utc-blue);
+}
+
+.utc-tab-btn.active {
+    background-color: var(--utc-blue);
+    border-color: var(--utc-blue);
+    color: #FFFFFF;
+    font-weight: 600;
+}
+
+.utc-search-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.utc-search-input-field {
+    flex: 1;
+}
+
+.utc-figma-search-input {
+    width: 100%;
+    height: 44px;
+    background-color: var(--utc-ice-bg);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 0 16px;
+    font-size: 14px;
+    color: var(--utc-navy);
+    outline: none;
+    font-family: inherit;
+    transition: all 0.2s ease;
+}
+
+.utc-figma-search-input:focus {
+    background-color: #FFFFFF;
+    border-color: var(--utc-blue);
+    box-shadow: 0 0 0 3px rgba(0, 121, 186, 0.12);
+}
+
+.utc-figma-search-input::placeholder {
+    color: var(--utc-text-muted);
+}
+
+.utc-figma-search-btn {
+    height: 44px;
+    padding: 0 24px;
+    background-color: var(--utc-blue);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background-color 0.2s ease;
+}
+
+.utc-figma-search-btn:hover {
+    background-color: var(--utc-blue-hover);
+}
+
+.utc-search-footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.utc-search-helper-text {
+    font-size: 13px;
+    color: var(--utc-text-muted);
+}
+
+.utc-search-adv-link {
+    font-size: 13.5px;
+    color: var(--utc-blue);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.utc-search-adv-link:hover {
+    text-decoration: underline;
+}
+
+/* ===== 2. QUICK ACCESS PILLS (CHUẨN FIGMA) ===== */
+.utc-quick-access-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 36px;
+}
+
+.utc-quick-pill {
+    background-color: var(--utc-ice-bg);
+    border: 1px solid var(--utc-border-light);
+    border-radius: 6px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.utc-quick-pill:hover {
+    background-color: var(--utc-ice-hover);
+    border-color: var(--utc-blue);
+    transform: translateY(-1px);
+}
+
+.utc-quick-pill-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background-color: var(--utc-icon-box);
+    color: var(--utc-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.utc-quick-pill-text {
+    min-width: 0;
+}
+
+.utc-quick-pill-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--utc-navy);
+    line-height: 1.3;
+}
+
+.utc-quick-pill-sub {
+    font-size: 12.5px;
+    color: var(--utc-text-muted);
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 2px;
+}
+
+/* ===== 3. NEWS & EDITORIAL (3 CỘT PHẲNG CHUẨN FIGMA) ===== */
+.utc-editorial-grid-section {
+    display: grid;
+    grid-template-columns: 340px 1fr 340px;
+    gap: 32px;
+    margin-bottom: 28px;
+}
+
+.utc-column-main-heading {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--utc-navy);
+    margin-bottom: 20px;
+}
+
+.utc-tag-cyan {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--utc-blue);
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.utc-tag-muted {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--utc-text-muted);
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+}
+
+/* Cột 1 */
+.utc-highlight-row {
+    display: block;
+    padding-bottom: 14px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--utc-border-light);
+    text-decoration: none;
+}
+
+.utc-highlight-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.utc-highlight-row-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--utc-navy);
+    line-height: 1.35;
+    margin-bottom: 4px;
+    transition: color 0.15s ease;
+}
+
+.utc-highlight-row:hover .utc-highlight-row-title {
+    color: var(--utc-blue);
+}
+
+.utc-highlight-row-author {
+    font-size: 12.5px;
+    color: var(--utc-text-muted);
+}
+
+/* Cột 2 */
+.utc-col-feature {
+    text-decoration: none;
+}
+
+.utc-feature-image-wrapper {
+    width: 100%;
+    height: 330px;
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: var(--utc-ice-bg);
+    margin-bottom: 14px;
+}
+
+.utc-feature-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.utc-feature-article-title {
+    font-size: 21px;
+    font-weight: 700;
+    color: var(--utc-navy);
+    line-height: 1.35;
+    margin-bottom: 8px;
+}
+
+.utc-feature-article-desc {
+    font-size: 14px;
+    color: var(--utc-text-body);
+    line-height: 1.5;
+    margin-bottom: 0;
+}
+
+/* Cột 3 */
+.utc-notice-link-row {
+    display: block;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--utc-border-light);
+    text-decoration: none;
+}
+
+.utc-notice-text {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--utc-navy);
+    transition: color 0.15s ease;
+}
+
+.utc-notice-link-row:hover .utc-notice-text {
+    color: var(--utc-blue);
+}
+
+.utc-quick-nav-block {
+    margin-top: 24px;
+}
+
+.utc-quick-nav-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--utc-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 12px;
+}
+
+.utc-quick-nav-item {
+    display: block;
+    font-size: 13.5px;
+    color: var(--utc-navy);
+    text-decoration: none;
+    margin-bottom: 8px;
+    transition: all 0.15s ease;
+}
+
+.utc-quick-nav-item:hover {
+    color: var(--utc-blue);
+    padding-left: 3px;
+}
+
+/* ===== DIVIDER ===== */
+.utc-figma-divider {
+    border: none;
+    border-top: 1px solid var(--utc-border-light);
+    margin: 32px 0 28px;
+}
+
+/* ===== 4. NGUỒN HỌC LIỆU (CHUẨN FIGMA) ===== */
+.utc-section-tag-heading {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--utc-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 18px;
+}
+
+.utc-collections-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+.utc-collection-flat-item {
+    display: block;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.utc-collection-flat-title {
+    font-size: 16.5px;
+    font-weight: 700;
+    color: var(--utc-navy);
+    margin-bottom: 4px;
+    transition: color 0.15s ease;
+}
+
+.utc-collection-flat-item:hover .utc-collection-flat-title {
+    color: var(--utc-blue);
+}
+
+.utc-collection-flat-desc {
+    font-size: 13px;
+    color: var(--utc-text-muted);
+    line-height: 1.4;
+    margin-bottom: 0;
+}
+
+/* ===== 5. SÁCH & GIÁO TRÌNH (4 THẺ VIỀN MỎNG CHUẨN FIGMA) ===== */
+.utc-btn-see-all {
+    display: inline-block;
+    padding: 6px 16px;
+    background-color: #FFFFFF;
+    border: 1px solid var(--utc-border-light);
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--utc-navy);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.15s ease;
+}
+
+.utc-btn-see-all:hover {
+    border-color: var(--utc-blue);
+    color: var(--utc-blue);
+}
+
+.utc-books-shelf-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+.utc-shelf-card {
+    background-color: #FFFFFF;
+    border: 1px solid var(--utc-border-light);
+    border-radius: 4px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.utc-shelf-card:hover {
+    border-color: var(--utc-blue);
+    box-shadow: 0 4px 12px rgba(0, 121, 186, 0.08);
+    transform: translateY(-2px);
+}
+
+.utc-shelf-card-title {
+    font-size: 15.5px;
+    font-weight: 700;
+    color: var(--utc-navy);
+    line-height: 1.35;
+    flex: 1;
+    margin-bottom: 0;
+    transition: color 0.15s ease;
+}
+
+.utc-shelf-card:hover .utc-shelf-card-title {
+    color: var(--utc-blue);
+}
+
+.utc-shelf-card-author {
+    font-size: 12.5px;
+    color: var(--utc-text-muted);
+}
+
+/* ===== 6. DỊCH VỤ BẠN ĐỌC (3 THẺ NỀN #F1FAFF CHUẨN FIGMA) ===== */
+.utc-services-shelf-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.utc-service-card-figma {
+    background-color: var(--utc-ice-bg);
+    border: 1px solid var(--utc-border-light);
+    border-radius: 6px;
+    padding: 26px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.utc-service-card-figma:hover {
+    background-color: #FFFFFF;
+    border-color: var(--utc-blue);
+    box-shadow: 0 4px 12px rgba(0, 121, 186, 0.08);
+    transform: translateY(-2px);
+}
+
+.utc-service-card-title {
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--utc-navy);
+    margin-bottom: 4px;
+}
+
+.utc-service-card-link {
+    font-size: 13px;
+    color: var(--utc-text-muted);
+    transition: color 0.15s ease;
+}
+
+.utc-service-card-figma:hover .utc-service-card-link {
+    color: var(--utc-blue);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+    .utc-editorial-grid-section {
+        grid-template-columns: 1fr;
+    }
+    .utc-quick-access-bar {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .utc-collections-grid,
+    .utc-books-shelf-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .utc-services-shelf-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .utc-quick-access-bar {
+        grid-template-columns: 1fr;
+    }
+    .utc-collections-grid,
+    .utc-books-shelf-grid {
+        grid-template-columns: 1fr;
+    }
+    .utc-search-bar-row {
+        flex-direction: column;
+    }
+    .utc-figma-search-btn {
+        width: 100%;
+    }
+}

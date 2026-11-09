@@ -1,0 +1,170 @@
+﻿@model BTL_LTWEB.Areas.Admin.ViewModels.IncidentIndexViewModel
+@{
+    ViewData["Title"] = "Mất / hỏng & Bồi thường";
+    ViewBag.ActiveMenu = "Incident";
+}
+
+<div class="admin-breadcrumb">THƯ VIỆN UTC / QUẢN TRỊ</div>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="admin-page-title mb-1">Sổ quỹ tài chính &amp; Bồi thường sự cố (@Model.Receipts.Count giao dịch)</h1>
+        <div class="text-muted small">
+            
+        </div>
+    </div>
+    <a href="/Admin/Circulation" class="btn btn-utc-primary">
+        <i class="bi bi-journal-arrow-down me-1"></i> Quầy lưu thông mượn trả
+    </a>
+</div>
+
+<!-- 3 Card Thống kê tài chính chuẩn theo CSDL (Soft Semantic Colors) -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="kpi-card kpi-card-success">
+            <div class="kpi-title text-success fw-bold">Tổng quỹ tiền đã thu</div>
+            <div class="kpi-value text-success">@Model.TongThu.ToString("N0") đ</div>
+            <div class="small text-muted mt-1">Tổng cộng các khoản thu nộp muộn &amp; đền bù vào CSDL</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="kpi-card kpi-card-warning">
+            <div class="kpi-title text-warning fw-bold">Thu từ phạt nộp muộn</div>
+            <div class="kpi-value text-warning">@Model.ThuNopMuon.ToString("N0") đ</div>
+            <div class="small text-muted mt-1">Khoản thu chế tài quá hạn 100.000 đ/cuốn theo quy định</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="kpi-card kpi-card-danger">
+            <div class="kpi-title text-danger fw-bold">Thu từ đền bù mất / hỏng</div>
+            <div class="kpi-value text-danger">@Model.ThuDenBu.ToString("N0") đ</div>
+            <div class="small text-muted mt-1">Tiền đền bù tài liệu hư hại hoặc làm mất học liệu</div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Bộ lọc tìm kiếm & loại khoản thu -->
+<form method="get" asp-action="Index" class="mb-4">
+    <div class="row g-3">
+        <div class="col-md-7">
+            <label class="form-label-utc">Tra cứu phiếu thu / Bạn đọc</label>
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                <input type="text" name="search" class="form-control form-control-utc border-start-0" 
+                       placeholder="Mã phiếu thu, mã sinh viên, họ tên người nộp, tên sách..." value="@Model.SearchKeyword" />
+                @if (!string.IsNullOrWhiteSpace(Model.SearchKeyword))
+                {
+                    <a href="@Url.Action("Index", new { type = Model.SelectedType })" class="btn btn-outline-secondary" title="Xóa tìm kiếm">
+                        <i class="bi bi-x-lg"></i>
+                    </a>
+                }
+            </div>
+        </div>
+        <div class="col-md-5">
+            <label class="form-label-utc">Khoản thu</label>
+            <select name="type" class="form-select form-control-utc" onchange="this.form.submit()">
+                <option value="Tất cả" selected="@(Model.SelectedType == "Tất cả")">Tất cả khoản thu</option>
+                <option value="Nộp muộn" selected="@(Model.SelectedType == "Nộp muộn")">Phạt nộp muộn (Quá hạn)</option>
+                <option value="Đền bù mất/hỏng" selected="@(Model.SelectedType == "Đền bù mất/hỏng")">Đền bù mất / hỏng sách</option>
+            </select>
+        </div>
+    </div>
+</form>
+
+<!-- Bảng danh sách phiếu thu tài chính -->
+<div class="admin-table-card shadow-sm border" style="border-radius: 8px; overflow: hidden;">
+    <div class="table-responsive">
+        <table class="table-utc mb-0">
+            <thead>
+                <tr style="background-color: #f1f8fc;">
+                    <th style="width: 13%;">Mã phiếu</th>
+                    <th style="width: 20%;">Người nộp tiền</th>
+                    <th style="width: 25%;">Tài liệu / Sách liên quan</th>
+                    <th style="width: 14%;">Khoản thu</th>
+                    <th style="width: 14%;">Hình thức xử lý</th>
+                    <th style="width: 14%; text-align: right;">Số tiền thu</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Receipts.Count == 0)
+                {
+                    <tr>
+                        <td colspan="6" class="py-4 text-center text-muted">
+                            <i class="bi bi-inbox fs-3 d-block mb-1 text-secondary"></i>
+                            Không có giao dịch tài chính nào phù hợp với bộ lọc hiện tại.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var r in Model.Receipts)
+                    {
+                        <tr>
+                            <td>
+                                <strong class="font-monospace text-primary">@r.MaPhieuThu</strong>
+                                <div class="text-muted" style="font-size: 11px;">@r.NgayThu</div>
+                            </td>
+                            <td>
+                                <div class="fw-bold text-navy">@r.NguoiNop</div>
+                                <div class="text-muted small">MSV/GV: <code>@r.MaBD</code></div>
+                            </td>
+                            <td>
+                                <div class="fw-medium text-dark text-truncate" style="max-width: 240px;" title="@r.TenSach">
+                                    @r.TenSach
+                                </div>
+                                @if (!string.IsNullOrWhiteSpace(r.GhiChu))
+                                {
+                                    <div class="text-muted" style="font-size: 11.5px;">
+                                        <em>@r.GhiChu</em>
+                                    </div>
+                                }
+                            </td>
+                            <td>
+                                @if (r.LoaiKhoanThu.Contains("Nộp muộn"))
+                                {
+                                    <span class="badge bg-warning text-dark px-2 py-1" style="font-size: 11.5px;">
+                                        <i class="bi bi-clock-history me-1"></i> Nộp muộn
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger text-white px-2 py-1" style="font-size: 11.5px;">
+                                        <i class="bi bi-shield-exclamation me-1"></i> Đền bù mất/hỏng
+                                    </span>
+                                }
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark border px-2 py-1" style="font-size: 11.5px;">
+                                    @r.HinhThucXuLy
+                                </span>
+                            </td>
+                            <td style="text-align: right;">
+                                @if (r.SoTien > 0)
+                                {
+                                    <strong class="text-success fs-6 font-monospace">@r.SoTien.ToString("N0") đ</strong>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small">0 đ (Đã đền sách mới)</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+            <tfoot class="bg-light">
+                <tr>
+                    <td colspan="4" class="fw-bold py-3 text-navy">
+                        <i class="bi bi-calculator me-1 text-primary"></i> Tổng cộng ghi nhận: <strong>@Model.Receipts.Count phiếu thu</strong>
+                    </td>
+                    <td colspan="2" class="text-end py-3">
+                        <span class="text-muted me-2">TỔNG TIỀN ĐÃ THU VÀO QUỸ:</span>
+                        <span class="badge bg-success fs-6 px-3 py-2 font-monospace">@Model.Receipts.Sum(x => x.SoTien).ToString("N0") VNĐ</span>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,266 @@
+/* ==========================================================================
+   UTC LIBRARY - BOOK DETAIL STYLES (Modern Blue Academic)
+   ========================================================================== */
+
+.utc-detail-section {
+    padding: 32px 0 64px;
+    background-color: var(--utc-bg-page, var(--utc-page-bg, #EDF4FA));
+    min-height: calc(100vh - 200px);
+}
+
+.utc-detail-header-row {
+    margin-bottom: 28px;
+}
+
+.utc-detail-main-layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 36px;
+    margin-bottom: 36px;
+    align-items: flex-start;
+}
+
+/* 3D Realistic Book Cover */
+.utc-detail-cover-card-img-wrap {
+    width: 100%;
+    height: 460px;
+    border-radius: var(--utc-radius-card, 10px);
+    overflow: hidden;
+    box-shadow: var(--utc-shadow-card);
+    background-color: var(--utc-surface, #ffffff);
+    border: 1px solid var(--utc-border, #e2e8f0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.utc-detail-cover-card-img-wrap::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 16px;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.04) 50%, rgba(255,255,255,0.15) 100%);
+    pointer-events: none;
+}
+
+.utc-detail-cover-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.utc-detail-cover-card {
+    height: 460px;
+    background: linear-gradient(145deg, #eaf4fc 0%, #f0f7fe 100%);
+    border-radius: var(--utc-radius-card, 10px);
+    border: 1px solid var(--utc-border, #e2e8f0);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: var(--utc-shadow-card);
+}
+
+.utc-detail-cover-tag {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--utc-primary-dark, #075985);
+    letter-spacing: 0.5px;
+}
+
+.utc-detail-cover-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--utc-text-primary, #0b2e4f);
+    line-height: 1.3;
+}
+
+.utc-detail-cover-footer {
+    font-size: 13px;
+    color: var(--utc-text-muted, #94a3b8);
+}
+
+/* Detail Content */
+.utc-detail-content {
+    background-color: var(--utc-surface, #ffffff);
+    border-radius: var(--utc-radius-card, 10px);
+    border: 1px solid var(--utc-border, #e2e8f0);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: var(--utc-shadow-card);
+}
+
+.utc-detail-status-banner {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--utc-success, #668d7b);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--utc-success-bg, #edf4ef);
+    border: 1px solid var(--utc-success-border, #d2e4d8);
+    padding: 6px 16px;
+    border-radius: var(--utc-radius-badge, 4px);
+    width: fit-content;
+}
+
+.utc-detail-desc {
+    font-size: 15px;
+    color: var(--utc-text-secondary, #718096);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.utc-metadata-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.utc-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.utc-meta-label {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--utc-text-muted, #94a3b8);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.utc-meta-value {
+    background-color: var(--utc-surface-secondary, #f8fafc);
+    border: 1px solid var(--utc-border, #e2e8f0);
+    border-radius: var(--utc-radius-input, 9px);
+    padding: 10px 14px;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--utc-text-primary, #0b2e4f);
+}
+
+.utc-stock-summary {
+    font-size: 14.5px;
+    color: var(--utc-text-secondary, #718096);
+    font-weight: 500;
+    padding: 12px 16px;
+    background-color: var(--utc-surface-secondary, #f8fafc);
+    border-radius: var(--utc-radius-input, 9px);
+    border: 1px dashed var(--utc-border, #e2eaf2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.utc-detail-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+
+.utc-borrow-guide-box {
+    background-color: var(--utc-primary-light, #eaf4fc);
+    border-radius: var(--utc-radius-card, 10px);
+    border: 1px solid rgba(8, 125, 187, 0.18);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.utc-borrow-guide-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--utc-primary-dark, #075985);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.utc-borrow-guide-desc {
+    font-size: 14px;
+    color: var(--utc-text-primary, #0b2e4f);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Copies list table */
+.utc-copies-section {
+    background-color: var(--utc-surface, #ffffff);
+    border-radius: var(--utc-radius-card, 10px);
+    border: 1px solid var(--utc-border, #e2e8f0);
+    padding: 28px;
+    box-shadow: var(--utc-shadow-card);
+    margin-top: 36px;
+}
+
+.utc-copies-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--utc-text-primary, #0b2e4f);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.utc-copies-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--utc-border, #e2e8f0);
+}
+
+.utc-copies-table th {
+    background-color: var(--utc-surface-secondary, #f8fafc);
+    color: var(--utc-text-primary, #0b2e4f);
+    padding: 12px 16px;
+    font-size: 13.5px;
+    font-weight: 700;
+    text-align: left;
+    border-bottom: 1.5px solid var(--utc-border, #e2eaf2);
+}
+
+.utc-copies-table td {
+    padding: 12px 16px;
+    font-size: 14px;
+    color: var(--utc-text-primary, #0b2e4f);
+    border-bottom: 1px solid var(--utc-border, #e2eaf2);
+    vertical-align: middle;
+}
+
+.utc-copies-table tr:last-child td {
+    border-bottom: none;
+}
+
+.utc-copies-table tr:hover td {
+    background-color: #fafcfe;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .utc-detail-main-layout {
+        grid-template-columns: 1fr;
+    }
+    .utc-detail-cover-card-img-wrap,
+    .utc-detail-cover-card {
+        height: 380px;
+        max-width: 320px;
+        margin: 0 auto;
+    }
+    .utc-metadata-grid {
+        grid-template-columns: 1fr;
+    }
+}

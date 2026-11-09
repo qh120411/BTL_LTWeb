@@ -1,243 +1,225 @@
-@model BTL_LTWEB.Areas.Reader.ViewModels.SearchIndexViewModel
+@model BTL_LTWEB.Areas.Reader.Models.BookSearchViewModel
+
 @{
-    ViewData["Title"] = "Tra cứu học liệu - Thư viện UTC";
+    ViewData["Title"] = "Tra cứu học liệu OPAC";
+    var keyword = Model.Keyword ?? "";
+    var category = Model.Category ?? "all";
+    var major = Model.Major ?? "all";
+    var language = Model.Language ?? "all";
+    var availability = Model.Availability ?? "all";
+
+    bool hasActiveFilter = !string.IsNullOrEmpty(keyword) 
+                           || category != "all" 
+                           || major != "all" 
+                           || language != "all" 
+                           || availability != "all";
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/search/search.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
 }
 
-<div class="search-page-wrapper">
-    <div class="container search-container">
+<section class="utc-search-page-section">
+    <div class="container-xl px-3 px-md-4">
+        <!-- Breadcrumb -->
+        <nav class="utc-breadcrumb mb-2" aria-label="breadcrumb">
+            <a href="/Reader/Home" class="text-decoration-none" style="color: var(--utc-primary);">Trang chủ</a>
+            <span style="color: var(--utc-border);">&bull;</span>
+            <span style="color: var(--utc-text-muted);">Cổng bạn đọc</span>
+            <span style="color: var(--utc-border);">&bull;</span>
+            <span style="color: var(--utc-text-primary); font-weight: 700;">Tra cứu OPAC</span>
+        </nav>
 
-        <!-- 1. Breadcrumb điều hướng -->
-        <div class="search-breadcrumb">
-            <a href="/Reader" class="breadcrumb-link">TRANG CHỦ</a>
-            <span class="breadcrumb-separator">/</span>
-            <span class="breadcrumb-current">TRA CỨU HỌC LIỆU</span>
-        </div>
+        <h1 class="utc-page-title-main">
+            @if (category == "thesis")
+            {
+                <span>Luận văn, Luận án &amp; Công trình nghiên cứu</span>
+            }
+            else if (category == "books")
+            {
+                <span>Sách &amp; Giáo trình Đại học UTC</span>
+            }
+            else
+            {
+                <span>Tra cứu học liệu trực tuyến (OPAC)</span>
+            }
+        </h1>
+        <p class="utc-page-subtitle-main">
+            Hệ thống tra cứu mục lục trực tuyến OPAC dành cho sinh viên, giảng viên trường Đại học Giao thông Vận tải.
+        </p>
 
-        <!-- 2. Tiêu đề trang & Giới thiệu -->
-        <div class="search-hero-header">
-            <h1 class="search-display-title">Tìm tài liệu bạn cần</h1>
-            <p class="search-display-sub">
-                Tra cứu sách và giáo trình trước khi đến thư viện. Bạn không cần đăng nhập để tìm kiếm.
-            </p>
-        </div>
+        <!-- Search Bar -->
+        <form action="/Reader/Search" method="get" class="utc-search-box-large">
+            <input type="hidden" name="category" value="@category" />
+            <input type="hidden" name="major" value="@major" />
+            <input type="hidden" name="language" value="@language" />
+            <input type="hidden" name="availability" value="@availability" />
 
-        <!-- 3. Thanh tìm kiếm từ khóa chính -->
-        <form method="get" action="/Reader/Search" class="search-primary-bar">
-            <!-- Giữ lại các bộ lọc hiện tại nếu có -->
-            @if (!string.IsNullOrEmpty(Model.SelectedLoai))
-            {
-                <input type="hidden" name="type" value="@Model.SelectedLoai" />
-            }
-            @if (!string.IsNullOrEmpty(Model.SelectedTheLoai))
-            {
-                <input type="hidden" name="theloai" value="@Model.SelectedTheLoai" />
-            }
-            @if (!string.IsNullOrEmpty(Model.SelectedNgonNgu))
-            {
-                <input type="hidden" name="lang" value="@Model.SelectedNgonNgu" />
-            }
-            @if (!string.IsNullOrEmpty(Model.SelectedTinhTrang))
-            {
-                <input type="hidden" name="status" value="@Model.SelectedTinhTrang" />
-            }
-
-            <div class="search-main-input-box">
-                <svg class="search-input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-                <input type="text"
-                       name="q"
-                       class="search-main-input"
-                       placeholder="Tìm theo tên sách, tác giả, nhà xuất bản hoặc mã tài liệu…"
-                       value="@Model.Keyword"
-                       autocomplete="off" />
+            <div class="utc-search-box-field">
+                <label class="utc-field-label">Từ khóa tìm kiếm (nhan đề, tác giả, chuyên ngành, mã ISBN)</label>
+                <input type="text" 
+                       name="keyword" 
+                       id="opacSearchInput"
+                       class="utc-field-input" 
+                       value="@keyword" 
+                       placeholder="Nhập từ khóa tìm kiếm (Ví dụ: Python, Cấu trúc dữ liệu, Giải tích, Cầu đường, Triết học...)" />
             </div>
-            <button type="submit" class="btn-search-primary">Tìm kiếm →</button>
+            <button type="submit" class="btn-utc-primary">
+                <i class="bi bi-search me-1"></i> Tra cứu OPAC
+            </button>
+            @if (!string.IsNullOrEmpty(keyword))
+            {
+                <a href="/Reader/Search?category=@category&major=@major&language=@language&availability=@availability" 
+                   class="btn-utc-secondary">
+                    <i class="bi bi-x-lg me-1"></i> Xóa từ khóa
+                </a>
+            }
         </form>
 
-        <!-- 4. Khu vực chính: Bộ lọc bên trái + Kết quả bên phải -->
-        <div class="search-layout-grid">
+        <!-- 2-Column Catalog Layout -->
+        <div class="utc-catalog-layout">
+            <!-- Sidebar: Bộ lọc kết quả -->
+            <aside class="utc-filter-sidebar">
+                <div class="utc-filter-header">
+                    <h3 class="utc-filter-title">
+                        <i class="bi bi-funnel-fill text-primary"></i> Lọc kết quả
+                    </h3>
+                    @if (hasActiveFilter)
+                    {
+                        <a href="/Reader/Search" class="btn-utc-ghost text-danger p-0" style="font-size: 13px;">
+                            <i class="bi bi-arrow-counterclockwise"></i> Đặt lại
+                        </a>
+                    }
+                </div>
 
-            <!-- CỘT TRÁI: BỘ LỌC TÌM KIẾM (Sidebar) -->
-            <aside class="search-sidebar-filter">
-                <div class="filter-panel-card">
-                    <div class="filter-header-row">
-                        <h2 class="filter-panel-title">Lọc kết quả</h2>
-                        @if (!string.IsNullOrEmpty(Model.Keyword) || !string.IsNullOrEmpty(Model.SelectedLoai) || !string.IsNullOrEmpty(Model.SelectedTheLoai) || !string.IsNullOrEmpty(Model.SelectedNgonNgu) || !string.IsNullOrEmpty(Model.SelectedTinhTrang))
-                        {
-                            <a href="/Reader/Search" class="filter-clear-link">Xóa bộ lọc</a>
-                        }
+                <form action="/Reader/Search" method="get" id="filterForm">
+                    <input type="hidden" name="keyword" value="@keyword" />
+
+                    <!-- Filter 1: Loại tài liệu -->
+                    <div class="utc-filter-group mb-3">
+                        <label class="utc-field-label">Loại tài liệu</label>
+                        <select name="category" class="utc-filter-select" onchange="document.getElementById('filterForm').submit()">
+                            <option value="all" selected="@(category == "all" ? "selected" : null)">Tất cả học liệu</option>
+                            <option value="books" selected="@(category == "books" ? "selected" : null)">Sách &amp; giáo trình</option>
+                            <option value="thesis" selected="@(category == "thesis" ? "selected" : null)">Luận văn, luận án</option>
+                            <option value="journal" selected="@(category == "journal" ? "selected" : null)">Báo &amp; tạp chí</option>
+                        </select>
                     </div>
 
-                    <form method="get" action="/Reader/Search" class="filter-form">
-                        @if (!string.IsNullOrEmpty(Model.Keyword))
-                        {
-                            <input type="hidden" name="q" value="@Model.Keyword" />
-                        }
+                    <!-- Filter 2: Chuyên ngành đào tạo -->
+                    <div class="utc-filter-group mb-3">
+                        <label class="utc-field-label">Chuyên ngành đào tạo</label>
+                        <select name="major" class="utc-filter-select" onchange="document.getElementById('filterForm').submit()">
+                            <option value="all" selected="@(major == "all" ? "selected" : null)">Tất cả chuyên ngành</option>
+                            <option value="cntt" selected="@(major == "cntt" ? "selected" : null)">Công nghệ thông tin</option>
+                            <option value="toanly" selected="@(major == "toanly" ? "selected" : null)">Khoa học cơ bản &amp; Toán lý</option>
+                            <option value="xaydung" selected="@(major == "xaydung" ? "selected" : null)">Kỹ thuật công trình &amp; Giao thông</option>
+                            <option value="kinhte" selected="@(major == "kinhte" ? "selected" : null)">Kinh tế vận tải &amp; Logistics</option>
+                            <option value="chinhtri" selected="@(major == "chinhtri" ? "selected" : null)">Lý luận chính trị &amp; Pháp luật</option>
+                        </select>
+                    </div>
 
-                        <!-- Lọc 1: Loại học liệu -->
-                        <div class="filter-field-group">
-                            <label class="filter-label">Loại học liệu</label>
-                            <select name="type" class="filter-select" onchange="this.form.submit()">
-                                @foreach (var opt in Model.LoaiOptions)
-                                {
-                                    if (opt == Model.SelectedLoai || (string.IsNullOrEmpty(Model.SelectedLoai) && opt == "Tất cả loại học liệu"))
-                                    {
-                                        <option value="@opt" selected="selected">@opt</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@opt">@opt</option>
-                                    }
-                                }
-                            </select>
-                        </div>
+                    <!-- Filter 3: Ngôn ngữ xuất bản -->
+                    <div class="utc-filter-group mb-3">
+                        <label class="utc-field-label">Ngôn ngữ xuất bản</label>
+                        <select name="language" class="utc-filter-select" onchange="document.getElementById('filterForm').submit()">
+                            <option value="all" selected="@(language == "all" ? "selected" : null)">Tất cả ngôn ngữ</option>
+                            <option value="vie" selected="@(language == "vie" ? "selected" : null)">Tiếng Việt</option>
+                            <option value="eng" selected="@(language == "eng" ? "selected" : null)">Tiếng Anh</option>
+                        </select>
+                    </div>
 
-                        <!-- Lọc 2: Chuyên ngành / Lĩnh vực -->
-                        <div class="filter-field-group">
-                            <label class="filter-label">Chuyên ngành</label>
-                            <select name="theloai" class="filter-select" onchange="this.form.submit()">
-                                @foreach (var opt in Model.TheLoaiOptions)
-                                {
-                                    if (opt == Model.SelectedTheLoai || (string.IsNullOrEmpty(Model.SelectedTheLoai) && opt == "Tất cả chuyên ngành"))
-                                    {
-                                        <option value="@opt" selected="selected">@opt</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@opt">@opt</option>
-                                    }
-                                }
-                            </select>
-                        </div>
+                    <!-- Filter 4: Tình trạng lưu thông -->
+                    <div class="utc-filter-group mb-3">
+                        <label class="utc-field-label">Tình trạng lưu thông</label>
+                        <select name="availability" class="utc-filter-select" onchange="document.getElementById('filterForm').submit()">
+                            <option value="all" selected="@(availability == "all" ? "selected" : null)">Tất cả tình trạng</option>
+                            <option value="available" selected="@(availability == "available" ? "selected" : null)">Có bản sẵn tại thư viện</option>
+                        </select>
+                    </div>
 
-                        <!-- Lọc 3: Ngôn ngữ -->
-                        <div class="filter-field-group">
-                            <label class="filter-label">Ngôn ngữ</label>
-                            <select name="lang" class="filter-select" onchange="this.form.submit()">
-                                @foreach (var opt in Model.NgonNguOptions)
-                                {
-                                    if (opt == Model.SelectedNgonNgu || (string.IsNullOrEmpty(Model.SelectedNgonNgu) && opt == "Tất cả ngôn ngữ"))
-                                    {
-                                        <option value="@opt" selected="selected">@opt</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@opt">@opt</option>
-                                    }
-                                }
-                            </select>
-                        </div>
+                    <button type="submit" class="btn-utc-primary w-100 mb-2">
+                        <i class="bi bi-funnel me-1"></i> Áp dụng bộ lọc
+                    </button>
 
-                        <!-- Lọc 4: Tình trạng -->
-                        <div class="filter-field-group">
-                            <label class="filter-label">Tình trạng tài liệu</label>
-                            <select name="status" class="filter-select" onchange="this.form.submit()">
-                                @foreach (var opt in Model.TinhTrangOptions)
-                                {
-                                    if (opt == Model.SelectedTinhTrang || (string.IsNullOrEmpty(Model.SelectedTinhTrang) && opt == "Tất cả trạng thái"))
-                                    {
-                                        <option value="@opt" selected="selected">@opt</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@opt">@opt</option>
-                                    }
-                                }
-                            </select>
-                        </div>
+                    @if (hasActiveFilter)
+                    {
+                        <a href="/Reader/Search" class="btn-utc-outline w-100 text-center text-decoration-none">
+                            <i class="bi bi-x-circle me-1"></i> Xóa tất cả bộ lọc
+                        </a>
+                    }
+                </form>
 
-                        <button type="submit" class="btn-filter-apply">Áp dụng lọc</button>
-                    </form>
-
-                    <!-- Ghi chú chân bộ lọc -->
-                    <p class="filter-notice-text">
-                        Tra cứu công khai. Quyền mượn phụ thuộc nhóm bạn đọc.
-                    </p>
-                </div>
             </aside>
 
-            <!-- CỘT PHẢI: KẾT QUẢ DANH MỤC HỌC LIỆU -->
-            <main class="search-results-col">
-                <div class="results-header-bar">
-                    <p class="results-count-text">
-                        <strong>@Model.TotalItems</strong> tài liệu trong danh mục
-                        @if (!string.IsNullOrEmpty(Model.Keyword))
-                        {
-                            <span>với từ khóa "<strong>@Model.Keyword</strong>"</span>
-                        }
-                    </p>
+            <!-- Results List -->
+            <div class="utc-catalog-results">
+                <div class="utc-catalog-results-header">
+                    <div class="utc-results-count">
+                        Tìm thấy <span>@Model.TotalCount</span> học liệu phù hợp
+                    </div>
                 </div>
 
-                @if (Model.Results.Count > 0)
+                @if (!Model.Items.Any())
                 {
-                    <div class="search-books-grid">
-                        @foreach (var book in Model.Results)
-                        {
-                            <a href="/Reader/Document/Detail/@book.MaTL" class="search-book-card">
-                                <div class="book-card-top">
-                                    <p class="search-book-tag">@book.TheLoai</p>
-                                    <h3 class="search-book-title">@book.TenTL</h3>
-                                    <p class="search-book-author">@book.TacGia</p>
-                                </div>
-
-                                <div class="book-card-meta">
-                                    <span class="meta-pill">@book.DinhDang</span>
-                                    <span class="meta-pill">@book.NgonNgu</span>
-                                </div>
-
-                                <div class="book-card-bottom">
-                                    @if (book.SoBanSanCo > 0)
-                                    {
-                                        <div class="availability-badge available">
-                                            <span class="status-dot"></span>
-                                            <span>@book.SoBanSanCo bản sẵn có</span>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <div class="availability-badge unavailable">
-                                            <span class="status-dot"></span>
-                                            <span>Đang mượn hết</span>
-                                        </div>
-                                    }
-                                    <span class="card-action-link">Xem chi tiết →</span>
-                                </div>
+                    <div class="utc-empty-state">
+                        <div class="utc-empty-state-icon">
+                            <i class="bi bi-search"></i>
+                        </div>
+                        <h4 class="utc-empty-state-title">Không tìm thấy tài liệu phù hợp</h4>
+                        <p class="utc-empty-state-desc">
+                            Không có kết quả nào khớp với các tiêu chí tìm kiếm hoặc bộ lọc hiện tại của bạn. Vui lòng thử từ khóa khác hoặc xóa bộ lọc.
+                        </p>
+                        <div>
+                            <a href="/Reader/Search" class="btn-utc-primary text-decoration-none">
+                                <i class="bi bi-arrow-counterclockwise me-1"></i> Đặt lại tất cả bộ lọc
                             </a>
-                        }
+                        </div>
                     </div>
                 }
                 else
                 {
-                    <div class="search-empty-box">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="empty-icon">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                        <h3 class="empty-title">Không tìm thấy tài liệu phù hợp</h3>
-                        <p class="empty-desc">
-                            Vui lòng thử lại với từ khóa khác hoặc xóa bớt tiêu chí lọc.
-                        </p>
-                        <a href="/Reader/Search" class="btn-figma-secondary">Xem tất cả tài liệu</a>
+                    <div class="utc-catalog-cards-grid">
+                        @foreach (var book in Model.Items)
+                        {
+                            var bookCover = string.IsNullOrWhiteSpace(book.CoverImage)
+                                ? "/images/covers/sach_01.jpg"
+                                : (book.CoverImage.StartsWith("/") ? book.CoverImage : "/" + book.CoverImage.TrimStart('~').TrimStart('/'));
+                            <a href="/Reader/Document/Details/@book.Id" class="utc-catalog-book-card">
+                                @if (!string.IsNullOrEmpty(bookCover))
+                                {
+                                    <div class="utc-book-cover-wrap">
+                                        <img src="@bookCover" alt="@book.Title" class="utc-book-cover-img" onerror="this.src='/images/covers/sach_01.jpg'" />
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="utc-typographic-cover" style="background-color: @(book.Category == "thesis" ? "#fef3c7" : "#e0f2fe");">
+                                        <span class="utc-cover-tag" style="color: @(book.Category == "thesis" ? "#92400e" : "var(--utc-navy)");">
+                                            UTC / @(book.Category == "thesis" ? "CÔNG TRÌNH NGHIÊN CỨU" : "HỌC LIỆU")
+                                        </span>
+                                        <div class="utc-cover-title" style="color: @(book.Category == "thesis" ? "#78350f" : "var(--utc-navy)"); font-size: 20px;">
+                                            @book.Title
+                                        </div>
+                                        <span class="utc-cover-sub" style="color: @(book.Category == "thesis" ? "#92400e" : "var(--utc-muted)");">
+                                            @book.Authors · @book.Year
+                                        </span>
+                                    </div>
+                                }
+                                <span class="utc-book-category">@book.MajorName.ToUpper()</span>
+                                <div class="utc-book-card-name" title="@book.Title">@book.Title</div>
+                                <div class="text-muted small text-truncate">
+                                    <i class="bi bi-person me-1"></i>@book.Authors
+                                </div>
+                                <span class="utc-book-meta-badge @(book.IsOnline ? "is-online" : "is-available")">
+                                    <i class="bi @(book.IsOnline ? "bi-file-earmark-pdf-fill" : "bi-check2-circle") me-1"></i>
+                                    @book.StockBadgeText
+                                </span>
+                            </a>
+                        }
                     </div>
                 }
-
-                <!-- Banner thông báo cuối danh mục (Xem tình trạng trước khi đến thư viện) -->
-                <div class="search-info-banner">
-                    <h3 class="banner-title">Xem tình trạng trước khi đến thư viện</h3>
-                    <p class="banner-desc">
-                        Mở chi tiết học liệu để xem số bản sẵn có, vị trí giá sách và hướng dẫn sử dụng tài liệu tại chỗ hoặc mượn về nhà.
-                    </p>
-                </div>
-            </main>
-
+            </div>
         </div>
-
     </div>
-</div>
-
+</section>

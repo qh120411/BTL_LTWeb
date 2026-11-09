@@ -1,0 +1,109 @@
+﻿@model BTL_LTWEB.Areas.Admin.ViewModels.OverdueIndexViewModel
+@{
+    ViewData["Title"] = "Quản lý quá hạn";
+    ViewBag.ActiveMenu = "Overdue";
+}
+
+<div class="admin-breadcrumb">THƯ VIỆN UTC / QUẢN TRỊ</div>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="admin-page-title mb-0">Quản lý sách quá hạn (@Model.OverdueList.Count lượt)</h1>
+        <div class="text-muted small">Thời hạn mượn quy định: 1 năm &middot; Mức phạt: 100.000 VNĐ / cuốn</div>
+    </div>
+    <button class="btn btn-utc-primary" type="button" onclick="alert('Đã gửi email nhắc nhở tự động đến tất cả bạn đọc quá hạn.')">
+        <i class="bi bi-bell-fill me-1"></i> Gửi thông báo nhắc trả
+    </button>
+</div>
+
+
+
+<!-- Bộ lọc tìm kiếm -->
+<form method="get" asp-action="Index" class="mb-4">
+    <div class="row g-3">
+        <div class="col-md-8">
+            <label class="form-label-utc">Tra cứu bạn đọc quá hạn</label>
+            <input type="text" name="search" class="form-control form-control-utc" 
+                   placeholder="Mã sinh viên, họ tên bạn đọc, tên sách..." value="@Model.SearchKeyword" />
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+            <button type="submit" class="btn btn-utc-primary w-100">
+                <i class="bi bi-search me-1"></i> Tìm kiếm
+            </button>
+        </div>
+    </div>
+</form>
+
+<!-- Bảng danh sách quá hạn -->
+<div class="admin-table-card">
+    <div class="table-responsive">
+        <table class="table-utc">
+            <thead>
+                <tr>
+                    <th style="width: 13%;">Mã GD</th>
+                    <th style="width: 22%;">Bạn đọc vi phạm</th>
+                    <th style="width: 25%;">Tên sách / Tài liệu</th>
+                    <th style="width: 12%;">Hạn trả</th>
+                    <th style="width: 10%;">Quá hạn</th>
+                    <th style="width: 9%; text-align: right;">Tiền phạt</th>
+                    <th style="width: 9%; text-align: center;">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.OverdueList)
+                {
+                    <tr>
+                        <td><strong>@item.MaGD</strong></td>
+                        <td>
+                            <a href="/Admin/Reader/Details/@item.MaBD" class="fw-bold text-navy text-decoration-none">
+                                @item.HoTen
+                            </a>
+                            <div class="text-muted small">MSV: @item.MaBD</div>
+                        </td>
+                        <td>
+                            <div class="fw-medium">@item.TenSach</div>
+                        </td>
+                        <td>
+                            <strong class="text-danger">@item.HanTra</strong>
+                            <div class="text-muted" style="font-size: 11.5px;">(Hạn 1 năm)</div>
+                        </td>
+                        <td>
+                            <span class="badge bg-danger text-white px-2 py-1">
+                                Quá @item.SoNgayQuaHan ngày
+                            </span>
+                        </td>
+                        <td style="text-align: right;">
+                            <strong class="text-danger">@item.TienPhat.ToString("N0") đ</strong>
+                        </td>
+                        <td style="text-align: center;">
+                            <button type="button" class="btn btn-outline-danger btn-sm px-2 py-1 btn-return-trigger"
+                                    data-magd="@item.MaGD"
+                                    data-mabd="@item.MaBD"
+                                    data-hoten="@item.HoTen"
+                                    data-tensach="@item.TenSach"
+                                    data-quahan="true"
+                                    data-returnurl="/Admin/Overdue"
+                                    title="Tiếp nhận trả sách hoặc bồi thường mất/hỏng">
+                                <i class="bi bi-arrow-return-left"></i> Trả sách
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot class="bg-light">
+                <tr>
+                    <td colspan="4" class="fw-bold py-3">
+                        <i class="bi bi-calculator me-1 text-primary"></i> Tổng cộng ghi nhận: <strong>@Model.OverdueList.Count lượt mượn quá hạn</strong>
+                    </td>
+                    <td colspan="3" class="text-end py-3">
+                        <span class="text-muted me-2">TỔNG TIỀN PHẠT CẦN THU:</span>
+                        <span class="badge bg-danger fs-6 px-3 py-2 font-monospace">@Model.TongTienPhat.ToString("N0") VNĐ</span>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<!-- MODAL DÙNG CHUNG: XÁC NHẬN TRẢ SÁCH HOẶC BỒI THƯỜNG MẤT/HỎNG -->
+<!-- Modal dùng chung đã được nhúng tại _AdminLayout -->

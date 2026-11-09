@@ -1,0 +1,247 @@
+﻿@model ReaderIndexViewModel
+@{
+    ViewData["Title"] = "Quản lý bạn đọc";
+    ViewBag.ActiveMenu = "Reader";
+}
+
+<div class="admin-breadcrumb">THƯ VIỆN UTC / QUẢN TRỊ</div>
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+        <h1 class="admin-page-title mb-1">Quản lý bạn đọc (@Model.Readers.Count bạn đọc)</h1>
+        <div class="text-muted small">
+            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle me-1">
+                <i class="bi bi-book-half me-1"></i> @Model.BorrowingReaders.Count bạn đọc đang mượn sách
+            </span>
+            <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary-subtle">
+                <i class="bi bi-person-check me-1"></i> @Model.NonBorrowingReaders.Count bạn đọc chưa mượn sách
+            </span>
+            
+        </div>
+    </div>
+
+</div>
+
+
+
+<!-- Bộ lọc tìm kiếm theo Tên hoặc Mã sinh viên / Mã giảng viên -->
+<form method="get" asp-action="Index" class="mb-4" id="readerFilterForm">
+    <div class="row g-3">
+        <div class="col-md-7">
+            <label class="form-label-utc">Tra cứu theo Tên hoặc Mã sinh viên / Mã giảng viên</label>
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                <input type="text" name="search" class="form-control form-control-utc border-start-0" 
+                       placeholder="Nhập tên hoặc Mã sinh viên (VD: 242630923, Đạt...) / Mã GV (VD: GV001)..." 
+                       value="@Model.SearchKeyword" />
+                @if (!string.IsNullOrWhiteSpace(Model.SearchKeyword))
+                {
+                    <a href="@Url.Action("Index", new { group = Model.SelectedGroup })" class="btn btn-outline-secondary" title="Xóa tìm kiếm">
+                        <i class="bi bi-x-lg"></i>
+                    </a>
+                }
+                <button class="btn btn-utc-primary px-3" type="submit">
+                    <i class="bi bi-arrow-right"></i> Tra cứu
+                </button>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <label class="form-label-utc">Nhóm bạn đọc</label>
+            <select name="group" class="form-select form-control-utc" onchange="this.form.submit()">
+                @foreach (var g in Model.Groups)
+                {
+                    <option value="@g" selected="@(g == Model.SelectedGroup)">@g</option>
+                }
+            </select>
+        </div>
+    </div>
+</form>
+
+<!-- ======================================================= -->
+<!-- BẢNG 1 (BẢNG TRÊN): DANH SÁCH BẠN ĐỌC ĐANG MƯỢN SÁCH -->
+<!-- ======================================================= -->
+<div class="mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-2 px-1">
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-primary text-white p-2 rounded-2">
+                <i class="bi bi-journal-bookmark-fill fs-6"></i>
+            </span>
+            <div>
+                <h5 class="fw-bold text-navy mb-0" style="font-size: 16px;">
+                    1. DANH SÁCH BẠN ĐỌC ĐANG MƯỢN SÁCH (@Model.BorrowingReaders.Count bạn đọc)
+                </h5>
+                
+            </div>
+        </div>
+        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-1 fw-bold">
+            Đang lưu hành
+        </span>
+    </div>
+
+    <div class="admin-table-card shadow-sm border" style="border-radius: 8px; overflow: hidden;">
+        <div class="table-responsive">
+            <table class="table-utc mb-0">
+                <thead>
+                    <tr style="background-color: #f1f8fc;">
+                        <th style="width: 14%;">Mã SV / Mã GV</th>
+                        <th style="width: 22%;">Họ và tên</th>
+                        <th style="width: 22%;">Lớp / Đơn vị</th>
+                        <th style="width: 14%;">Quyền sử dụng</th>
+                        <th style="width: 11%; text-align: center;">Đang mượn</th>
+                        <th style="width: 10%; text-align: center;">Quá hạn</th>
+                        <th style="width: 7%; text-align: right;">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.BorrowingReaders.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="7" class="py-4 text-center text-muted">
+                                <i class="bi bi-inbox fs-3 d-block mb-1 text-secondary"></i>
+                                Không có bạn đọc nào đang mượn sách phù hợp với điều kiện tra cứu hiện tại.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var r in Model.BorrowingReaders)
+                        {
+                            <tr>
+                                <td>
+                                    <strong class="font-monospace text-primary">@r.MaBD</strong>
+                                    @if (r.Nhom == "Giảng viên")
+                                    {
+                                        <span class="badge bg-info-subtle text-info border border-info-subtle ms-1" style="font-size: 10px;">GV</span>
+                                    }
+                                </td>
+                                <td>
+                                    <a asp-action="Details" asp-route-id="@r.MaBD" class="fw-bold text-navy text-decoration-none">
+                                        @r.HoTen
+                                    </a>
+                                </td>
+                                <td><span class="text-muted small">@r.LopKhoa</span></td>
+                                <td>
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1" style="font-size: 11.5px;">
+                                        <i class="bi bi-check-circle-fill me-1"></i> @r.QuyenSuDung
+                                    </span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span class="badge bg-primary text-white px-2 py-1" style="font-weight: 600;">
+                                        <i class="bi bi-book me-1"></i> @r.SoSachDangMuon cuốn
+                                    </span>
+                                </td>
+                                <td style="text-align: center;">
+                                    @if (r.SoSachQuaHan > 0)
+                                    {
+                                        <span class="badge bg-danger text-white px-2 py-1" style="font-weight: 600;">
+                                            <i class="bi bi-exclamation-triangle-fill me-1"></i> @r.SoSachQuaHan cuốn
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success-subtle text-success" style="font-size: 11px;">Còn hạn</span>
+                                    }
+                                </td>
+                                <td style="text-align: right;">
+                                    <a asp-action="Details" asp-route-id="@r.MaBD" class="btn btn-outline-primary btn-sm px-2 py-1" style="font-size: 12px; white-space: nowrap;">
+                                        Xem hồ sơ
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- ======================================================= -->
+<!-- BẢNG 2 (BẢNG DƯỚI): DANH SÁCH BẠN ĐỌC KHÔNG MƯỢN SÁCH -->
+<!-- ======================================================= -->
+<div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-2 px-1">
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-secondary text-white p-2 rounded-2">
+                <i class="bi bi-person-check-fill fs-6"></i>
+            </span>
+            <div>
+                <h5 class="fw-bold text-navy mb-0" style="font-size: 16px;">
+                    2. DANH SÁCH BẠN ĐỌC KHÔNG MƯỢN / CHƯA MƯỢN SÁCH (@Model.NonBorrowingReaders.Count bạn đọc)
+                </h5>
+                
+            </div>
+        </div>
+        <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-3 py-1 fw-bold">
+            Thẻ sẵn sàng
+        </span>
+    </div>
+
+    <div class="admin-table-card shadow-sm border" style="border-radius: 8px; overflow: hidden;">
+        <div class="table-responsive">
+            <table class="table-utc mb-0">
+                <thead>
+                    <tr style="background-color: #f8fafc;">
+                        <th style="width: 14%;">Mã SV / Mã GV</th>
+                        <th style="width: 22%;">Họ và tên</th>
+                        <th style="width: 22%;">Lớp / Đơn vị</th>
+                        <th style="width: 14%;">Quyền sử dụng</th>
+                        <th style="width: 11%; text-align: center;">Tình trạng mượn</th>
+                        <th style="width: 10%; text-align: center;">Hạn mức</th>
+                        <th style="width: 7%; text-align: right;">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.NonBorrowingReaders.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="7" class="py-4 text-center text-muted">
+                                <i class="bi bi-inbox fs-3 d-block mb-1 text-secondary"></i>
+                                Không có bạn đọc nào thuộc danh sách chưa mượn sách phù hợp với điều kiện tra cứu.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var r in Model.NonBorrowingReaders)
+                        {
+                            <tr>
+                                <td>
+                                    <strong class="font-monospace text-dark">@r.MaBD</strong>
+                                    @if (r.Nhom == "Giảng viên")
+                                    {
+                                        <span class="badge bg-info-subtle text-info border border-info-subtle ms-1" style="font-size: 10px;">GV</span>
+                                    }
+                                </td>
+                                <td>
+                                    <a asp-action="Details" asp-route-id="@r.MaBD" class="fw-bold text-navy text-decoration-none">
+                                        @r.HoTen
+                                    </a>
+                                </td>
+                                <td><span class="text-muted small">@r.LopKhoa</span></td>
+                                <td>
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1" style="font-size: 11.5px;">
+                                        <i class="bi bi-check-circle-fill me-1"></i> @r.QuyenSuDung
+                                    </span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span class="badge bg-light text-muted border px-2 py-1" style="font-size: 11.5px;">
+                                        Chưa mượn (0 cuốn)
+                                    </span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span class="text-muted small">Tối đa 5 cuốn</span>
+                                </td>
+                                <td style="text-align: right;">
+                                    <a asp-action="Details" asp-route-id="@r.MaBD" class="btn btn-outline-primary btn-sm px-2 py-1" style="font-size: 12px; white-space: nowrap;">
+                                        Xem hồ sơ
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

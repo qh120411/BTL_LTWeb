@@ -1,0 +1,434 @@
+@model BTL_LTWEB.Areas.Admin.ViewModels.UserManagementIndexViewModel
+@{
+    Layout = "~/Views/Shared/Admin/_AdminLayout.cshtml";
+    ViewData["Title"] = "Tài khoản & phân quyền";
+    ViewBag.ActiveMenu = "User";
+}
+
+<div class="admin-breadcrumb">
+    <i class="bi bi-shield-check text-primary me-1"></i> THƯ VIỆN UTC / QUẢN TRỊ
+</div>
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <h1 class="admin-page-title mb-0">Tài khoản &amp; phân quyền</h1>
+            @if (Model.IsCurrentUserSuperAdmin)
+            {
+                <span class="badge" style="background: #e0f2fe; color: #0284c7; font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 20px; border: 1px solid #bae6fd;">
+                    <i class="bi bi-shield-fill-check me-1"></i> Admin tối cao
+                </span>
+            }
+        </div>
+        
+    </div>
+    <div>
+        @if (Model.IsCurrentUserSuperAdmin)
+        {
+            <button class="btn btn-utc-primary" type="button" data-bs-toggle="modal" data-bs-target="#addStaffModal">
+                <i class="bi bi-person-plus-fill me-1"></i> + Thêm cán bộ
+            </button>
+        }
+        else
+        {
+            <button class="btn btn-utc-primary disabled opacity-50" type="button" disabled title="Chỉ Quản trị viên tối cao (admin) mới có quyền thêm cán bộ">
+                <i class="bi bi-lock-fill me-1"></i> + Thêm cán bộ
+            </button>
+        }
+    </div>
+</div>
+
+@if (!Model.IsCurrentUserSuperAdmin)
+{
+    <!-- Cảnh báo chế độ chỉ xem khi không phải Admin tối cao -->
+    <div class="alert mb-4 border-0 d-flex align-items-center gap-3 p-3 shadow-sm" style="background: #fffbeb; border-left: 4px solid #f59e0b !important; border-radius: 12px; color: #92400e;">
+        <i class="bi bi-shield-exclamation fs-3 text-warning"></i>
+        <div>
+            <div class="fw-bold" style="font-size: 14px;">Chế độ chỉ xem phân quyền</div>
+            <div class="small" style="font-size: 13px;">
+                Bạn đang đăng nhập với tài khoản <strong>@Model.CurrentUsername</strong>. Theo quy định bảo mật hệ thống: <strong>Chỉ Quản trị viên tối cao (admin) mới có quyền thay đổi phân quyền và thêm mới tài khoản cán bộ.</strong>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+<!-- Bộ lọc tìm kiếm & vai trò trực tiếp trên nền -->
+<form method="get" action="/Admin/User" class="row g-3 mb-4 align-items-end">
+    <div class="col-md-7">
+        <label class="form-label-utc">Tra cứu cán bộ</label>
+        <div class="input-group">
+            <span class="input-group-text bg-white border-end-0 text-muted" style="border-radius: 12px 0 0 12px; border-color: #e2e8f0;">
+                <i class="bi bi-search text-primary"></i>
+            </span>
+            <input type="text" name="keyword" value="@Model?.Keyword" class="form-control form-control-utc border-start-0" 
+                   style="border-radius: 0 12px 12px 0;"
+                   placeholder="Mã cán bộ, họ tên, email..." />
+            @if (!string.IsNullOrWhiteSpace(Model?.Keyword))
+            {
+                <a href="/Admin/User" class="btn btn-outline-utc ms-2" title="Xóa bộ lọc" style="border-radius: 12px;">
+                    <i class="bi bi-x-lg"></i>
+                </a>
+            }
+        </div>
+    </div>
+    <div class="col-md-5">
+        <label class="form-label-utc">Vai trò</label>
+        <select name="role" class="form-select form-control-utc" onchange="this.form.submit()" style="border-radius: 12px;">
+            <option value="Tất cả vai trò" selected="@(string.IsNullOrEmpty(Model?.SelectedRole) || Model?.SelectedRole == "Tất cả vai trò")">Tất cả vai trò</option>
+            <option value="ADMIN" selected="@(Model?.SelectedRole == "ADMIN")">Quản trị viên (QTV)</option>
+            <option value="QUANLY_BANDOC" selected="@(Model?.SelectedRole == "QUANLY_BANDOC")">Quản lý bạn đọc (QLB)</option>
+            <option value="QUANLY_TAILIEU" selected="@(Model?.SelectedRole == "QUANLY_TAILIEU")">Thủ thư mượn trả (TTM)</option>
+        </select>
+    </div>
+</form>
+
+<!-- Bảng danh sách cán bộ -->
+<div class="admin-table-card">
+    <table class="table-utc">
+        <thead>
+            <tr>
+                <th style="width: 14%;">Mã NV</th>
+                <th style="width: 25%;">Họ tên</th>
+                <th style="width: 22%;">Tên đăng nhập</th>
+                <th style="width: 17%;">Vai trò</th>
+                <th style="width: 10%;">Trạng thái</th>
+                <th style="width: 12%; text-align: center;">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model?.StaffList != null && Model.StaffList.Any())
+            {
+                @foreach (var s in Model.StaffList)
+                {
+                    <tr id="row-account-@s.MaTaiKhoan">
+                        <td>
+                            <strong class="font-monospace text-primary">
+                                @s.MaNV
+                            </strong>
+                            @if (s.IsSuperAdminAccount)
+                            {
+                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle ms-1" style="font-size: 10px;" title="Tài khoản Quản trị viên cấp cao nhất">
+                                    <i class="bi bi-star-fill"></i> Tối cao
+                                </span>
+                            }
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="d-flex align-items-center justify-content-center fw-bold text-white shadow-sm" 
+                                     style="width: 34px; height: 34px; border-radius: 50%; background: @(s.IsSuperAdminAccount ? "linear-gradient(135deg, #e11d48, #fb7185)" : "linear-gradient(135deg, #0284c7, #38bdf8)"); font-size: 13px;">
+                                    @(string.IsNullOrEmpty(s.HoTen) ? "U" : s.HoTen.Trim().Substring(s.HoTen.Trim().LastIndexOf(' ') + 1)[0].ToString().ToUpper())
+                                </div>
+                                <div>
+                                    <div class="fw-semibold text-dark" style="font-size: 14px;">@s.HoTen</div>
+                                    <div class="text-muted" style="font-size: 11.5px;">@s.Email</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="text-secondary small font-monospace">@s.TenDangNhap</span>
+                            @if (s.IsCurrentLoggedInUser)
+                            {
+                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle ms-1" style="font-size: 10px;">
+                                    <i class="bi bi-person-fill"></i> Bạn
+                                </span>
+                            }
+                        </td>
+                        <td id="role-cell-@s.MaTaiKhoan">
+                            @if (s.VaiTroCode == "ADMIN")
+                            {
+                                <span class="badge-role-admin">
+                                    <i class="bi bi-shield-fill-check"></i> Quản trị viên (QTV)
+                                </span>
+                            }
+                            else if (s.VaiTroCode == "QUANLY_BANDOC")
+                            {
+                                <span class="badge-role-reader">
+                                    <i class="bi bi-people-fill"></i> Quản lý bạn đọc (QLB)
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge-role-catalog">
+                                    <i class="bi bi-journal-bookmark-fill"></i> Thủ thư mượn trả (TTM)
+                                </span>
+                            }
+                        </td>
+                        <td>
+                            <span class="badge-status badge-available">
+                                @s.TrangThai
+                            </span>
+                        </td>
+                        <td style="text-align: center;">
+                            @if (s.IsCurrentLoggedInUser)
+                            {
+                                <!-- Quy tắc: Không tự sửa được chính mình -->
+                                <span class="badge bg-light text-secondary border px-2 py-1" style="font-size: 11.5px; cursor: not-allowed;" title="Bạn không thể tự sửa quyền của chính mình">
+                                    <i class="bi bi-lock-fill text-muted me-1"></i>Chính bạn
+                                </span>
+                                <div class="text-muted" style="font-size: 10px; margin-top: 2px;">(Không thể tự sửa)</div>
+                            }
+                            else if (s.CanEdit)
+                            {
+                                <!-- Quy tắc: Chỉ admin tối cao mới sửa quyền được các cán bộ khác -->
+                                <button type="button" class="btn btn-sm btn-outline-primary px-2 py-1" 
+                                        style="border-radius: 8px; font-size: 12.5px; font-weight: 500;"
+                                        onclick="openEditRoleModal('@s.MaTaiKhoan', '@s.MaNV', '@s.HoTen', '@s.VaiTroCode', '@s.TenDangNhap')">
+                                    <i class="bi bi-pencil-square me-1"></i>Sửa quyền
+                                </button>
+                            }
+                            else
+                            {
+                                <!-- Không có quyền chỉnh sửa -->
+                                <span class="badge bg-light text-muted border px-2 py-1" style="font-size: 11.5px; cursor: not-allowed;" title="Chỉ Quản trị viên tối cao (admin) mới có quyền chỉnh sửa quyền cán bộ">
+                                    <i class="bi bi-shield-lock-fill text-secondary me-1"></i>Khóa sửa
+                                </span>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-5">
+                        <i class="bi bi-inbox fs-2 d-block mb-2 text-primary opacity-50"></i>
+                        Không tìm thấy cán bộ nào phù hợp với điều kiện tìm kiếm.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="admin-table-note">
+    <i class="bi bi-info-circle-fill text-primary"></i>
+    <span>Mỗi tài khoản được cấp quyền truy cập vào các phân hệ nghiệp vụ tương ứng theo tiêu chuẩn quản trị Thư viện UTC. Chỉ Quản trị viên tối cao mới được cấp hoặc thay đổi quyền.</span>
+</div>
+
+<!-- Modal Thêm cán bộ (Chỉ Quản trị viên tối cao mới thực hiện được) -->
+<div class="modal fade" id="addStaffModal" tabindex="-1" aria-labelledby="addStaffModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 20px; border: 1px solid #e2eef8; box-shadow: 0 20px 45px rgba(2, 132, 199, 0.16);">
+            <div class="modal-header bg-white text-dark py-3 px-4 border-bottom" style="background: #ffffff !important; border-bottom: 1px solid #e2eaf2 !important;">
+                <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2" id="addStaffModalLabel">
+                    <i class="bi bi-person-plus-fill text-primary"></i> Thêm tài khoản cán bộ thư viện
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="addStaffForm" onsubmit="submitAddStaff(event)">
+                    <div class="mb-3">
+                        <label class="form-label-utc">Mã cán bộ (Mã NV) <span class="text-danger">*</span></label>
+                        <input type="text" id="newStaffMa" class="form-control form-control-utc" placeholder="VD: NV26-04" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label-utc">Họ và tên cán bộ <span class="text-danger">*</span></label>
+                        <input type="text" id="newStaffName" class="form-control form-control-utc" placeholder="VD: Hoàng Minh Châu" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label-utc">Email đăng nhập <span class="text-danger">*</span></label>
+                        <input type="email" id="newStaffEmail" class="form-control form-control-utc" placeholder="VD: chau.demo@utc.edu.vn" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label-utc">Phân quyền vai trò <span class="text-danger">*</span></label>
+                        <select id="newStaffRole" class="form-select form-control-utc">
+                            <option value="ADMIN">Quản trị viên (QTV) - Toàn bộ quyền</option>
+                            <option value="QUANLY_BANDOC" selected>Quản lý bạn đọc (QLB) - Lưu thông, Thẻ, Phạt</option>
+                            <option value="QUANLY_TAILIEU">Thủ thư mượn trả (TTM) - Quản lý học liệu</option>
+                        </select>
+                    </div>
+                    <div class="p-3 mb-2 rounded-3" style="background-color: #f8fbff; border: 1px dashed #bae6fd;">
+                        <div class="small text-muted">
+                            <i class="bi bi-shield-lock-fill text-primary me-1"></i> Mật khẩu mặc định khởi tạo sẽ được băm SHA-256 an toàn trong CSDL SQL Server: <strong>Tên+MãNV</strong> (VD: <em>ChauNV26-04</em>).
+                        </div>
+                    </div>
+                    <div class="modal-footer px-0 pb-0 pt-3" style="border-top: 1px solid #f1f5f9;">
+                        <button type="button" class="btn btn-outline-utc" data-bs-dismiss="modal">Hủy bỏ</button>
+                        <button type="submit" class="btn btn-utc-primary" id="btnAddStaffSubmit">
+                            <i class="bi bi-check-lg"></i> Cấp tài khoản
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Sửa quyền cán bộ (Chỉ mở khi là Admin tối cao và không phải chính mình) -->
+<div class="modal fade" id="editRoleModal" tabindex="-1" aria-labelledby="editRoleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 20px; border: 1px solid #e2eef8; box-shadow: 0 20px 45px rgba(2, 132, 199, 0.16);">
+            <div class="modal-header bg-white text-dark py-3 px-4 border-bottom" style="background: #ffffff !important; border-bottom: 1px solid #e2eaf2 !important;">
+                <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2" id="editRoleModalLabel">
+                    <i class="bi bi-shield-lock-fill text-primary"></i> Phân quyền tài khoản cán bộ
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <input type="hidden" id="editStaffAccountId" />
+                <div class="mb-3">
+                    <label class="form-label-utc">Cán bộ thư viện</label>
+                    <input type="text" id="editStaffName" class="form-control form-control-utc" readonly style="background-color: #f8fafc;" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label-utc">Tên đăng nhập</label>
+                    <input type="text" id="editStaffLogin" class="form-control form-control-utc" readonly style="background-color: #f8fafc;" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label-utc">Chọn vai trò phân quyền mới</label>
+                    <select id="editStaffRole" class="form-select form-control-utc">
+                        <option value="ADMIN">Quản trị viên (QTV) - Toàn bộ quyền</option>
+                        <option value="QUANLY_BANDOC">Quản lý bạn đọc (QLB) - Mượn trả, quá hạn, thẻ bạn đọc</option>
+                        <option value="QUANLY_TAILIEU">Thủ thư mượn trả (TTM) - Quản lý học liệu sách/tài liệu</option>
+                    </select>
+                </div>
+                <div class="p-3 rounded-3" style="background-color: #f0fdf4; border: 1px solid #bbf7d0;">
+                    <div class="small text-success">
+                        <i class="bi bi-check-circle-fill me-1"></i> Quyền truy cập phân hệ sẽ được cập nhật trực tiếp vào SQL Server và có hiệu lực ngay trong phiên đăng nhập của cán bộ.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid #f1f5f9; padding: 16px 24px;">
+                <button type="button" class="btn btn-outline-utc" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-utc-primary" id="btnSaveRole" onclick="saveStaffRole()">
+                    <i class="bi bi-save2-fill me-1"></i> Lưu phân quyền
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    var isSuperAdmin = @(Model.IsCurrentUserSuperAdmin ? "true" : "false");
+    var currentUsername = '@Model.CurrentUsername';
+
+    function openEditRoleModal(maTaiKhoan, manv, hoten, role, login) {
+        if (!isSuperAdmin) {
+            alert('Từ chối quyền: Chỉ Quản trị viên tối cao (admin) mới có quyền chỉnh sửa phân quyền cán bộ!');
+            return;
+        }
+
+        if (login && login.toLowerCase() === currentUsername.toLowerCase()) {
+            alert('Theo quy định bảo mật: Bạn không thể tự chỉnh sửa quyền hạn của chính mình!');
+            return;
+        }
+
+        document.getElementById('editStaffAccountId').value = maTaiKhoan;
+        document.getElementById('editStaffName').value = hoten + ' (' + manv + ')';
+        document.getElementById('editStaffLogin').value = login || '';
+        document.getElementById('editStaffRole').value = role || 'QUANLY_BANDOC';
+
+        var modal = new bootstrap.Modal(document.getElementById('editRoleModal'));
+        modal.show();
+    }
+
+    function saveStaffRole() {
+        var maTaiKhoan = document.getElementById('editStaffAccountId').value;
+        var role = document.getElementById('editStaffRole').value;
+        var login = document.getElementById('editStaffLogin').value;
+
+        if (!maTaiKhoan || !role) {
+            alert('Vui lòng chọn vai trò phân quyền hợp lệ!');
+            return;
+        }
+
+        if (login && login.toLowerCase() === currentUsername.toLowerCase()) {
+            alert('Theo quy định bảo mật: Bạn không thể tự chỉnh sửa quyền hạn của chính mình!');
+            return;
+        }
+
+        var btn = document.getElementById('btnSaveRole');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Đang lưu...';
+
+        var formData = new URLSearchParams();
+        formData.append('maTaiKhoan', maTaiKhoan);
+        formData.append('vaiTro', role);
+
+        fetch('/Admin/User/UpdateRole', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: formData.toString()
+        })
+        .then(function(res) {
+            return res.json();
+        })
+        .then(function(data) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-save2-fill me-1"></i> Lưu phân quyền';
+
+            if (data.success) {
+                alert(data.message || 'Đã cập nhật phân quyền cán bộ thành công!');
+                var modalEl = document.getElementById('editRoleModal');
+                var modal = bootstrap.Modal.getInstance(modalEl);
+                if (modal) modal.hide();
+                window.location.reload();
+            } else {
+                alert('Lỗi: ' + (data.message || 'Không thể cập nhật phân quyền.'));
+            }
+        })
+        .catch(function(err) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-save2-fill me-1"></i> Lưu phân quyền';
+            alert('Đã xảy ra lỗi khi gửi yêu cầu tới máy chủ: ' + err);
+        });
+    }
+
+    function submitAddStaff(event) {
+        event.preventDefault();
+
+        if (!isSuperAdmin) {
+            alert('Chỉ Quản trị viên tối cao mới có quyền thêm cán bộ!');
+            return;
+        }
+
+        var maNv = document.getElementById('newStaffMa').value;
+        var hoTen = document.getElementById('newStaffName').value;
+        var email = document.getElementById('newStaffEmail').value;
+        var role = document.getElementById('newStaffRole').value;
+
+        var btn = document.getElementById('btnAddStaffSubmit');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Đang cấp tài khoản...';
+
+        var formData = new URLSearchParams();
+        formData.append('maNv', maNv);
+        formData.append('hoTen', hoTen);
+        formData.append('email', email);
+        formData.append('vaiTro', role);
+
+        fetch('/Admin/User/AddStaff', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: formData.toString()
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-check-lg"></i> Cấp tài khoản';
+
+            if (data.success) {
+                alert(data.message);
+                var modalEl = document.getElementById('addStaffModal');
+                var modal = bootstrap.Modal.getInstance(modalEl);
+                if (modal) modal.hide();
+                window.location.reload();
+            } else {
+                alert('Lỗi: ' + data.message);
+            }
+        })
+        .catch(function(err) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-check-lg"></i> Cấp tài khoản';
+            alert('Đã xảy ra lỗi kết nối: ' + err);
+        });
+    }
+</script>
+}

@@ -1,0 +1,113 @@
+/* ==========================================================================
+   UTC LIBRARY DESIGN SYSTEM - FIGMA CLEAN THEME
+   Unified Tokens matching Figma design style (Be Vietnam Pro · Navy / Slate / Ice Blue)
+   ========================================================================== */
+:root {
+    /* ===== PRIMARY BRAND PALETTE (FIGMA CLEAN UTC BLUE) ===== */
+    --utc-primary: #0079BA;            /* Figma Primary Action Blue */
+    --utc-primary-hover: #00679E;      /* Figma Primary Hover */
+    --utc-primary-dark: #005B8C;       /* Primary Dark */
+    --utc-bright-blue: #0284C7;        /* Bright Blue Accent */
+    --utc-primary-light: #F0F7FC;      /* Figma Soft Ice-Blue Container */
+    --utc-soft-blue: #F0F7FC;          /* Soft Sky Tint */
+    --utc-gold: #F59E0B;               /* Muted Gold Accent */
+    
+    /* Header & Footer Institutional */
+    --utc-deep-navy: #0B2E4F;          /* Deep Navy */
+    --utc-primary-navy: #0F5999;       /* Primary Navy */
+    --utc-footer-bg: #176A9E;          /* Figma Exact Footer Blue */
+    
+    /* Surfaces & Layout Backgrounds */
+    --utc-page-bg: #F8FAFC;            /* Clean light background */
+    --utc-bg-page: var(--utc-page-bg);
+    --utc-surface: #FFFFFF;            /* Card & Modal Surface: White */
+    --utc-surface-secondary: #F0F7FC;  /* Secondary / Highlight Surface */
+    --utc-border: #E2E8F0;             /* Crisp clean border */
+    --utc-border-light: #EDF2F7;       /* Ultra-soft Divider */
+    --utc-border-focus: #0079BA;       /* Focus Border */
+    
+    /* Typography Colors */
+    --utc-text-primary: #0B2E4F;       /* Headings: Deep Navy, high contrast */
+    --utc-text-secondary: #334E68;     /* Body: Slate academic */
+    --utc-text-muted: #627D98;         /* Muted Metadata / Subtitle */
+    --utc-text-inverse: #FFFFFF;       /* White text */
+
+    /* Soft Semantic State Colors */
+    --utc-success: #059669;
+    --utc-success-bg: #ECFDF5;
+    --utc-success-border: #A7F3D0;
+    
+    --utc-warning: #D97706;
+    --utc-warning-bg: #FFFBEB;
+    --utc-warning-border: #FDE68A;
+    
+    --utc-danger: #DC2626;
+    --utc-danger-bg: #FEF2F2;
+    --utc-danger-border: #FECACA;
+    
+    --utc-info: #0284C7;
+    --utc-info-bg: #F0F7FC;
+    --utc-info-border: #BAE6FD;
+
+    /* Legacy Alias Mapping */
+    --utc-brand: var(--utc-primary);
+    --utc-brand-hover: var(--utc-primary-hover);
+    --utc-navy: var(--utc-text-primary);
+    --utc-navy-dark: var(--utc-primary-dark);
+    --utc-sky-primary: var(--utc-primary);
+    --utc-sky-hover: var(--utc-primary-hover);
+    --utc-sky-light: var(--utc-primary-light);
+    --utc-sky-soft: var(--utc-page-bg);
+    --utc-paper: var(--utc-surface);
+    --utc-bg-soft: var(--utc-page-bg);
+    --utc-ink: var(--utc-text-primary);
+    --utc-muted: var(--utc-text-secondary);
+    --utc-line: var(--utc-border);
+
+    /* Typography */
+    --utc-font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    
+    --utc-fs-title: 26px;
+    --utc-fs-section: 20px;
+    --utc-fs-card: 16px;
+    --utc-fs-body: 14.5px;
+    --utc-fs-meta: 12.5px;
+    --utc-fs-btn: 14px;
+
+    /* Figma Border Radius (Gọn gàng, thanh thoát 6-10px) */
+    --utc-radius-card: 10px;           /* Clean Card: 10px */
+    --utc-radius-btn: 6px;             /* Figma Clean Button: 6px */
+    --utc-radius-input: 6px;           /* Input: 6px */
+    --utc-radius-badge: 4px;           /* Status Badge: 4px */
+    --utc-radius-dialog: 12px;         /* Modal: 12px */
+    --utc-radius-xs: 4px;
+    --utc-radius-sm: 6px;
+    --utc-radius-md: 6px;
+    --utc-radius-lg: 10px;
+    --utc-radius-xl: 12px;
+    --utc-radius-2xl: 14px;
+    --utc-radius-3xl: 16px;
+    --utc-radius-full: 9999px;
+
+    /* Figma Clean Flat Shadows (Không đổ bóng nặng nề) */
+    --utc-shadow-card: 0 1px 3px rgba(11, 46, 79, 0.05), 0 1px 2px rgba(11, 46, 79, 0.03);
+    --utc-shadow-hover: 0 4px 12px rgba(11, 46, 79, 0.08);
+    --utc-shadow-sm: 0 1px 2px rgba(11, 46, 79, 0.04);
+    --utc-shadow-btn: 0 1px 2px rgba(0, 121, 186, 0.15);
+    --utc-shadow-modal: 0 12px 32px rgba(11, 46, 79, 0.15);
+
+    /* Spacing */
+    --utc-space-1: 4px;
+    --utc-space-2: 8px;
+    --utc-space-3: 12px;
+    --utc-space-4: 16px;
+    --utc-space-5: 20px;
+    --utc-space-6: 24px;
+    --utc-space-8: 32px;
+    --utc-space-10: 40px;
+    --utc-space-12: 48px;
+
+    /* Motion */
+    --utc-transition: all 0.2s ease;
+    --utc-transition-smooth: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}

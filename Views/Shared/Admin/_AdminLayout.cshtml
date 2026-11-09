@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Quản trị Thư viện UTC</title>
+    
+    <!-- Google Fonts: Be Vietnam Pro -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/reader-theme.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/admin-theme.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body class="admin-body">
+    <!-- Header -->
+    <partial name="~/Views/Shared/Admin/_AdminHeader.cshtml" />
+
+    <!-- Container wrapper -->
+    <div class="admin-wrapper">
+        <!-- Sidebar Navigation -->
+        <partial name="~/Views/Shared/Admin/_AdminSidebar.cshtml" />
+
+        <!-- Main Content Area -->
+        <main class="admin-content">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show shadow-sm mb-3" role="alert" style="background-color: #ffffff !important; border: 1px solid var(--utc-border-card, #e2eaf2) !important; border-left: 4px solid var(--utc-success, #668d7b) !important; color: var(--utc-text-dark, #163b5c) !important; border-radius: var(--utc-radius-card, 14px);">
+                    <i class="bi bi-check-circle-fill me-2" style="color: var(--utc-success, #668d7b);"></i> @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-3" role="alert" style="background-color: #ffffff !important; border: 1px solid var(--utc-border-card, #e2eaf2) !important; border-left: 4px solid var(--utc-danger, #a96d72) !important; color: var(--utc-text-dark, #163b5c) !important; border-radius: var(--utc-radius-card, 14px);">
+                    <i class="bi bi-exclamation-triangle-fill me-2" style="color: var(--utc-danger, #a96d72);"></i> @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Modal Trả sách & Bồi thường nhanh dùng chung -->
+    <partial name="~/Views/Shared/Admin/_ReturnAndCompensationModal.cshtml" />
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <!-- Script điều khiển Responsive Menu Drawer trên mobile / tablet -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleBtn = document.getElementById("adminSidebarToggle");
+            const closeBtn = document.getElementById("adminSidebarClose");
+            const sidebar = document.getElementById("adminSidebar");
+            const backdrop = document.getElementById("adminSidebarBackdrop");
+
+            function openSidebar() {
+                if (sidebar) sidebar.classList.add("show");
+                if (backdrop) backdrop.classList.add("show");
+                document.body.classList.add("sidebar-open");
+            }
+
+            function closeSidebar() {
+                if (sidebar) sidebar.classList.remove("show");
+                if (backdrop) backdrop.classList.remove("show");
+                document.body.classList.remove("sidebar-open");
+            }
+
+            if (toggleBtn) {
+                toggleBtn.addEventListener("click", function (e) {
+                    e.stopPropagation();
+                    if (sidebar && sidebar.classList.contains("show")) {
+                        closeSidebar();
+                    } else {
+                        openSidebar();
+                    }
+                });
+            }
+
+            if (closeBtn) {
+                closeBtn.addEventListener("click", closeSidebar);
+            }
+
+            if (backdrop) {
+                backdrop.addEventListener("click", closeSidebar);
+            }
+
+            // Tự động đóng menu khi bấm chọn 1 liên kết trên mobile
+            if (sidebar) {
+                const links = sidebar.querySelectorAll(".sidebar-link, .btn-back-web");
+                links.forEach(l => {
+                    l.addEventListener("click", function () {
+                        if (window.innerWidth <= 992) {
+                            closeSidebar();
+                        }
+                    });
+                });
+            }
+
+            // Phím ESC để đóng nhanh menu
+            document.addEventListener("keydown", function (e) {
+                if (e.key === "Escape" && sidebar && sidebar.classList.contains("show")) {
+                    closeSidebar();
+                }
+            });
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

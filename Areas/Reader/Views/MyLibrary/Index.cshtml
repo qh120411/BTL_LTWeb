@@ -1,0 +1,287 @@
+@model BTL_LTWEB.Areas.Reader.Models.UserProfileViewModel
+@{
+    ViewData["Title"] = "Thư viện của tôi";
+    var studentName = Model?.HoTen ?? (User.Identity?.Name ?? "Đỗ Văn Đạt");
+    var studentId = Model?.MaSinhVien ?? (User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "242630923");
+    var totalBorrowed = Model?.TongSoSachDangMuon ?? 5;
+    var totalOverdue = Model?.SoSachQuaHan ?? 3;
+}
+
+<section class="py-5" style="background-color: var(--utc-bg-soft); min-height: 80vh;">
+    <div class="container">
+        <!-- Breadcrumb & Tiêu đề -->
+        <div class="utc-breadcrumb">CỔNG BẠN ĐỌC / THƯ VIỆN CỦA TÔI</div>
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+                <h1 class="utc-page-title-main mb-1">Thư viện của tôi</h1>
+                <div class="text-muted small">Bạn đọc: <strong>@studentName</strong> (@(studentId.StartsWith("GV") ? "Mã GV" : "Mã SV"): <strong>@studentId</strong> &middot; @(Model?.LopQuanLy ?? "Bạn đọc UTC"))</div>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="/Reader/Profile" class="btn btn-outline-primary">
+                    <i class="bi bi-person-badge me-1"></i> Hồ sơ sinh viên (Profile)
+                </a>
+                <a href="/Reader/Search" class="btn-utc-primary">
+                    <i class="bi bi-search me-1"></i> Tra cứu mượn sách mới
+                </a>
+            </div>
+        </div>
+
+        <!-- 4 Card thống kê cá nhân (Chuẩn Figma 07) -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="p-3 bg-white rounded-utc border-utc shadow-sm">
+                    <div class="text-muted small">Sách đang mượn</div>
+                    <div class="fs-2 fw-bold text-navy">@totalBorrowed</div>
+                    <div class="text-muted small">Thời hạn mượn: 1 năm</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="p-3 bg-white rounded-utc border-utc shadow-sm">
+                    <div class="text-muted small">Sách quá hạn</div>
+                    <div class="fs-2 fw-bold text-danger">@totalOverdue</div>
+                    <div class="text-danger small fw-medium">Tiền phạt: 100k / cuốn</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="p-3 bg-white rounded-utc border-utc shadow-sm">
+                    <div class="text-muted small">Lịch sử đã mượn</div>
+                    <div class="fs-2 fw-bold text-brand">15</div>
+                    <div class="text-muted small">Trong năm học 2026</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="p-3 bg-white rounded-utc border-utc shadow-sm">
+                    <div class="text-muted small">Trạng thái thẻ</div>
+                    <div class="fs-2 fw-bold text-success">Hoạt động</div>
+                    <div class="text-muted small">Hạn thẻ: 30/06/2028</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab chuyển đổi giữa các màn hình 07, 08, 09, 10 -->
+        <div class="bg-white rounded-utc border-utc shadow-sm p-4">
+            <ul class="nav nav-tabs mb-4" id="myLibraryTabs" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active fw-bold text-navy" id="borrowed-tab" data-bs-toggle="tab" data-bs-target="#tab-borrowed">
+                        <i class="bi bi-book-half me-1"></i> Sách đang mượn &amp; Hạn trả (Figma 07)
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link fw-bold text-navy" id="history-tab" data-bs-toggle="tab" data-bs-target="#tab-history">
+                        <i class="bi bi-clock-history me-1"></i> Lịch sử mượn trả (Figma 08)
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link fw-bold text-navy" id="notices-tab" data-bs-toggle="tab" data-bs-target="#tab-notices">
+                        <i class="bi bi-bell-fill me-1"></i> Thông báo của tôi (Figma 09)
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link fw-bold text-navy" id="profile-tab" data-bs-toggle="tab" data-bs-target="#tab-profile">
+                        <i class="bi bi-person-lines-fill me-1"></i> Thông tin bạn đọc (Figma 10)
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="myLibraryTabContent">
+                <!-- Tab 1: Sách đang mượn & Hạn trả (Figma 07) -->
+                <div class="tab-pane fade show active" id="tab-borrowed">
+                    <div class="table-responsive">
+                        <table class="utc-copies-table">
+                            <thead>
+                                <tr>
+                                    <th>Mã GD</th>
+                                    <th>Tên tài liệu / Sách</th>
+                                    <th>Ngày mượn</th>
+                                    <th>Hạn trả (1 năm)</th>
+                                    <th>Tình trạng</th>
+                                    <th>Tiền phạt</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.BorrowedBooks.Any())
+                                {
+                                    foreach (var book in Model.BorrowedBooks)
+                                    {
+                                        <tr>
+                                            <td><strong>@book.MaGD</strong></td>
+                                            <td>
+                                                <div class="fw-bold">@book.TenSach</div>
+                                                <div class="text-muted small">Tác giả: @book.TacGia · Mã vạch: @book.MaVach</div>
+                                            </td>
+                                            <td>@book.NgayMuon.ToString("dd/MM/yyyy")</td>
+                                            <td>
+                                                <strong class="@(book.IsQuaHan ? "text-danger" : "text-success")">
+                                                    @book.HanTra.ToString("dd/MM/yyyy")
+                                                </strong>
+                                            </td>
+                                            <td>
+                                                @if (book.IsQuaHan)
+                                                {
+                                                    <span class="badge-status badge-overdue">
+                                                        <i class="bi bi-exclamation-triangle-fill"></i> Đang quá hạn (@book.SoNgayQuaHan ngày)
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge-status badge-available">
+                                                        <i class="bi bi-check-circle-fill"></i> Còn hạn (@book.SoNgayConLai ngày)
+                                                    </span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (book.IsQuaHan)
+                                                {
+                                                    <strong class="text-danger">@book.TienPhat.ToString("N0") đ</strong>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">0 đ</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (book.IsQuaHan)
+                                                {
+                                                    <a href="/Reader/Profile" class="btn btn-outline-danger btn-sm">Xem chi tiết phạt</a>
+                                                }
+                                                else
+                                                {
+                                                    <button class="btn btn-utc-secondary btn-sm" onclick="alert('Gia hạn trực tuyến thành công thêm 30 ngày!')">Gia hạn sách</button>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                            <tfoot class="bg-light">
+                                <tr>
+                                    <td colspan="5" class="fw-bold py-3">
+                                        Tổng cộng: @totalBorrowed cuốn (@(Model?.SoSachConHan ?? 2) cuốn còn hạn, @totalOverdue cuốn quá hạn)
+                                    </td>
+                                    <td colspan="2" class="text-end py-3">
+                                        <span class="fw-bold me-2">TỔNG PHẢI THANH TOÁN:</span>
+                                        <span class="badge bg-danger fs-6">@(Model?.TongTienPhaiThanhToan.ToString("N0") ?? "300,000") VNĐ</span>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Lịch sử mượn trả (Figma 08) -->
+                <div class="tab-pane fade" id="tab-history">
+                    <div class="table-responsive">
+                        <table class="utc-copies-table">
+                            <thead>
+                                <tr>
+                                    <th>Mã GD</th>
+                                    <th>Tên sách</th>
+                                    <th>Ngày mượn</th>
+                                    <th>Ngày trả</th>
+                                    <th>Thủ thư nhận</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>GD2610100003</strong></td>
+                                    <td>Lập trình Python cơ bản (Bản BS001-02)</td>
+                                    <td>10/10/2026</td>
+                                    <td>20/10/2026</td>
+                                    <td>Trần Thị Lan</td>
+                                    <td><span class="badge-status badge-available"><i class="bi bi-check-circle-fill"></i> Đã trả đúng hạn</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>GD2609150004</strong></td>
+                                    <td>Cấu trúc dữ liệu và giải thuật</td>
+                                    <td>15/09/2026</td>
+                                    <td>28/09/2026</td>
+                                    <td>Phạm Quang Tuấn</td>
+                                    <td><span class="badge-status badge-available"><i class="bi bi-check-circle-fill"></i> Đã trả đúng hạn</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>GD2609010005</strong></td>
+                                    <td>Toán rời rạc và ứng dụng</td>
+                                    <td>01/09/2026</td>
+                                    <td>14/09/2026</td>
+                                    <td>Trần Thị Lan</td>
+                                    <td><span class="badge-status badge-available"><i class="bi bi-check-circle-fill"></i> Đã trả đúng hạn</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Thông báo của tôi (Figma 09) -->
+                <div class="tab-pane fade" id="tab-notices">
+                    <div class="d-flex flex-column gap-3">
+                        <div class="p-3 rounded-utc border-utc bg-soft d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="text-danger fw-bold"><i class="bi bi-exclamation-circle-fill me-1"></i> Cảnh báo sách quá hạn</div>
+                                <div class="small text-muted">Bạn có 3 cuốn sách đã quá hạn mượn (1 năm). Tiền nộp phạt quy định là 100.000 đ/cuốn, tổng phải thanh toán là 300.000 đ. Vui lòng mang sách tới quầy thủ thư tầng 5 Nhà A8 để làm thủ tục hoàn trả.</div>
+                            </div>
+                            <span class="text-muted small">Hôm nay</span>
+                        </div>
+                        <div class="p-3 rounded-utc border-utc bg-soft d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="text-brand fw-bold"><i class="bi bi-info-circle-fill me-1"></i> Nhắc nhở hạn trả sắp tới</div>
+                                <div class="small text-muted">Cuốn sách "Cấu trúc dữ liệu và giải thuật" và "Lập trình Python" vẫn đang trong hạn mượn hợp lệ 1 năm (đến tháng 3 &amp; tháng 5/2027).</div>
+                            </div>
+                            <span class="text-muted small">2 ngày trước</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 4: Thông tin bạn đọc & Hồ sơ thẻ (Figma 10) -->
+                <div class="tab-pane fade" id="tab-profile">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <h4 class="text-navy fw-bold fs-5 mb-3">Hồ sơ định danh bạn đọc</h4>
+                            <div class="utc-meta-item mb-2">
+                                <span class="utc-meta-label">Họ và tên</span>
+                                <div class="utc-meta-value">@studentName</div>
+                            </div>
+                            <div class="utc-meta-item mb-2">
+                                <span class="utc-meta-label">Mã sinh viên / Mã bạn đọc</span>
+                                <div class="utc-meta-value">@studentId</div>
+                            </div>
+                            <div class="utc-meta-item mb-2">
+                                <span class="utc-meta-label">Lớp sinh hoạt / Khóa</span>
+                                <div class="utc-meta-value">CLC Công nghệ thông tin - Anh 1 K65</div>
+                            </div>
+                            <div class="utc-meta-item mb-2">
+                                <span class="utc-meta-label">Khoa đào tạo</span>
+                                <div class="utc-meta-value">Khoa Công nghệ thông tin</div>
+                            </div>
+                            <div class="mt-3">
+                                <a href="/Reader/Profile" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-pencil-square me-1"></i> Tự nhập hồ sơ &amp; Cập nhật SĐT, Địa chỉ nhà (Profile)
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="text-navy fw-bold fs-5 mb-3">Thông tin thẻ thư viện UTC</h4>
+                            <div class="utc-meta-item mb-2">
+                                <span class="utc-meta-label">Mã thẻ thư viện</span>
+                                <div class="utc-meta-value">THE-UTC-@studentId</div>
+                            </div>
+                            <div class="utc-meta-item mb-2">
+                                <span class="utc-meta-label">Ngày cấp thẻ</span>
+                                <div class="utc-meta-value">01/09/2024</div>
+                            </div>
+                            <div class="utc-meta-item mb-2">
+                                <span class="utc-meta-label">Ngày hết hạn</span>
+                                <div class="utc-meta-value">30/06/2028</div>
+                            </div>
+                            <div class="utc-meta-item mb-2">
+                                <span class="utc-meta-label">Trạng thái xác thực QLĐT</span>
+                                <div class="utc-meta-value text-success"><i class="bi bi-check-circle-fill me-1"></i> Đã đồng bộ dữ liệu QLĐT thành công</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

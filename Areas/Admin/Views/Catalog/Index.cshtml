@@ -1,0 +1,579 @@
+﻿@model BTL_LTWEB.Areas.Admin.ViewModels.CatalogIndexViewModel
+@{
+    ViewData["Title"] = "Quản lý học liệu";
+    ViewBag.ActiveMenu = "Catalog";
+}
+
+<div class="admin-breadcrumb">THƯ VIỆN UTC / QUẢN TRỊ</div>
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+        <h1 class="admin-page-title mb-1">Quản lý học liệu &amp; Danh mục sách (@Model.TongDauSach đầu sách)</h1>
+
+    </div>
+    <button class="btn btn-utc-primary shadow-sm d-inline-flex align-items-center gap-2" type="button" data-bs-toggle="modal" data-bs-target="#createBookModal">
+        <i class="bi bi-plus-circle-fill"></i>
+        <span>+ Thêm học liệu mới</span>
+    </button>
+</div>
+
+<!-- 4 Thẻ KPI Thống kê Kho học liệu (Soft Semantic Colors) -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3 col-sm-6">
+        <div class="kpi-card kpi-card-primary">
+            <div class="kpi-title">Tổng đầu sách CSDL</div>
+            <div class="kpi-value" style="color: var(--utc-primary);">@Model.TongDauSach</div>
+            <div class="small text-muted mt-1">Đầu sách danh mục giáo trình, tài liệu</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="kpi-card kpi-card-info">
+            <div class="kpi-title">Tổng bản sao vật lý</div>
+            <div class="kpi-value" style="color: var(--utc-info);">@Model.TongBanSao</div>
+            <div class="small text-muted mt-1">Gắn mã vạch lưu thông tại các tầng kho</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="kpi-card kpi-card-success">
+            <div class="kpi-title text-success">Bản sẵn có trong kho</div>
+            <div class="kpi-value text-success">@Model.TongSanCo</div>
+            <div class="small text-muted mt-1">Sẵn sàng phục vụ sinh viên mượn đọc</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="kpi-card kpi-card-warning">
+            <div class="kpi-title text-warning">Đang mượn ngoài kho</div>
+            <div class="kpi-value text-warning">@Model.TongDangMuon</div>
+            <div class="small text-muted mt-1">Bản sách đang được sinh viên mượn đọc</div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Bộ lọc tìm kiếm & chuyên ngành & tình trạng -->
+<form method="get" asp-action="Index" class="mb-4">
+    <div class="row g-3">
+        <div class="col-md-5">
+            <label class="form-label-utc">Tra cứu học liệu</label>
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                <input type="text" name="search" class="form-control form-control-utc border-start-0" 
+                       placeholder="Tên sách, tác giả, nhà xuất bản, ISBN..." value="@Model.SearchKeyword" />
+                @if (!string.IsNullOrWhiteSpace(Model.SearchKeyword))
+                {
+                    <a href="@Url.Action("Index", new { major = Model.SelectedMajor, status = Model.SelectedStatus })" class="btn btn-outline-secondary" title="Xóa tìm kiếm">
+                        <i class="bi bi-x-lg"></i>
+                    </a>
+                }
+            </div>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label-utc">Chuyên ngành đào tạo</label>
+            <select name="major" class="form-select form-control-utc" onchange="this.form.submit()">
+                <option value="Tất cả chuyên ngành" selected="@(Model.SelectedMajor == "Tất cả chuyên ngành")">Tất cả chuyên ngành</option>
+                <option value="Công nghệ thông tin" selected="@(Model.SelectedMajor == "Công nghệ thông tin")">Công nghệ thông tin</option>
+                <option value="Kỹ thuật xây dựng & Giao thông" selected="@(Model.SelectedMajor == "Kỹ thuật xây dựng & Giao thông" || Model.SelectedMajor == "Kỹ thuật xây dựng")">Kỹ thuật xây dựng &amp; Giao thông</option>
+                <option value="Kinh tế & Quản trị" selected="@(Model.SelectedMajor == "Kinh tế & Quản trị")">Kinh tế &amp; Quản trị</option>
+                <option value="Khoa học cơ bản" selected="@(Model.SelectedMajor == "Khoa học cơ bản")">Khoa học cơ bản</option>
+                <option value="Lý luận chính trị & Pháp luật" selected="@(Model.SelectedMajor == "Lý luận chính trị & Pháp luật")">Lý luận chính trị &amp; Pháp luật</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label-utc">Tình trạng kho</label>
+            <select name="status" class="form-select form-control-utc" onchange="this.form.submit()">
+                <option value="Tất cả" selected="@(Model.SelectedStatus == "Tất cả")">Tất cả trạng thái</option>
+                <option value="Có sẵn" selected="@(Model.SelectedStatus == "Có sẵn")">Có sẵn trong kho</option>
+                <option value="Hết sách" selected="@(Model.SelectedStatus == "Hết sách")">Đang mượn hết</option>
+            </select>
+        </div>
+    </div>
+</form>
+
+<!-- Bảng danh sách học liệu -->
+<div class="admin-table-card shadow-sm border" style="border-radius: 8px; overflow: hidden;">
+    <div class="table-responsive">
+        <table class="table-utc mb-0">
+            <thead>
+                <tr style="background-color: #f1f8fc;">
+                    <th style="width: 10%;">Mã tài liệu</th>
+                    <th style="width: 30%;">Tên học liệu &amp; ISBN</th>
+                    <th style="width: 18%;">Tác giả &amp; Nhà xuất bản</th>
+                    <th style="width: 15%;">Chuyên ngành</th>
+                    <th style="width: 10%;">Vị trí kệ</th>
+                    <th style="width: 8%; text-align: center;">Kho</th>
+                    <th style="width: 9%; text-align: right;">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Books.Count == 0)
+                {
+                    <tr>
+                        <td colspan="7" class="py-4 text-center text-muted">
+                            <i class="bi bi-inbox fs-3 d-block mb-1 text-secondary"></i>
+                            Không tìm thấy học liệu nào phù hợp với điều kiện tra cứu hiện tại.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var book in Model.Books)
+                    {
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <img src="@book.CoverImage" alt="@book.TenHocLieu" 
+                                         class="rounded border shadow-sm flex-shrink-0" 
+                                         style="width: 42px; height: 58px; object-fit: cover;"
+                                         onerror="this.src='/images/covers/sach_01.jpg'" />
+                                    <div>
+                                        <strong class="font-monospace text-primary d-block" style="font-size: 11.5px;">@book.MaHocLieu</strong>
+                                        <span class="badge bg-light text-muted border" style="font-size: 10px;">@book.DinhDang</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="fw-bold text-navy mb-1" style="line-height: 1.35; max-width: 320px;" title="@book.TenHocLieu">
+                                    @book.TenHocLieu
+                                </div>
+                                <div class="text-muted small">
+                                    ISBN: <code>@book.ISBN</code> &middot; Năm: <strong>@book.NamXuatBan</strong> &middot; @book.SoTrang tr.
+                                </div>
+                            </td>
+                            <td>
+                                <div class="fw-medium text-dark">@book.TacGia</div>
+                                <div class="text-muted small">@book.NhaXuatBan</div>
+                            </td>
+                            <td>
+                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle px-2 py-1" style="font-size: 11px;">
+                                    @book.TheLoai
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark border px-2 py-1">
+                                    <i class="bi bi-geo-alt-fill text-danger me-1"></i> @book.ViTriKe
+                                </span>
+                            </td>
+                            <td style="text-align: center;">
+                                @if (book.SanCo > 0)
+                                {
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1" style="font-size: 11.5px;">
+                                        Có sẵn (@book.SanCo/@book.TongBan)
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1" style="font-size: 11.5px;">
+                                        Hết sách (0/@book.TongBan)
+                                    </span>
+                                }
+                            </td>
+                            <td style="text-align: right;">
+                                <div class="d-flex justify-content-end align-items-center gap-1">
+                                    <!-- Xem bản sao vật lý -->
+                                    <button type="button" class="btn btn-sm btn-outline-primary px-2 py-1 btn-view-copies" 
+                                            data-id="@book.Id" title="Xem danh sách bản sao vật lý & mã vạch">
+                                        <i class="bi bi-upc-scan"></i>
+                                    </button>
+                                    <!-- Sửa học liệu -->
+                                    <button type="button" class="btn btn-sm btn-outline-secondary px-2 py-1 btn-edit-book"
+                                            data-id="@book.Id" title="Chỉnh sửa thông tin học liệu">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                    <!-- Xóa học liệu -->
+                                    <button type="button" class="btn btn-sm btn-outline-danger px-2 py-1 btn-delete-book"
+                                            data-id="@book.Id" data-title="@book.TenHocLieu" data-copies="@book.SanCo" data-total="@book.TongBan"
+                                            title="Xóa học liệu khỏi CSDL">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ======================================================== -->
+<!-- MODAL 1: THÊM HỌC LIỆU MỚI VÀO CSDL THƯ VIỆN UTC -->
+<!-- ======================================================== -->
+<div class="modal fade" id="createBookModal" tabindex="-1" aria-labelledby="createBookModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden;">
+            <div class="modal-header bg-white text-dark py-3 px-4 border-bottom" style="background: #ffffff !important; border-bottom: 1px solid #e2eaf2 !important;">
+                <h5 class="modal-title fw-bold mb-0 text-dark" id="createBookModalLabel" style="color: #163b5c !important;">
+                    <i class="bi bi-journal-plus text-primary me-2"></i>Thêm học liệu mới
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-body p-4">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label-utc fw-bold">Tên học liệu / Giáo trình <span class="text-danger">*</span></label>
+                            <input type="text" name="title" class="form-control form-control-utc" placeholder="VD: Giáo trình Kỹ thuật Vi điều khiển và IoT..." required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label-utc fw-bold">Tác giả / Chủ biên <span class="text-danger">*</span></label>
+                            <input type="text" name="authors" class="form-control form-control-utc" placeholder="VD: PGS. TS. Nguyễn Văn A, ThS. Trần B..." required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label-utc fw-bold">Nhà xuất bản</label>
+                            <input type="text" name="publisher" class="form-control form-control-utc" placeholder="VD: NXB Giao thông Vận tải / NXB Bách Khoa..." />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label-utc fw-bold">Chuyên ngành đào tạo <span class="text-danger">*</span></label>
+                            <select name="major" class="form-select form-control-utc" required>
+                                <option value="cntt">Công nghệ thông tin</option>
+                                <option value="xaydung">Kỹ thuật xây dựng &amp; Giao thông</option>
+                                <option value="kinhte">Kinh tế &amp; Quản trị</option>
+                                <option value="toanly">Khoa học cơ bản</option>
+                                <option value="chinhtri">Lý luận chính trị &amp; Pháp luật</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label-utc fw-bold">Mã số chuẩn ISBN</label>
+                            <input type="text" name="isbn" class="form-control form-control-utc" placeholder="VD: 978-604-0-32451-2" />
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label-utc fw-bold">Năm XB</label>
+                            <input type="number" name="year" class="form-control form-control-utc" value="@DateTime.Today.Year" min="1990" max="2030" />
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label-utc fw-bold">Số trang</label>
+                            <input type="number" name="pages" class="form-control form-control-utc" value="300" min="10" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label-utc fw-bold">Vị trí xếp kệ (Kho Nhà A8)</label>
+                            <input type="text" name="shelf" class="form-control form-control-utc" value="Kệ IT-01 - Tầng 2 Nhà A8" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label-utc fw-bold">Số lượng bản sao nhập kho</label>
+                            <input type="number" name="copiesCount" class="form-control form-control-utc" value="4" min="1" max="20" />
+                            <div class="form-text small text-muted">Hệ thống sẽ tự động tạo tương ứng mã vạch <code>UTC-XX-01...</code></div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label-utc fw-bold">Đường dẫn ảnh bìa (Cover Image URL)</label>
+                            <input type="text" name="coverImage" class="form-control form-control-utc" value="/images/covers/sach_01.jpg" />
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label-utc fw-bold">Mô tả tóm tắt nội dung học liệu</label>
+                            <textarea name="description" class="form-control form-control-utc" rows="3" placeholder="Tóm tắt nội dung giáo trình, đối tượng phục vụ, kiến thức trọng tâm..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer bg-light px-4 py-3">
+                    <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Hủy bỏ</button>
+                    <button type="submit" class="btn btn-utc-primary px-4 fw-bold">
+                        <i class="bi bi-cloud-arrow-up-fill me-1"></i> Lưu vào CSDL Thư viện
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ======================================================== -->
+<!-- MODAL 2: CHỈNH SỬA THÔNG TIN HỌC LIỆU TRONG CSDL -->
+<!-- ======================================================== -->
+<div class="modal fade" id="editBookModal" tabindex="-1" aria-labelledby="editBookModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden;">
+            <div class="modal-header bg-white text-dark py-3 px-4 border-bottom" style="background: #ffffff !important; border-bottom: 1px solid #e2eaf2 !important;">
+                <h5 class="modal-title fw-bold mb-0 text-dark" id="editBookModalLabel" style="color: #163b5c !important;">
+                    <i class="bi bi-pencil-square text-primary me-2"></i>Chỉnh sửa thông tin học liệu
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form asp-action="Update" method="post" id="formEditBook">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" id="editBookId" value="" />
+
+                <div class="modal-body p-4">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label-utc fw-bold">Tên học liệu / Giáo trình <span class="text-danger">*</span></label>
+                            <input type="text" name="title" id="editBookTitle" class="form-control form-control-utc" required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label-utc fw-bold">Tác giả / Chủ biên <span class="text-danger">*</span></label>
+                            <input type="text" name="authors" id="editBookAuthors" class="form-control form-control-utc" required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label-utc fw-bold">Nhà xuất bản</label>
+                            <input type="text" name="publisher" id="editBookPublisher" class="form-control form-control-utc" />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label-utc fw-bold">Chuyên ngành đào tạo</label>
+                            <select name="major" id="editBookMajor" class="form-select form-control-utc">
+                                <option value="cntt">Công nghệ thông tin</option>
+                                <option value="xaydung">Kỹ thuật xây dựng &amp; Giao thông</option>
+                                <option value="kinhte">Kinh tế &amp; Quản trị</option>
+                                <option value="toanly">Khoa học cơ bản</option>
+                                <option value="chinhtri">Lý luận chính trị &amp; Pháp luật</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label-utc fw-bold">ISBN</label>
+                            <input type="text" name="isbn" id="editBookIsbn" class="form-control form-control-utc" />
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label-utc fw-bold">Năm XB</label>
+                            <input type="number" name="year" id="editBookYear" class="form-control form-control-utc" />
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label-utc fw-bold">Số trang</label>
+                            <input type="number" name="pages" id="editBookPages" class="form-control form-control-utc" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label-utc fw-bold">Vị trí xếp kệ (Kho Nhà A8)</label>
+                            <input type="text" name="shelf" id="editBookShelf" class="form-control form-control-utc" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label-utc fw-bold">Ảnh bìa (URL)</label>
+                            <input type="text" name="coverImage" id="editBookCover" class="form-control form-control-utc" />
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label-utc fw-bold">Mô tả tóm tắt</label>
+                            <textarea name="description" id="editBookDesc" class="form-control form-control-utc" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer bg-light px-4 py-3">
+                    <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary px-4 fw-bold">
+                        <i class="bi bi-save me-1"></i> Lưu thay đổi CSDL
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ======================================================== -->
+<!-- MODAL 3: XEM CHI TIẾT BẢN SAO VẬT LÝ & MÃ VẠCH (BARCODE) -->
+<!-- ======================================================== -->
+<div class="modal fade" id="bookCopiesModal" tabindex="-1" aria-labelledby="bookCopiesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden;">
+            <div class="modal-header bg-white text-dark py-3 px-4 border-bottom" style="background: #ffffff !important; border-bottom: 1px solid #e2eaf2 !important;">
+                <h5 class="modal-title fw-bold mb-0 text-dark" id="bookCopiesModalLabel" style="color: #163b5c !important;">
+                    <i class="bi bi-upc-scan text-primary me-2"></i>Danh sách bản sao vật lý &amp; Mã vạch lưu thông
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="text-muted small">
+                        Vị trí kệ: <strong id="copiesModalShelf" class="text-navy"></strong>
+                    </div>
+                    <div>
+                        <span id="copiesModalStatsBadge" class="badge bg-success px-3 py-1 fs-6 font-monospace">4/4 bản sẵn có</span>
+                    </div>
+                </div>
+
+                <div class="table-responsive border rounded-2">
+                    <table class="table table-hover table-striped mb-0 align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 15%;">Mã bản sao</th>
+                                <th style="width: 25%;">Mã vạch (Barcode)</th>
+                                <th style="width: 25%;">Vị trí kệ</th>
+                                <th style="width: 15%;">Tình trạng</th>
+                                <th style="width: 20%; text-align: center;">Trạng thái kho</th>
+                            </tr>
+                        </thead>
+                        <tbody id="copiesTableBody">
+                            <!-- Được nạp tự động qua AJAX -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="modal-footer bg-light px-4 py-3">
+                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ======================================================== -->
+<!-- MODAL 4: XÁC NHẬN XÓA HỌC LIỆU KHỎI CSDL -->
+<!-- ======================================================== -->
+<div class="modal fade" id="deleteBookModal" tabindex="-1" aria-labelledby="deleteBookModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden;">
+            <div class="modal-header bg-danger text-white py-3 px-4">
+                <h5 class="modal-title fw-bold mb-0" id="deleteBookModalLabel">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>Xác nhận xóa học liệu
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form asp-action="Delete" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" id="deleteBookId" value="" />
+
+                <div class="modal-body p-4">
+                    <div class="alert alert-warning py-2 px-3 small mb-3">
+                        <i class="bi bi-info-circle-fill me-1"></i>
+                        Thao tác này sẽ xóa đầu sách và toàn bộ mã vạch bản sao vật lý liên quan khỏi CSDL Thư viện UTC.
+                    </div>
+                    <div class="text-dark">
+                        Bạn có chắc chắn muốn xóa học liệu:
+                        <div class="fw-bold text-danger mt-1 fs-6" id="deleteBookTitle"></div>
+                    </div>
+                    <div class="mt-2 text-muted small" id="deleteBookWarning"></div>
+                </div>
+
+                <div class="modal-footer bg-light px-4 py-3">
+                    <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Hủy bỏ</button>
+                    <button type="submit" class="btn btn-danger px-4 fw-bold">
+                        <i class="bi bi-trash-fill me-1"></i> Xác nhận xóa khỏi CSDL
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // 1. Xử lý mở Modal xem Bản sao vật lý
+        var copiesModalEl = document.getElementById("bookCopiesModal");
+        var copiesModal = new bootstrap.Modal(copiesModalEl);
+        var copiesModalBookTitle = document.getElementById("copiesModalBookTitle");
+        var copiesModalShelf = document.getElementById("copiesModalShelf");
+        var copiesModalStatsBadge = document.getElementById("copiesModalStatsBadge");
+        var copiesTableBody = document.getElementById("copiesTableBody");
+
+        document.querySelectorAll(".btn-view-copies").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+                var bookId = this.getAttribute("data-id");
+
+                copiesTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-3 text-muted">Đang tải danh sách bản sao từ CSDL...</td></tr>';
+                copiesModal.show();
+
+                fetch('/Admin/Catalog/GetCopies/' + bookId)
+                    .then(function (res) { return res.json(); })
+                    .then(function (data) {
+                        copiesModalBookTitle.textContent = data.title;
+                        copiesModalShelf.textContent = data.shelf;
+                        copiesModalStatsBadge.textContent = data.availableCopies + "/" + data.totalCopies + " bản sẵn có";
+
+                        if (data.availableCopies > 0) {
+                            copiesModalStatsBadge.className = "badge bg-success px-3 py-1 fs-6 font-monospace";
+                        } else {
+                            copiesModalStatsBadge.className = "badge bg-danger px-3 py-1 fs-6 font-monospace";
+                        }
+
+                        if (!data.copies || data.copies.length === 0) {
+                            copiesTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-3 text-muted">Chưa có bản sao vật lý nào trong kho.</td></tr>';
+                            return;
+                        }
+
+                        var rows = "";
+                        data.copies.forEach(function (c) {
+                            var statusBadge = c.status === "Có sẵn"
+                                ? '<span class="badge bg-success text-white px-2 py-1"><i class="bi bi-check-circle-fill me-1"></i> Có sẵn trong kho</span>'
+                                : '<span class="badge bg-primary text-white px-2 py-1"><i class="bi bi-arrow-left-right me-1"></i> Đang mượn</span>';
+
+                            rows += '<tr>' +
+                                '<td><strong class="font-monospace text-navy">BS-' + c.id + '</strong></td>' +
+                                '<td><span class="badge bg-light text-dark border font-monospace px-2 py-1"><i class="bi bi-upc me-1"></i>' + c.barcode + '</span></td>' +
+                                '<td><span class="small text-muted">' + c.shelf + '</span></td>' +
+                                '<td><span class="badge bg-secondary-subtle text-secondary border">' + c.condition + '</span></td>' +
+                                '<td style="text-align: center;">' + statusBadge + '</td>' +
+                                '</tr>';
+                        });
+                        copiesTableBody.innerHTML = rows;
+                    })
+                    .catch(function () {
+                        copiesTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-3 text-danger">Lỗi kết nối khi tải bản sao!</td></tr>';
+                    });
+            });
+        });
+
+        // 2. Xử lý mở Modal Chỉnh sửa học liệu
+        var editModalEl = document.getElementById("editBookModal");
+        var editModal = new bootstrap.Modal(editModalEl);
+
+        document.querySelectorAll(".btn-edit-book").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+                var bookId = this.getAttribute("data-id");
+
+                fetch('/Admin/Catalog/GetBook/' + bookId)
+                    .then(function (res) { return res.json(); })
+                    .then(function (data) {
+                        document.getElementById("editBookId").value = data.id;
+                        document.getElementById("editBookTitle").value = data.title;
+                        document.getElementById("editBookAuthors").value = data.authors;
+                        document.getElementById("editBookPublisher").value = data.publisher || "";
+                        document.getElementById("editBookMajor").value = data.major;
+                        document.getElementById("editBookIsbn").value = data.isbn || "";
+                        document.getElementById("editBookYear").value = data.year;
+                        document.getElementById("editBookPages").value = data.pages;
+                        document.getElementById("editBookShelf").value = data.shelf || "";
+                        document.getElementById("editBookCover").value = data.coverImage || "";
+                        document.getElementById("editBookDesc").value = data.description || "";
+
+                        editModal.show();
+                    });
+            });
+        });
+
+        // 3. Xử lý mở Modal Xóa học liệu
+        var deleteModalEl = document.getElementById("deleteBookModal");
+        var deleteModal = new bootstrap.Modal(deleteModalEl);
+
+        document.querySelectorAll(".btn-delete-book").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+                var bookId = this.getAttribute("data-id");
+                var title = this.getAttribute("data-title");
+                var available = parseInt(this.getAttribute("data-copies") || "0");
+                var total = parseInt(this.getAttribute("data-total") || "0");
+
+                document.getElementById("deleteBookId").value = bookId;
+                document.getElementById("deleteBookTitle").textContent = title;
+
+                var warningEl = document.getElementById("deleteBookWarning");
+                if (available < total) {
+                    warningEl.innerHTML = '<span class="text-danger fw-bold"><i class="bi bi-shield-exclamation me-1"></i> Cảnh báo: Hiện có ' + (total - available) + ' bản sao đang được sinh viên mượn. Hệ thống sẽ từ chối xóa để bảo vệ toàn vẹn CSDL.</span>';
+                } else {
+                    warningEl.textContent = 'Tất cả ' + total + ' bản sao hiện đang có sẵn trong kho, đủ điều kiện để xóa.';
+                }
+
+                deleteModal.show();
+            });
+        });
+    });
+</script>
+}
