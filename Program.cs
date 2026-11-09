@@ -78,6 +78,9 @@ namespace BTL_LTWEB
             app.UseAuthentication();
             app.UseAuthorization();
 
+            // Kích hoạt Attribute Routing cho các API và trang tài liệu /ApiDoc
+            app.MapControllers();
+
             // Cấu hình Routing chuẩn hóa theo 2 phân hệ Admin & Reader
             app.MapAreaControllerRoute(
                 name: "admin_area",
