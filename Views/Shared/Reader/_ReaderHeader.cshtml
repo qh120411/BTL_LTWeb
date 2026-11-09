@@ -53,7 +53,7 @@
 
                 @if (User.Identity?.IsAuthenticated == true)
                 {
-                    <a href="/Reader/Profile" class="utc-header-btn-user" title="Xem & cập nhật Hồ sơ sinh viên">
+                    <a href="/Reader/Profile" class="utc-header-btn-user" title="Xem & cập nhật Hồ sơ bạn đọc">
                         <i class="bi bi-person-circle me-1"></i>
                         <span class="utc-user-name">@User.Identity.Name</span>
                     </a>
@@ -109,7 +109,7 @@
                 <li class="utc-navbar-item">
                     <a href="/Reader/Profile" class="utc-navbar-link @(currentController == "Profile" ? "active" : "")">
                         <i class="bi bi-person-vcard"></i>
-                        <span>Hồ sơ sinh viên</span>
+                        <span>Hồ sơ bạn đọc</span>
                     </a>
                 </li>
             </ul>

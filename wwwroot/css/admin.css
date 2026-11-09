@@ -1270,9 +1270,9 @@ body.admin-body {
 
 .modal-header {
 
-    background: linear-gradient(90deg, var(--utc-primary-dark) 0%, var(--utc-primary) 100%) !important;
+    background: #ffffff;
 
-    border-bottom: none !important;
+    border-bottom: 1px solid var(--utc-border-card, #e2eaf2);
 
 }
 

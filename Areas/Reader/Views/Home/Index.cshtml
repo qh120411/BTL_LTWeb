@@ -10,17 +10,10 @@
 
 <div class="utc-home-wrapper">
     <div class="container-xl">
-        <!-- 1. FLOATING SEARCH BOX (CHUẨN FIGMA) -->
+        <!-- 1. FLOATING SEARCH BOX -->
         <section class="utc-search-panel-box">
-            <!-- 3 Tabs -->
-            <div class="utc-catalog-tabs">
-                <a href="/Reader/Search?category=all" class="utc-tab-btn active" data-type="all">Tất cả học liệu</a>
-                <a href="/Reader/Search?category=books" class="utc-tab-btn" data-type="books">Sách &amp; giáo trình</a>
-                <a href="/Reader/Search?category=thesis" class="utc-tab-btn" data-type="thesis">Luận văn, luận án</a>
-            </div>
-
             <!-- Search Bar Form -->
-            <form action="/Reader/Search" method="get" class="utc-search-bar-row" id="utcSearchForm">
+            <form action="/Reader/Search" method="get" class="utc-search-bar-row mb-0" id="utcSearchForm">
                 <input type="hidden" name="category" id="searchCategory" value="all" />
                 <div class="utc-search-input-field">
                     <input type="text" 
@@ -34,12 +27,6 @@
                     Tìm học liệu &rarr;
                 </button>
             </form>
-
-            <!-- Helper Text Row -->
-            <div class="utc-search-footer-row">
-                <span class="utc-search-helper-text">Tra cứu và xem thông tin học liệu không cần đăng nhập</span>
-                <a href="/Reader/Search" class="utc-search-adv-link">Tìm kiếm nâng cao &rarr;</a>
-            </div>
         </section>
 
         <!-- 2. QUICK ACCESS CARDS (4 THẺ NỀN XANH NHẠT #F1FAFF CHUẨN FIGMA) -->
@@ -92,21 +79,21 @@
                 <h3 class="utc-column-main-heading">Học liệu đáng chú ý</h3>
 
                 <a href="/Reader/Document/Details/1" class="utc-highlight-row">
-                    <span class="utc-tag-cyan">NGOẠI NGỮ · XÂY DỰNG</span>
-                    <h4 class="utc-highlight-row-title">Tiếng Anh chuyên ngành Quản lý xây dựng</h4>
-                    <span class="utc-highlight-row-author">Nguyễn Hoàng Tùng, Vũ Minh Hằng và cộng sự</span>
+                    <span class="utc-tag-cyan">CÔNG NGHỆ THÔNG TIN · GIẢI THUẬT</span>
+                    <h4 class="utc-highlight-row-title">Cấu trúc dữ liệu và giải thuật (Python: Thuật toán &amp; Cấu trúc dữ liệu)</h4>
+                    <span class="utc-highlight-row-author">Bùi Việt Hà</span>
                 </a>
 
                 <a href="/Reader/Document/Details/2" class="utc-highlight-row">
-                    <span class="utc-tag-cyan">CÔNG NGHỆ · GIAO THÔNG</span>
-                    <h4 class="utc-highlight-row-title">Xử lý ảnh trong công nghiệp và giao thông</h4>
-                    <span class="utc-highlight-row-author">Lê Thị Thúy Nga (chủ biên)</span>
+                    <span class="utc-tag-cyan">CƠ SỞ DỮ LIỆU · SQL</span>
+                    <h4 class="utc-highlight-row-title">Giáo trình Cơ sở dữ liệu quan hệ - Lý thuyết và Thực hành</h4>
+                    <span class="utc-highlight-row-author">Phạm Minh Chuẩn, Trịnh Thị Nhị, Nguyễn Văn Quyết</span>
                 </a>
 
                 <a href="/Reader/Document/Details/3" class="utc-highlight-row">
-                    <span class="utc-tag-cyan">DỮ LIỆU · GIAO THÔNG</span>
-                    <h4 class="utc-highlight-row-title">Cơ sở GIS và ứng dụng trong giao thông vận tải</h4>
-                    <span class="utc-highlight-row-author">Lê Khánh Giang (chủ biên)</span>
+                    <span class="utc-tag-cyan">MẠNG MÁY TÍNH · VIỄN THÔNG</span>
+                    <h4 class="utc-highlight-row-title">Giáo trình Mạng máy tính</h4>
+                    <span class="utc-highlight-row-author">Nguyễn Thế Lộc, Nguyễn Hồng Phương</span>
                 </a>
             </div>
 
@@ -195,27 +182,27 @@
 
             <div class="utc-books-shelf-grid">
                 <a href="/Reader/Document/Details/1" class="utc-shelf-card">
-                    <span class="utc-tag-cyan">NGOẠI NGỮ · XÂY DỰNG</span>
-                    <h5 class="utc-shelf-card-title">Tiếng Anh chuyên ngành Quản lý xây dựng</h5>
-                    <span class="utc-shelf-card-author">Nguyễn Hoàng Tùng, Vũ Minh Hằng và cộng sự</span>
+                    <span class="utc-tag-cyan">CÔNG NGHỆ THÔNG TIN · LẬP TRÌNH</span>
+                    <h5 class="utc-shelf-card-title">Cấu trúc dữ liệu và giải thuật (Python: Thuật toán &amp; Cấu trúc dữ liệu)</h5>
+                    <span class="utc-shelf-card-author">Bùi Việt Hà</span>
                 </a>
 
                 <a href="/Reader/Document/Details/2" class="utc-shelf-card">
-                    <span class="utc-tag-cyan">CÔNG NGHỆ · GIAO THÔNG</span>
-                    <h5 class="utc-shelf-card-title">Xử lý ảnh trong công nghiệp và giao thông</h5>
-                    <span class="utc-shelf-card-author">Lê Thị Thúy Nga (chủ biên)</span>
+                    <span class="utc-tag-cyan">CƠ SỞ DỮ LIỆU · PHẦN MỀM</span>
+                    <h5 class="utc-shelf-card-title">Giáo trình Cơ sở dữ liệu quan hệ - Lý thuyết và Thực hành</h5>
+                    <span class="utc-shelf-card-author">Phạm Minh Chuẩn, Trịnh Thị Nhị, Nguyễn Văn Quyết</span>
                 </a>
 
                 <a href="/Reader/Document/Details/3" class="utc-shelf-card">
-                    <span class="utc-tag-cyan">DỮ LIỆU · GIAO THÔNG</span>
-                    <h5 class="utc-shelf-card-title">Cơ sở GIS và ứng dụng trong giao thông vận tải</h5>
-                    <span class="utc-shelf-card-author">Lê Khánh Giang (chủ biên)</span>
+                    <span class="utc-tag-cyan">MẠNG MÁY TÍNH · HỆ THỐNG</span>
+                    <h5 class="utc-shelf-card-title">Giáo trình Mạng máy tính</h5>
+                    <span class="utc-shelf-card-author">Nguyễn Thế Lộc, Nguyễn Hồng Phương</span>
                 </a>
 
                 <a href="/Reader/Document/Details/4" class="utc-shelf-card">
-                    <span class="utc-tag-cyan">QUY HOẠCH · XÂY DỰNG</span>
-                    <h5 class="utc-shelf-card-title">Quy hoạch hệ thống công trình ngầm</h5>
-                    <span class="utc-shelf-card-author">Trần Tuấn Hiệp, Vũ Ngọc Phương (chủ biên)</span>
+                    <span class="utc-tag-cyan">AN TOÀN THÔNG TIN · BẢO MẬT</span>
+                    <h5 class="utc-shelf-card-title">Giáo trình Cơ sở An toàn thông tin</h5>
+                    <span class="utc-shelf-card-author">Học viện Công nghệ Bưu chính Viễn thông</span>
                 </a>
             </div>
         </section>
@@ -250,32 +237,4 @@
 </div>
 
 @section Scripts {
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const tabs = document.querySelectorAll(".utc-catalog-tabs .utc-tab-btn");
-            const searchInput = document.getElementById("utcSearchInput");
-            const categoryInput = document.getElementById("searchCategory");
-
-            tabs.forEach(tab => {
-                tab.addEventListener("click", function (e) {
-                    e.preventDefault();
-                    tabs.forEach(t => t.classList.remove("active"));
-                    this.classList.add("active");
-
-                    const type = this.getAttribute("data-type") || "all";
-                    if (categoryInput) {
-                        categoryInput.value = type;
-                    }
-
-                    if (type === "books") {
-                        searchInput.placeholder = "Tìm sách, giáo trình theo tên, tác giả, ISBN...";
-                    } else if (type === "thesis") {
-                        searchInput.placeholder = "Tìm luận văn, luận án thạc sĩ, tiến sĩ UTC...";
-                    } else {
-                        searchInput.placeholder = "Tìm tên sách, tác giả hoặc chủ đề bạn quan tâm…";
-                    }
-                });
-            });
-        });
-    </script>
 }

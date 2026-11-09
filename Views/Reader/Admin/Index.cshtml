@@ -16,19 +16,13 @@
             <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary-subtle">
                 <i class="bi bi-person-check me-1"></i> @Model.NonBorrowingReaders.Count bạn đọc chưa mượn sách
             </span>
-            &middot; CSDL Thư viện UTC
+            
         </div>
     </div>
 
 </div>
 
-<!-- Khung thông tin sinh viên từ phòng QLĐT -->
-<div class="admin-info-box mb-4">
-    <div class="admin-info-title">Quản lý hồ sơ bạn đọc &amp; Quyền lưu thông (CSDL Thật Thư viện UTC)</div>
-    <div class="admin-info-desc">
-        Hệ thống phân chia trực quan thành 2 bảng quản lý: <strong>Bạn đọc đang mượn sách</strong> (giám sát thời hạn 1 năm và quá hạn) và <strong>Bạn đọc chưa mượn sách</strong> (thẻ sẵn sàng mượn tối đa 5 cuốn).
-    </div>
-</div>
+
 
 <!-- Bộ lọc tìm kiếm theo Tên hoặc Mã sinh viên / Mã giảng viên -->
 <form method="get" asp-action="Index" class="mb-4" id="readerFilterForm">
@@ -76,7 +70,7 @@
                 <h5 class="fw-bold text-navy mb-0" style="font-size: 16px;">
                     1. DANH SÁCH BẠN ĐỌC ĐANG MƯỢN SÁCH (@Model.BorrowingReaders.Count bạn đọc)
                 </h5>
-                <span class="text-muted small">Các bạn đọc hiện đang giữ tài liệu học liệu mượn từ thư viện UTC</span>
+                
             </div>
         </div>
         <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-1 fw-bold">
@@ -175,7 +169,7 @@
                 <h5 class="fw-bold text-navy mb-0" style="font-size: 16px;">
                     2. DANH SÁCH BẠN ĐỌC KHÔNG MƯỢN / CHƯA MƯỢN SÁCH (@Model.NonBorrowingReaders.Count bạn đọc)
                 </h5>
-                <span class="text-muted small">Các bạn đọc hiện không giữ cuốn sách nào, thẻ thư viện sẵn sàng mượn mới tối đa 5 cuốn</span>
+                
             </div>
         </div>
         <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-3 py-1 fw-bold">

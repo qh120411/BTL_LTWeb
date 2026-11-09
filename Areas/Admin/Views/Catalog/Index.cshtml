@@ -9,9 +9,7 @@
 <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
     <div>
         <h1 class="admin-page-title mb-1">Quản lý học liệu &amp; Danh mục sách (@Model.TongDauSach đầu sách)</h1>
-        <div class="text-muted small">
-            Dữ liệu chuẩn hóa theo <strong>CSDL QLThuVienUTC</strong> &middot; Quản lý @Model.TongBanSao bản sao vật lý tại các kho Nhà A8
-        </div>
+
     </div>
     <button class="btn btn-utc-primary shadow-sm d-inline-flex align-items-center gap-2" type="button" data-bs-toggle="modal" data-bs-target="#createBookModal">
         <i class="bi bi-plus-circle-fill"></i>
@@ -51,13 +49,7 @@
     </div>
 </div>
 
-<!-- Khung giới thiệu nghiệp vụ -->
-<div class="admin-info-box mb-4">
-    <div class="admin-info-title">Danh mục học liệu &amp; Bản sao lưu thông (CSDL Thật Thư viện UTC)</div>
-    <div class="admin-info-desc">
-        Quản lý danh mục giáo trình, tài liệu tham khảo theo chuyên ngành đào tạo UTC. Mỗi đầu sách có thể tra cứu mã vạch bản sao vật lý, vị trí kệ xếp giá tại Nhà A8, chỉnh sửa hoặc thêm học liệu mới trực tiếp vào CSDL.
-    </div>
-</div>
+
 
 <!-- Bộ lọc tìm kiếm & chuyên ngành & tình trạng -->
 <form method="get" asp-action="Index" class="mb-4">
@@ -210,14 +202,11 @@
 <div class="modal fade" id="createBookModal" tabindex="-1" aria-labelledby="createBookModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden;">
-            <div class="modal-header text-white" style="background: linear-gradient(135deg, #174c7f, #0079ba); padding: 16px 24px;">
-                <div>
-                    <h5 class="modal-title fw-bold mb-0" id="createBookModalLabel">
-                        <i class="bi bi-journal-plus me-2"></i>Thêm học liệu mới vào CSDL Thư viện UTC
-                    </h5>
-                    <div class="text-white-50 small mt-1">Tự động sinh mã tài liệu, tạo bản sao vật lý và gắn vị trí kệ Nhà A8</div>
-                </div>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header bg-white text-dark py-3 px-4 border-bottom" style="background: #ffffff !important; border-bottom: 1px solid #e2eaf2 !important;">
+                <h5 class="modal-title fw-bold mb-0 text-dark" id="createBookModalLabel" style="color: #163b5c !important;">
+                    <i class="bi bi-journal-plus text-primary me-2"></i>Thêm học liệu mới
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <form asp-action="Create" method="post">
@@ -305,11 +294,11 @@
 <div class="modal fade" id="editBookModal" tabindex="-1" aria-labelledby="editBookModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden;">
-            <div class="modal-header bg-primary text-white py-3 px-4">
-                <h5 class="modal-title fw-bold mb-0" id="editBookModalLabel">
-                    <i class="bi bi-pencil-square me-2"></i>Chỉnh sửa thông tin học liệu trong CSDL
+            <div class="modal-header bg-white text-dark py-3 px-4 border-bottom" style="background: #ffffff !important; border-bottom: 1px solid #e2eaf2 !important;">
+                <h5 class="modal-title fw-bold mb-0 text-dark" id="editBookModalLabel" style="color: #163b5c !important;">
+                    <i class="bi bi-pencil-square text-primary me-2"></i>Chỉnh sửa thông tin học liệu
                 </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <form asp-action="Update" method="post" id="formEditBook">
@@ -393,14 +382,11 @@
 <div class="modal fade" id="bookCopiesModal" tabindex="-1" aria-labelledby="bookCopiesModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden;">
-            <div class="modal-header bg-navy text-white py-3 px-4" style="background-color: #174c7f;">
-                <div>
-                    <h5 class="modal-title fw-bold mb-0" id="bookCopiesModalLabel">
-                        <i class="bi bi-upc-scan me-2"></i>Danh sách bản sao vật lý &amp; Mã vạch lưu thông
-                    </h5>
-                    <div class="text-white-50 small mt-1" id="copiesModalBookTitle">Tên sách</div>
-                </div>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header bg-white text-dark py-3 px-4 border-bottom" style="background: #ffffff !important; border-bottom: 1px solid #e2eaf2 !important;">
+                <h5 class="modal-title fw-bold mb-0 text-dark" id="bookCopiesModalLabel" style="color: #163b5c !important;">
+                    <i class="bi bi-upc-scan text-primary me-2"></i>Danh sách bản sao vật lý &amp; Mã vạch lưu thông
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body p-4">

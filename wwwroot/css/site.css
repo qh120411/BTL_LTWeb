@@ -150,18 +150,26 @@ a {
 }
 
 /* Buttons - Chuẩn Figma: Phẳng, màu xanh #0079BA, bo góc 6px, không gradient */
-.btn {
-    border-radius: var(--utc-radius-btn, 6px);
+.btn,
+.btn-utc-primary,
+.btn-utc-secondary,
+.btn-utc-outline,
+.btn-outline-utc {
+    border-radius: var(--utc-radius-btn, 6px) !important;
     font-weight: 600;
     transition: var(--utc-transition);
     padding: 9px 18px;
     font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-primary, .btn-utc-primary {
+    border-radius: var(--utc-radius-btn, 6px) !important;
     background: var(--utc-primary, #0079BA) !important;
     background-color: var(--utc-primary, #0079BA) !important;
-    border-color: var(--utc-primary, #0079BA) !important;
+    border: 1px solid var(--utc-primary, #0079BA) !important;
     color: #FFFFFF !important;
     box-shadow: var(--utc-shadow-btn) !important;
 }
@@ -172,9 +180,11 @@ a {
     border-color: var(--utc-primary-hover, #00679E) !important;
     transform: translateY(-1px);
     box-shadow: 0 3px 8px rgba(0, 121, 186, 0.25) !important;
+    color: #FFFFFF !important;
 }
 
-.btn-secondary, .btn-utc-secondary, .btn-outline-utc {
+.btn-secondary, .btn-utc-secondary, .btn-outline-utc, .btn-utc-outline {
+    border-radius: var(--utc-radius-btn, 6px) !important;
     background: #FFFFFF !important;
     background-color: #FFFFFF !important;
     border: 1px solid #D0E0EC !important;
@@ -182,7 +192,7 @@ a {
     box-shadow: none !important;
 }
 
-.btn-secondary:hover, .btn-utc-secondary:hover, .btn-outline-utc:hover {
+.btn-secondary:hover, .btn-utc-secondary:hover, .btn-outline-utc:hover, .btn-utc-outline:hover {
     background: var(--utc-primary-light, #F0F7FC) !important;
     background-color: var(--utc-primary-light, #F0F7FC) !important;
     border-color: var(--utc-primary, #0079BA) !important;

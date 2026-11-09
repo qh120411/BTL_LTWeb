@@ -20,9 +20,7 @@
                 </span>
             }
         </div>
-        <div class="text-muted small">
-            Quản trị viên &middot; Phân quyền bảo mật CSDL SQL Server &middot; @(Model?.StaffList?.Count ?? 0) cán bộ trong hệ thống
-        </div>
+        
     </div>
     <div>
         @if (Model.IsCurrentUserSuperAdmin)
@@ -54,21 +52,7 @@
     </div>
 }
 
-<!-- Khung giới thiệu nghiệp vụ tinh tế kiểu Frosted Sky Card -->
-<div class="admin-info-box">
-    <div class="d-flex align-items-start gap-3">
-        <div class="p-2 bg-white rounded-circle shadow-sm text-primary fs-4 d-none d-sm-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
-            <i class="bi bi-shield-shaded"></i>
-        </div>
-        <div>
-            <div class="admin-info-title">Danh sách tài khoản cán bộ thư viện &amp; Phân quyền bảo mật</div>
-            <div class="admin-info-desc">
-                Phân quyền theo vai trò (<strong>Quản trị viên</strong>, <strong>Quản lý bạn đọc</strong>, <strong>Thủ thư mượn trả</strong>). Mật khẩu được mã hóa băm SHA-256 an toàn trong CSDL SQL Server.
-                <span class="text-primary fw-semibold">Quy tắc bảo mật: Chỉ Admin tối cao mới có thể sửa quyền, và không thể tự sửa quyền của chính mình.</span>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <!-- Bộ lọc tìm kiếm & vai trò trực tiếp trên nền -->
 <form method="get" action="/Admin/User" class="row g-3 mb-4 align-items-end">
@@ -227,7 +211,7 @@
 <div class="modal fade" id="addStaffModal" tabindex="-1" aria-labelledby="addStaffModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 20px; border: 1px solid #e2eef8; box-shadow: 0 20px 45px rgba(2, 132, 199, 0.16);">
-            <div class="modal-header" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-bottom: 1px solid #bae6fd; border-radius: 20px 20px 0 0; padding: 18px 24px;">
+            <div class="modal-header bg-white text-dark py-3 px-4 border-bottom" style="background: #ffffff !important; border-bottom: 1px solid #e2eaf2 !important;">
                 <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2" id="addStaffModalLabel">
                     <i class="bi bi-person-plus-fill text-primary"></i> Thêm tài khoản cán bộ thư viện
                 </h5>
@@ -276,7 +260,7 @@
 <div class="modal fade" id="editRoleModal" tabindex="-1" aria-labelledby="editRoleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 20px; border: 1px solid #e2eef8; box-shadow: 0 20px 45px rgba(2, 132, 199, 0.16);">
-            <div class="modal-header" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-bottom: 1px solid #bae6fd; border-radius: 20px 20px 0 0; padding: 18px 24px;">
+            <div class="modal-header bg-white text-dark py-3 px-4 border-bottom" style="background: #ffffff !important; border-bottom: 1px solid #e2eaf2 !important;">
                 <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2" id="editRoleModalLabel">
                     <i class="bi bi-shield-lock-fill text-primary"></i> Phân quyền tài khoản cán bộ
                 </h5>

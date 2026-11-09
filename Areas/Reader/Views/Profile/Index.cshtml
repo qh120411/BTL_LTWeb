@@ -75,9 +75,7 @@
                         <div class="col-lg-3 col-md-4 profile-left-col">
                             <div class="avatar-wrapper">
                                 <i class="bi bi-person-fill avatar-icon-placeholder"></i>
-                                <button type="button" class="avatar-cam-btn" title="Cập nhật ảnh thẻ sinh viên">
-                                    <i class="bi bi-camera-fill"></i>
-                                </button>
+
                             </div>
 
                             <div class="student-data-table">
@@ -90,20 +88,8 @@
                                     <div class="student-data-value">@Model.NgaySinh</div>
                                 </div>
                                 <div class="student-data-row">
-                                    <span class="student-data-label">CMND/CCCD</span>
-                                    <div class="student-data-value">@Model.SoCCCD</div>
-                                </div>
-                                <div class="student-data-row">
                                     <span class="student-data-label">@(Model.MaSinhVien.StartsWith("GV") ? "MÃ GV" : "MÃ SV")</span>
                                     <div class="student-data-value">@Model.MaSinhVien</div>
-                                </div>
-                                <div class="student-data-row">
-                                    <span class="student-data-label">@(Model.MaSinhVien.StartsWith("GV") ? "KHOA / ĐƠN VỊ" : "NGÀNH HỌC")</span>
-                                    <div class="student-data-value">@Model.NganhHoc</div>
-                                </div>
-                                <div class="student-data-row">
-                                    <span class="student-data-label">@(Model.MaSinhVien.StartsWith("GV") ? "BỘ MÔN / CHỨC DANH" : "LỚP QUẢN LÝ")</span>
-                                    <div class="student-data-value">@Model.LopQuanLy</div>
                                 </div>
                             </div>
                         </div>
@@ -217,9 +203,7 @@
                         II. DANH SÁCH TÀI LIỆU / SÁCH ĐANG MƯỢN (THỜI GIAN MƯỢN 1 NĂM)
                     </div>
                 </div>
-                <div class="d-none d-md-block text-white-50 small">
-                    Đồng bộ từ CSDL Thư viện UTC
-                </div>
+
             </div>
 
             <!-- Nội dung phần II -->

@@ -340,3 +340,37 @@
     color: var(--utc-warning, #b28a52) !important;
     border-color: var(--utc-warning-border, #eaddc7) !important;
 }
+
+
+/* Unified Button Border Radius & Styling for Search Page */
+.btn-utc-primary,
+button.btn-utc-primary,
+.btn-utc-secondary,
+a.btn-utc-secondary,
+.btn-utc-outline,
+a.btn-utc-outline {
+    border-radius: var(--utc-radius-btn, 6px) !important;
+    font-weight: 600;
+    transition: var(--utc-transition);
+}
+
+.utc-search-box-large .btn-utc-primary,
+.utc-search-box-large .btn-utc-secondary {
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    font-size: 14px;
+    border-radius: var(--utc-radius-btn, 6px) !important;
+}
+
+.utc-filter-sidebar .btn-utc-primary,
+.utc-filter-sidebar .btn-utc-outline {
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    border-radius: var(--utc-radius-btn, 6px) !important;
+}

@@ -11,7 +11,7 @@
     <div>
         <h1 class="admin-page-title mb-1">Tổng quan Thư viện</h1>
         <div class="text-muted" style="font-size: 14.5px;">
-            Số liệu thống kê thời gian thực theo CSDL Thư viện UTC &middot; Ngày cập nhật: @DateTime.Now.ToString("dd/MM/yyyy")
+            Ngày cập nhật: @DateTime.Now.ToString("dd/MM/yyyy")
         </div>
     </div>
     <div class="d-flex gap-2">
@@ -48,7 +48,7 @@
         <div class="kpi-card kpi-card-danger">
             <div class="kpi-title" style="color: var(--utc-danger);">Quá hạn quy định</div>
             <div class="kpi-value" style="color: var(--utc-danger);">@Model.LuotQuaHan</div>
-            <div class="small text-muted mt-1">Phạt 100k/cuốn (@((Model.LuotQuaHan * 100).ToString("N0"))k)</div>
+            <div class="small text-muted mt-1">Phạt 100k/cuốn</div>
         </div>
     </div>
 </div>
@@ -124,7 +124,7 @@
             <h3 class="fw-bold mb-0" style="color: var(--utc-navy); font-size: 20px;">
                 <i class="bi bi-cash-coin text-success me-2"></i> Thống kê tài chính &amp; Quỹ thư viện
             </h3>
-            <div class="text-muted small">Hạch toán tự động từ các khoản phạt nộp muộn &amp; đền bù mất/hỏng tài liệu (CSDL Thật)</div>
+            
         </div>
         <a href="/Admin/Incident" class="btn btn-sm btn-outline-primary shadow-sm">
             <i class="bi bi-receipt-cutoff me-1"></i> Xem chi tiết sổ quỹ tài chính &rarr;

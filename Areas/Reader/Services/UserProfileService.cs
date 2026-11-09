@@ -62,6 +62,7 @@ namespace BTL_LTWEB.Areas.Reader.Services
                             ? (banDoc.MaLopNavigation != null ? (banDoc.MaLopNavigation.KhoaHoc ?? "Cán bộ / Giảng viên") : "Cán bộ / Giảng viên")
                             : (banDoc.MaLopNavigation != null ? banDoc.MaLopNavigation.TenLop : "K65.CLCCNTT1");
 
+                        _profiles.TryGetValue(studentId, out var existingSaved);
                         var profile = new UserProfileViewModel
                         {
                             MaSinhVien = banDoc.MaSinhVien,
@@ -70,11 +71,11 @@ namespace BTL_LTWEB.Areas.Reader.Services
                             SoCCCD = $"03320600{studentId.Substring(Math.Max(0, studentId.Length - 4))}",
                             NganhHoc = nganhHoc,
                             LopQuanLy = lopQuanLy,
-                            SoDienThoai = banDoc.SoDienThoai ?? "0986123456",
-                            DiaChiNha = banDoc.DiaChi ?? "Số 3 Phố Cầu Giấy, Láng Thượng, Đống Đa, Hà Nội",
-                            SoTaiKhoanNganHang = "1028374659",
-                            TenNganHang = "Vietcombank",
-                            Email = banDoc.Email ?? $"{studentId}@utc.edu.vn",
+                            SoDienThoai = existingSaved?.SoDienThoai ?? banDoc.SoDienThoai ?? "",
+                            DiaChiNha = existingSaved?.DiaChiNha ?? banDoc.DiaChi ?? "",
+                            SoTaiKhoanNganHang = existingSaved?.SoTaiKhoanNganHang ?? "",
+                            TenNganHang = existingSaved?.TenNganHang ?? "",
+                            Email = existingSaved?.Email ?? banDoc.Email ?? "",
                             AvatarUrl = "/images/default-avatar.png",
                             BorrowedBooks = new List<BorrowedBookItem>()
                         };
@@ -221,11 +222,11 @@ namespace BTL_LTWEB.Areas.Reader.Services
                 SoCCCD = $"03320600{studentId.Substring(Math.Max(0, studentId.Length - 4))}",
                 NganhHoc = "CLC Công nghệ thông tin Việt - Anh",
                 LopQuanLy = "CLC Công nghệ thông tin - Anh 1 K65",
-                SoDienThoai = "0986123456",
-                DiaChiNha = "Số 3 Phố Cầu Giấy, Láng Thượng, Đống Đa, Hà Nội",
-                SoTaiKhoanNganHang = "1028374659",
-                TenNganHang = "Vietcombank",
-                Email = $"{studentId}@utc.edu.vn",
+                SoDienThoai = "",
+                DiaChiNha = "",
+                SoTaiKhoanNganHang = "",
+                TenNganHang = "",
+                Email = "",
                 BorrowedBooks = new List<BorrowedBookItem>()
             };
 

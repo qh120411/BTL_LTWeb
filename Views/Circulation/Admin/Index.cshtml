@@ -43,17 +43,10 @@
             Thời hạn mượn quy định: <strong>1 năm</strong> &middot; Giới hạn: <strong>Tối đa 5 cuốn / sinh viên</strong> &middot; Cập nhật CSDL Thư viện UTC
         </div>
     </div>
-    <button class="btn btn-utc-primary d-inline-flex align-items-center gap-2 shadow-sm px-3 py-2" type="button" data-bs-toggle="modal" data-bs-target="#createBorrowModal">
-        <i class="bi bi-plus-circle-fill"></i>
-        <span>+ Tạo giao dịch mượn</span>
-    </button>
+    
 </div>
 
-<!-- Khung giới thiệu nghiệp vụ -->
-<div class="admin-info-box mb-4">
-    <div class="admin-info-title">Quầy lưu thông &amp; Mượn trả tài liệu học liệu (CSDL Thật Thư viện UTC)</div>
-    <div class="admin-info-desc">Tiếp nhận yêu cầu mượn trả tại quầy, kiểm tra điều kiện mượn (tối đa 5 cuốn, 1 quyển/đầu sách), ấn định thời hạn 1 năm và đối soát cấn trừ phí quá hạn khi hoàn tất trả sách.</div>
-</div>
+
 
 <!-- Bộ lọc tìm kiếm & trạng thái -->
 <form method="get" asp-action="Index" class="mb-4">
@@ -185,14 +178,11 @@
 <div class="modal fade" id="createBorrowModal" tabindex="-1" aria-labelledby="createBorrowModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden;">
-            <div class="modal-header text-white" style="background: linear-gradient(135deg, #174c7f, #0079ba); padding: 16px 24px;">
-                <div>
-                    <h5 class="modal-title fw-bold mb-0" id="createBorrowModalLabel">
-                        <i class="bi bi-journal-plus me-2"></i>Tạo giao dịch mượn tài liệu mới
-                    </h5>
-                    <div class="text-white-50 small mt-1">Quầy lưu thông Thư viện UTC &middot; Thời hạn mượn 1 năm &middot; Cập nhật CSDL Thật</div>
-                </div>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header bg-white text-dark py-3 px-4 border-bottom" style="background: #ffffff !important; border-bottom: 1px solid #e2eaf2 !important;">
+                <h5 class="modal-title fw-bold mb-0 text-dark" id="createBorrowModalLabel" style="color: #163b5c !important;">
+                    <i class="bi bi-journal-plus text-primary me-2"></i>Tạo giao dịch mượn tài liệu mới
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <form asp-action="CreateBorrow" method="post" id="formCreateBorrow">

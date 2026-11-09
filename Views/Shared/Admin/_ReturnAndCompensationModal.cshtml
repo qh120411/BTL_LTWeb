@@ -4,14 +4,11 @@
 <div class="modal fade" id="returnAndCompensationModal" tabindex="-1" aria-labelledby="rcModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
-            <div class="modal-header text-white" style="background: linear-gradient(90deg, #075985 0%, #087dbb 100%); padding: 16px 24px;">
-                <div>
-                    <h5 class="modal-title fw-bold mb-0" id="rcModalLabel">
-                        <i class="bi bi-arrow-left-right me-2"></i>Xác nhận trả sách &amp; Bồi thường sự cố
-                    </h5>
-                    <div class="text-white-50 small mt-1">Quầy lưu thông Thư viện UTC &middot; Tự động hạch toán vào Sổ quỹ tài chính CSDL</div>
-                </div>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header bg-white text-dark py-3 px-4 border-bottom" style="background: #ffffff !important; border-bottom: 1px solid #e2eaf2 !important;">
+                <h5 class="modal-title fw-bold mb-0 text-dark" id="rcModalLabel" style="color: #163b5c !important;">
+                    <i class="bi bi-arrow-left-right text-primary me-2"></i>Xác nhận trả sách &amp; Bồi thường sự cố
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <form action="/Admin/Circulation/ProcessReturnOrCompensation" method="post" id="formReturnAndCompensation">
