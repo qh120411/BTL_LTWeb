@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using BTL_LTWEB.Areas.Reader.Models;
 using BTL_LTWEB.Areas.Reader.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BTL_LTWEB.Areas.Reader.Controllers
@@ -16,6 +17,7 @@ namespace BTL_LTWEB.Areas.Reader.Controllers
         }
 
         // [Figma Reader 01] Trang chủ Thư viện UTC
+        [AllowAnonymous]
         public IActionResult Index()
         {
             UserProfileViewModel? profile = null;

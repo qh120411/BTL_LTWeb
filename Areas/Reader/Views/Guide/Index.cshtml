@@ -1,256 +1,112 @@
 @{
-    ViewData["Title"] = "Dịch vụ & Quy định phục vụ Bạn đọc";
+    ViewData["Title"] = "Dịch vụ bạn đọc";
 }
 
-<section class="py-4 py-md-5" style="background-color: var(--utc-page-bg, #EDF4FA); min-height: calc(100vh - 200px);">
-    <div class="container-xl px-3 px-md-4">
-        <!-- Breadcrumb -->
-        <nav class="utc-breadcrumb mb-2" aria-label="breadcrumb">
-            <a href="/Reader/Home" class="text-decoration-none" style="color: var(--utc-primary);">Trang chủ</a>
-            <span style="color: var(--utc-border);">&bull;</span>
-            <span style="color: var(--utc-text-muted);">Cổng bạn đọc</span>
-            <span style="color: var(--utc-border);">&bull;</span>
-            <span style="color: var(--utc-text-primary); font-weight: 700;">Dịch vụ &amp; Quy định</span>
+@section Styles {
+    <link rel="stylesheet" href="~/css/reader-services.css" asp-append-version="true" />
+}
+
+<div class="utc-services-page">
+    <div class="utc-services-container">
+        <nav class="utc-services-breadcrumb" aria-label="Đường dẫn">
+            <a href="/Reader/Home">Trang chủ</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Dịch vụ</span>
         </nav>
 
-        <h1 class="utc-page-title-main">Dịch vụ &amp; Quy định phục vụ Bạn đọc Thư viện UTC</h1>
-        <p class="utc-page-subtitle-main">
-            Chi tiết quy chế mượn trả học liệu, thời hạn mượn 1 năm, chế tài xử lý nộp muộn 100.000 đ/cuốn, quy định đền bù mất hỏng và quy trình phục vụ tại Nhà A8.
-        </p>
+        <header class="utc-services-header">
+            <h1>Dịch vụ bạn đọc</h1>
+            <p>Thông tin cần thiết cho mỗi lần đến thư viện.</p>
+        </header>
 
-        <!-- Khung tóm tắt quy chế cốt lõi của hệ thống -->
-        <div class="utc-card mb-4 p-4" style="border-left: 5px solid var(--utc-primary); background: #ffffff;">
-            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-                <div class="d-flex align-items-center gap-3">
-                    <div style="width: 48px; height: 48px; border-radius: 12px; background-color: var(--utc-primary-light); display: flex; align-items: center; justify-content: center; color: var(--utc-primary); font-size: 24px; flex-shrink: 0;">
-                        <i class="bi bi-shield-check"></i>
-                    </div>
-                    <div>
-                        <h4 class="mb-1" style="color: var(--utc-text-primary); font-size: 17px; font-weight: 700;">
-                            Quy chế Mượn Trả Tự động đồng bộ CSDL Thư viện UTC
-                        </h4>
-                        <p class="text-secondary small mb-0">
-                            Áp dụng thống nhất cho toàn bộ sinh viên, học viên và cán bộ giảng viên trường Đại học Giao thông Vận tải.
-                        </p>
-                    </div>
-                </div>
-                <div class="d-flex gap-2">
-                    <a href="/Reader/Search" class="btn-utc-primary btn-sm">
-                        <i class="bi bi-search me-1"></i> Tra cứu sách
-                    </a>
-                    <a href="/Reader/Profile" class="btn-utc-secondary btn-sm">
-                        <i class="bi bi-person-vcard me-1"></i> Hồ sơ mượn sách
-                    </a>
-                </div>
-            </div>
-        </div>
+        <nav class="utc-services-nav" aria-label="Các mục dịch vụ">
+            <a href="#muon-tra">Mượn &amp; trả sách</a>
+            <a href="#phong-doc">Đọc tại chỗ</a>
+            <a href="#gio-phuc-vu">Giờ phục vụ</a>
+            <a href="#lien-he">Liên hệ</a>
+        </nav>
 
-        <!-- 3 CỘT QUY ĐỊNH CHI TIẾT THEO LOGIC HỆ THỐNG -->
-        <div class="row g-4 mb-4">
-            <!-- Cột 1: Thời hạn & Hạn mức -->
-            <div class="col-lg-4 col-md-6">
-                <div class="utc-card h-100 d-flex flex-column p-4">
-                    <div class="d-flex align-items-center gap-3 mb-3">
-                        <div style="width: 44px; height: 44px; border-radius: 10px; background-color: var(--utc-primary-light); display: flex; align-items: center; justify-content: center; color: var(--utc-primary); font-size: 22px;">
-                            <i class="bi bi-calendar2-check-fill"></i>
-                        </div>
-                        <div>
-                            <h3 class="utc-card-title mb-0" style="font-size: 16px;">Thời hạn &amp; Hạn mức mượn</h3>
-                            <span class="text-muted small">Thời gian chuẩn 1 năm</span>
-                        </div>
-                    </div>
-                    <ul class="text-secondary small ps-3 mb-3 flex-grow-1" style="line-height: 1.7;">
-                        <li class="mb-2"><strong>Thời hạn mượn:</strong> Luôn là <strong>1 năm (365 ngày)</strong> kể từ ngày hoàn tất thủ tục lập phiếu tại bàn thủ thư.</li>
-                        <li class="mb-2"><strong>Hạn mức sách:</strong> Mỗi bạn đọc được mượn tối đa <strong>3 – 5 cuốn giáo trình</strong> cùng thời điểm.</li>
-                        <li class="mb-2"><strong>Thẻ mượn sách:</strong> Sử dụng trực tiếp <strong>Mã sinh viên (MSV)</strong> / Thẻ sinh viên tích hợp thẻ thư viện.</li>
-                        <li><strong>Gia hạn sách:</strong> Có thể thực hiện gia hạn trực tuyến trên Cổng Hồ sơ sinh viên khi tài liệu chưa quá hạn.</li>
-                    </ul>
-                    <div class="p-2 px-3 rounded-2 text-center" style="background-color: var(--utc-primary-light); color: var(--utc-primary); font-size: 13px; font-weight: 600;">
-                        <i class="bi bi-clock-history me-1"></i> Chu kỳ phục vụ: 365 ngày / lượt mượn
-                    </div>
-                </div>
+        <section class="utc-service-section" id="muon-tra" aria-labelledby="borrowingTitle">
+            <div class="utc-service-section-heading">
+                <h2 id="borrowingTitle">Mượn &amp; trả sách</h2>
+                <a href="/Reader/Search" class="utc-service-text-link">Tra cứu học liệu</a>
             </div>
+            <div class="utc-service-borrowing-grid">
+                <ol class="utc-service-steps">
+                    <li>
+                        <h3>Tìm tài liệu</h3>
+                        <p>Tra cứu tên sách, ghi lại mã sách và vị trí kệ.</p>
+                    </li>
+                    <li>
+                        <h3>Làm thủ tục mượn</h3>
+                        <p>Mang sách và thẻ sinh viên hoặc thẻ bạn đọc đến quầy tầng 5, Nhà A8.</p>
+                    </li>
+                    <li>
+                        <h3>Theo dõi và trả sách</h3>
+                        <p>Xem hạn trả trong <a href="/Reader/Profile">hồ sơ bạn đọc</a>. Hoàn trả sách tại quầy trước ngày đến hạn.</p>
+                    </li>
+                </ol>
+                <aside class="utc-service-borrowing-note" aria-labelledby="borrowingRulesTitle">
+                    <h3 id="borrowingRulesTitle">Điều cần nhớ</h3>
+                    <dl class="utc-service-facts">
+                        <div><dt>Thời hạn mượn</dt><dd>1 năm</dd></div>
+                        <div><dt>Hạn mức sinh viên</dt><dd>5 cuốn</dd></div>
+                        <div><dt>Hạn mức giảng viên</dt><dd>10 cuốn</dd></div>
+                    </dl>
+                    <p>Mỗi bạn đọc mượn tối đa 1 bản cho mỗi đầu sách.</p>
+                </aside>
+            </div>
+            <div class="utc-service-extra-rules">
+                <details>
+                    <summary>Trả sách quá hạn</summary>
+                    <p>Mức phạt là <strong>100.000 đ/cuốn</strong>. Mang sách đến quầy tầng 5, Nhà A8 để hoàn trả và thanh toán.</p>
+                </details>
+                <details>
+                    <summary>Sách bị mất hoặc hư hỏng</summary>
+                    <p>Liên hệ thủ thư để thống nhất hình thức bồi thường: bổ sung sách mới đúng tên, phiên bản hoặc đền tiền theo biên bản. Nếu sách đã quá hạn, cần thanh toán thêm khoản phạt nộp muộn.</p>
+                </details>
+            </div>
+        </section>
 
-            <!-- Cột 2: Chế tài quá hạn -->
-            <div class="col-lg-4 col-md-6">
-                <div class="utc-card h-100 d-flex flex-column p-4">
-                    <div class="d-flex align-items-center gap-3 mb-3">
-                        <div style="width: 44px; height: 44px; border-radius: 10px; background-color: var(--utc-warning-bg); display: flex; align-items: center; justify-content: center; color: var(--utc-warning); font-size: 22px;">
-                            <i class="bi bi-exclamation-triangle-fill"></i>
-                        </div>
-                        <div>
-                            <h3 class="utc-card-title mb-0" style="font-size: 16px;">Phí phạt Nộp muộn &amp; Quá hạn</h3>
-                            <span class="text-muted small">Mức phạt 100.000 đ/cuốn</span>
-                        </div>
-                    </div>
-                    <ul class="text-secondary small ps-3 mb-3 flex-grow-1" style="line-height: 1.7;">
-                        <li class="mb-2"><strong>Tự động xác định:</strong> Hệ thống SQL Server tự động rà soát ngày trả; khi quá hạn 1 năm sẽ chuyển trạng thái <strong>"Đang quá hạn"</strong>.</li>
-                        <li class="mb-2"><strong>Mức phạt quy định:</strong> <strong>100.000 VNĐ / cuốn</strong> đối với bất kỳ tài liệu nào nộp muộn so với kỳ hạn.</li>
-                        <li class="mb-2"><strong>Cộng dồn tiền phạt:</strong> Tiền phạt được hệ thống tự động tổng hợp vào <em>Tổng phải thanh toán</em> của sinh viên.</li>
-                        <li><strong>Quyết toán phạt:</strong> Bạn đọc mang sách nộp tại quầy thủ thư Tầng 5 Nhà A8 để quyết toán tiền phạt và tất toán phiếu.</li>
-                    </ul>
-                    <div class="p-2 px-3 rounded-2 text-center" style="background-color: var(--utc-warning-bg); color: var(--utc-warning); font-size: 13px; font-weight: 600;">
-                        <i class="bi bi-cash-stack me-1"></i> Chế tài quá hạn: 100.000 đ / cuốn
-                    </div>
-                </div>
+        <section class="utc-service-section" id="phong-doc" aria-labelledby="readingTitle">
+            <div class="utc-service-section-heading">
+                <h2 id="readingTitle">Đọc tại chỗ</h2>
+                <span class="utc-service-location">Tầng 6 · Nhà A8</span>
             </div>
+            <p>Không gian dành cho đọc sách, tự học và nghiên cứu. Bạn có thể tra cứu trước tài liệu hoặc nhờ thủ thư hỗ trợ tìm sách.</p>
+            <a href="#gio-phuc-vu" class="utc-service-text-link">Xem giờ mở cửa phòng đọc</a>
+        </section>
 
-            <!-- Cột 3: Bồi thường mất/hỏng -->
-            <div class="col-lg-4 col-md-12">
-                <div class="utc-card h-100 d-flex flex-column p-4">
-                    <div class="d-flex align-items-center gap-3 mb-3">
-                        <div style="width: 44px; height: 44px; border-radius: 10px; background-color: var(--utc-danger-bg); display: flex; align-items: center; justify-content: center; color: var(--utc-danger); font-size: 22px;">
-                            <i class="bi bi-book-half"></i>
-                        </div>
-                        <div>
-                            <h3 class="utc-card-title mb-0" style="font-size: 16px;">Xử lý Báo mất &amp; Hư hỏng sách</h3>
-                            <span class="text-muted small">Đền bù sách mới bổ sung kho</span>
-                        </div>
-                    </div>
-                    <ul class="text-secondary small ps-3 mb-3 flex-grow-1" style="line-height: 1.7;">
-                        <li class="mb-2"><strong>Thủ tục tại quầy:</strong> Khi làm mất, rách bìa hoặc hư hại học liệu, bạn đọc liên hệ trực tiếp bàn thủ thư <strong>Tầng 5 Nhà A8</strong>.</li>
-                        <li class="mb-2"><strong>Hình thức đền bù:</strong> Bạn đọc mua và đền bù <strong>01 cuốn sách mới</strong> đúng tên và phiên bản xuất bản để thủ thư nhập lại kho.</li>
-                        <li class="mb-2"><strong>Trường hợp quá hạn kèm mất:</strong> Bạn đọc phải nộp đủ tiền phạt nộp muộn (100.000 đ) + bàn giao 01 sách mới đền bù.</li>
-                        <li><strong>Ghi nhận CSDL:</strong> Hệ thống tự động phát hành Mã phiếu thu đền bù và xóa nợ học liệu cho sinh viên.</li>
-                    </ul>
-                    <div class="p-2 px-3 rounded-2 text-center" style="background-color: var(--utc-danger-bg); color: var(--utc-danger); font-size: 13px; font-weight: 600;">
-                        <i class="bi bi-arrow-repeat me-1"></i> Bồi thường: Đền 01 cuốn sách mới
-                    </div>
-                </div>
+        <section class="utc-service-section" id="gio-phuc-vu" aria-labelledby="openingTitle">
+            <div class="utc-service-section-heading">
+                <h2 id="openingTitle">Giờ phục vụ</h2>
             </div>
-        </div>
+            <dl class="utc-service-hours">
+                <div>
+                    <dt>Quầy mượn trả <span>Thứ Hai – Thứ Sáu</span></dt>
+                    <dd>07:30 – 11:30<br />13:30 – 17:00</dd>
+                </div>
+                <div>
+                    <dt>Quầy mượn trả <span>Thứ Bảy</span></dt>
+                    <dd>07:30 – 11:30</dd>
+                </div>
+                <div>
+                    <dt>Phòng đọc &amp; tự học <span>Thứ Hai – Chủ Nhật</span></dt>
+                    <dd>07:30 – 21:00</dd>
+                </div>
+            </dl>
+            <p class="utc-service-holiday-note">Ngày lễ, Tết áp dụng lịch nghỉ của nhà trường.</p>
+        </section>
 
-        <!-- QUY TRÌNH 5 BƯỚC PHỤC VỤ BẠN ĐỌC -->
-        <div class="utc-card mb-4 p-4">
-            <h3 class="utc-section-title mb-3" style="font-size: 18px;">
-                <i class="bi bi-diagram-3-fill text-primary me-2"></i>Quy trình 5 Bước Mượn &amp; Hoàn trả Học liệu tại Thư viện UTC
-            </h3>
-            <div class="row g-3">
-                <div class="col-md">
-                    <div class="p-3 rounded-3 h-100" style="background-color: var(--utc-surface-secondary); border: 1px solid var(--utc-border);">
-                        <div class="d-flex align-items-center gap-2 mb-2">
-                            <span class="badge rounded-circle text-white d-flex align-items-center justify-content-center" style="background-color: var(--utc-primary); width: 28px; height: 28px; font-weight: 700;">1</span>
-                            <strong style="color: var(--utc-text-primary); font-size: 13.5px;">Tra cứu OPAC</strong>
-                        </div>
-                        <p class="small text-muted mb-0">Tìm kiếm tài liệu trên cổng trực tuyến, lưu lại tên sách, mã vạch và vị trí kệ sách.</p>
-                    </div>
-                </div>
-                <div class="col-md">
-                    <div class="p-3 rounded-3 h-100" style="background-color: var(--utc-surface-secondary); border: 1px solid var(--utc-border);">
-                        <div class="d-flex align-items-center gap-2 mb-2">
-                            <span class="badge rounded-circle text-white d-flex align-items-center justify-content-center" style="background-color: var(--utc-primary); width: 28px; height: 28px; font-weight: 700;">2</span>
-                            <strong style="color: var(--utc-text-primary); font-size: 13.5px;">Chọn tại Kho mở</strong>
-                        </div>
-                        <p class="small text-muted mb-0">Đến các tầng kho mở Nhà A8, đối chiếu số kệ theo ngành học và kiểm tra hiện trạng sách.</p>
-                    </div>
-                </div>
-                <div class="col-md">
-                    <div class="p-3 rounded-3 h-100" style="background-color: var(--utc-surface-secondary); border: 1px solid var(--utc-border);">
-                        <div class="d-flex align-items-center gap-2 mb-2">
-                            <span class="badge rounded-circle text-white d-flex align-items-center justify-content-center" style="background-color: var(--utc-primary); width: 28px; height: 28px; font-weight: 700;">3</span>
-                            <strong style="color: var(--utc-text-primary); font-size: 13.5px;">Làm thủ tục Quầy</strong>
-                        </div>
-                        <p class="small text-muted mb-0">Xuất trình thẻ sinh viên tại quầy Tầng 5 Nhà A8 để thủ thư quét mã vạch và tạo phiếu mượn (1 năm).</p>
-                    </div>
-                </div>
-                <div class="col-md">
-                    <div class="p-3 rounded-3 h-100" style="background-color: var(--utc-surface-secondary); border: 1px solid var(--utc-border);">
-                        <div class="d-flex align-items-center gap-2 mb-2">
-                            <span class="badge rounded-circle text-white d-flex align-items-center justify-content-center" style="background-color: var(--utc-primary); width: 28px; height: 28px; font-weight: 700;">4</span>
-                            <strong style="color: var(--utc-text-primary); font-size: 13.5px;">Theo dõi Hồ sơ</strong>
-                        </div>
-                        <p class="small text-muted mb-0">Đăng nhập Hồ sơ sinh viên theo dõi hạn trả 365 ngày, kiểm tra số ngày còn hạn và cảnh báo quá hạn.</p>
-                    </div>
-                </div>
-                <div class="col-md">
-                    <div class="p-3 rounded-3 h-100" style="background-color: var(--utc-surface-secondary); border: 1px solid var(--utc-border);">
-                        <div class="d-flex align-items-center gap-2 mb-2">
-                            <span class="badge rounded-circle text-white d-flex align-items-center justify-content-center" style="background-color: var(--utc-success); width: 28px; height: 28px; font-weight: 700;">5</span>
-                            <strong style="color: var(--utc-text-primary); font-size: 13.5px;">Hoàn trả &amp; Quyết toán</strong>
-                        </div>
-                        <p class="small text-muted mb-0">Mang sách đến quầy Tầng 5 Nhà A8 để kiểm tra nhập lại kho và nộp phạt (nếu có quá hạn).</p>
-                    </div>
-                </div>
+        <section class="utc-service-section" id="lien-he" aria-labelledby="contactTitle">
+            <div class="utc-service-section-heading">
+                <h2 id="contactTitle">Liên hệ &amp; hỗ trợ</h2>
             </div>
-        </div>
-
-        <!-- THÔNG TIN PHÒNG ĐỌC, GIỜ MỞ CỬA & HỖ TRỢ -->
-        <div class="row g-4">
-            <!-- Giờ phục vụ -->
-            <div class="col-md-6">
-                <div class="utc-card h-100 d-flex flex-column p-4">
-                    <div class="d-flex align-items-center gap-3 mb-3">
-                        <div style="width: 44px; height: 44px; border-radius: 10px; background-color: var(--utc-primary-light); display: flex; align-items: center; justify-content: center; color: var(--utc-primary); font-size: 22px;">
-                            <i class="bi bi-clock-history"></i>
-                        </div>
-                        <div>
-                            <h3 class="utc-card-title mb-0" style="font-size: 16px;">Giờ mở cửa &amp; Phục vụ Bạn đọc</h3>
-                            <span class="text-muted small">Nhà A8 - Trường Đại học Giao thông Vận tải</span>
-                        </div>
-                    </div>
-                    <div class="p-3 rounded-3 mb-3 flex-grow-1" style="background-color: var(--utc-surface-secondary); border: 1px solid var(--utc-border);">
-                        <div class="d-flex justify-content-between align-items-center pb-2 mb-2 border-bottom">
-                            <div>
-                                <strong style="color: var(--utc-text-primary); font-size: 13.5px;">Phòng Mượn &amp; Trả sách (Tầng 5 Nhà A8)</strong>
-                                <div class="text-muted small">Thứ Hai – Thứ Sáu hàng tuần</div>
-                            </div>
-                            <span class="badge" style="background-color: var(--utc-primary-light); color: var(--utc-primary); font-size: 12.5px; font-weight: 600;">
-                                07:30 – 11:30 | 13:30 – 17:00
-                            </span>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center pb-2 mb-2 border-bottom">
-                            <div>
-                                <strong style="color: var(--utc-text-primary); font-size: 13.5px;">Phục vụ sáng Thứ Bảy</strong>
-                                <div class="text-muted small">Quầy thủ thư tiếp nhận mượn trả</div>
-                            </div>
-                            <span class="badge" style="background-color: var(--utc-primary-light); color: var(--utc-primary); font-size: 12.5px; font-weight: 600;">
-                                07:30 – 11:30 (Chiều nghỉ)
-                            </span>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong style="color: var(--utc-text-primary); font-size: 13.5px;">Phòng Đọc &amp; Không gian Tự học (Tầng 6 Nhà A8)</strong>
-                                <div class="text-muted small">Mở cửa liên tục cả tuần (Thứ 2 – Chủ Nhật)</div>
-                            </div>
-                            <span class="badge" style="background-color: var(--utc-success-bg); color: var(--utc-success); font-size: 12.5px; font-weight: 600;">
-                                07:30 – 21:00
-                            </span>
-                        </div>
-                    </div>
-                    <p class="text-muted small mb-0">
-                        <i class="bi bi-info-circle me-1"></i> Thư viện tạm nghỉ vào các ngày Lễ, Tết theo lịch nghỉ chung của Nhà trường.
-                    </p>
-                </div>
+            <p>Để được hỗ trợ tra cứu, tài khoản hoặc mượn trả, liên hệ thủ thư tại quầy tầng 5, Nhà A8.</p>
+            <div class="utc-service-contact-links">
+                <a href="tel:02437669860">024 3766 9860</a>
+                <a href="mailto:thuvien@utc.edu.vn">thuvien@utc.edu.vn</a>
             </div>
-
-            <!-- Kênh liên hệ & Hỗ trợ -->
-            <div class="col-md-6">
-                <div class="utc-card h-100 d-flex flex-column p-4">
-                    <div class="d-flex align-items-center gap-3 mb-3">
-                        <div style="width: 44px; height: 44px; border-radius: 10px; background-color: var(--utc-primary-light); display: flex; align-items: center; justify-content: center; color: var(--utc-primary); font-size: 22px;">
-                            <i class="bi bi-headset"></i>
-                        </div>
-                        <div>
-                            <h3 class="utc-card-title mb-0" style="font-size: 16px;">Kênh Liên hệ &amp; Hỗ trợ Bạn đọc</h3>
-                            <span class="text-muted small">Thủ thư &amp; Bộ phận Hỗ trợ học thuật</span>
-                        </div>
-                    </div>
-                    <ul class="text-secondary small ps-3 mb-4 flex-grow-1" style="line-height: 1.8;">
-                        <li class="mb-2"><strong>Địa điểm phục vụ:</strong> Tầng 5 &amp; Tầng 6, Nhà A8, Số 3 Phố Cầu Giấy, Q. Đống Đa, Hà Nội.</li>
-                        <li class="mb-2"><strong>Hotline hỗ trợ:</strong> <a href="tel:02437669860" class="fw-semibold text-decoration-none" style="color: var(--utc-primary);">(024) 37669860</a></li>
-                        <li class="mb-2"><strong>Email tiếp nhận:</strong> <a href="mailto:thuvien@utc.edu.vn" class="fw-semibold text-decoration-none" style="color: var(--utc-primary);">thuvien@utc.edu.vn</a></li>
-                        <li><strong>Hỗ trợ trực tiếp:</strong> Cán bộ thủ thư trực tại Bàn phục vụ Tầng 5 Nhà A8 trong giờ hành chính.</li>
-                    </ul>
-                    <div class="d-flex gap-2">
-                        <a href="mailto:thuvien@utc.edu.vn" class="btn-utc-outline flex-grow-1 text-center text-decoration-none">
-                            <i class="bi bi-envelope-fill me-1"></i> Gửi email hỗ trợ
-                        </a>
-                        <a href="/Reader/Profile" class="btn-utc-primary flex-grow-1 text-center text-decoration-none">
-                            <i class="bi bi-person-badge me-1"></i> Kiểm tra hồ sơ cá nhân
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </section>
     </div>
-</section>
+</div>

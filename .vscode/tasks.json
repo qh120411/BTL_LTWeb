@@ -1,0 +1,21 @@
+﻿{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "UTC: build",
+      "type": "process",
+      "command": "dotnet",
+      "args": ["build", "${workspaceFolder}/BTL_LTWEB.csproj"],
+      "problemMatcher": "$msCompile",
+      "group": { "kind": "build", "isDefault": true }
+    },
+    {
+      "label": "UTC: run (localhost:5124)",
+      "type": "process",
+      "command": "dotnet",
+      "args": ["run", "--project", "${workspaceFolder}/BTL_LTWEB.csproj", "--launch-profile", "http"],
+      "problemMatcher": "$msCompile",
+      "presentation": { "reveal": "always", "panel": "dedicated" }
+    }
+  ]
+}

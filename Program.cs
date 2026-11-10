@@ -55,7 +55,7 @@ namespace BTL_LTWEB
                     options.Cookie.HttpOnly = true;
                     options.Cookie.SameSite = SameSiteMode.Lax;
                     options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
-                    options.LoginPath = "/Home/Index";
+                    options.LoginPath = "/Account/Login";
                     options.LogoutPath = "/Account/Logout";
                     options.AccessDeniedPath = "/Account/AccessDenied";
                     options.ExpireTimeSpan = TimeSpan.FromHours(12);
@@ -96,7 +96,7 @@ namespace BTL_LTWEB
                 name: "areas",
                 pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
-            // Default Route -> Mở ngay Home/Index (Trang đăng nhập hệ thống)
+            // Default Route -> Trang chủ công khai; chức năng cá nhân/quản trị tự yêu cầu đăng nhập.
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");

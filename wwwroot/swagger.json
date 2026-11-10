@@ -1,58 +1,178 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.3",
   "info": {
-    "title": "UTC Library Project",
+    "title": "UTC Library API",
     "version": "1.0",
-    "description": "The UTC library management API description"
+    "description": "Tài liệu 11 endpoint JSON hiện có của Thư viện UTC. Ví dụ là dữ liệu minh họa.\n\nAPI dùng camelCase, chưa có envelope lỗi chung. Các endpoint hiện chưa bắt buộc đăng nhập/vai trò; cookie UTC_Library_Auth_v3 chỉ nhận diện phiên cho /api/auth/profile. POST mượn/trả ghi dữ liệu thật.\n\nDữ liệu kết hợp SQL Server, catalog JSON và hồ sơ JSON; fallback không bảo đảm đồng bộ mọi nguồn. Controller chưa có [ApiController] và không kiểm tra ModelState, vì vậy không bảo đảm mọi JSON sai kiểu/cú pháp được chuẩn hóa thành lỗi validation. Lỗi chưa xử lý có thể trả 500 với nội dung tùy môi trường.\n\nHướng dẫn và ví dụ PowerShell: docs/API.md trong repository."
   },
   "servers": [
     {
-      "url": "/"
+      "url": "/",
+      "description": "Cùng origin với ứng dụng đang chạy"
     }
   ],
+  "tags": [
+    {
+      "name": "Hệ thống",
+      "description": "Kết nối SQL và số liệu tổng quát."
+    },
+    {
+      "name": "Phiên đăng nhập",
+      "description": "Đọc phiên cookie hiện tại."
+    },
+    {
+      "name": "Học liệu",
+      "description": "Danh mục và bản sao từ catalog."
+    },
+    {
+      "name": "Mượn trả",
+      "description": "Giao dịch đang mượn và thao tác ghi dữ liệu."
+    },
+    {
+      "name": "Bạn đọc",
+      "description": "Danh sách, hồ sơ và dữ liệu mượn."
+    },
+    {
+      "name": "Thống kê",
+      "description": "Tổng hợp lưu thông và tài chính."
+    }
+  ],
+  "security": [],
   "paths": {
     "/api/system/health": {
       "get": {
-        "tags": ["default"],
-        "summary": "Check system and SQL Server connection health",
+        "tags": [
+          "Hệ thống"
+        ],
+        "operationId": "getSystemHealth",
+        "summary": "Kiểm tra hệ thống và kết nối SQL",
+        "description": "status luôn là Healthy khi action hoàn tất, kể cả khi databaseConnected=false. totalBooks lấy từ catalog; totalReaders và activeLoans từ ReaderService. Không có phản hồi 503 riêng khi SQL offline.",
         "responses": {
           "200": {
-            "description": "System health status"
+            "description": "Trạng thái và bộ đếm hiện tại.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                },
+                "example": {
+                  "status": "Healthy",
+                  "time": "2026-11-10 10:00:00",
+                  "databaseConnected": true,
+                  "totalBooks": 30,
+                  "totalReaders": 50,
+                  "activeLoans": 18
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/auth/profile": {
       "get": {
-        "tags": ["default"],
-        "summary": "Get current logged in user session and claims",
+        "tags": [
+          "Phiên đăng nhập"
+        ],
+        "operationId": "getCurrentUserProfile",
+        "summary": "Xem phiên đăng nhập hiện tại",
+        "description": "Không yêu cầu đăng nhập. Cookie UTC_Library_Auth_v3 được cấp qua biểu mẫu /Account/Login có anti-forgery token. Không có endpoint đăng nhập JSON/JWT. Khi chưa đăng nhập vẫn trả 200.",
         "responses": {
           "200": {
-            "description": "User profile"
+            "description": "Hai cấu trúc theo trạng thái đăng nhập.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/AnonymousProfile"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AuthenticatedProfile"
+                    }
+                  ]
+                },
+                "examples": {
+                  "anonymous": {
+                    "value": {
+                      "isAuthenticated": false,
+                      "user": null
+                    }
+                  },
+                  "authenticated": {
+                    "value": {
+                      "isAuthenticated": true,
+                      "username": "tai-khoan-thu-nghiem",
+                      "fullName": "Bạn đọc thử nghiệm",
+                      "roles": [
+                        "Reader"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/catalog/books": {
       "get": {
-        "tags": ["default"],
-        "summary": "Search and filter book catalog",
+        "tags": [
+          "Học liệu"
+        ],
+        "operationId": "getBooks",
+        "summary": "Tìm kiếm và phân trang học liệu",
+        "description": "Chỉ hỗ trợ keyword, page, pageSize. total là số kết quả trước phân trang. Không có kết quả trả data=[]. page<=0 tính offset như trang 1 nhưng phản hồi page gốc; pageSize<=0 cho danh sách rỗng. Chưa có giới hạn pageSize phía server. Dữ liệu từ catalog JSON/bộ nhớ.",
+        "responses": {
+          "200": {
+            "description": "Danh sách học liệu.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookList"
+                },
+                "example": {
+                  "total": 1,
+                  "page": 1,
+                  "pageSize": 10,
+                  "data": [
+                    {
+                      "id": 1,
+                      "title": "Cấu trúc dữ liệu và giải thuật",
+                      "author": "Bùi Việt Hà",
+                      "major": "cntt",
+                      "year": 2023,
+                      "shelf": "Kệ IT-01",
+                      "availableCopies": 3,
+                      "totalCopies": 4,
+                      "status": "Có sẵn"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
         "parameters": [
           {
             "name": "keyword",
             "in": "query",
             "required": false,
+            "description": "Tìm trong tiêu đề, tác giả, NXB, ISBN, mô tả, tên chuyên ngành; không phân biệt hoa/thường.",
             "schema": {
               "type": "string",
-              "example": "Java"
+              "example": "Python"
             }
           },
           {
             "name": "page",
             "in": "query",
             "required": false,
+            "description": "Nên gửi số >=1; server chưa validation giá trị này.",
             "schema": {
               "type": "integer",
+              "format": "int32",
               "default": 1
             }
           },
@@ -60,167 +180,377 @@
             "name": "pageSize",
             "in": "query",
             "required": false,
+            "description": "Nên gửi số >0; server chưa giới hạn kích thước trang.",
             "schema": {
               "type": "integer",
+              "format": "int32",
               "default": 10
             }
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of books"
-          }
-        }
+        ]
       }
     },
     "/api/catalog/books/{id}": {
       "get": {
-        "tags": ["default"],
-        "summary": "Get book details by ID",
+        "tags": [
+          "Học liệu"
+        ],
+        "operationId": "getBookById",
+        "summary": "Lấy chi tiết học liệu",
+        "description": "Trả BookItem và danh sách bản sao từ catalog. Trường tác giả trong book là authors, khác author của danh sách.",
+        "responses": {
+          "200": {
+            "description": "Chi tiết sách và bản sao.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Không có sách trong catalog.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Không tìm thấy sách ID: 999999"
+                }
+              }
+            }
+          }
+        },
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
+            "description": "ID học liệu trong catalog. Route yêu cầu số nguyên.",
             "schema": {
               "type": "integer",
-              "default": 1
+              "format": "int32",
+              "example": 1
             }
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "Book details"
-          },
-          "404": {
-            "description": "Book not found"
-          }
-        }
+        ]
       }
     },
     "/api/catalog/books/{id}/copies": {
       "get": {
-        "tags": ["default"],
-        "summary": "Get physical copies and barcodes of a book",
+        "tags": [
+          "Học liệu"
+        ],
+        "operationId": "getBookCopies",
+        "summary": "Lấy bản sao của học liệu",
+        "description": "Đọc từ catalog, không truy vấn trực tiếp bảng BanSao. ID không tồn tại vẫn trả 200 với copies=[].",
+        "responses": {
+          "200": {
+            "description": "Danh sách bản sao, có thể rỗng.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookCopies"
+                },
+                "examples": {
+                  "withCopies": {
+                    "value": {
+                      "bookId": 1,
+                      "copies": [
+                        {
+                          "id": 11,
+                          "bookId": 1,
+                          "barcode": "UTC-01-01",
+                          "shelf": "Kệ IT-01",
+                          "condition": "Tốt",
+                          "status": "Có sẵn",
+                          "importDate": "15/01/2024",
+                          "isAvailable": true
+                        }
+                      ]
+                    }
+                  },
+                  "unknownBook": {
+                    "value": {
+                      "bookId": 999999,
+                      "copies": []
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
+            "description": "ID học liệu trong catalog. Route yêu cầu số nguyên.",
             "schema": {
               "type": "integer",
-              "default": 1
+              "format": "int32",
+              "example": 1
             }
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "Physical copies"
-          }
-        }
+        ]
       }
     },
     "/api/circulation/transactions": {
       "get": {
-        "tags": ["default"],
-        "summary": "Get all circulation borrow/return transactions",
+        "tags": [
+          "Mượn trả"
+        ],
+        "operationId": "getCirculationTransactions",
+        "summary": "Xem các giao dịch đang mượn",
+        "description": "Chỉ giao dịch chưa trả, loại Đã trả/Đã đền sách mới/Đã đền tiền; không phải lịch sử toàn bộ. Không phân trang. SQL lỗi trả danh sách rỗng; không hợp nhất mượn fallback từ hồ sơ JSON.",
+        "responses": {
+          "200": {
+            "description": "Danh sách giao dịch đang mượn.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionList"
+                },
+                "example": {
+                  "total": 1,
+                  "data": [
+                    {
+                      "maGD": "GD261110-001",
+                      "maBD": "242630923",
+                      "hoTen": "Bạn đọc thử nghiệm",
+                      "maBanSao": "UTC-01-01",
+                      "tenSach": "Cấu trúc dữ liệu và giải thuật",
+                      "tacGia": "Bùi Việt Hà",
+                      "coverImage": "/images/covers/sach_01.jpg",
+                      "ngayMuon": "10/11/2026",
+                      "hanTra": "10/11/2027",
+                      "trangThai": "Còn hạn",
+                      "isQuaHan": false
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
         "parameters": [
           {
             "name": "maBD",
             "in": "query",
             "required": false,
+            "description": "Mã sinh viên tùy chọn; trim, so khớp không phân biệt hoa/thường.",
             "schema": {
               "type": "string",
               "example": "242630923"
             }
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "Transactions list"
-          }
-        }
+        ]
       }
     },
     "/api/circulation/borrow": {
       "post": {
-        "tags": ["default"],
-        "summary": "Borrow a book for a reader",
+        "tags": [
+          "Mượn trả"
+        ],
+        "operationId": "borrowBook",
+        "summary": "Mượn một đầu sách (ghi dữ liệu)",
+        "description": "Thao tác thực sự ghi SQL/JSON. Nhánh SQL: tối đa 5 cuốn cho sinh viên, 10 cho mã GV/CB, chặn trùng đầu sách, hạn trả một năm; tự tạo bản sao nếu hết bản sẵn có. Các lỗi khác ngoài vượt giới hạn/trùng đầu sách chuyển fallback hồ sơ JSON. Fallback chỉ kiểm tra trùng tiêu đề, chưa áp dụng quota SQL. Không có idempotency; không tự gửi lại sau timeout. API hiện chưa kiểm tra đăng nhập/vai trò hoặc anti-forgery token.",
+        "responses": {
+          "200": {
+            "description": "Mượn thành công; maGD fallback chỉ có trong message.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionResult"
+                },
+                "examples": {
+                  "sql": {
+                    "value": {
+                      "success": true,
+                      "mode": "SQL_Server",
+                      "message": "Mượn thành công 'Cấu trúc dữ liệu và giải thuật' cho 242630923"
+                    }
+                  },
+                  "fallback": {
+                    "value": {
+                      "success": true,
+                      "mode": "Offline_Fallback",
+                      "message": "Mượn thành công 'Cấu trúc dữ liệu và giải thuật' (Mã GD: GD261110-001)"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Thiếu dữ liệu, vượt giới hạn hoặc trùng đầu sách.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "invalidBody": {
+                    "value": {
+                      "message": "Vui lòng nhập maBD và bookId."
+                    }
+                  },
+                  "duplicate": {
+                    "value": {
+                      "success": false,
+                      "message": "Bạn đọc đã mượn đầu sách này rồi!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "SQL không mượn được và sách không có trong catalog.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Không tìm thấy sách ID: 999999"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Content-Type không được JSON input formatter hỗ trợ."
+          }
+        },
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "maBD": {
-                    "type": "string",
-                    "example": "242630923"
-                  },
-                  "bookId": {
-                    "type": "integer",
-                    "example": 1
-                  }
-                },
-                "required": ["maBD", "bookId"]
+                "$ref": "#/components/schemas/BorrowRequest"
               }
             }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Borrow successful"
-          },
-          "400": {
-            "description": "Validation or quota error"
           }
         }
       }
     },
     "/api/circulation/return": {
       "post": {
-        "tags": ["default"],
-        "summary": "Return a book for a reader",
+        "tags": [
+          "Mượn trả"
+        ],
+        "operationId": "returnBook",
+        "summary": "Trả sách (ghi dữ liệu)",
+        "description": "Bỏ trống maGD để chọn giao dịch đầu tiên từ SQL rồi hồ sơ. Nếu SQL trả thất bại, fallback tìm maGD trong hồ sơ; nếu không khớp vẫn trả cuốn đầu tiên. 200 không đảm bảo mã yêu cầu được xử lý đúng; đối chiếu message và dữ liệu sau thao tác. Không có 404 riêng cho giao dịch. API hiện chưa kiểm tra đăng nhập/vai trò hoặc anti-forgery token.",
+        "responses": {
+          "200": {
+            "description": "Đã xử lý trả sách theo nhánh SQL hoặc fallback.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionResult"
+                },
+                "examples": {
+                  "sql": {
+                    "value": {
+                      "success": true,
+                      "mode": "SQL_Server",
+                      "message": "Đã nhận trả thành công sách 'Cấu trúc dữ liệu và giải thuật'"
+                    }
+                  },
+                  "fallback": {
+                    "value": {
+                      "success": true,
+                      "mode": "Offline_Fallback",
+                      "message": "Đã nhận trả thành công sách 'Cấu trúc dữ liệu và giải thuật' (Mã GD: GD261110-001)"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Thiếu maBD hoặc không có sách để trả sau khi SQL thất bại.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "invalidBody": {
+                    "value": {
+                      "message": "Vui lòng nhập maBD."
+                    }
+                  },
+                  "noActiveLoans": {
+                    "value": {
+                      "success": false,
+                      "message": "Bạn đọc '242630923' hiện không có cuốn sách nào đang mượn để trả."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Content-Type không được JSON input formatter hỗ trợ."
+          }
+        },
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "maBD": {
-                    "type": "string",
-                    "example": "242630923"
-                  },
-                  "maGD": {
-                    "type": "string",
-                    "example": ""
-                  }
-                },
-                "required": ["maBD"]
+                "$ref": "#/components/schemas/ReturnRequest"
               }
             }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return successful"
-          },
-          "400": {
-            "description": "Transaction not found"
           }
         }
       }
     },
     "/api/readers": {
       "get": {
-        "tags": ["default"],
-        "summary": "Get all reader cards",
+        "tags": [
+          "Bạn đọc"
+        ],
+        "operationId": "getReaders",
+        "summary": "Tìm danh sách bạn đọc",
+        "description": "Không phân trang. SQL lỗi trả total=0, data=[]. Service hiện phân nhóm theo mã thành Sinh viên hoặc Giảng viên; Ngoài trường chỉ là lựa chọn trên model.",
+        "responses": {
+          "200": {
+            "description": "Danh sách bạn đọc sau lọc.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReaderList"
+                },
+                "example": {
+                  "total": 1,
+                  "data": [
+                    {
+                      "maBD": "242630923",
+                      "hoTen": "Bạn đọc thử nghiệm",
+                      "nhom": "Sinh viên",
+                      "lopKhoa": "K65.CLCCNTT1",
+                      "quyenSuDung": "Hoạt động",
+                      "soSachDangMuon": 1,
+                      "soSachQuaHan": 0
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
         "parameters": [
           {
             "name": "keyword",
             "in": "query",
             "required": false,
+            "description": "Tìm mã, họ tên, lớp/khoa; hỗ trợ không dấu cho họ tên và lớp/khoa.",
             "schema": {
               "type": "string"
             }
@@ -229,50 +559,947 @@
             "name": "group",
             "in": "query",
             "required": false,
+            "description": "Sinh viên hoặc Giảng viên; bỏ trống/Tất cả nhóm để không lọc. So khớp không phân biệt hoa/thường.",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "Sinh viên"
             }
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of readers"
-          }
-        }
+        ]
       }
     },
     "/api/readers/{id}": {
       "get": {
-        "tags": ["default"],
-        "summary": "Get reader detail by Student ID (MaSinhVien)",
+        "tags": [
+          "Bạn đọc"
+        ],
+        "operationId": "getReaderDetail",
+        "summary": "Lấy chi tiết bạn đọc",
+        "description": "Ưu tiên mã sinh viên; thử MaBanDoc nếu ID là số, không tìm trực tiếp SoThe. Nhánh tra cứu khóa số truy vấn SQL ngoài try/catch, có thể lỗi 500 khi SQL offline trước khi fallback. GetProfile có thể tạo hồ sơ mặc định cho mã chưa biết: 200 fallback không xác nhận có bạn đọc trong SQL. Schema data và borrowTransactions khác nhau theo mode.",
+        "responses": {
+          "200": {
+            "description": "Chi tiết SQL hoặc hồ sơ fallback.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/SqlReaderResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/OfflineReaderResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ID chỉ chứa khoảng trắng.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Vui lòng nhập ID bạn đọc."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Không lấy được hồ sơ có họ tên.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Không tìm thấy bạn đọc 'unknown'"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Lỗi SQL chưa được xử lý trong nhánh tra cứu khóa số; nội dung tùy môi trường, không đảm bảo JSON."
+          }
+        },
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
+            "description": "Mã sinh viên (ưu tiên) hoặc khóa số MaBanDoc.",
             "schema": {
               "type": "string",
-              "default": "242630923"
+              "example": "242630923"
             }
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "Reader details"
-          },
-          "404": {
-            "description": "Reader not found"
-          }
-        }
+        ]
       }
     },
     "/api/dashboard/stats": {
       "get": {
-        "tags": ["default"],
-        "summary": "Get dashboard summary statistics",
+        "tags": [
+          "Thống kê"
+        ],
+        "operationId": "getDashboardStats",
+        "summary": "Lấy thống kê tổng hợp",
+        "description": "Trả trực tiếp DashboardViewModel. SQL đếm lỗi giữ mặc định 30 đầu sách, 120 bản sao, 49 bạn đọc; không phải số liệu thực được xác nhận. matChoBoiThuong hiện là 0. recentTransactions tối đa 8 giao dịch từ danh sách đang mượn. Tiền tính bằng VND.",
         "responses": {
           "200": {
-            "description": "Statistics data"
+            "description": "Thống kê học liệu, lưu thông và tài chính.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardViewModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean",
+            "description": "Chỉ xuất hiện ở một số lỗi nghiệp vụ.",
+            "example": false
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
+      "ActionResult": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "SQL_Server",
+              "Offline_Fallback"
+            ]
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "mode",
+          "message"
+        ]
+      },
+      "Health": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "Healthy"
+            ],
+            "description": "Giá trị cố định khi action hoàn tất, không thể hiện SQL còn kết nối."
+          },
+          "time": {
+            "type": "string",
+            "example": "2026-11-10 10:00:00",
+            "description": "Giờ máy chủ, yyyy-MM-dd HH:mm:ss, không kèm múi giờ."
+          },
+          "databaseConnected": {
+            "type": "boolean"
+          },
+          "totalBooks": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalReaders": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "activeLoans": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "required": [
+          "status",
+          "time",
+          "databaseConnected",
+          "totalBooks",
+          "totalReaders",
+          "activeLoans"
+        ]
+      },
+      "AnonymousProfile": {
+        "type": "object",
+        "properties": {
+          "isAuthenticated": {
+            "type": "boolean",
+            "enum": [
+              false
+            ]
+          },
+          "user": {
+            "type": "object",
+            "nullable": true,
+            "example": null
+          }
+        },
+        "required": [
+          "isAuthenticated",
+          "user"
+        ]
+      },
+      "AuthenticatedProfile": {
+        "type": "object",
+        "properties": {
+          "isAuthenticated": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "fullName": {
+            "type": "string",
+            "nullable": true
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "isAuthenticated",
+          "username",
+          "fullName",
+          "roles"
+        ]
+      },
+      "BookSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          },
+          "author": {
+            "type": "string"
+          },
+          "major": {
+            "type": "string"
+          },
+          "year": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "shelf": {
+            "type": "string"
+          },
+          "availableCopies": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCopies": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Có sẵn",
+              "Hết sách"
+            ]
+          }
+        }
+      },
+      "BookCopyItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "bookId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "barcode": {
+            "type": "string"
+          },
+          "shelf": {
+            "type": "string"
+          },
+          "condition": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "importDate": {
+            "type": "string",
+            "example": "15/01/2024"
+          },
+          "isAvailable": {
+            "type": "boolean",
+            "readOnly": true,
+            "description": "True khi status là Có sẵn."
+          }
+        }
+      },
+      "BookItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          },
+          "authors": {
+            "type": "string"
+          },
+          "publisher": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "categoryName": {
+            "type": "string"
+          },
+          "major": {
+            "type": "string"
+          },
+          "majorName": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "languageName": {
+            "type": "string"
+          },
+          "year": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isbn": {
+            "type": "string"
+          },
+          "coverImage": {
+            "type": "string"
+          },
+          "availableCopies": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCopies": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "shelf": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "isOnline": {
+            "type": "boolean"
+          },
+          "documentCode": {
+            "type": "string",
+            "readOnly": true
+          },
+          "stockBadgeText": {
+            "type": "string",
+            "readOnly": true
+          },
+          "copies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BookCopyItem"
+            }
+          }
+        }
+      },
+      "BookList": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BookSummary"
+            }
+          }
+        },
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "data"
+        ]
+      },
+      "BookDetail": {
+        "type": "object",
+        "properties": {
+          "book": {
+            "$ref": "#/components/schemas/BookItem"
+          },
+          "copies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BookCopyItem"
+            }
+          }
+        },
+        "required": [
+          "book",
+          "copies"
+        ]
+      },
+      "BookCopies": {
+        "type": "object",
+        "properties": {
+          "bookId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "copies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BookCopyItem"
+            }
+          }
+        },
+        "required": [
+          "bookId",
+          "copies"
+        ]
+      },
+      "CirculationTransactionItem": {
+        "type": "object",
+        "properties": {
+          "maGD": {
+            "type": "string"
+          },
+          "maBD": {
+            "type": "string"
+          },
+          "hoTen": {
+            "type": "string"
+          },
+          "maBanSao": {
+            "type": "string"
+          },
+          "tenSach": {
+            "type": "string"
+          },
+          "tacGia": {
+            "type": "string"
+          },
+          "coverImage": {
+            "type": "string"
+          },
+          "ngayMuon": {
+            "type": "string",
+            "example": "10/11/2026"
+          },
+          "hanTra": {
+            "type": "string",
+            "example": "10/11/2027"
+          },
+          "trangThai": {
+            "type": "string"
+          },
+          "isQuaHan": {
+            "type": "boolean"
+          }
+        }
+      },
+      "TransactionList": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CirculationTransactionItem"
+            }
+          }
+        },
+        "required": [
+          "total",
+          "data"
+        ]
+      },
+      "BorrowRequest": {
+        "type": "object",
+        "properties": {
+          "maBD": {
+            "type": "string",
+            "minLength": 1,
+            "example": "242630923",
+            "description": "Mã sinh viên; không được chỉ chứa khoảng trắng."
+          },
+          "bookId": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1,
+            "example": 1
+          }
+        },
+        "required": [
+          "maBD",
+          "bookId"
+        ]
+      },
+      "ReturnRequest": {
+        "type": "object",
+        "properties": {
+          "maBD": {
+            "type": "string",
+            "minLength": 1,
+            "example": "242630923"
+          },
+          "maGD": {
+            "type": "string",
+            "nullable": true,
+            "example": "GD261110-001",
+            "description": "Tùy chọn. Bỏ trống để chọn giao dịch đầu tiên; xem lưu ý fallback của endpoint."
+          }
+        },
+        "required": [
+          "maBD"
+        ]
+      },
+      "ReaderListItem": {
+        "type": "object",
+        "properties": {
+          "maBD": {
+            "type": "string"
+          },
+          "hoTen": {
+            "type": "string"
+          },
+          "nhom": {
+            "type": "string"
+          },
+          "lopKhoa": {
+            "type": "string"
+          },
+          "quyenSuDung": {
+            "type": "string"
+          },
+          "soSachDangMuon": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "soSachQuaHan": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ReaderList": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReaderListItem"
+            }
+          }
+        },
+        "required": [
+          "total",
+          "data"
+        ]
+      },
+      "BorrowTransactionViewModel": {
+        "type": "object",
+        "properties": {
+          "maGD": {
+            "type": "string"
+          },
+          "maSach": {
+            "type": "string"
+          },
+          "tenSach": {
+            "type": "string"
+          },
+          "tacGia": {
+            "type": "string"
+          },
+          "coverImage": {
+            "type": "string"
+          },
+          "ngayMuon": {
+            "type": "string",
+            "example": "10/11/2026"
+          },
+          "ngayHenTra": {
+            "type": "string",
+            "example": "10/11/2027"
+          },
+          "ngayTra": {
+            "type": "string",
+            "nullable": true
+          },
+          "trangThai": {
+            "type": "string"
+          },
+          "isQuaHan": {
+            "type": "boolean"
+          },
+          "soNgayQuaHan": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tienPhat": {
+            "type": "number",
+            "description": "VND"
+          }
+        }
+      },
+      "BorrowedBookItem": {
+        "type": "object",
+        "properties": {
+          "maGD": {
+            "type": "string"
+          },
+          "maVach": {
+            "type": "string"
+          },
+          "tenSach": {
+            "type": "string"
+          },
+          "tacGia": {
+            "type": "string"
+          },
+          "coverImage": {
+            "type": "string"
+          },
+          "ngayMuon": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "hanTra": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isQuaHan": {
+            "type": "boolean"
+          },
+          "soNgayQuaHan": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "soNgayConLai": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "trangThaiText": {
+            "type": "string"
+          },
+          "tienPhat": {
+            "type": "number",
+            "description": "VND"
+          }
+        }
+      },
+      "ReaderDetailViewModel": {
+        "type": "object",
+        "properties": {
+          "maBD": {
+            "type": "string"
+          },
+          "hoTen": {
+            "type": "string"
+          },
+          "lopKhoa": {
+            "type": "string"
+          },
+          "trangThaiHocTap": {
+            "type": "string"
+          },
+          "nhom": {
+            "type": "string"
+          },
+          "quyenSuDung": {
+            "type": "string"
+          },
+          "gioiHanSach": {
+            "type": "string"
+          },
+          "hieuLucQuyen": {
+            "type": "string"
+          },
+          "soSachDangMuon": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "soSachQuaHan": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tongTienPhat": {
+            "type": "number",
+            "description": "VND"
+          },
+          "borrowTransactions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BorrowTransactionViewModel"
+            }
+          },
+          "availableBooks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BookItem"
+            }
+          }
+        }
+      },
+      "OfflineReaderDetail": {
+        "type": "object",
+        "properties": {
+          "maBD": {
+            "type": "string"
+          },
+          "hoTen": {
+            "type": "string"
+          },
+          "lopKhoa": {
+            "type": "string"
+          },
+          "soSachDangMuon": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "borrowTransactions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BorrowedBookItem"
+            }
+          }
+        }
+      },
+      "SqlReaderResponse": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "SQL_Server"
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/ReaderDetailViewModel"
+          }
+        },
+        "required": [
+          "mode",
+          "data"
+        ]
+      },
+      "OfflineReaderResponse": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "Offline_Fallback"
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/OfflineReaderDetail"
+          }
+        },
+        "required": [
+          "mode",
+          "data"
+        ]
+      },
+      "DashboardTransactionItem": {
+        "type": "object",
+        "properties": {
+          "maGD": {
+            "type": "string"
+          },
+          "maBD": {
+            "type": "string"
+          },
+          "hoTen": {
+            "type": "string"
+          },
+          "maSach": {
+            "type": "string"
+          },
+          "tenSach": {
+            "type": "string"
+          },
+          "ngayMuon": {
+            "type": "string"
+          },
+          "hanTra": {
+            "type": "string"
+          },
+          "trangThai": {
+            "type": "string"
+          },
+          "isQuaHan": {
+            "type": "boolean"
+          },
+          "soNgayQuaHan": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tienPhat": {
+            "type": "number",
+            "description": "VND"
+          }
+        }
+      },
+      "FinancialReceiptViewModel": {
+        "type": "object",
+        "properties": {
+          "maPhieuThu": {
+            "type": "string"
+          },
+          "maGD": {
+            "type": "string"
+          },
+          "maBD": {
+            "type": "string"
+          },
+          "nguoiNop": {
+            "type": "string"
+          },
+          "tenSach": {
+            "type": "string"
+          },
+          "loaiKhoanThu": {
+            "type": "string"
+          },
+          "hinhThucXuLy": {
+            "type": "string"
+          },
+          "soTien": {
+            "type": "number"
+          },
+          "tienNopMuon": {
+            "type": "number"
+          },
+          "tienDenBu": {
+            "type": "number"
+          },
+          "ngayThu": {
+            "type": "string"
+          },
+          "ghiChu": {
+            "type": "string"
+          }
+        }
+      },
+      "DashboardViewModel": {
+        "type": "object",
+        "properties": {
+          "tongDauSach": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tongBanSao": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "banSanCo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dangMuon": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "matChoBoiThuong": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "luotQuaHan": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tongBanDoc": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "recentTransactions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DashboardTransactionItem"
+            }
+          },
+          "tongQuyTaiChinh": {
+            "type": "number"
+          },
+          "tienThuNopMuon": {
+            "type": "number"
+          },
+          "tienThuDenBu": {
+            "type": "number"
+          },
+          "recentReceipts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialReceiptViewModel"
+            }
           }
         }
       }

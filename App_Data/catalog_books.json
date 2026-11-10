@@ -14,13 +14,13 @@
     "Pages": 506,
     "ISBN": "978-604-0-32451-2",
     "CoverImage": "/images/covers/sach_01.jpg",
-    "AvailableCopies": 4,
+    "AvailableCopies": 3,
     "TotalCopies": 4,
     "Shelf": "Kệ IT-01",
     "Description": "Giáo trình trang bị nền tảng chuyên sâu về thuật toán và các cấu trúc dữ liệu kinh điển: mảng động, danh sách liên kết, ngăn xếp (Stack), hàng đợi (Queue), cây nhị phân, bảng băm (Hash Table) và đồ thị, ứng dụng trực tiếp bằng ngôn ngữ hiện đại.",
     "IsOnline": false,
     "DocumentCode": "DS001",
-    "StockBadgeText": "4 bản sẵn có · Sách in",
+    "StockBadgeText": "3 bản sẵn có · Sách in",
     "Copies": [
       {
         "Id": 11,

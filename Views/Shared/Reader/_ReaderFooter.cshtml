@@ -1,91 +1,58 @@
-<footer class="utc-site-footer">
-    <!-- 3 dải màu thương hiệu UTC -->
-    <div class="utc-brand-stripes">
-        <span class="utc-stripe-navy"></span>
-        <span class="utc-stripe-gold"></span>
-        <span class="utc-stripe-sky"></span>
-    </div>
-
-    <div class="container">
+﻿<footer class="utc-site-footer" id="utc-library-info">
+    <partial name="~/Views/Shared/_UtcBrandStripes.cshtml" />
+    <div class="container utc-footer-inner">
         <div class="utc-footer-columns">
-            <!-- Cột 1: Thông tin thương hiệu trường & Liên hệ -->
             <div class="utc-footer-col utc-footer-brand-col">
-                <div class="utc-footer-brand-lockup">
-                    <img src="~/logo/utc.png" alt="Logo UTC" class="utc-footer-logo" onerror="this.src='/images/logo.png'" />
-                    <div class="utc-footer-school-titles">
-                        <span class="utc-footer-school-top">TRƯỜNG ĐẠI HỌC</span>
-                        <span class="utc-footer-school-bottom">GIAO THÔNG VẬN TẢI</span>
-                        <span class="utc-footer-lib-sub">THƯ VIỆN ĐẠI HỌC GIAO THÔNG VẬN TẢI</span>
-                    </div>
-                </div>
-
-                <div class="utc-footer-contact-list">
-                    <div class="utc-footer-contact-row">
-                        <span class="utc-footer-icon-circle"><i class="bi bi-geo-alt-fill"></i></span>
-                        <span>Địa chỉ: Số 3 phố Cầu Giấy, Phường Láng Thượng, TP. Hà Nội. (Tầng 5, 6, 7 Nhà A8)</span>
-                    </div>
-                    <div class="utc-footer-contact-row">
-                        <span class="utc-footer-icon-circle"><i class="bi bi-envelope-fill"></i></span>
-                        <span>Email: <a href="mailto:thuvien@utc.edu.vn">thuvien@utc.edu.vn</a> &middot; <a href="mailto:dhgtvt@utc.edu.vn">dhgtvt@utc.edu.vn</a></span>
-                    </div>
-                    <div class="utc-footer-contact-row">
-                        <span class="utc-footer-icon-circle"><i class="bi bi-telephone-fill"></i></span>
-                        <span>Hotline: <a href="tel:02437669860">(024) 37669860</a> &middot; <a href="tel:02437663311">(84.24) 37663311</a></span>
-                    </div>
-                </div>
+                <a href="/Reader/Home" class="utc-footer-brand-lockup"><img src="~/images/figma/brand/utc-logo.png" alt="Logo UTC" class="utc-footer-logo" width="52" height="52" /><span>THƯ VIỆN UTC</span></a>
+                <p>Tra cứu học liệu, sử dụng dịch vụ<br />và kết nối với thư viện.</p>
             </div>
-
-            <!-- Cột 2: Tiện ích (thông tin bản cũ) -->
             <div class="utc-footer-col">
-                <h4 class="utc-footer-title">Tiện ích</h4>
+                <h2 class="utc-footer-title">Liên hệ &amp; hỗ trợ</h2>
                 <ul class="utc-footer-list">
-                    <li><a href="/Reader/News">Tin tức &amp; Hoạt động</a></li>
+                    <li><a href="tel:02437669860">Điện thoại: 024.37669860</a></li>
+                    <li><a href="mailto:thuvien@utc.edu.vn">Email: thuvien@utc.edu.vn</a></li>
+                    <li>Tầng 5, 6, 7 · Nhà A8 · Trường Đại học GTVT</li>
+                    <li>Fanpage: Trung tâm Thông tin - Thư viện UTC</li>
+                </ul>
+                <details class="utc-footer-map-details">
+                    <summary>Địa chỉ &amp; bản đồ trường</summary>
+                    <p>Số 3 phố Cầu Giấy, Phường Láng Thượng, TP. Hà Nội.</p>
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.113241088469!2d105.8016597750315!3d21.02815448062145!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab424a50fff9%3A0xbe6376a933664f7a!2zVHLGsOG7nW5nIMSQ4bqhaSBI4buNYyBHaWFvIFRow7RuZyBW4bqtbiBU4bqjaSAoVVRDKQ!5e0!3m2!1svi!2s!4v1700000000000!5m2!1svi!2s"
+                        class="utc-footer-map-iframe"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Bản đồ Trường Đại học Giao thông vận tải">
+                    </iframe>
+                    <a href="https://maps.google.com/?q=Trường+Đại+học+Giao+thông+Vận+tải+Hà+Nội" target="_blank" rel="noopener">Xem bản đồ lớn →</a>
+                    <p><a href="mailto:dhgtvt@utc.edu.vn">dhgtvt@utc.edu.vn</a> · <a href="tel:02437663311">(84.24) 37663311</a></p>
+                </details>
+            </div>
+            <div class="utc-footer-col">
+                <h2 class="utc-footer-title">Dành cho bạn đọc</h2>
+                <ul class="utc-footer-list">
                     <li><a href="/Reader/Guide">Hướng dẫn mượn trả</a></li>
-                    <li><a href="/Reader/Guide">Nội quy &amp; Giờ phục vụ</a></li>
-                    <li><a href="/Reader/Search">Tra cứu mục lục OPAC</a></li>
+                    <li><a href="/Reader/Guide">Nội quy thư viện</a></li>
+                    <li><a href="/Reader/Search">Hỗ trợ tra cứu</a></li>
+                    <li><a href="/Reader/News">Tin tức &amp; hoạt động</a></li>
                     <li><a href="/Reader/Profile">Hồ sơ sinh viên</a></li>
                 </ul>
             </div>
-
-            <!-- Cột 3: Truy cập nhanh (thông tin bản cũ) -->
             <div class="utc-footer-col">
-                <h4 class="utc-footer-title">Truy cập nhanh</h4>
+                <h2 class="utc-footer-title">Liên kết trường</h2>
                 <ul class="utc-footer-list">
                     <li><a href="https://www.utc.edu.vn" target="_blank" rel="noopener">Website UTC</a></li>
-                    <li><a href="https://qldt.utc.edu.vn" target="_blank" rel="noopener">Cổng thông tin sinh viên (QLĐT)</a></li>
+                    <li><a href="https://qldt.utc.edu.vn" target="_blank" rel="noopener">Cổng thông tin sinh viên</a></li>
                     <li><a href="https://jst.utc.edu.vn" target="_blank" rel="noopener">Tạp chí Khoa học GTVT</a></li>
-                    <li><a href="https://e-office.utc.edu.vn" target="_blank" rel="noopener">Nhà trường điện tử (nội bộ)</a></li>
-                    @if (User.IsInRole("Admin") || User.IsInRole("Thuthu"))
+                    <li><a href="https://e-office.utc.edu.vn" target="_blank" rel="noopener">Nhà trường điện tử</a></li>
+                    @if (User.IsInRole("Admin") || User.IsInRole("ADMIN") || User.IsInRole("Thuthu") || User.IsInRole("QUANLY_BANDOC") || User.IsInRole("QUANLY_TAILIEU"))
                     {
                         <li><a href="/Admin/Dashboard">Cổng quản trị thủ thư</a></li>
                     }
                 </ul>
             </div>
-
-            <!-- Cột 4: Bản đồ trường ĐH GTVT -->
-            <div class="utc-footer-col utc-footer-map-col">
-                <h4 class="utc-footer-title">Trường Đại học Giao thông vận tải</h4>
-                <div class="utc-footer-map-card">
-                    <iframe 
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.113241088469!2d105.8016597750315!3d21.02815448062145!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab424a50fff9%3A0xbe6376a933664f7a!2zVHLGsOG7nW5nIMSQ4bqhaSBI4buNYyBHaWFvIFRow7RuZyBW4bqtbiBU4bqjaSAoVVRDKQ!5e0!3m2!1svi!2s!4v1700000000000!5m2!1svi!2s" 
-                        class="utc-footer-map-iframe" 
-                        allowfullscreen="" 
-                        loading="lazy" 
-                        referrerpolicy="no-referrer-when-downgrade"
-                        title="Bản đồ Trường Đại học Giao thông vận tải">
-                    </iframe>
-                    <div class="utc-footer-map-overlay-bar">
-                        <a href="https://maps.google.com/?q=Trường+Đại+học+Giao+thông+Vận+tải+Hà+Nội" target="_blank" rel="noopener" class="utc-footer-map-btn">
-                            <i class="bi bi-box-arrow-up-right me-1"></i> Maps &middot; Xem bản đồ lớn
-                        </a>
-                    </div>
-                </div>
-            </div>
         </div>
-
-        <div class="utc-footer-bottom">
-            <span>© @DateTime.Now.Year Trường Đại học Giao thông vận tải &middot; Thư viện UTC</span>
-            <span>Cổng Bạn đọc OPAC &amp; Dịch vụ Học liệu Điện tử</span>
-        </div>
+        <div class="utc-footer-bottom">© @DateTime.Now.Year Thư viện Trường Đại học Giao thông vận tải</div>
     </div>
 </footer>

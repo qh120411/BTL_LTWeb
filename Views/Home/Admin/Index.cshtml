@@ -1,123 +1,35 @@
-﻿@model BTL_LTWEB.Areas.Admin.ViewModels.DashboardViewModel
+@model BTL_LTWEB.Areas.Admin.ViewModels.DashboardViewModel
 @{
     Layout = "~/Views/Shared/Admin/_AdminLayout.cshtml";
     ViewData["Title"] = "Tổng quan";
     ViewBag.ActiveMenu = "Dashboard";
 }
 
-<!-- Breadcrumb -->
-<div class="admin-breadcrumb">THƯ VIỆN UTC / QUẢN TRỊ</div>
-
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <div>
-        <h1 class="admin-page-title mb-1">Tổng quan Thư viện</h1>
-        <div class="text-muted" style="font-size: 14.5px;">
-            Ngày cập nhật: @DateTime.Now.ToString("dd/MM/yyyy")
+<div class="utc-dashboard">
+    <div class="admin-breadcrumb">THƯ VIỆN UTC / QUẢN TRỊ</div>
+    <h1 class="admin-page-title">Tổng quan</h1>
+    <p class="utc-dashboard-description">Tổng hợp học liệu và nghiệp vụ · Ngày cập nhật: @DateTime.Now.ToString("dd/MM/yyyy")</p>
+    <div class="utc-summary-grid">
+        <div class="kpi-card utc-kpi-catalog"><div class="kpi-title">Đầu sách</div><div class="kpi-value">@Model.TongDauSach</div></div>
+        <div class="kpi-card utc-kpi-available"><div class="kpi-title">Bản sẵn có</div><div class="kpi-value">@Model.BanSanCo</div></div>
+        <div class="kpi-card utc-kpi-borrowed"><div class="kpi-title">Đang mượn</div><div class="kpi-value">@Model.DangMuon</div></div>
+        <div class="kpi-card utc-kpi-pending"><div class="kpi-title">Mất / chờ bồi thường</div><div class="kpi-value">@Model.MatChoBoiThuong</div></div>
+    </div>
+    <section class="utc-dashboard-tasks" aria-labelledby="utc-tasks-title">
+        <h2 id="utc-tasks-title" class="utc-dashboard-section-title">Công việc cần theo dõi</h2>
+        <div class="admin-table-card">
+            <table class="table-utc utc-tasks-table">
+                <thead><tr><th scope="col">Nội dung</th><th scope="col">Số lượng</th><th scope="col">Thao tác</th></tr></thead>
+                <tbody>
+                    <tr><td>Lượt mượn quá hạn</td><td>@Model.LuotQuaHan</td><td><a href="/Admin/Overdue">Xem quá hạn</a></td></tr>
+                    <tr><td>Sách mất chưa hoàn tất bồi thường</td><td>@Model.MatChoBoiThuong</td><td><a href="/Admin/Incident">Mở hồ sơ</a></td></tr>
+                    <tr><td>Học liệu và bản sách trong kho</td><td>@Model.TongBanSao bản / @Model.TongDauSach đầu sách</td><td><a href="/Admin/Catalog">Xem học liệu</a></td></tr>
+                    <tr><td>Bạn đọc thư viện</td><td>@Model.TongBanDoc bạn đọc</td><td><a href="/Admin/Reader">Xem quản lý bạn đọc</a></td></tr>
+                </tbody>
+            </table>
         </div>
-    </div>
-    <div class="d-flex gap-2">
-        <a href="/Admin/Report" class="btn btn-utc-primary">
-            <i class="bi bi-file-earmark-bar-graph me-1"></i> Xem báo cáo tháng
-        </a>
-    </div>
-</div>
-
-<!-- 4 Card Thống kê chuẩn theo CSDL Thật -->
-<div class="row g-3 mb-4">
-    <div class="col-md-3 col-sm-6">
-        <div class="kpi-card" style="background-color: #e7f5ff; border: 1px solid #d4ebf9;">
-            <div class="kpi-title" style="color: var(--utc-text-muted);">Đầu sách CSDL</div>
-            <div class="kpi-value" style="color: #0079ba;">@Model.TongDauSach</div>
-            <div class="small text-muted mt-1">Đầu sách trong danh mục (@Model.TongBanSao bản sao)</div>
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-6">
-        <div class="kpi-card" style="background-color: #e9faf4; border: 1px solid #c8f0e0;">
-            <div class="kpi-title" style="color: var(--utc-text-muted);">Bản sẵn có</div>
-            <div class="kpi-value" style="color: #059669;">@Model.BanSanCo</div>
-            <div class="small text-muted mt-1">Sẵn sàng phục vụ bạn đọc tại quầy</div>
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-6">
-        <div class="kpi-card" style="background-color: #edf2ff; border: 1px solid #d9e2fc;">
-            <div class="kpi-title" style="color: var(--utc-text-muted);">Đang mượn</div>
-            <div class="kpi-value" style="color: #2563eb;">@Model.DangMuon</div>
-            <div class="small text-muted mt-1">Bản sách đang lưu hành ngoài kho</div>
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-6">
-        <div class="kpi-card" style="background-color: #fef2f2; border: 1px solid #fecaca;">
-            <div class="kpi-title" style="color: #dc2626;">Quá hạn quy định</div>
-            <div class="kpi-value" style="color: #dc2626;">@Model.LuotQuaHan</div>
-            <div class="small text-muted mt-1">Phạt 100k/cuốn</div>
-        </div>
-    </div>
-</div>
-
-<!-- Bảng Công việc cần theo dõi (Chuẩn bảng Figma) -->
-<div class="mb-4">
-    <h3 class="fw-bold mb-3" style="color: var(--utc-navy); font-size: 20px;">
-        Công việc cần theo dõi
-    </h3>
-    <div class="admin-table-card">
-        <table class="table-utc">
-            <thead>
-                <tr>
-                    <th style="width: 40%;">Nội dung nghiệp vụ</th>
-                    <th style="width: 30%;">Số lượng ghi nhận</th>
-                    <th style="width: 30%;">Thao tác xử lý</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="fw-medium text-navy">
-                        <i class="bi bi-clock-history text-danger me-2"></i> Lượt mượn quá hạn (quy định 1 năm)
-                    </td>
-                    <td>
-                        <span class="badge bg-danger text-white px-2 py-1" style="font-size: 13px;">
-                            <i class="bi bi-exclamation-triangle-fill me-1"></i> @Model.LuotQuaHan lượt
-                        </span>
-                    </td>
-                    <td>
-                        <a href="/Admin/Overdue" class="text-brand fw-medium">Xem danh sách quá hạn &rarr;</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="fw-medium text-navy">
-                        <i class="bi bi-exclamation-octagon text-warning me-2"></i> Sách mất / chờ hoàn tất bồi thường
-                    </td>
-                    <td>
-                        <span class="badge bg-warning text-dark px-2 py-1" style="font-size: 13px;">
-                            @Model.MatChoBoiThuong hồ sơ
-                        </span>
-                    </td>
-                    <td>
-                        <a href="/Admin/Incident" class="text-brand fw-medium">Mở hồ sơ sự cố &rarr;</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="fw-medium text-navy">
-                        <i class="bi bi-journal-bookmark-fill text-brand me-2"></i> Học liệu và bản sách trong kho
-                    </td>
-                    <td><strong>@Model.TongBanSao bản / @Model.TongDauSach đầu sách</strong></td>
-                    <td>
-                        <a href="/Admin/Catalog" class="text-brand fw-medium">Xem quản lý học liệu &rarr;</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="fw-medium text-navy">
-                        <i class="bi bi-people-fill text-primary me-2"></i> Bạn đọc lớp K65.CLCCNTT1
-                    </td>
-                    <td><strong>@Model.TongBanDoc bạn đọc (49 sinh viên)</strong></td>
-                    <td>
-                        <a href="/Admin/Reader" class="text-brand fw-medium">Xem quản lý bạn đọc &rarr;</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
+        <a href="/Admin/Report" class="btn btn-outline-utc utc-monthly-report">Xem báo cáo tháng</a>
+    </section>
 <!-- KHỐI THỐNG KÊ TÀI CHÍNH & QUỸ THƯ VIỆN (MỚI) -->
 <div class="mb-5">
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -135,24 +47,21 @@
     <!-- 3 Card Thống kê Quỹ tài chính -->
     <div class="row g-3 mb-3">
         <div class="col-md-4">
-            <div class="kpi-card shadow-sm" style="background-color: #ecfdf5; border: 1px solid #a7f3d0;">
+            <div class="kpi-card utc-kpi-available">
                 <div class="kpi-title text-success fw-bold">Tổng quỹ tiền đã thu</div>
                 <div class="kpi-value text-success">@Model.TongQuyTaiChinh.ToString("N0") đ</div>
-                <div class="small text-muted mt-1">Tổng cộng các khoản thu nộp muộn &amp; đền bù</div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="kpi-card shadow-sm" style="background-color: #fffbeb; border: 1px solid #fde68a;">
+            <div class="kpi-card utc-kpi-pending">
                 <div class="kpi-title text-warning-emphasis fw-bold">Thu từ phạt nộp muộn</div>
                 <div class="kpi-value text-warning-emphasis">@Model.TienThuNopMuon.ToString("N0") đ</div>
-                <div class="small text-muted mt-1">Phạt quá hạn 100.000 đ/cuốn theo quy chế</div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="kpi-card shadow-sm" style="background-color: #fef2f2; border: 1px solid #fecaca;">
+            <div class="kpi-card utc-kpi-catalog">
                 <div class="kpi-title text-danger fw-bold">Thu từ đền bù mất / hỏng</div>
                 <div class="kpi-value text-danger">@Model.TienThuDenBu.ToString("N0") đ</div>
-                <div class="small text-muted mt-1">Khoản bồi hoàn tài liệu hư hại hoặc làm mất</div>
             </div>
         </div>
     </div>
@@ -293,4 +202,6 @@
             </tbody>
         </table>
     </div>
+</div>
+
 </div>

@@ -23,28 +23,24 @@
         <div class="kpi-card kpi-card-primary">
             <div class="kpi-title">Tổng đầu sách CSDL</div>
             <div class="kpi-value" style="color: var(--utc-primary);">@Model.TongDauSach</div>
-            <div class="small text-muted mt-1">Đầu sách danh mục giáo trình, tài liệu</div>
         </div>
     </div>
     <div class="col-md-3 col-sm-6">
         <div class="kpi-card kpi-card-info">
             <div class="kpi-title">Tổng bản sao vật lý</div>
             <div class="kpi-value" style="color: var(--utc-info);">@Model.TongBanSao</div>
-            <div class="small text-muted mt-1">Gắn mã vạch lưu thông tại các tầng kho</div>
         </div>
     </div>
     <div class="col-md-3 col-sm-6">
         <div class="kpi-card kpi-card-success">
             <div class="kpi-title text-success">Bản sẵn có trong kho</div>
             <div class="kpi-value text-success">@Model.TongSanCo</div>
-            <div class="small text-muted mt-1">Sẵn sàng phục vụ sinh viên mượn đọc</div>
         </div>
     </div>
     <div class="col-md-3 col-sm-6">
         <div class="kpi-card kpi-card-warning">
             <div class="kpi-title text-warning">Đang mượn ngoài kho</div>
             <div class="kpi-value text-warning">@Model.TongDangMuon</div>
-            <div class="small text-muted mt-1">Bản sách đang được sinh viên mượn đọc</div>
         </div>
     </div>
 </div>
@@ -262,7 +258,6 @@
                         <div class="col-md-6">
                             <label class="form-label-utc fw-bold">Số lượng bản sao nhập kho</label>
                             <input type="number" name="copiesCount" class="form-control form-control-utc" value="4" min="1" max="20" />
-                            <div class="form-text small text-muted">Hệ thống sẽ tự động tạo tương ứng mã vạch <code>UTC-XX-01...</code></div>
                         </div>
 
                         <div class="col-md-12">

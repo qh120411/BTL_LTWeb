@@ -1,7 +1,10 @@
 ## Visual Studio / VS Code
 .vs/
 .vs_backup/
-.vscode/
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/extensions.json
 *.user
 *.userosscache
 *.suo

@@ -1,104 +1,92 @@
 @model ReportViewModel
 @{
-    ViewData["Title"] = "Báo cáo & thống kê";
+    ViewData["Title"] = "Báo cáo thư viện";
 }
 
-<div class="admin-breadcrumb">THƯ VIỆN UTC / QUẢN TRỊ</div>
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin-report.css" asp-append-version="true" />
+}
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="admin-page-title mb-0">Báo cáo &amp; thống kê</h1>
-    <a asp-action="ExportExcel" asp-route-period="@Model.KyBaoCao" asp-route-scope="@Model.PhamVi" class="btn btn-utc-primary">
-        Xuất báo cáo Excel
-    </a>
-</div>
+<div class="report-page">
+    <header class="report-header">
+        <h1>Báo cáo thư viện</h1>
+        <a asp-area="Admin" asp-controller="Report" asp-action="ExportExcel"
+           asp-route-period="@Model.KyBaoCao" asp-route-scope="@Model.PhamVi"
+           class="btn btn-outline-utc">Xuất Excel</a>
+    </header>
 
-<!-- Bộ lọc Kỳ báo cáo & Phạm vi -->
-<form method="get" asp-action="Index" class="mb-4">
-    <div class="row g-3">
-        <div class="col-md-6">
-            <label class="form-label-utc">Kỳ báo cáo</label>
-            <select name="period" class="form-select form-control-utc" onchange="this.form.submit()">
-                @foreach (var k in Model.DanhSachKyBaoCao)
+    <form method="get" asp-area="Admin" asp-controller="Report" asp-action="Index" class="report-filters">
+        <div class="report-field">
+            <label for="reportPeriod">Kỳ báo cáo</label>
+            <select id="reportPeriod" name="period" class="form-select">
+                @foreach (var period in Model.DanhSachKyBaoCao)
                 {
-                    <option value="@k" selected="@(k == Model.KyBaoCao)">@k</option>
+                    <option value="@period" selected="@(period == Model.KyBaoCao)">@period</option>
                 }
             </select>
         </div>
-        <div class="col-md-6">
-            <label class="form-label-utc">Phạm vi</label>
-            <select name="scope" class="form-select form-control-utc" onchange="this.form.submit()">
-                @foreach (var p in Model.DanhSachPhamVi)
+        <div class="report-field">
+            <label for="reportScope">Phạm vi</label>
+            <select id="reportScope" name="scope" class="form-select">
+                @foreach (var scope in Model.DanhSachPhamVi)
                 {
-                    <option value="@p" selected="@(p == Model.PhamVi)">@p</option>
+                    <option value="@scope" selected="@(scope == Model.PhamVi)">@scope</option>
                 }
             </select>
         </div>
-    </div>
-</form>
+        <button type="submit" class="btn btn-utc-primary">Xem báo cáo</button>
+    </form>
 
-<!-- 4 Card KPI -->
-<div class="row g-3 mb-4">
-    <div class="col-md-3 col-sm-6">
-        <div class="kpi-card">
-            <div class="kpi-title">Lượt mượn trong tháng</div>
-            <div class="kpi-value">@Model.LuotMuonTrongThang</div>
+    <dl class="report-summary" aria-label="Số liệu tổng hợp">
+        <div><dt>Lượt mượn</dt><dd>@Model.LuotMuonTrongThang.ToString("N0")</dd></div>
+        <div><dt>Lượt trả</dt><dd>@Model.LuotTraTrongThang.ToString("N0")</dd></div>
+        <div><dt>Đang quá hạn</dt><dd>@Model.QuaHanHienTai.ToString("N0")</dd></div>
+        <div><dt>Tổng bản sách</dt><dd>@Model.TongBanSach.ToString("N0")</dd></div>
+    </dl>
+
+    <section class="report-books" aria-labelledby="reportBooksTitle">
+        <h2 id="reportBooksTitle">Số lượng sách</h2>
+        <div class="report-table-wrap" role="region" aria-label="Số lượng sách theo đầu sách" tabindex="0">
+            <table class="report-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Tên sách</th>
+                        <th scope="col">Tổng bản</th>
+                        <th scope="col">Sẵn có</th>
+                        <th scope="col">Đang mượn</th>
+                        <th scope="col">Mất / hỏng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.ChiTietDauSach.Count == 0)
+                    {
+                        <tr><td colspan="5" class="report-empty">Chưa có dữ liệu.</td></tr>
+                    }
+                    else
+                    {
+                        @foreach (var book in Model.ChiTietDauSach)
+                        {
+                            <tr>
+                                <th scope="row">@book.DauSach</th>
+                                <td>@book.TongBan.ToString("N0")</td>
+                                <td>@book.SanCo.ToString("N0")</td>
+                                <td>@book.DangMuon.ToString("N0")</td>
+                                <td>@book.MatHong.ToString("N0")</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th scope="row">Tổng cộng</th>
+                        <td>@Model.TongCongSoBan.ToString("N0")</td>
+                        <td>@Model.TongCongSanCo.ToString("N0")</td>
+                        <td>@Model.TongCongDangMuon.ToString("N0")</td>
+                        <td>@Model.TongCongMatHong.ToString("N0")</td>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
-    </div>
-    <div class="col-md-3 col-sm-6">
-        <div class="kpi-card">
-            <div class="kpi-title">Lượt trả trong tháng</div>
-            <div class="kpi-value">@Model.LuotTraTrongThang</div>
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-6">
-        <div class="kpi-card">
-            <div class="kpi-title">Quá hạn hiện tại</div>
-            <div class="kpi-value">@Model.QuaHanHienTai</div>
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-6">
-        <div class="kpi-card">
-            <div class="kpi-title">Tổng bản sách</div>
-            <div class="kpi-value">@Model.TongBanSach</div>
-        </div>
-    </div>
+        <p class="report-note">Số liệu minh họa.</p>
+    </section>
 </div>
-
-<!-- Bảng chi tiết lưu thông theo đầu sách -->
-<div class="admin-table-card">
-    <table class="table-utc">
-        <thead>
-            <tr>
-                <th style="width: 38%;">Đầu sách</th>
-                <th style="width: 15%;">Tổng bản</th>
-                <th style="width: 15%;">Sẵn có</th>
-                <th style="width: 16%;">Đang mượn</th>
-                <th style="width: 16%;">Mất / hỏng</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var book in Model.ChiTietDauSach)
-            {
-                <tr>
-                    <td>@book.DauSach</td>
-                    <td>@book.TongBan</td>
-                    <td>@book.SanCo</td>
-                    <td>@book.DangMuon</td>
-                    <td>@book.MatHong</td>
-                </tr>
-            }
-            <tr class="fw-bold">
-                <td>TỔNG</td>
-                <td>@Model.TongCongSoBan</td>
-                <td>@Model.TongCongSanCo</td>
-                <td>@Model.TongCongDangMuon</td>
-                <td>@Model.TongCongMatHong</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<div class="admin-table-note">
-    Báo cáo gồm lượt mượn / trả theo tháng, đầu sách và trạng thái từng bản sách. Số liệu minh họa.
-</div>
-

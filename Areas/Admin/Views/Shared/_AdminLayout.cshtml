@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="~/css/admin-theme.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
+    <link rel="stylesheet" href="~/css/utc-figma.css" asp-append-version="true" />
 </head>
 <body class="admin-body">
     <!-- Header -->
@@ -65,12 +66,14 @@
             const backdrop = document.getElementById("adminSidebarBackdrop");
 
             function openSidebar() {
+                if (toggleBtn) toggleBtn.setAttribute("aria-expanded", "true");
                 if (sidebar) sidebar.classList.add("show");
                 if (backdrop) backdrop.classList.add("show");
                 document.body.classList.add("sidebar-open");
             }
 
             function closeSidebar() {
+                if (toggleBtn) toggleBtn.setAttribute("aria-expanded", "false");
                 if (sidebar) sidebar.classList.remove("show");
                 if (backdrop) backdrop.classList.remove("show");
                 document.body.classList.remove("sidebar-open");
@@ -100,12 +103,16 @@
                 const links = sidebar.querySelectorAll(".sidebar-link, .btn-back-web");
                 links.forEach(l => {
                     l.addEventListener("click", function () {
-                        if (window.innerWidth <= 992) {
+                        if (window.innerWidth < 992) {
                             closeSidebar();
                         }
                     });
                 });
             }
+
+            window.addEventListener("resize", function () {
+                if (window.innerWidth >= 992) closeSidebar();
+            });
 
             // Phím ESC để đóng nhanh menu
             document.addEventListener("keydown", function (e) {

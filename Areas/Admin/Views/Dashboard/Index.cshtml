@@ -27,28 +27,24 @@
         <div class="kpi-card kpi-card-primary">
             <div class="kpi-title">Đầu sách CSDL</div>
             <div class="kpi-value" style="color: var(--utc-primary);">@Model.TongDauSach</div>
-            <div class="small text-muted mt-1">Đầu sách trong danh mục (@Model.TongBanSao bản sao)</div>
         </div>
     </div>
     <div class="col-md-3 col-sm-6">
         <div class="kpi-card kpi-card-success">
             <div class="kpi-title">Bản sẵn có</div>
             <div class="kpi-value" style="color: var(--utc-success);">@Model.BanSanCo</div>
-            <div class="small text-muted mt-1">Sẵn sàng phục vụ bạn đọc tại quầy</div>
         </div>
     </div>
     <div class="col-md-3 col-sm-6">
         <div class="kpi-card kpi-card-info">
             <div class="kpi-title">Đang mượn</div>
             <div class="kpi-value" style="color: var(--utc-info);">@Model.DangMuon</div>
-            <div class="small text-muted mt-1">Bản sách đang lưu hành ngoài kho</div>
         </div>
     </div>
     <div class="col-md-3 col-sm-6">
         <div class="kpi-card kpi-card-danger">
             <div class="kpi-title" style="color: var(--utc-danger);">Quá hạn quy định</div>
             <div class="kpi-value" style="color: var(--utc-danger);">@Model.LuotQuaHan</div>
-            <div class="small text-muted mt-1">Phạt 100k/cuốn</div>
         </div>
     </div>
 </div>
@@ -137,21 +133,18 @@
             <div class="kpi-card kpi-card-success">
                 <div class="kpi-title text-success fw-bold">Tổng quỹ tiền đã thu</div>
                 <div class="kpi-value text-success">@Model.TongQuyTaiChinh.ToString("N0") đ</div>
-                <div class="small text-muted mt-1">Tổng cộng các khoản thu nộp muộn &amp; đền bù</div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="kpi-card kpi-card-warning">
                 <div class="kpi-title text-warning fw-bold">Thu từ phạt nộp muộn</div>
                 <div class="kpi-value text-warning">@Model.TienThuNopMuon.ToString("N0") đ</div>
-                <div class="small text-muted mt-1">Phạt quá hạn 100.000 đ/cuốn theo quy chế</div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="kpi-card kpi-card-danger">
                 <div class="kpi-title text-danger fw-bold">Thu từ đền bù mất / hỏng</div>
                 <div class="kpi-value text-danger">@Model.TienThuDenBu.ToString("N0") đ</div>
-                <div class="small text-muted mt-1">Khoản bồi hoàn tài liệu hư hại hoặc làm mất</div>
             </div>
         </div>
     </div>

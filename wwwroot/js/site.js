@@ -26,6 +26,25 @@ function initNavToggle() {
     });
 }
 
+function initReaderNav() {
+    const toggle = document.querySelector("[data-utc-nav-toggle]");
+    const menu = document.getElementById("utcReaderNav");
+    if (!toggle || !menu) return;
+    function setOpen(open) {
+        menu.classList.toggle("show", open);
+        toggle.setAttribute("aria-expanded", String(open));
+        toggle.setAttribute("aria-label", open ? "Đóng menu" : "Mở menu");
+    }
+    toggle.addEventListener("click", () => setOpen(toggle.getAttribute("aria-expanded") !== "true"));
+    menu.addEventListener("click", event => { if (event.target.closest("a")) setOpen(false); });
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape" && menu.classList.contains("show")) {
+            setOpen(false);
+            toggle.focus();
+        }
+    });
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
     await Promise.all([
         loadPartial("#site-header", "partials/header.html"),
@@ -33,4 +52,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     ]);
     setActiveNav();
     initNavToggle();
+    initReaderNav();
 });

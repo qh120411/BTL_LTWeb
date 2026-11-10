@@ -9,9 +9,6 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h1 class="admin-page-title mb-1">Sổ quỹ tài chính &amp; Bồi thường sự cố (@Model.Receipts.Count giao dịch)</h1>
-        <div class="text-muted small">
-            
-        </div>
     </div>
     <a href="/Admin/Circulation" class="btn btn-utc-primary">
         <i class="bi bi-journal-arrow-down me-1"></i> Quầy lưu thông mượn trả
@@ -24,21 +21,18 @@
         <div class="kpi-card shadow-sm" style="background-color: #ecfdf5; border: 1px solid #a7f3d0;">
             <div class="kpi-title text-success fw-bold">Tổng quỹ tiền đã thu</div>
             <div class="kpi-value text-success">@Model.TongThu.ToString("N0") đ</div>
-            <div class="small text-muted mt-1">Tổng cộng các khoản thu nộp muộn &amp; đền bù vào CSDL</div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="kpi-card shadow-sm" style="background-color: #fffbeb; border: 1px solid #fde68a;">
             <div class="kpi-title text-warning-emphasis fw-bold">Thu từ phạt nộp muộn</div>
             <div class="kpi-value text-warning-emphasis">@Model.ThuNopMuon.ToString("N0") đ</div>
-            <div class="small text-muted mt-1">Khoản thu chế tài quá hạn 100.000 đ/cuốn theo quy định</div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="kpi-card shadow-sm" style="background-color: #fef2f2; border: 1px solid #fecaca;">
             <div class="kpi-title text-danger fw-bold">Thu từ đền bù mất / hỏng</div>
             <div class="kpi-value text-danger">@Model.ThuDenBu.ToString("N0") đ</div>
-            <div class="small text-muted mt-1">Tiền đền bù tài liệu hư hại hoặc làm mất học liệu</div>
         </div>
     </div>
 </div>

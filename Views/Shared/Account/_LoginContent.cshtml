@@ -1,0 +1,52 @@
+@{
+    string returnUrl = ViewBag.ReturnUrl ?? "";
+    string errorMsg = ViewBag.Error ?? "";
+    string username = Context.Request.HasFormContentType ? Context.Request.Form["username"].ToString() : "";
+}
+<section class="utc-login-section" aria-labelledby="loginTitle">
+    <div class="utc-login-grid">
+        <div class="utc-login-introduction">
+            <p class="utc-login-eyebrow">UTC LIBRARY / CHÀO MỪNG TRỞ LẠI</p>
+            <h1>Tài khoản thư viện<br /> của bạn</h1>
+            <p>Đăng nhập để xem sách đang mượn, hạn trả,<br class="d-none d-xl-block" /> lịch sử và thông báo dành riêng cho bạn.</p>
+            <a href="/Reader/Search">← Tiếp tục tra cứu không cần đăng nhập</a>
+        </div>
+        <div class="utc-login-card">
+            <h2 id="loginTitle">Đăng nhập thư viện</h2>
+            <p class="utc-login-description">Sử dụng tài khoản do nhà trường hoặc thư viện cung cấp.</p>
+            @if (!string.IsNullOrEmpty(errorMsg))
+            {
+                <div class="utc-login-error" role="alert" id="loginError">@errorMsg</div>
+            }
+            <form asp-area="" asp-controller="Account" asp-action="Login" method="post" id="loginForm">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="returnUrl" value="@returnUrl" />
+                <div class="utc-login-field">
+                    <label for="loginUsername">Mã sinh viên / Tên đăng nhập</label>
+                    <input type="text" name="username" id="loginUsername" value="@username" placeholder="Nhập tên đăng nhập" required autocomplete="username" autocapitalize="none" spellcheck="false" aria-describedby="@(string.IsNullOrEmpty(errorMsg) ? null : "loginError")" />
+                </div>
+                <div class="utc-login-field">
+                    <label for="loginPassword">Mật khẩu</label>
+                    <div class="utc-login-password">
+                        <input type="password" name="password" id="loginPassword" placeholder="Nhập mật khẩu" required autocomplete="current-password" />
+                        <button type="button" class="utc-toggle-password" id="togglePasswordBtn" aria-label="Hiện mật khẩu" aria-pressed="false" aria-controls="loginPassword" title="Hiện mật khẩu"><i class="bi bi-eye" id="toggleEyeIcon" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+                <a class="utc-login-forgot" href="mailto:thuvien@utc.edu.vn?subject=Hỗ%20trợ%20cấp%20lại%20mật%20khẩu">Quên mật khẩu? →</a>
+                <button type="submit" class="utc-login-submit">Đăng nhập</button>
+            </form>
+            <p class="utc-login-support">Cần hỗ trợ tài khoản? <a href="mailto:thuvien@utc.edu.vn">Liên hệ thư viện.</a></p>
+            <details class="utc-login-help">
+                <summary>Trợ giúp &amp; tài khoản dùng thử</summary>
+                <p>Sinh viên sử dụng mã sinh viên; mật khẩu theo tài khoản được nhà trường cung cấp. Liên hệ quầy thủ thư Tầng 5 · Nhà A8 khi cần cấp lại mật khẩu.</p>
+                <div class="utc-login-demo-accounts" aria-label="Điền nhanh tài khoản dùng thử">
+                    <button type="button" data-login-username="242630923" data-login-password="Dat242630923">Sinh viên Đỗ Văn Đạt</button>
+                    <button type="button" data-login-username="GV01" data-login-password="TuanGV01">GV Nguyễn Văn Tuấn</button>
+                    <button type="button" data-login-username="GV02" data-login-password="MaiGV02">GV Trần Thị Mai</button>
+                    <button type="button" data-login-username="admin" data-login-password="Admin@123">Quản trị viên</button>
+                </div>
+            </details>
+            <a class="utc-login-preview-link" href="/preview/admin.html">Xem trước giao diện quản trị →</a>
+        </div>
+    </div>
+</section>

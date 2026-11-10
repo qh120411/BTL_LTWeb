@@ -20,13 +20,15 @@
                 <button type="button" 
                         class="btn btn-outline-primary d-lg-none me-2 admin-sidebar-toggler" 
                         id="adminSidebarToggle" 
+                        aria-controls="adminSidebar"
+                        aria-expanded="false"
                         aria-label="Toggle navigation" 
                         title="Bật/Tắt Menu Quản trị">
                     <i class="bi bi-list fs-5"></i>
                 </button>
 
                 <a href="/Admin/Dashboard" class="admin-brand d-flex align-items-center text-decoration-none">
-                    <img src="~/logo/utc.png" alt="UTC Logo" class="admin-logo me-2 me-md-3" onerror="this.src='/images/logo.png'" />
+                    <img src="~/images/figma/brand/utc-logo.png" alt="UTC Logo" class="admin-logo me-2 me-md-3" width="64" height="64" />
                     <div class="admin-brand-text">
                         <div class="brand-vi">THƯ VIỆN ĐẠI HỌC GIAO THÔNG VẬN TẢI</div>
                         <div class="brand-en d-none d-sm-block">UNIVERSITY OF TRANSPORT AND COMMUNICATIONS LIBRARY</div>
@@ -35,12 +37,11 @@
             </div>
 
             <div class="admin-actions d-flex align-items-center gap-2">
+                <a href="/Admin/Dashboard" class="btn btn-utc-primary admin-overview-link">Tổng quan</a>
 
                 <div class="dropdown">
                     <button class="btn user-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-person-circle me-1"></i>
-                        <span class="d-none d-md-inline">@(User.Identity?.Name ?? "Cán bộ Thư viện")</span>
-                        <span class="badge @(isAdmin ? "bg-danger" : "bg-primary") ms-1" style="font-size: 11px;">@roleTitle</span>
+                        <span class="admin-account-name">@(User.Identity?.Name ?? "Cán bộ Thư viện")</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm">
                         <li><span class="dropdown-item-text text-muted small">@(User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? "canbo@utc.edu.vn")</span></li>

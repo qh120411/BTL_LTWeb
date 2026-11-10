@@ -1,10 +1,23 @@
-﻿# BTL_LTWeb — Website Thư viện UTC
+# BTL_LTWeb — Website Thư viện UTC
 
 Bài tập lớn môn Lập trình Web, xây dựng website thư viện Trường Đại học Giao thông Vận tải (UTC) theo mô hình **ASP.NET Core MVC**. Project hướng đến hỗ trợ bạn đọc tra cứu học liệu, tiếp cận dịch vụ thư viện và hỗ trợ quản lý tài liệu, bạn đọc, hoạt động mượn trả.
 
 ## Thiết kế Figma
 
 Link Figma: [UTC Library — Prototype](https://www.figma.com/proto/4ul02l3jmMTv1gssiJbQyc/UTC-Library)
+
+## Chạy bằng VS Code
+
+Máy hiện tại dùng SQL Server `.\HUYPC`, database `QLThuVienUTC` và Windows Authentication trong `appsettings.Development.json`.
+Nhấn **F5 → UTC: Debug web (localhost:5125)**, hoặc chạy `dotnet run --launch-profile http` tại http://localhost:5124.
+Ứng dụng mở trang chủ công khai; hồ sơ cá nhân và nghiệp vụ quản trị vẫn yêu cầu đăng nhập.
+Chi tiết: [Hướng dẫn chạy VS Code](docs/RUN_VSCODE.md).
+
+## Tài liệu API
+
+- [Hướng dẫn API tiếng Việt](docs/API.md): endpoint, tham số, cấu trúc phản hồi, ví dụ PowerShell và hành vi SQL/JSON fallback.
+- Swagger UI khi chạy ứng dụng: [http://localhost:5124/ApiDoc](http://localhost:5124/ApiDoc) (cũng có tại `/api-docs`, `/swagger`, `/Docs/Api`).
+- Đặc tả OpenAPI: [`wwwroot/swagger.json`](wwwroot/swagger.json), được phục vụ tại `/swagger.json`.
 
 ## Tổng quan chức năng
 
@@ -24,7 +37,7 @@ Link Figma: [UTC Library — Prototype](https://www.figma.com/proto/4ul02l3jmMTv
 - Quản lý tài liệu, bản sao, tác giả và nhà xuất bản.
 - Quản lý bạn đọc, thẻ bạn đọc và giao dịch mượn trả.
 
-**Trạng thái hiện tại:** project đang ở giai đoạn xây dựng giao diện và chuẩn bị cơ sở dữ liệu. Nội dung trang chủ còn là khung mẫu; các mục điều hướng và nút đăng nhập chưa có đầy đủ xử lý nghiệp vụ. Ứng dụng chưa cấu hình kết nối SQL Server hoặc tầng truy cập dữ liệu.
+**Trạng thái hiện tại:** ứng dụng có hai phân hệ Reader/Admin, đăng nhập và phân quyền, kết nối SQL Server bằng Entity Framework Core. Một phần service còn lưu dữ liệu trong `App_Data/*.json`; cấu hình kết nối không tự chuyển các dữ liệu này vào SQL Server.
 
 ## Công nghệ sử dụng
 

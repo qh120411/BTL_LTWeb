@@ -1,118 +1,55 @@
-@{
+﻿@{
     string currentController = ViewContext.RouteData.Values["Controller"]?.ToString() ?? "Home";
-    string currentAction = ViewContext.RouteData.Values["Action"]?.ToString() ?? "Index";
+    bool isStaff = User.IsInRole("Admin") || User.IsInRole("ADMIN") || User.IsInRole("Thuthu")
+        || User.IsInRole("QUANLY_BANDOC") || User.IsInRole("QUANLY_TAILIEU");
 }
-
-<!-- Header Thương hiệu UTC (Tầng 1 & Tầng 2 - Cuộn tự nhiên và bị đẩy lên khi xem nội dung) -->
 <header class="utc-site-header">
-    <!-- Tầng 1: Institutional Topbar (#DCECF8 - Xanh da trời nhạt trang nhã, cao 32px) -->
     <div class="utc-institutional-topbar">
         <div class="container utc-topbar-inner">
-            <div class="utc-topbar-left">
-                <span class="utc-topbar-school">TRƯỜNG ĐẠI HỌC GIAO THÔNG VẬN TẢI</span>
-            </div>
-            <div class="utc-topbar-right">
-                <a href="/Reader/Guide" class="utc-topbar-link">
-                    <i class="bi bi-question-circle me-1"></i> Hỗ trợ bạn đọc
-                </a>
-                <span class="utc-topbar-divider">·</span>
-                <div class="utc-lang-selector">
-                    <span class="utc-lang-item active">VI</span>
-                    <span class="utc-lang-sep">/</span>
-                    <a href="#" class="utc-lang-item">EN</a>
-                </div>
-            </div>
+            <span class="utc-topbar-school">TRƯỜNG ĐẠI HỌC GIAO THÔNG VẬN TẢI</span>
+            <div class="utc-topbar-right"><a href="/Reader/Guide" class="utc-topbar-link">Hỗ trợ bạn đọc</a><span>·</span><span>VI / EN</span></div>
         </div>
     </div>
-
-    <!-- Tầng 2: Brand Header (Tone xanh da trời tươi sáng, texture trang nhã phong cách đại học) -->
     <div class="utc-brand-header">
         <div class="container utc-brand-inner">
             <a href="/Reader/Home" class="utc-brand-lockup">
-                <div class="utc-logo-column">
-                    <div class="utc-logo-container">
-                        <img src="~/logo/utc.png" alt="Logo Đại học Giao thông Vận tải" class="utc-logo-img" onerror="this.src='/images/logo.png'" />
-                    </div>
-                    <span class="utc-brand-slogan">The way to success</span>
-                </div>
-                <span class="utc-brand-divider" aria-hidden="true"></span>
+                <img src="~/images/figma/brand/utc-logo.png" alt="Đại học Giao thông vận tải" class="utc-logo-img" width="64" height="64" />
                 <div class="utc-brand-titles">
-                    <span class="utc-brand-school-top">TRƯỜNG ĐẠI HỌC GIAO THÔNG VẬN TẢI</span>
-                    <h1 class="utc-brand-name">THƯ VIỆN ĐẠI HỌC GIAO THÔNG VẬN TẢI</h1>
+                    <span class="utc-brand-name">THƯ VIỆN ĐẠI HỌC GIAO THÔNG VẬN TẢI</span>
                     <span class="utc-brand-sub">UNIVERSITY OF TRANSPORT AND COMMUNICATIONS LIBRARY</span>
                 </div>
             </a>
-
             <div class="utc-header-account-actions">
-                @if (User.IsInRole("Admin") || User.IsInRole("Thuthu"))
+                @if (isStaff)
                 {
-                    <a href="/Admin/Dashboard" class="utc-header-btn-admin" title="Vào phân hệ dành cho cán bộ thủ thư">
-                        <i class="bi bi-shield-lock-fill me-1"></i> Trang quản trị
-                    </a>
+                    <a href="/Admin/Dashboard" class="utc-header-btn-admin">Trang quản trị →</a>
                 }
-
                 @if (User.Identity?.IsAuthenticated == true)
                 {
-                    <a href="/Reader/Profile" class="utc-header-btn-user" title="Xem & cập nhật Hồ sơ bạn đọc">
-                        <i class="bi bi-person-circle me-1"></i>
-                        <span class="utc-user-name">@User.Identity.Name</span>
-                    </a>
-                    <a href="/Account/Logout" class="utc-header-btn-logout" title="Đăng xuất khỏi hệ thống">
-                        <i class="bi bi-box-arrow-right me-1"></i> Đăng xuất
-                    </a>
+                    <a href="/Reader/Profile" class="utc-header-btn-user"><span class="utc-user-name">@User.Identity.Name</span></a>
+                    <a href="/Account/Logout" class="utc-header-btn-logout">Đăng xuất</a>
                 }
                 else
                 {
-                    <a href="/Account/Login" class="utc-header-btn-login">
-                        <i class="bi bi-box-arrow-in-right me-1"></i> Đăng nhập
-                    </a>
+                    <a href="/Account/Login" class="utc-header-btn-login">Đăng nhập</a>
                 }
             </div>
         </div>
     </div>
-</header>
-
-<!-- Tầng 3: Navigation Bar (Tone xanh da trời nhạt TRONG SUỐT, CỐ ĐỊNH TRÊN ĐỈNH TRANG & có hiệu ứng Blur khi cuộn) -->
-<div class="utc-navbar-sticky">
-    <nav class="utc-main-navbar">
+    <nav class="utc-main-navbar" aria-label="Điều hướng chính">
         <div class="container utc-navbar-inner">
-            <button class="utc-navbar-toggler d-lg-none" type="button" onclick="document.getElementById('utcReaderNav').classList.toggle('show');" aria-label="Toggle navigation">
-                <i class="bi bi-list"></i>
-                <span class="ms-1 fs-6">Menu</span>
-            </button>
-
+            <button class="utc-navbar-toggler d-lg-none" type="button" data-utc-nav-toggle aria-controls="utcReaderNav" aria-expanded="false" aria-label="Mở menu"><i class="bi bi-list" aria-hidden="true"></i> Menu</button>
             <ul class="utc-navbar-menu" id="utcReaderNav">
-                <li class="utc-navbar-item">
-                    <a href="/Reader/Home" class="utc-navbar-link @(currentController == "Home" ? "active" : "")">
-                        <i class="bi bi-house-door"></i>
-                        <span>Trang chủ</span>
-                    </a>
-                </li>
-                <li class="utc-navbar-item">
-                    <a href="/Reader/Search" class="utc-navbar-link @(currentController == "Search" || currentController == "Document" ? "active" : "")">
-                        <i class="bi bi-search"></i>
-                        <span>Tra cứu học liệu</span>
-                    </a>
-                </li>
-                <li class="utc-navbar-item">
-                    <a href="/Reader/Guide" class="utc-navbar-link @(currentController == "Guide" ? "active" : "")">
-                        <i class="bi bi-compass"></i>
-                        <span>Dịch vụ &amp; Quy định</span>
-                    </a>
-                </li>
-                <li class="utc-navbar-item">
-                    <a href="/Reader/News" class="utc-navbar-link @(currentController == "News" ? "active" : "")">
-                        <i class="bi bi-newspaper"></i>
-                        <span>Tin tức &amp; thông báo</span>
-                    </a>
-                </li>
-                <li class="utc-navbar-item">
-                    <a href="/Reader/Profile" class="utc-navbar-link @(currentController == "Profile" ? "active" : "")">
-                        <i class="bi bi-person-vcard"></i>
-                        <span>Hồ sơ bạn đọc</span>
-                    </a>
-                </li>
+                <li><a href="/Reader/Home" class="utc-navbar-link @(currentController == "Home" ? "active" : "")">Trang chủ</a></li>
+                <li><a href="/Reader/Search" class="utc-navbar-link @(currentController == "Search" || currentController == "Document" ? "active" : "")">Tra cứu học liệu</a></li>
+                <li><a href="/Reader/Guide" class="utc-navbar-link @(currentController == "Guide" ? "active" : "")">Dịch vụ</a></li>
+                <li><a href="/Reader/News" class="utc-navbar-link @(currentController == "News" ? "active" : "")">Tin tức &amp; thông báo</a></li>
+                @if (!isStaff && User.Identity?.IsAuthenticated == true)
+                {
+                    <li><a href="/Reader/Profile" class="utc-navbar-link @(currentController == "Profile" ? "active" : "")">Hồ sơ bạn đọc</a></li>
+                }
             </ul>
         </div>
     </nav>
-</div>
+    <partial name="~/Views/Shared/_UtcBrandStripes.cshtml" />
+</header>

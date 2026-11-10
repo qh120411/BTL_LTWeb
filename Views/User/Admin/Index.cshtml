@@ -167,7 +167,6 @@
                                 <span class="badge bg-light text-secondary border px-2 py-1" style="font-size: 11.5px; cursor: not-allowed;" title="Bạn không thể tự sửa quyền của chính mình">
                                     <i class="bi bi-lock-fill text-muted me-1"></i>Chính bạn
                                 </span>
-                                <div class="text-muted" style="font-size: 10px; margin-top: 2px;">(Không thể tự sửa)</div>
                             }
                             else if (s.CanEdit)
                             {
@@ -241,7 +240,7 @@
                     </div>
                     <div class="p-3 mb-2 rounded-3" style="background-color: #f8fbff; border: 1px dashed #bae6fd;">
                         <div class="small text-muted">
-                            <i class="bi bi-shield-lock-fill text-primary me-1"></i> Mật khẩu mặc định khởi tạo sẽ được băm SHA-256 an toàn trong CSDL SQL Server: <strong>Tên+MãNV</strong> (VD: <em>ChauNV26-04</em>).
+                            <i class="bi bi-shield-lock-fill text-primary me-1"></i> Mật khẩu ban đầu: <strong>Tên + Mã nhân viên</strong> (ví dụ: <em>ChauNV26-04</em>).
                         </div>
                     </div>
                     <div class="modal-footer px-0 pb-0 pt-3" style="border-top: 1px solid #f1f5f9;">
@@ -283,11 +282,6 @@
                         <option value="QUANLY_BANDOC">Quản lý bạn đọc (QLB) - Mượn trả, quá hạn, thẻ bạn đọc</option>
                         <option value="QUANLY_TAILIEU">Thủ thư mượn trả (TTM) - Quản lý học liệu sách/tài liệu</option>
                     </select>
-                </div>
-                <div class="p-3 rounded-3" style="background-color: #f0fdf4; border: 1px solid #bbf7d0;">
-                    <div class="small text-success">
-                        <i class="bi bi-check-circle-fill me-1"></i> Quyền truy cập phân hệ sẽ được cập nhật trực tiếp vào SQL Server và có hiệu lực ngay trong phiên đăng nhập của cán bộ.
-                    </div>
                 </div>
             </div>
             <div class="modal-footer" style="border-top: 1px solid #f1f5f9; padding: 16px 24px;">
