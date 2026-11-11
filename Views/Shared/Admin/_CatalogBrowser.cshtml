@@ -1,0 +1,163 @@
+@model BTL_LTWEB.Areas.Admin.ViewModels.CatalogIndexViewModel
+<div class="admin-catalog">
+    <header class="catalog-heading">
+        <h1 class="admin-page-title">Quản lý học liệu</h1>
+        <button class="btn btn-utc-primary" type="button" data-bs-toggle="modal" data-bs-target="#createBookModal">Thêm học liệu</button>
+    </header>
+    <form method="get" asp-action="Index" class="catalog-search" role="search">
+        <input type="hidden" name="category" value="@Model.SelectedCategory" />
+        <input type="hidden" name="major" value="@Model.SelectedMajor" />
+        <input type="hidden" name="language" value="@Model.SelectedLanguage" />
+        <input type="hidden" name="status" value="@Model.SelectedStatus" />
+        <label for="catalogSearch" class="visually-hidden">Tìm học liệu theo tên, tác giả hoặc ISBN</label>
+        <input id="catalogSearch" name="search" type="search" class="form-control" maxlength="100"
+               value="@Model.SearchKeyword" placeholder="Tìm tên sách, tác giả hoặc ISBN" />
+        <button class="btn btn-utc-primary" type="submit">Tìm kiếm</button>
+    </form>
+    <div class="catalog-layout">
+        <aside class="catalog-filter-panel" aria-labelledby="catalogFiltersTitle">
+            <h2 id="catalogFiltersTitle">Lọc kết quả</h2>
+            <form method="get" asp-action="Index" class="catalog-filters">
+                <input type="hidden" name="search" value="@Model.SearchKeyword" />
+                <div class="catalog-filter-field">
+                    <label for="catalogCategory">Loại tài liệu</label>
+                    <select id="catalogCategory" name="category" class="form-select">
+                        <option value="all" selected="@(Model.SelectedCategory == "all")">Tất cả học liệu</option>
+                        <option value="books" selected="@(Model.SelectedCategory == "books")">Sách và giáo trình</option>
+                        <option value="thesis" selected="@(Model.SelectedCategory == "thesis")">Luận văn, luận án</option>
+                        <option value="journal" selected="@(Model.SelectedCategory == "journal")">Tạp chí</option>
+                    </select>
+                </div>
+                <div class="catalog-filter-field">
+                    <label for="catalogMajor">Chuyên ngành</label>
+                    <select id="catalogMajor" name="major" class="form-select">
+                        <option value="Tất cả chuyên ngành" selected="@(Model.SelectedMajor == "Tất cả chuyên ngành" || Model.SelectedMajor == "all")">Tất cả chuyên ngành</option>
+                        <option value="Công nghệ thông tin" selected="@(Model.SelectedMajor == "Công nghệ thông tin" || Model.SelectedMajor == "cntt")">Công nghệ thông tin</option>
+                        <option value="Kỹ thuật xây dựng &amp; Giao thông" selected="@(Model.SelectedMajor == "Kỹ thuật xây dựng & Giao thông" || Model.SelectedMajor == "xaydung" || Model.SelectedMajor == "Kỹ thuật xây dựng")">Kỹ thuật xây dựng và giao thông</option>
+                        <option value="Kinh tế &amp; Quản trị" selected="@(Model.SelectedMajor == "Kinh tế & Quản trị" || Model.SelectedMajor == "kinhte")">Kinh tế và quản trị</option>
+                        <option value="Khoa học cơ bản" selected="@(Model.SelectedMajor == "Khoa học cơ bản" || Model.SelectedMajor == "toanly")">Khoa học cơ bản</option>
+                        <option value="Lý luận chính trị &amp; Pháp luật" selected="@(Model.SelectedMajor == "Lý luận chính trị & Pháp luật" || Model.SelectedMajor == "chinhtri")">Lý luận chính trị và pháp luật</option>
+                    </select>
+                </div>
+                <div class="catalog-filter-field">
+                    <label for="catalogLanguage">Ngôn ngữ</label>
+                    <select id="catalogLanguage" name="language" class="form-select">
+                        <option value="all" selected="@(Model.SelectedLanguage == "all")">Tất cả ngôn ngữ</option>
+                        <option value="vie" selected="@(Model.SelectedLanguage == "vie")">Tiếng Việt</option>
+                        <option value="eng" selected="@(Model.SelectedLanguage == "eng")">Tiếng Anh</option>
+                    </select>
+                </div>
+                <div class="catalog-filter-field">
+                    <label for="catalogStatus">Tình trạng kho</label>
+                    <select id="catalogStatus" name="status" class="form-select">
+                        <option value="Tất cả" selected="@(Model.SelectedStatus == "Tất cả")">Tất cả tình trạng</option>
+                        <option value="Có sẵn" selected="@(Model.SelectedStatus == "Có sẵn")">Còn sách in</option>
+                        <option value="Hết sách" selected="@(Model.SelectedStatus == "Hết sách")">Hết bản in</option>
+                        <option value="Bản điện tử" selected="@(Model.SelectedStatus == "Bản điện tử")">Bản điện tử</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-utc-primary">Áp dụng bộ lọc</button>
+                @if (!string.IsNullOrWhiteSpace(Model.SearchKeyword) || Model.SelectedCategory != "all" ||
+                    (Model.SelectedMajor != "Tất cả chuyên ngành" && Model.SelectedMajor != "all") ||
+                    Model.SelectedLanguage != "all" || Model.SelectedStatus != "Tất cả")
+                {
+                    <a asp-action="Index" class="catalog-clear">Xóa bộ lọc</a>
+                }
+            </form>
+        </aside>
+        <section class="catalog-results" id="catalogResults" aria-labelledby="catalogResultsTitle" data-page="@Model.TrangHienTai" data-total="@Model.TongDauSach" data-pages="@Model.TongTrang">
+            <div class="catalog-results-heading">
+                <h2 id="catalogResultsTitle">Tìm thấy @Model.TongDauSach học liệu phù hợp</h2>
+            </div>
+            @if (Model.Books.Count == 0)
+            {
+                <div class="catalog-empty">
+                    <p>Không có học liệu phù hợp.</p>
+                    <a asp-action="Index">Xem tất cả học liệu</a>
+                </div>
+            }
+            else
+            {
+                <div class="catalog-book-grid">
+                    @foreach (var book in Model.BooksOnPage)
+                    {
+                        var cover = book.CoverImage.StartsWith("/", StringComparison.Ordinal) ||
+                                    book.CoverImage.StartsWith("https://", StringComparison.OrdinalIgnoreCase) ||
+                                    book.CoverImage.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
+                            ? book.CoverImage : "/" + book.CoverImage.TrimStart('~', '/');
+                        <article class="catalog-book" data-book-id="@book.Id">
+                            <a asp-area="Reader" asp-controller="Document" asp-action="Details" asp-route-id="@book.Id"
+                               class="catalog-cover" target="_blank" rel="noopener" aria-label="Xem thông tin @book.TenHocLieu">
+                                <img src="@cover" alt="@book.TenHocLieu" loading="lazy"
+                                     onerror="this.onerror=null;this.src='/images/covers/sach_01.jpg'" />
+                            </a>
+                            <div class="catalog-book-body">
+                                <p class="catalog-major">@book.TheLoai</p>
+                                <h2 class="catalog-book-title" title="@book.TenHocLieu">
+                                    <a asp-area="Reader" asp-controller="Document" asp-action="Details" asp-route-id="@book.Id"
+                                       target="_blank" rel="noopener">@book.TenHocLieu</a>
+                                </h2>
+                                <p class="catalog-author" title="@book.TacGia">@book.TacGia</p>
+                                <span class="catalog-stock @(book.IsOnline ? "is-online" : book.SanCo <= 0 ? "is-empty" : "")">
+                                    @(book.IsOnline ? "Bản điện tử" : $"{book.SanCo} bản sẵn có · Sách in")
+                                </span>
+                            </div>
+                            <div class="catalog-book-actions">
+                                <button type="button" class="btn btn-outline-primary btn-view-copies" data-id="@book.Id"
+                                        disabled="@book.IsOnline" aria-label="Xem bản sách @book.TenHocLieu">Bản sách</button>
+                                <button type="button" class="btn btn-outline-secondary btn-edit-book" data-id="@book.Id"
+                                        aria-label="Sửa @book.TenHocLieu">Sửa</button>
+                                <button type="button" class="btn btn-outline-danger btn-delete-book" data-id="@book.Id"
+                                        data-title="@book.TenHocLieu" data-copies="@book.SanCo" data-total="@book.TongBan"
+                                        aria-label="Xóa @book.TenHocLieu">Xóa</button>
+                            </div>
+                        </article>
+                    }
+                </div>
+                <div class="catalog-results-footer">
+                    <span>@((Model.TrangHienTai - 1) * Model.KichThuocTrang + 1)–@Math.Min(Model.TrangHienTai * Model.KichThuocTrang, Model.TongDauSach) / @Model.TongDauSach học liệu</span>
+                    @if (Model.TongTrang > 1)
+                    {
+                        <nav class="catalog-pagination" aria-label="Trang học liệu">
+                            @if (Model.TrangHienTai > 1)
+                            {
+                                <a asp-action="Index" asp-route-search="@Model.SearchKeyword" asp-route-category="@Model.SelectedCategory"
+                                   asp-route-major="@Model.SelectedMajor" asp-route-language="@Model.SelectedLanguage" asp-route-status="@Model.SelectedStatus" asp-route-page="@(Model.TrangHienTai - 1)" asp-fragment="catalogResults" class="catalog-page-direction" rel="prev">Trước</a>
+                            }
+                            else
+                            {
+                                <span class="catalog-page-direction" aria-disabled="true">Trước</span>
+                            }
+                            <span class="catalog-page-context">Trang @Model.TrangHienTai / @Model.TongTrang</span>
+                            @foreach (var p in Model.TrangHienThi)
+                            {
+                                if (!p.HasValue)
+                                {
+                                    <span class="catalog-page-gap" aria-hidden="true">…</span>
+                                }
+                                else if (p == Model.TrangHienTai)
+                                {
+                                    <span class="catalog-page-number" aria-current="page">@p</span>
+                                }
+                                else
+                                {
+                                    <a asp-action="Index" asp-route-search="@Model.SearchKeyword" asp-route-category="@Model.SelectedCategory"
+                                   asp-route-major="@Model.SelectedMajor" asp-route-language="@Model.SelectedLanguage" asp-route-status="@Model.SelectedStatus" asp-route-page="@p" asp-fragment="catalogResults" class="catalog-page-number" aria-label="Trang @p">@p</a>
+                                }
+                            }
+                            @if (Model.TrangHienTai < Model.TongTrang)
+                            {
+                                <a asp-action="Index" asp-route-search="@Model.SearchKeyword" asp-route-category="@Model.SelectedCategory"
+                                   asp-route-major="@Model.SelectedMajor" asp-route-language="@Model.SelectedLanguage" asp-route-status="@Model.SelectedStatus" asp-route-page="@(Model.TrangHienTai + 1)" asp-fragment="catalogResults" class="catalog-page-direction" rel="next">Sau</a>
+                            }
+                            else
+                            {
+                                <span class="catalog-page-direction" aria-disabled="true">Sau</span>
+                            }
+                        </nav>
+                    }
+                </div>
+            }
+        </section>
+    </div>
+</div>

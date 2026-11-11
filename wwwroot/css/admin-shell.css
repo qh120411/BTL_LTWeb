@@ -33,10 +33,17 @@
 .admin-body .admin-sidebar .btn-back-web { min-height: 44px; min-width: 0; padding: 10px 12px; font-size: 14px; }
 
 @media (min-width: 1200px) {
-    .admin-body .admin-wrapper { flex-direction: row; }
+    .admin-body .admin-wrapper {
+        flex-direction: row;
+        padding-left: var(--admin-sidebar-width);
+        min-height: calc(100vh - var(--admin-header-height));
+        min-height: calc(100dvh - var(--admin-header-height));
+    }
     .admin-body .admin-sidebar {
-        position: sticky !important;
+        position: fixed !important;
         top: var(--admin-header-height) !important;
+        left: 0;
+        bottom: 0;
         align-self: flex-start;
         flex: 0 0 var(--admin-sidebar-width);
         width: var(--admin-sidebar-width) !important;

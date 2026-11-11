@@ -148,7 +148,7 @@ body.admin-body {
 
 .admin-topbar {
 
-    background: linear-gradient(90deg, var(--utc-primary-dark) 0%, var(--utc-primary) 100%);
+    background: var(--utc-header-bg, #176a9e);
 
     color: #ffffff;
 

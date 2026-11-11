@@ -51,6 +51,7 @@ namespace BTL_LTWEB.Areas.Admin.ViewModels
         public string TheLoai { get; set; } = string.Empty;
         public string MajorCode { get; set; } = "cntt";
         public string DinhDang { get; set; } = "Sách in";
+        public bool IsOnline { get; set; }
         public string CoverImage { get; set; } = string.Empty;
         public int TongBan { get; set; } = 4;
         public int SanCo { get; set; } = 4;
@@ -67,6 +68,12 @@ namespace BTL_LTWEB.Areas.Admin.ViewModels
         public string? SelectedCategory { get; set; }
         public string? SelectedMajor { get; set; }
         public string? SelectedStatus { get; set; }
+        public string SelectedLanguage { get; set; } = "all";
+        public int TrangHienTai { get; set; } = 1;
+        public int KichThuocTrang => 12;
+        public int TongTrang => Math.Max(1, (int)Math.Ceiling(Books.Count / (double)KichThuocTrang));
+        public IEnumerable<CatalogItemViewModel> BooksOnPage => Books.Skip((TrangHienTai - 1) * KichThuocTrang).Take(KichThuocTrang);
+        public IReadOnlyList<int?> TrangHienThi => BTL_LTWEB.Common.PageNavigation.GetPages(TrangHienTai, TongTrang);
         public List<CatalogItemViewModel> Books { get; set; } = new();
 
         public int TongDauSach => Books.Count;

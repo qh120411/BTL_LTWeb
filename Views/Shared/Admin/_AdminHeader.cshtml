@@ -1,59 +1,43 @@
 @{
     bool isAdmin = User.IsInRole("Admin") || User.IsInRole("ADMIN");
-    string roleTitle = User.FindFirst("RoleTitle")?.Value ?? (isAdmin ? "Quản trị viên (QTV)" : (User.IsInRole("QUANLY_BANDOC") ? "Quản lý bạn đọc (QLB)" : "Quản lý tài liệu (QLTL)"));
+    string roleTitle = isAdmin ? "Quản trị viên" : User.IsInRole("QUANLY_BANDOC") ? "Quản lý bạn đọc" : "Quản lý học liệu";
 }
-
 <header class="admin-main-header">
-    <!-- Top banner siêu nhỏ trên cùng -->
     <div class="admin-topbar">
-        <div class="container-fluid px-3 px-md-4 d-flex justify-content-between align-items-center">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
             <span class="topbar-title">TRƯỜNG ĐẠI HỌC GIAO THÔNG VẬN TẢI</span>
-            <span class="topbar-links">Hỗ trợ cán bộ &middot; VI / EN</span>
         </div>
     </div>
-
-    <!-- Header chính: Nút Menu Mobile + Logo UTC + Tiêu đề + Nút Tổng quan & User -->
     <div class="admin-navbar">
         <div class="container-fluid px-3 px-md-4 d-flex justify-content-between align-items-center">
             <div class="admin-brand-group d-flex align-items-center">
-                <!-- Nút bật/tắt menu trên màn hình nhỏ (Mobile/Tablet) -->
-                <button type="button" 
-                        class="btn btn-outline-primary me-2 admin-sidebar-toggler"
-                        id="adminSidebarToggle" 
-                        aria-controls="adminSidebar"
-                        aria-expanded="false"
-                        aria-label="Mở menu quản trị"
-                        title="Bật/Tắt Menu Quản trị">
+                <button type="button" class="btn btn-outline-primary me-3 admin-sidebar-toggler"
+                        id="adminSidebarToggle" aria-controls="adminSidebar" aria-expanded="false" aria-label="Mở menu quản trị">
                     Menu
                 </button>
-
                 <a href="/Admin/Dashboard" class="admin-brand d-flex align-items-center text-decoration-none">
-                    <img src="~/images/figma/brand/utc-logo.png" alt="UTC Logo" class="admin-logo me-2 me-md-3" width="64" height="64" />
+                    <img src="~/images/figma/brand/utc-logo.png" alt="UTC" class="admin-logo me-3" width="56" height="56" />
                     <div class="admin-brand-text">
                         <div class="brand-vi">THƯ VIỆN ĐẠI HỌC GIAO THÔNG VẬN TẢI</div>
                         <div class="brand-en d-none d-sm-block">UNIVERSITY OF TRANSPORT AND COMMUNICATIONS LIBRARY</div>
                     </div>
                 </a>
             </div>
-
-            <div class="admin-actions d-flex align-items-center gap-2">
+            <div class="admin-actions d-flex align-items-center">
                 <a href="/Admin/Dashboard" class="btn btn-utc-primary admin-overview-link">Tổng quan</a>
-
                 <div class="dropdown">
-                    <button class="btn user-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="admin-account-name">@(User.Identity?.Name ?? "Cán bộ Thư viện")</span>
+                    <button class="btn user-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="menu">
+                        <span class="admin-account-name">@(User.Identity?.Name ?? "Cán bộ thư viện")</span>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end shadow-sm">
-                        <li><span class="dropdown-item-text text-muted small">@(User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? "canbo@utc.edu.vn")</span></li>
-                        <li><span class="dropdown-item-text fw-bold small text-dark">Vai trò: @roleTitle</span></li>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><span class="dropdown-item-text admin-account-role">@roleTitle</span></li>
                         <li><hr class="dropdown-divider"></li>
                         @if (isAdmin)
                         {
-                            <li><a class="dropdown-item" href="/Admin/User"><i class="bi bi-shield-lock me-2"></i>Tài khoản &amp; Phân quyền</a></li>
+                            <li><a class="dropdown-item" href="/Admin/User">Tài khoản &amp; phân quyền</a></li>
                         }
-                        <li><a class="dropdown-item" href="/Reader/Home"><i class="bi bi-journal-text me-2"></i>Xem Cổng Bạn đọc</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="/Account/Logout"><i class="bi bi-box-arrow-right me-2"></i>Đăng xuất</a></li>
+                        <li><a class="dropdown-item" href="/Reader/Home">Về website</a></li>
+                        <li><a class="dropdown-item text-danger" href="/Account/Logout">Đăng xuất</a></li>
                     </ul>
                 </div>
             </div>

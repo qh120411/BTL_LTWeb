@@ -7,16 +7,14 @@
     string dueDateStr = canBorrow ? dueDate.ToString("dd/MM/yyyy") : "Ngoài học kỳ";
 }
 
-<div class="admin-breadcrumb">THƯ VIỆN UTC / QUẢN TRỊ</div>
-
 <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
     <div>
-        <h1 class="admin-page-title mb-1">Quản lý lưu thông &amp; Mượn trả (@Model.Transactions.Count giao dịch)</h1>
+        <h1 class="admin-page-title mb-1">Mượn trả</h1>
     </div>
     <button type="button" class="btn btn-utc-primary" data-bs-toggle="modal" data-bs-target="#createBorrowModal" disabled="@(!canBorrow)" aria-describedby="@(!canBorrow ? "borrowTermNotice" : null)">
         Cho mượn sách
     </button>
-    
+
 </div>
 
 
@@ -32,16 +30,17 @@
         <div class="col-md-7">
             <label class="form-label-utc">Tra cứu giao dịch</label>
             <div class="input-group">
-                <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                <input type="text" name="search" class="form-control form-control-utc border-start-0" 
+
+                <input type="text" name="search" class="form-control form-control-utc"
                        placeholder="Mã giao dịch, mã sinh viên, họ tên, tên sách..." value="@Model.SearchKeyword" />
+                <button type="submit" class="btn btn-utc-primary">Tìm</button>
             </div>
         </div>
         <div class="col-md-5">
             <label class="form-label-utc">Trạng thái giao dịch</label>
             <select name="status" class="form-select form-control-utc" onchange="this.form.submit()">
                 <option value="Tất cả trạng thái" selected="@(Model.SelectedStatus == "Tất cả trạng thái")">Tất cả trạng thái</option>
-                <option value="Đang mượn" selected="@(Model.SelectedStatus == "Đang mượn")">Đang mượn (Còn hạn)</option>
+                <option value="Đang mượn" selected="@(Model.SelectedStatus == "Đang mượn")">Còn hạn</option>
                 <option value="Quá hạn" selected="@(Model.SelectedStatus == "Quá hạn")">Đang quá hạn</option>
             </select>
         </div>
@@ -56,7 +55,7 @@
                 <tr>
                     <th style="width: 13%;">Mã giao dịch</th>
                     <th style="width: 20%;">Bạn đọc</th>
-                    <th style="width: 32%;">Tài liệu / Sách học liệu</th>
+                    <th style="width: 32%;">Sách</th>
                     <th style="width: 12%;">Hạn trả</th>
                     <th style="width: 11%;">Trạng thái</th>
                     <th style="width: 12%; text-align: center;">Thao tác</th>
@@ -67,8 +66,8 @@
                 {
                     <tr>
                         <td colspan="6" class="text-center py-4 text-muted">
-                            <i class="bi bi-inbox fs-2 d-block mb-2"></i>
-                            Không tìm thấy giao dịch mượn trả nào phù hợp với bộ lọc hiện tại.
+
+                            Không có giao dịch phù hợp.
                         </td>
                     </tr>
                 }
@@ -77,21 +76,16 @@
                     <tr>
                         <td>
                             <strong class="text-primary font-monospace">@item.MaGD</strong>
-                            <div class="text-muted" style="font-size: 11px;">Mượn: @item.NgayMuon</div>
+                            <div class="text-muted" style="font-size: 14px;">Mượn: @item.NgayMuon</div>
                         </td>
                         <td>
                             <a href="/Admin/Reader/Details/@item.MaBD" class="fw-bold text-navy text-decoration-none">
                                 @item.HoTen
                             </a>
-                            <div class="text-muted small">MSV: <code>@item.MaBD</code></div>
+                            <div class="text-muted small">Mã: <code>@item.MaBD</code></div>
                         </td>
                         <td>
                             <div class="d-flex align-items-center gap-2">
-                                <img src="@(string.IsNullOrEmpty(item.CoverImage) ? "/images/covers/sach_01.jpg" : item.CoverImage)" 
-                                     alt="@item.TenSach" 
-                                     class="rounded border shadow-sm flex-shrink-0" 
-                                     style="width: 38px; height: 50px; object-fit: cover;"
-                                     onerror="this.src='/images/covers/sach_01.jpg'" />
                                 <div>
                                     <div class="fw-bold text-dark text-truncate" style="max-width: 280px;" title="@item.TenSach">
                                         @item.TenSach
@@ -106,7 +100,7 @@
                             <span class="@(item.IsQuaHan ? "text-danger fw-bold" : "text-dark")">@item.HanTra</span>
                             @if (item.IsQuaHan)
                             {
-                                <div class="text-danger small fw-semibold" style="font-size: 11px;">
+                                <div class="text-danger small fw-semibold" style="font-size: 14px;">
                                     Phạt 100.000 đ
                                 </div>
                             }
@@ -114,19 +108,19 @@
                         <td>
                             @if (item.IsQuaHan)
                             {
-                                <span class="badge bg-danger text-white px-2 py-1" style="font-weight: 600; font-size: 11.5px; display: inline-flex; align-items: center; gap: 4px;">
-                                    <i class="bi bi-exclamation-triangle-fill"></i> @item.TrangThai
+                                <span class="badge bg-danger text-white px-2 py-1" style="font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 4px;">
+                                     @item.TrangThai
                                 </span>
                             }
                             else
                             {
-                                <span class="badge bg-success text-white px-2 py-1" style="font-weight: 600; font-size: 11.5px; display: inline-flex; align-items: center; gap: 4px;">
-                                    <i class="bi bi-check-circle-fill"></i> Còn hạn
+                                <span class="badge bg-success text-white px-2 py-1" style="font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 4px;">
+                                     Còn hạn
                                 </span>
                             }
                         </td>
                         <td class="text-center">
-                            <div class="d-flex justify-content-center align-items-center gap-1">
+                            <div class="d-flex flex-wrap justify-content-center align-items-center gap-2 admin-row-actions">
                                 <!-- Nút trả sách -->
                                 <button type="button" class="btn btn-sm btn-outline-success px-2 py-1 btn-return-trigger"
                                         data-magd="@item.MaGD"
@@ -135,12 +129,10 @@
                                         data-tensach="@item.TenSach"
                                         data-quahan="@(item.IsQuaHan ? "true" : "false")"
                                         title="Tiếp nhận trả sách tại quầy">
-                                    <i class="bi bi-arrow-return-left"></i> Trả sách
+                                     Trả sách
                                 </button>
                                 <!-- Xem hồ sơ bạn đọc -->
-                                <a href="/Admin/Reader/Details/@item.MaBD" class="btn btn-sm btn-outline-secondary px-2 py-1" title="Xem hồ sơ bạn đọc">
-                                    <i class="bi bi-person-lines-fill"></i>
-                                </a>
+                                <a href="/Admin/Reader/Details/@item.MaBD" class="btn btn-sm btn-outline-secondary px-2 py-1" title="Xem hồ sơ bạn đọc">Hồ sơ</a>
                             </div>
                         </td>
                     </tr>
@@ -231,8 +223,8 @@
                         <div id="bookPreviewCard" class="card mt-2 border d-none" style="border-radius: 8px; background-color: #f8fafc;">
                             <div class="card-body p-3">
                                 <div class="d-flex align-items-start gap-3">
-                                    <img id="previewBookCover" src="/images/covers/sach_01.jpg" alt="Bìa sách" 
-                                         class="rounded border shadow-sm flex-shrink-0" 
+                                    <img id="previewBookCover" src="/images/covers/sach_01.jpg" alt="Bìa sách"
+                                         class="rounded border shadow-sm flex-shrink-0"
                                          style="width: 52px; height: 72px; object-fit: cover;" />
                                     <div class="flex-grow-1">
                                         <h6 id="previewBookTitle" class="fw-bold text-navy mb-1" style="font-size: 14.5px;">Tên sách</h6>

@@ -12,7 +12,7 @@ dotnet run --launch-profile http
 
 - Base URL: `http://localhost:5124` (HTTPS: `https://localhost:7223` với profile `https`).
 - Swagger UI: [http://localhost:5124/ApiDoc](http://localhost:5124/ApiDoc).
-- Các đường dẫn tương đương: `/api-docs`, `/swagger`, `/Docs/Api`.
+- Các đường dẫn tương đương: `/api-docs`, `/swagger`, `/swagger/index.html`, `/Docs/Api`.
 - OpenAPI JSON: `/swagger.json`, nguồn trong [`wwwroot/swagger.json`](../wwwroot/swagger.json).
 - Swagger UI tải CSS/JavaScript từ CDN `unpkg.com`, nên cần mạng để hiển thị. File OpenAPI vẫn được phục vụ từ ứng dụng.
 

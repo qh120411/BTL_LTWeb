@@ -33,6 +33,7 @@ namespace BTL_LTWEB.Controllers
         [HttpGet("/ApiDoc")]
         [HttpGet("/api-docs")]
         [HttpGet("/swagger")]
+        [HttpGet("/swagger/index.html")]
         [HttpGet("/Docs/Api")]
         public IActionResult Index() => View();
 

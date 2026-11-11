@@ -29,8 +29,13 @@
                 deepLinking: true,
                 docExpansion: "list",
                 requestInterceptor: function(request) {
-                    if (request.method.toUpperCase() === 'POST') {
-                        request.headers['RequestVerificationToken'] = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                    var method = String(request.method || 'GET').toUpperCase();
+                    if (method === 'POST') {
+                        var token = document.querySelector('input[name="__RequestVerificationToken"]');
+                        if (token) {
+                            request.headers = request.headers || {};
+                            request.headers['RequestVerificationToken'] = token.value;
+                        }
                     }
                     return request;
                 },

@@ -16,7 +16,7 @@ Chi tiết: [Hướng dẫn chạy VS Code](docs/RUN_VSCODE.md).
 ## Tài liệu API
 
 - [Hướng dẫn API tiếng Việt](docs/API.md): endpoint, tham số, cấu trúc phản hồi, ví dụ PowerShell và hành vi SQL/JSON fallback.
-- Swagger UI khi chạy ứng dụng: [http://localhost:5124/ApiDoc](http://localhost:5124/ApiDoc) (cũng có tại `/api-docs`, `/swagger`, `/Docs/Api`).
+- Swagger UI khi chạy ứng dụng: [http://localhost:5124/swagger/index.html](http://localhost:5124/swagger/index.html) (cũng có tại `/ApiDoc`, `/api-docs`, `/swagger`, `/Docs/Api`).
 - Đặc tả OpenAPI: [`wwwroot/swagger.json`](wwwroot/swagger.json), được phục vụ tại `/swagger.json`.
 
 ## Tổng quan chức năng

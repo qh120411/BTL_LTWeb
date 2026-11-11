@@ -3,194 +3,10 @@
     ViewData["Title"] = "Quản lý học liệu";
     ViewBag.ActiveMenu = "Catalog";
 }
-
-<div class="admin-breadcrumb">THƯ VIỆN UTC / QUẢN TRỊ</div>
-
-<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
-    <div>
-        <h1 class="admin-page-title mb-1">Quản lý học liệu &amp; Danh mục sách (@Model.TongDauSach đầu sách)</h1>
-
-    </div>
-    <button class="btn btn-utc-primary shadow-sm d-inline-flex align-items-center gap-2" type="button" data-bs-toggle="modal" data-bs-target="#createBookModal">
-        <i class="bi bi-plus-circle-fill"></i>
-        <span>+ Thêm học liệu</span>
-    </button>
-</div>
-
-<!-- 4 Thẻ KPI Thống kê Kho học liệu -->
-<div class="row g-3 mb-4">
-    <div class="col-md-3 col-sm-6">
-        <div class="kpi-card shadow-sm" style="background-color: #e7f5ff; border: 1px solid #d4ebf9;">
-            <div class="kpi-title" style="color: var(--utc-text-muted);">Tổng đầu sách</div>
-            <div class="kpi-value" style="color: #0079ba;">@Model.TongDauSach</div>
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-6">
-        <div class="kpi-card shadow-sm" style="background-color: #f3e8ff; border: 1px solid #e9d5ff;">
-            <div class="kpi-title" style="color: #7e22ce;">Tổng bản sao vật lý</div>
-            <div class="kpi-value" style="color: #7e22ce;">@Model.TongBanSao</div>
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-6">
-        <div class="kpi-card shadow-sm" style="background-color: #e9faf4; border: 1px solid #c8f0e0;">
-            <div class="kpi-title text-success">Bản sẵn có trong kho</div>
-            <div class="kpi-value text-success">@Model.TongSanCo</div>
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-6">
-        <div class="kpi-card shadow-sm" style="background-color: #edf2ff; border: 1px solid #d9e2fc;">
-            <div class="kpi-title text-primary">Đang mượn ngoài kho</div>
-            <div class="kpi-value text-primary">@Model.TongDangMuon</div>
-        </div>
-    </div>
-</div>
-
-
-
-<!-- Bộ lọc tìm kiếm & chuyên ngành & tình trạng -->
-<form method="get" asp-action="Index" class="mb-4">
-    <div class="row g-3">
-        <div class="col-md-5">
-            <label class="form-label-utc">Tra cứu học liệu</label>
-            <div class="input-group">
-                <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                <input type="text" name="search" class="form-control form-control-utc border-start-0" 
-                       placeholder="Tên sách, tác giả, nhà xuất bản, ISBN..." value="@Model.SearchKeyword" />
-                @if (!string.IsNullOrWhiteSpace(Model.SearchKeyword))
-                {
-                    <a href="@Url.Action("Index", new { major = Model.SelectedMajor, status = Model.SelectedStatus })" class="btn btn-outline-secondary" title="Xóa tìm kiếm">
-                        <i class="bi bi-x-lg"></i>
-                    </a>
-                }
-            </div>
-        </div>
-        <div class="col-md-4">
-            <label class="form-label-utc">Chuyên ngành</label>
-            <select name="major" class="form-select form-control-utc" onchange="this.form.submit()">
-                <option value="Tất cả chuyên ngành" selected="@(Model.SelectedMajor == "Tất cả chuyên ngành")">Tất cả chuyên ngành</option>
-                <option value="Công nghệ thông tin" selected="@(Model.SelectedMajor == "Công nghệ thông tin")">Công nghệ thông tin</option>
-                <option value="Kỹ thuật xây dựng & Giao thông" selected="@(Model.SelectedMajor == "Kỹ thuật xây dựng & Giao thông" || Model.SelectedMajor == "Kỹ thuật xây dựng")">Kỹ thuật xây dựng &amp; Giao thông</option>
-                <option value="Kinh tế & Quản trị" selected="@(Model.SelectedMajor == "Kinh tế & Quản trị")">Kinh tế &amp; Quản trị</option>
-                <option value="Khoa học cơ bản" selected="@(Model.SelectedMajor == "Khoa học cơ bản")">Khoa học cơ bản</option>
-                <option value="Lý luận chính trị & Pháp luật" selected="@(Model.SelectedMajor == "Lý luận chính trị & Pháp luật")">Lý luận chính trị &amp; Pháp luật</option>
-            </select>
-        </div>
-        <div class="col-md-3">
-            <label class="form-label-utc">Tình trạng kho</label>
-            <select name="status" class="form-select form-control-utc" onchange="this.form.submit()">
-                <option value="Tất cả" selected="@(Model.SelectedStatus == "Tất cả")">Tất cả trạng thái</option>
-                <option value="Có sẵn" selected="@(Model.SelectedStatus == "Có sẵn")">Có sẵn trong kho</option>
-                <option value="Hết sách" selected="@(Model.SelectedStatus == "Hết sách")">Đang mượn hết</option>
-            </select>
-        </div>
-    </div>
-</form>
-
-<!-- Bảng danh sách học liệu -->
-<div class="admin-table-card shadow-sm border" style="border-radius: 8px; overflow: hidden;">
-    <div class="table-responsive">
-        <table class="table-utc mb-0">
-            <thead>
-                <tr style="background-color: #f1f8fc;">
-                    <th style="width: 10%;">Mã tài liệu</th>
-                    <th style="width: 30%;">Tên học liệu &amp; ISBN</th>
-                    <th style="width: 18%;">Tác giả &amp; Nhà xuất bản</th>
-                    <th style="width: 15%;">Chuyên ngành</th>
-                    <th style="width: 10%;">Vị trí kệ</th>
-                    <th style="width: 8%; text-align: center;">Kho</th>
-                    <th style="width: 9%; text-align: right;">Thao tác</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model.Books.Count == 0)
-                {
-                    <tr>
-                        <td colspan="7" class="py-4 text-center text-muted">
-                            <i class="bi bi-inbox fs-3 d-block mb-1 text-secondary"></i>
-                            Không tìm thấy học liệu nào phù hợp với điều kiện tra cứu hiện tại.
-                        </td>
-                    </tr>
-                }
-                else
-                {
-                    @foreach (var book in Model.Books)
-                    {
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <img src="@book.CoverImage" alt="@book.TenHocLieu" 
-                                         class="rounded border shadow-sm flex-shrink-0" 
-                                         style="width: 42px; height: 58px; object-fit: cover;"
-                                         onerror="this.src='/images/covers/sach_01.jpg'" />
-                                    <div>
-                                        <strong class="font-monospace text-primary d-block" style="font-size: 14px;">@book.MaHocLieu</strong>
-                                        <span class="badge bg-light text-muted border" style="font-size: 14px;">@book.DinhDang</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="fw-bold text-navy mb-1" style="line-height: 1.35; max-width: 320px;" title="@book.TenHocLieu">
-                                    @book.TenHocLieu
-                                </div>
-                                <div class="text-muted small">
-                                    ISBN: <code>@book.ISBN</code> &middot; Năm: <strong>@book.NamXuatBan</strong> &middot; @book.SoTrang tr.
-                                </div>
-                            </td>
-                            <td>
-                                <div class="fw-medium text-dark">@book.TacGia</div>
-                                <div class="text-muted small">@book.NhaXuatBan</div>
-                            </td>
-                            <td>
-                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle px-2 py-1" style="font-size: 14px;">
-                                    @book.TheLoai
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge bg-light text-dark border px-2 py-1">
-                                    <i class="bi bi-geo-alt-fill text-danger me-1"></i> @book.ViTriKe
-                                </span>
-                            </td>
-                            <td style="text-align: center;">
-                                @if (book.SanCo > 0)
-                                {
-                                    <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1" style="font-size: 14px;">
-                                        Có sẵn (@book.SanCo/@book.TongBan)
-                                    </span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1" style="font-size: 14px;">
-                                        Hết sách (0/@book.TongBan)
-                                    </span>
-                                }
-                            </td>
-                            <td style="text-align: right;">
-                                <div class="d-flex justify-content-end align-items-center gap-1">
-                                    <!-- Xem bản sao vật lý -->
-                                    <button type="button" class="btn btn-sm btn-outline-primary px-2 py-1 btn-view-copies" 
-                                            data-id="@book.Id" title="Xem danh sách bản sao vật lý & mã vạch">
-                                        <i class="bi bi-upc-scan"></i>
-                                    </button>
-                                    <!-- Sửa học liệu -->
-                                    <button type="button" class="btn btn-sm btn-outline-secondary px-2 py-1 btn-edit-book"
-                                            data-id="@book.Id" title="Sửa học liệu">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </button>
-                                    <!-- Xóa học liệu -->
-                                    <button type="button" class="btn btn-sm btn-outline-danger px-2 py-1 btn-delete-book"
-                                            data-id="@book.Id" data-title="@book.TenHocLieu" data-copies="@book.SanCo" data-total="@book.TongBan"
-                                            title="Xóa học liệu">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
-    </div>
-</div>
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin-catalog.css" asp-append-version="true" />
+}
+<partial name="~/Views/Shared/Admin/_CatalogBrowser.cshtml" model="Model" />
 
 <!-- ======================================================== -->
 <!-- MODAL 1: THÊM HỌC LIỆU MỚI VÀO CSDL THƯ VIỆN UTC -->
@@ -385,7 +201,7 @@
             </div>
 
             <div class="modal-body p-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-3">
                     <div class="text-muted small">
                         Vị trí kệ: <strong id="copiesModalShelf" class="text-navy"></strong>
                     </div>
@@ -497,12 +313,12 @@
                         var rows = "";
                         data.copies.forEach(function (c) {
                             var statusBadge = c.status === "Có sẵn"
-                                ? '<span class="badge bg-success text-white px-2 py-1"><i class="bi bi-check-circle-fill me-1"></i> Có sẵn trong kho</span>'
-                                : '<span class="badge bg-primary text-white px-2 py-1"><i class="bi bi-arrow-left-right me-1"></i> Đang mượn</span>';
+                                ? '<span class="badge bg-success text-white px-2 py-1"> Có sẵn trong kho</span>'
+                                : '<span class="badge bg-primary text-white px-2 py-1"> Đang mượn</span>';
 
                             rows += '<tr>' +
                                 '<td><strong class="font-monospace text-navy">BS-' + c.id + '</strong></td>' +
-                                '<td><span class="badge bg-light text-dark border font-monospace px-2 py-1"><i class="bi bi-upc me-1"></i>' + c.barcode + '</span></td>' +
+                                '<td><span class="badge bg-light text-dark border font-monospace px-2 py-1">' + c.barcode + '</span></td>' +
                                 '<td><span class="small text-muted">' + c.shelf + '</span></td>' +
                                 '<td><span class="badge bg-secondary-subtle text-secondary border">' + c.condition + '</span></td>' +
                                 '<td style="text-align: center;">' + statusBadge + '</td>' +
@@ -560,7 +376,7 @@
 
                 var warningEl = document.getElementById("deleteBookWarning");
                 if (available < total) {
-                    warningEl.innerHTML = '<span class="text-danger fw-bold"><i class="bi bi-shield-exclamation me-1"></i> Có ' + (total - available) + ' bản đang mượn. Không thể xóa.</span>';
+                    warningEl.innerHTML = '<span class="text-danger fw-bold"> Có ' + (total - available) + ' bản đang mượn. Không thể xóa.</span>';
                 } else {
                     warningEl.textContent = 'Tất cả ' + total + ' bản sao hiện đang có sẵn trong kho, đủ điều kiện để xóa.';
                 }

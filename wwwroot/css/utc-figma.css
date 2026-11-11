@@ -30,7 +30,7 @@
 :is(.reader-body,.admin-body) :is(.form-control,.form-select,.form-control-utc):focus { border-color: var(--utc-brand); box-shadow: 0 0 0 3px rgb(0 121 186 / 12%); }
 .utc-site-header { background: white; border: 0; box-shadow: none; position: relative; }
 .utc-site-header .container,.utc-site-footer .container { max-width: 1920px; padding-left: clamp(24px,4.1667vw,80px); padding-right: clamp(24px,4.1667vw,80px); }
-.utc-site-header .utc-institutional-topbar { height: auto; min-height: 41px; padding: 12px 0; background: #176a9e; font-size: 12px; font-weight: 400; letter-spacing: 0; }
+.utc-site-header .utc-institutional-topbar { height: auto; min-height: 41px; padding: 12px 0; background: var(--utc-header-bg, #176a9e); font-size: 12px; font-weight: 400; letter-spacing: 0; }
 .utc-site-header .utc-topbar-school { font-size: 12px; font-weight: 400; }
 .utc-site-header .utc-topbar-right { font-size: 12px; font-weight: 400; gap: 8px; }
 .utc-site-header .utc-topbar-link:hover { color: white !important; text-decoration: underline; }
@@ -82,7 +82,7 @@
 /* Admin shell from Figma 66:141; existing role checks and modal workflows are retained. */
 .admin-body { background: var(--utc-cream); }
 .admin-body .admin-main-header { position: relative; top: auto; box-shadow: none; border: 0; }
-.admin-body .admin-topbar { background: #176a9e; padding: 12px 0; font-size: 12px; line-height: 1.45; letter-spacing: 0; }
+.admin-body .admin-topbar { background: var(--utc-header-bg, #176a9e); padding: 12px 0; font-size: 12px; line-height: 1.45; letter-spacing: 0; }
 .admin-body .admin-topbar > div,.admin-body .admin-navbar > div { padding-left: 48px !important; padding-right: 48px !important; gap: 24px; }
 .admin-body .topbar-title { font-weight: 400; }
 .admin-body .admin-navbar { padding: 24px 0; }

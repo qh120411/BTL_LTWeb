@@ -18,56 +18,56 @@
     <!-- Tiêu đề + Nút đóng khi mở dạng Drawer trên Mobile/Tablet -->
     <div class="admin-sidebar-heading align-items-center justify-content-between pb-3 mb-2 border-bottom">
         <div class="fw-bold text-primary" style="font-size: 14.5px;">
-            <i class="bi bi-shield-lock-fill me-1"></i> MENU QUẢN TRỊ
+             Menu quản trị
         </div>
         <button type="button" class="btn-close" id="adminSidebarClose" aria-label="Đóng menu"></button>
     </div>
 
-    <div class="sidebar-category">QUẢN TRỊ THƯ VIỆN</div>
-    
+    <div class="sidebar-category">Quản trị thư viện</div>
+
     <nav class="sidebar-nav">
         <a href="/Admin/Dashboard" class="sidebar-link @(activeMenu == "Dashboard" ? "active" : "")">
-            <i class="bi bi-speedometer2 me-2"></i>Tổng quan
+            Tổng quan
         </a>
 
         @if (canViewCatalog)
         {
             <a href="/Admin/Catalog" class="sidebar-link @(activeMenu == "Catalog" ? "active" : "")">
-                <i class="bi bi-journal-bookmark-fill me-2"></i>Quản lý học liệu
+                Quản lý học liệu
             </a>
         }
 
         @if (canViewReaderManagement)
         {
             <a href="/Admin/Reader" class="sidebar-link @(activeMenu == "Reader" ? "active" : "")">
-                <i class="bi bi-people-fill me-2"></i>Quản lý bạn đọc
+                Quản lý bạn đọc
             </a>
             <a href="/Admin/Circulation" class="sidebar-link @(activeMenu == "Circulation" ? "active" : "")">
-                <i class="bi bi-arrow-left-right me-2"></i>Mượn trả
+                Mượn trả
             </a>
             <a href="/Admin/Overdue" class="sidebar-link @(activeMenu == "Overdue" ? "active" : "")">
-                <i class="bi bi-clock-history me-2"></i>Quá hạn
+                Quá hạn
             </a>
             <a href="/Admin/Incident" class="sidebar-link @(activeMenu == "Incident" ? "active" : "")">
-                <i class="bi bi-exclamation-octagon-fill me-2"></i>Mất / hỏng &amp; bồi thường
+                Mất / hỏng &amp; bồi thường
             </a>
         }
 
         <a href="/Admin/Report" class="sidebar-link @(activeMenu == "Report" ? "active" : "")">
-            <i class="bi bi-bar-chart-fill me-2"></i>Báo cáo
+            Báo cáo
         </a>
 
         @if (canViewUserManagement)
         {
             <a href="/Admin/User" class="sidebar-link @(activeMenu == "User" ? "active" : "")">
-                <i class="bi bi-shield-lock-fill me-2"></i>Tài khoản &amp; phân quyền
+                Tài khoản &amp; phân quyền
             </a>
         }
     </nav>
 
     <div class="sidebar-footer">
         <a href="/Reader/Home" class="btn btn-back-web w-100 text-center">
-            &larr; Về website
+            Về website
         </a>
     </div>
 </aside>

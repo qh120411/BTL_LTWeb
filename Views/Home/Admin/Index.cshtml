@@ -6,9 +6,7 @@
 }
 
 <div class="utc-dashboard">
-    <div class="admin-breadcrumb">THƯ VIỆN UTC / QUẢN TRỊ</div>
     <h1 class="admin-page-title">Tổng quan</h1>
-    <p class="utc-dashboard-description">Tổng hợp học liệu và nghiệp vụ · Ngày cập nhật: @DateTime.Now.ToString("dd/MM/yyyy")</p>
     <div class="utc-summary-grid">
         <div class="kpi-card utc-kpi-catalog"><div class="kpi-title">Đầu sách</div><div class="kpi-value">@Model.TongDauSach</div></div>
         <div class="kpi-card utc-kpi-available"><div class="kpi-title">Bản sẵn có</div><div class="kpi-value">@Model.BanSanCo</div></div>
@@ -16,7 +14,7 @@
         <div class="kpi-card utc-kpi-pending"><div class="kpi-title">Mất / chờ bồi thường</div><div class="kpi-value">@Model.MatChoBoiThuong</div></div>
     </div>
     <section class="utc-dashboard-tasks" aria-labelledby="utc-tasks-title">
-        <h2 id="utc-tasks-title" class="utc-dashboard-section-title">Công việc cần theo dõi</h2>
+        <h2 id="utc-tasks-title" class="utc-dashboard-section-title">Theo dõi</h2>
         <div class="admin-table-card">
             <table class="table-utc utc-tasks-table">
                 <thead><tr><th scope="col">Nội dung</th><th scope="col">Số lượng</th><th scope="col">Thao tác</th></tr></thead>
@@ -28,19 +26,19 @@
                 </tbody>
             </table>
         </div>
-        <a href="/Admin/Report" class="btn btn-outline-utc utc-monthly-report">Xem báo cáo tháng</a>
+        <a href="/Admin/Report" class="btn btn-outline-utc utc-monthly-report">Xem báo cáo</a>
     </section>
 <!-- KHỐI THỐNG KÊ TÀI CHÍNH & QUỸ THƯ VIỆN (MỚI) -->
 <div class="mb-5">
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-3">
         <div>
             <h3 class="fw-bold mb-0" style="color: var(--utc-navy); font-size: 20px;">
-                <i class="bi bi-cash-coin text-success me-2"></i> Thống kê tài chính &amp; Quỹ thư viện
+                 Tài chính
             </h3>
-            
+
         </div>
         <a href="/Admin/Incident" class="btn btn-sm btn-outline-primary shadow-sm">
-            <i class="bi bi-receipt-cutoff me-1"></i> Xem chi tiết sổ quỹ tài chính &rarr;
+             Xem phiếu thu
         </a>
     </div>
 
@@ -70,7 +68,7 @@
     <div class="admin-table-card shadow-sm border" style="border-radius: 8px; overflow: hidden;">
         <div class="p-3 bg-white border-bottom d-flex justify-content-between align-items-center">
             <span class="fw-bold" style="color: var(--utc-navy); font-size: 15px;">
-                <i class="bi bi-receipt me-1 text-success"></i> Khoản thu gần đây
+                 Khoản thu gần đây
             </span>
             <a href="/Admin/Incident" class="small text-brand fw-medium">Xem tất cả (@Model.RecentReceipts.Count phiếu) &rarr;</a>
         </div>
@@ -100,11 +98,11 @@
                             <tr>
                                 <td>
                                     <strong class="font-monospace text-primary">@r.MaPhieuThu</strong>
-                                    <div class="text-muted" style="font-size: 11px;">@r.NgayThu</div>
+                                    <div class="text-muted" style="font-size: 14px;">@r.NgayThu</div>
                                 </td>
                                 <td>
                                     <div class="fw-bold text-navy">@r.NguoiNop</div>
-                                    <div class="text-muted small">MSV/GV: <code>@r.MaBD</code></div>
+                                    <div class="text-muted small">Mã: <code>@r.MaBD</code></div>
                                 </td>
                                 <td>
                                     <div class="fw-medium text-dark text-truncate" style="max-width: 240px;" title="@r.TenSach">
@@ -114,19 +112,19 @@
                                 <td>
                                     @if (r.LoaiKhoanThu.Contains("Nộp muộn"))
                                     {
-                                        <span class="badge bg-warning text-dark px-2 py-1" style="font-size: 11px;">
+                                        <span class="badge bg-warning text-dark px-2 py-1" style="font-size: 14px;">
                                             Nộp muộn
                                         </span>
                                     }
                                     else
                                     {
-                                        <span class="badge bg-danger text-white px-2 py-1" style="font-size: 11px;">
+                                        <span class="badge bg-danger text-white px-2 py-1" style="font-size: 14px;">
                                             Đền bù mất/hỏng
                                         </span>
                                     }
                                 </td>
                                 <td>
-                                    <span class="badge bg-light text-dark border px-2 py-1" style="font-size: 11px;">
+                                    <span class="badge bg-light text-dark border px-2 py-1" style="font-size: 14px;">
                                         @r.HinhThucXuLy
                                     </span>
                                 </td>
@@ -153,7 +151,7 @@
 <div class="admin-table-card mb-4">
     <div class="p-3 bg-white border-bottom d-flex justify-content-between align-items-center">
         <span class="fw-bold" style="color: var(--utc-navy); font-size: 16px;">
-            <i class="bi bi-arrow-left-right me-1 text-primary"></i> Mượn trả gần đây
+             Mượn trả gần đây
         </span>
         <a href="/Admin/Circulation" class="small text-brand fw-medium">Xem tất cả (@Model.DangMuon giao dịch) &rarr;</a>
     </div>
@@ -163,7 +161,7 @@
                 <tr>
                     <th style="width: 14%;">Mã GD</th>
                     <th style="width: 24%;">Bạn đọc</th>
-                    <th style="width: 28%;">Tài liệu / Sách</th>
+                    <th style="width: 28%;">Sách</th>
                     <th style="width: 15%;">Hạn trả</th>
                     <th style="width: 19%;">Trạng thái</th>
                 </tr>
@@ -175,7 +173,7 @@
                         <td><strong>@t.MaGD</strong></td>
                         <td>
                             <div class="fw-bold text-navy">@t.HoTen</div>
-                            <div class="text-muted small">MSV: @t.MaBD</div>
+                            <div class="text-muted small">Mã: @t.MaBD</div>
                         </td>
                         <td>
                             <div class="fw-medium">@t.TenSach</div>
@@ -186,14 +184,14 @@
                         <td>
                             @if (t.IsQuaHan)
                             {
-                                <span class="badge bg-danger text-white px-2 py-1" style="font-weight: 600; font-size: 12px; display: inline-flex; align-items: center; gap: 4px;">
-                                    <i class="bi bi-exclamation-triangle-fill"></i> @t.TrangThai
+                                <span class="badge bg-danger text-white px-2 py-1" style="font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 4px;">
+                                     @t.TrangThai
                                 </span>
                             }
                             else
                             {
-                                <span class="badge bg-success text-white px-2 py-1" style="font-weight: 600; font-size: 12px; display: inline-flex; align-items: center; gap: 4px;">
-                                    <i class="bi bi-check-circle-fill"></i> Đang mượn (Còn hạn)
+                                <span class="badge bg-success text-white px-2 py-1" style="font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 4px;">
+                                     Còn hạn
                                 </span>
                             }
                         </td>

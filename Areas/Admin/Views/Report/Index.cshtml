@@ -1,96 +1,135 @@
+@using System.Globalization
 @model ReportViewModel
 @{
     ViewData["Title"] = "Báo cáo thư viện";
+    var start = Model.TuNgay?.ToString("yyyy-MM-dd");
+    var end = Model.DenNgay?.ToString("yyyy-MM-dd");
+    var maxCount = Math.Max(4, Model.XuHuong.Select(x => Math.Max(x.Muon, x.Tra)).DefaultIfEmpty().Max());
+    var chartMax = (int)Math.Ceiling(maxCount / 4.0) * 4;
+    string Num(double value) => value.ToString("0.##", CultureInfo.InvariantCulture);
+    double X(int i) => 48 + i * 132;
+    double Y(int value) => 220 - value * 192.0 / chartMax;
+    string Points(bool returns) => string.Join(" ", Model.XuHuong.Select((m, i) => $"{Num(X(i))},{Num(Y(returns ? m.Tra : m.Muon))}"));
+    string Percent(int count) => Num(Model.TongBanSach == 0 ? 0 : count * 100.0 / Model.TongBanSach);
+    var availableEnd = Percent(Model.TongCongSanCo);
+    var borrowedEnd = Percent(Model.TongCongSanCo + Model.TongCongDangMuon);
+    var damagedEnd = Percent(Model.TongCongSanCo + Model.TongCongDangMuon + Model.TongCongMatHong);
+    var ring = Model.TongBanSach == 0 ? "#e8edf2" :
+        $"conic-gradient(#169b75 0% {availableEnd}%, #087eb5 {availableEnd}% {borrowedEnd}%, #b6656d {borrowedEnd}% {damagedEnd}%, #9aa8b5 {damagedEnd}% 100%)";
 }
-
 @section Styles {
     <link rel="stylesheet" href="~/css/admin-report.css" asp-append-version="true" />
 }
-
+@section Scripts {
+    <script src="~/js/admin-report.js" asp-append-version="true"></script>
+}
 <div class="report-page">
     <header class="report-header">
         <h1>Báo cáo thư viện</h1>
-        <a asp-area="Admin" asp-controller="Report" asp-action="ExportExcel"
-           asp-route-period="@Model.KyBaoCao" asp-route-scope="@Model.PhamVi"
-           class="btn btn-utc-primary report-export">Xuất Excel</a>
+        @if (Model.LoiDuLieu == null)
+        {
+            <a asp-area="Admin" asp-controller="Report" asp-action="ExportExcel"
+               asp-route-period="@Model.KyBaoCao" asp-route-startDate="@start" asp-route-endDate="@end"
+               asp-route-search="@Model.TimKiem" class="btn btn-utc-primary report-export">Xuất Excel</a>
+        }
     </header>
+    @if (Model.LoiDuLieu != null)
+    {
+        <p class="alert alert-warning" role="alert">@Model.LoiDuLieu</p>
+    }
+    else
+    {
+        @if (Model.LoiBoLoc != null)
+        {
+            <p class="alert alert-warning" role="alert">@Model.LoiBoLoc</p>
+        }
+        <form method="get" asp-area="Admin" asp-controller="Report" asp-action="Index" class="report-filters">
+            <input type="hidden" name="search" value="@Model.TimKiem" />
+            <div class="report-field">
+                <label for="reportStart">Từ ngày</label>
+                <input id="reportStart" name="startDate" type="date" value="@start" class="form-control" required />
+            </div>
+            <div class="report-field">
+                <label for="reportEnd">Đến ngày</label>
+                <input id="reportEnd" name="endDate" type="date" value="@end" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-utc-primary">Lọc báo cáo</button>
+            <a asp-area="Admin" asp-controller="Report" asp-action="Index"
+               asp-route-period="Tất cả thời gian" asp-route-search="@Model.TimKiem" class="report-all-time">Toàn bộ</a>
+        </form>
 
-    <form method="get" asp-area="Admin" asp-controller="Report" asp-action="Index" class="report-filters">
-        <div class="report-field">
-            <label for="reportPeriod">Kỳ báo cáo</label>
-            <select id="reportPeriod" name="period" class="form-select" onchange="this.form.requestSubmit()">
-                @foreach (var period in Model.DanhSachKyBaoCao)
-                {
-                    <option value="@period" selected="@(period == Model.KyBaoCao)">@period</option>
-                }
-            </select>
-        </div>
-        <div class="report-field">
-            <label for="reportScope">Phạm vi</label>
-            <select id="reportScope" name="scope" class="form-select" onchange="this.form.requestSubmit()">
-                @foreach (var scope in Model.DanhSachPhamVi)
-                {
-                    <option value="@scope" selected="@(scope == Model.PhamVi)">@scope</option>
-                }
-            </select>
-        </div>
-        <noscript><button type="submit" class="btn btn-utc-primary">Xem báo cáo</button></noscript>
-    </form>
+        <dl class="report-summary" aria-label="Số liệu tổng hợp">
+            <div><dt>Lượt mượn trong kỳ</dt><dd class="report-number-blue">@Model.LuotMuonTrongThang.ToString("N0")</dd></div>
+            <div><dt>Lượt trả trong kỳ</dt><dd class="report-number-green">@Model.LuotTraTrongThang.ToString("N0")</dd></div>
+            <div><dt>Đang quá hạn</dt><dd class="report-number-red">@Model.QuaHanHienTai.ToString("N0")</dd></div>
+            <div><dt>Tổng bản sách</dt><dd>@Model.TongBanSach.ToString("N0")</dd></div>
+            <div><dt>Tổng bạn đọc</dt><dd>@Model.TongBanDoc.ToString("N0")</dd></div>
+        </dl>
 
-    <dl class="report-summary" aria-label="Số liệu tổng hợp">
-        <div><dt>Lượt mượn</dt><dd>@Model.LuotMuonTrongThang.ToString("N0")</dd></div>
-        <div><dt>Lượt trả</dt><dd>@Model.LuotTraTrongThang.ToString("N0")</dd></div>
-        <div><dt>Đang quá hạn</dt><dd>@Model.QuaHanHienTai.ToString("N0")</dd></div>
-        <div><dt>Tổng bản sách</dt><dd>@Model.TongBanSach.ToString("N0")</dd></div>
-    </dl>
-
-    <section class="report-books" aria-labelledby="reportBooksTitle">
-        <h2 id="reportBooksTitle" class="visually-hidden">Số lượng sách</h2>
-        <div class="report-table-wrap" role="region" aria-label="Số lượng sách theo đầu sách" tabindex="0">
-            <table class="report-table">
-                <colgroup>
-                    <col class="report-title-column" />
-                    <col span="4" />
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th scope="col">Tên sách</th>
-                        <th scope="col">Tổng bản</th>
-                        <th scope="col">Sẵn có</th>
-                        <th scope="col">Đang mượn</th>
-                        <th scope="col">Mất / hỏng</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model.ChiTietDauSach.Count == 0)
+        <div class="report-charts">
+            <section class="report-panel report-trend" aria-labelledby="reportTrendTitle">
+                <div class="report-panel-heading">
+                    <h2 id="reportTrendTitle">Mượn và trả theo tháng</h2>
+                    @if (Model.XuHuong.Count > 0)
                     {
-                        <tr><td colspan="5" class="report-empty">Chưa có dữ liệu.</td></tr>
+                        <span>@Model.XuHuong.First().Thang – @Model.XuHuong.Last().Thang</span>
                     }
-                    else
+                </div>
+                <div class="report-chart-legend" aria-hidden="true">
+                    <span><i class="report-dot report-blue"></i>Mượn</span>
+                    <span><i class="report-dot report-green"></i>Trả</span>
+                </div>
+                <svg class="report-line-chart" viewBox="0 0 748 264" role="img" aria-labelledby="reportTrendTitle reportTrendDescription">
+                    <desc id="reportTrendDescription">Số bản sách được mượn và trả theo từng tháng. Bảng số liệu có bên dưới biểu đồ.</desc>
+                    @for (var i = 0; i <= 4; i++)
                     {
-                        @foreach (var book in Model.ChiTietDauSach)
+                        var value = chartMax * i / 4;
+                        <g class="report-gridline">
+                            <line x1="48" y1="@Num(Y(value))" x2="708" y2="@Num(Y(value))" />
+                            <text x="35" y="@Num(Y(value) + 5)" text-anchor="end">@value</text>
+                        </g>
+                    }
+                    <polyline points="@Points(false)" class="report-loan-line" />
+                    <polyline points="@Points(true)" class="report-return-line" />
+                    @for (var i = 0; i < Model.XuHuong.Count; i++)
+                    {
+                        var point = Model.XuHuong[i];
+                        <g>
+                            <circle cx="@Num(X(i))" cy="@Num(Y(point.Muon))" r="4" class="report-loan-point"><title>@point.Thang: @point.Muon lượt mượn</title></circle>
+                            <circle cx="@Num(X(i))" cy="@Num(Y(point.Tra))" r="4" class="report-return-point"><title>@point.Thang: @point.Tra lượt trả</title></circle>
+                            <text x="@Num(X(i))" y="250" text-anchor="middle">@point.Thang</text>
+                        </g>
+                    }
+                </svg>
+                <table class="visually-hidden">
+                    <caption>Số liệu mượn và trả theo tháng</caption>
+                    <thead><tr><th>Tháng</th><th>Mượn</th><th>Trả</th></tr></thead>
+                    <tbody>
+                        @foreach (var month in Model.XuHuong)
                         {
-                            <tr>
-                                <th scope="row">@book.DauSach</th>
-                                <td>@book.TongBan.ToString("N0")</td>
-                                <td>@book.SanCo.ToString("N0")</td>
-                                <td>@book.DangMuon.ToString("N0")</td>
-                                <td>@book.MatHong.ToString("N0")</td>
-                            </tr>
+                            <tr><th>@month.Thang</th><td>@month.Muon</td><td>@month.Tra</td></tr>
                         }
+                    </tbody>
+                </table>
+            </section>
+            <section class="report-panel report-stock" aria-labelledby="reportStockTitle">
+                <div class="report-panel-heading"><h2 id="reportStockTitle">Trạng thái kho</h2></div>
+                <div class="report-donut" style="background: @ring" role="img"
+                     aria-label="@($"Tổng {Model.TongBanSach} bản: {Model.TongCongSanCo} sẵn có, {Model.TongCongDangMuon} đang mượn, {Model.TongCongMatHong} mất hoặc hỏng, {Model.TongCongKhac} khác.")">
+                    <div><strong>@Model.TongBanSach.ToString("N0")</strong><span>bản sách</span></div>
+                </div>
+                <dl class="report-stock-legend">
+                    <div><dt><i class="report-dot report-green"></i>Sẵn có</dt><dd>@Model.TongCongSanCo.ToString("N0")</dd></div>
+                    <div><dt><i class="report-dot report-blue"></i>Đang mượn</dt><dd>@Model.TongCongDangMuon.ToString("N0")</dd></div>
+                    <div><dt><i class="report-dot report-red"></i>Mất / hỏng</dt><dd>@Model.TongCongMatHong.ToString("N0")</dd></div>
+                    @if (Model.TongCongKhac > 0)
+                    {
+                        <div><dt><i class="report-dot report-gray"></i>Khác</dt><dd>@Model.TongCongKhac.ToString("N0")</dd></div>
                     }
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th scope="row">Tổng cộng</th>
-                        <td>@Model.TongCongSoBan.ToString("N0")</td>
-                        <td>@Model.TongCongSanCo.ToString("N0")</td>
-                        <td>@Model.TongCongDangMuon.ToString("N0")</td>
-                        <td>@Model.TongCongMatHong.ToString("N0")</td>
-                    </tr>
-                </tfoot>
-            </table>
+                </dl>
+            </section>
         </div>
-        <p class="report-note">Số liệu minh họa.</p>
-    </section>
+
+        <partial name="~/Views/Shared/Admin/_ReportInventory.cshtml" model="Model" />
+    }
 </div>

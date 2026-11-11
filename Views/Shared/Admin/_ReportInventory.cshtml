@@ -1,0 +1,112 @@
+@model ReportViewModel
+@{
+    var start = Model.TuNgay?.ToString("yyyy-MM-dd");
+    var end = Model.DenNgay?.ToString("yyyy-MM-dd");
+    var periodRoute = Model.TuNgay.HasValue ? null : Model.KyBaoCao;
+    var pageUrl = Url.Action("Index", "Report", new { area = "Admin", period = periodRoute, startDate = start, endDate = end, search = Model.TimKiem, page = Model.TrangHienTai });
+    var exportUrl = Url.Action("ExportExcel", "Report", new { area = "Admin", period = periodRoute, startDate = start, endDate = end, search = Model.TimKiem });
+}
+<section class="report-panel report-books" aria-labelledby="reportBooksTitle" id="reportBooks" data-report-inventory data-current-url="@pageUrl" data-export-url="@exportUrl">
+    <div class="report-books-toolbar">
+        <div class="report-panel-heading">
+            <h2 id="reportBooksTitle" tabindex="-1">Kho sách hiện tại</h2>
+            <span>@Model.TongDauSach.ToString("N0") đầu sách</span>
+        </div>
+        <form method="get" asp-area="Admin" asp-controller="Report" asp-action="Index" class="report-search" role="search" data-report-search>
+            <input type="hidden" name="period" value="@periodRoute" />
+            <input type="hidden" name="startDate" value="@start" />
+            <input type="hidden" name="endDate" value="@end" />
+            <label for="reportSearch" class="visually-hidden">Tên sách hoặc ISBN</label>
+            <input id="reportSearch" name="search" type="search" class="form-control" value="@Model.TimKiem"
+                   maxlength="100" placeholder="Tìm tên sách hoặc ISBN" />
+            <button type="submit" class="btn btn-utc-primary">Tìm</button>
+            @if (Model.TimKiem.Length > 0)
+            {
+                <a asp-area="Admin" asp-controller="Report" asp-action="Index" asp-route-period="@periodRoute"
+                   asp-route-startDate="@start" asp-route-endDate="@end" data-report-link>Xóa lọc</a>
+            }
+        </form>
+    </div>
+    <div class="report-feedback" role="status" aria-live="polite" hidden>
+        <span data-report-feedback></span>
+        <button type="button" class="report-retry" data-report-retry hidden>Thử lại</button>
+    </div>
+    <div class="report-results" data-report-results>
+    <div class="report-table-wrap" role="region" aria-label="Kho sách hiện tại" tabindex="0">
+        <table class="report-table" id="reportInventory" data-total-titles="@Model.TongKetQua" data-page="@Model.TrangHienTai" data-total-pages="@Model.TongTrang">
+            <colgroup><col class="report-title-column" /><col span="4" />@if (Model.CoBanKhac) { <col /> }</colgroup>
+            <thead>
+                <tr>
+                    <th scope="col">Tên sách</th><th scope="col">Tổng bản</th><th scope="col">Sẵn có</th>
+                    <th scope="col">Đang mượn</th><th scope="col">Mất / hỏng</th>
+                    @if (Model.CoBanKhac) { <th scope="col">Khác</th> }
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.ChiTietDauSach.Count == 0)
+                {
+                    <tr><td colspan="@(Model.CoBanKhac ? 6 : 5)" class="report-empty">Không có sách phù hợp.</td></tr>
+                }
+                @foreach (var book in Model.ChiTietDauSach)
+                {
+                    <tr>
+                        <th scope="row">@book.DauSach</th><td>@book.TongBan.ToString("N0")</td>
+                        <td>@book.SanCo.ToString("N0")</td><td>@book.DangMuon.ToString("N0")</td><td>@book.MatHong.ToString("N0")</td>
+                        @if (Model.CoBanKhac) { <td>@book.Khac.ToString("N0")</td> }
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th scope="row">Tổng @Model.TongKetQua đầu sách</th><td>@Model.KhoDaLoc.TongBan.ToString("N0")</td><td>@Model.KhoDaLoc.SanCo.ToString("N0")</td>
+                    <td>@Model.KhoDaLoc.DangMuon.ToString("N0")</td><td>@Model.KhoDaLoc.MatHong.ToString("N0")</td>
+                    @if (Model.CoBanKhac) { <td>@Model.KhoDaLoc.Khac.ToString("N0")</td> }
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="report-table-footer">
+        <span>@(Model.TongKetQua == 0 ? 0 : (Model.TrangHienTai - 1) * Model.KichThuocTrang + 1)–@Math.Min(Model.TrangHienTai * Model.KichThuocTrang, Model.TongKetQua) / @Model.TongKetQua đầu sách</span>
+        @if (Model.TongTrang > 1)
+        {
+            <nav class="report-pagination" aria-label="Trang kho sách">
+                @if (Model.TrangHienTai > 1)
+                {
+                    <a asp-area="Admin" asp-controller="Report" asp-action="Index" asp-route-period="@periodRoute" asp-route-startDate="@start" asp-route-endDate="@end"
+                       asp-route-search="@Model.TimKiem" asp-route-page="@(Model.TrangHienTai - 1)" asp-fragment="reportBooks" class="report-page-direction" rel="prev">Trước</a>
+                }
+                else
+                {
+                    <span class="report-page-direction" aria-disabled="true">Trước</span>
+                }
+                <span class="report-page-context">Trang @Model.TrangHienTai / @Model.TongTrang</span>
+                @foreach (var p in Model.TrangHienThi)
+                {
+                    if (!p.HasValue)
+                    {
+                        <span class="report-page-gap" aria-hidden="true">…</span>
+                    }
+                    else if (p == Model.TrangHienTai)
+                    {
+                        <span class="report-page-number" aria-current="page" aria-label="Trang @p">@p</span>
+                    }
+                    else
+                    {
+                        <a asp-area="Admin" asp-controller="Report" asp-action="Index" asp-route-period="@periodRoute" asp-route-startDate="@start" asp-route-endDate="@end"
+                           asp-route-search="@Model.TimKiem" asp-route-page="@p" asp-fragment="reportBooks" class="report-page-number" aria-label="Trang @p">@p</a>
+                    }
+                }
+                @if (Model.TrangHienTai < Model.TongTrang)
+                {
+                    <a asp-area="Admin" asp-controller="Report" asp-action="Index" asp-route-period="@periodRoute" asp-route-startDate="@start" asp-route-endDate="@end"
+                       asp-route-search="@Model.TimKiem" asp-route-page="@(Model.TrangHienTai + 1)" asp-fragment="reportBooks" class="report-page-direction" rel="next">Sau</a>
+                }
+                else
+                {
+                    <span class="report-page-direction" aria-disabled="true">Sau</span>
+                }
+            </nav>
+        }
+    </div>
+    </div>
+</section>

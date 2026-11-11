@@ -29,6 +29,6 @@ public interface IReaderService
 
 public interface IReportService
 {
-    ReportViewModel GetReport(string? period, string? scope);
-    byte[] GenerateExcelReport(string? period, string? scope);
+    ReportViewModel GetReport(string? period, string? search = null, int page = 1, DateOnly? startDate = null, DateOnly? endDate = null);
+    byte[] GenerateExcelReport(string? period, string? search = null, DateOnly? startDate = null, DateOnly? endDate = null);
 }

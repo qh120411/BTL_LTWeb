@@ -16,11 +16,17 @@ public class CatalogController : AdminBaseController
         _catalogService = catalogService;
     }
 
-    public IActionResult Index(string? search, string? major, string? status)
+    public IActionResult Index(string? search, string? major, string? status, string? category = null, string? language = null, int page = 1)
     {
         ViewBag.ActiveMenu = "Catalog";
 
+        search = search?.Trim();
+        if (search?.Length > 100) search = search[..100];
+        category = string.IsNullOrWhiteSpace(category) ? "all" : category.Trim();
+        language = string.IsNullOrWhiteSpace(language) ? "all" : language.Trim();
         var books = _catalogService.GetAll();
+        if (category != "all") books = books.Where(b => b.Category.Equals(category, StringComparison.OrdinalIgnoreCase));
+        if (language != "all") books = books.Where(b => b.Language.Equals(language, StringComparison.OrdinalIgnoreCase));
 
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -49,17 +55,20 @@ public class CatalogController : AdminBaseController
         {
             if (status == "Có sẵn")
             {
-                books = books.Where(b => b.AvailableCopies > 0);
+                books = books.Where(b => !b.IsOnline && b.AvailableCopies > 0);
             }
             else if (status == "Hết sách")
             {
-                books = books.Where(b => b.AvailableCopies <= 0);
+                books = books.Where(b => !b.IsOnline && b.AvailableCopies <= 0);
             }
+            else if (status == "Bản điện tử") books = books.Where(b => b.IsOnline);
         }
 
         var model = new CatalogIndexViewModel
         {
             SearchKeyword = search,
+            SelectedCategory = category,
+            SelectedLanguage = language,
             SelectedMajor = major ?? "Tất cả chuyên ngành",
             SelectedStatus = status ?? "Tất cả",
             Books = books.Select(b => new CatalogItemViewModel
@@ -75,6 +84,7 @@ public class CatalogController : AdminBaseController
                 TheLoai = b.MajorName,
                 MajorCode = b.Major,
                 DinhDang = b.IsOnline ? "Bản điện tử" : "Sách in",
+                IsOnline = b.IsOnline,
                 CoverImage = string.IsNullOrWhiteSpace(b.CoverImage) ? "/images/covers/sach_01.jpg" : b.CoverImage,
                 TongBan = b.TotalCopies,
                 SanCo = b.AvailableCopies,
@@ -84,6 +94,8 @@ public class CatalogController : AdminBaseController
                 Copies = b.Copies ?? new List<BookCopyItem>()
             }).ToList()
         };
+
+        model.TrangHienTai = Math.Clamp(page, 1, model.TongTrang);
 
         return View(model);
     }
@@ -135,7 +147,7 @@ public class CatalogController : AdminBaseController
         var success = _catalogService.AddBook(book, copiesCount > 0 ? copiesCount : 4, out int newId, out string errorMessage);
         if (success)
         {
-            TempData["SuccessMessage"] = $"Đã thêm thành công học liệu '{book.Title}' (Mã: TLVN26-{newId:D3}) với {Math.Max(1, copiesCount)} bản sao vào CSDL Thư viện UTC!";
+            TempData["SuccessMessage"] = $"Đã thêm học liệu: {book.Title}.";
         }
         else
         {
@@ -190,7 +202,7 @@ public class CatalogController : AdminBaseController
         var success = _catalogService.UpdateBook(book, out string errorMessage);
         if (success)
         {
-            TempData["SuccessMessage"] = $"Đã cập nhật thông tin học liệu '{book.Title}' trong CSDL thành công!";
+            TempData["SuccessMessage"] = "Đã cập nhật học liệu.";
         }
         else
         {
@@ -208,7 +220,7 @@ public class CatalogController : AdminBaseController
         var success = _catalogService.DeleteBook(id, out string errorMessage);
         if (success)
         {
-            TempData["SuccessMessage"] = "Đã xóa học liệu khỏi CSDL Thư viện UTC thành công!";
+            TempData["SuccessMessage"] = "Đã xóa học liệu.";
         }
         else
         {

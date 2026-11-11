@@ -1,0 +1,125 @@
+/* Shared presentation for administration pages. */
+.admin-body {
+    --admin-header-height: 132px;
+    --utc-cream: #f1faff;
+    --utc-line: #deebf4;
+    --utc-ink: #203c58;
+    --utc-navy: #174c7f;
+    --utc-muted: #5c7187;
+    --utc-blue: #e7f6ff;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    height: auto;
+    min-height: 100vh;
+    background: var(--utc-cream);
+}
+.admin-body :is(button, input, select, textarea) { font-family: inherit; }
+.admin-body .admin-main-header { background: #fff; border-bottom: 1px solid var(--utc-line); }
+.admin-body .admin-topbar { padding: 8px 0; background: var(--utc-header-bg, #176a9e); font-size: 12px; line-height: 1.5; }
+.admin-body .admin-topbar > div { padding-left: 32px !important; padding-right: 32px !important; gap: 20px; }
+.admin-body .topbar-title, .admin-body .topbar-links { font-size: inherit; font-weight: 400; }
+.admin-body .admin-navbar { padding: 20px 0; }
+.admin-body .admin-navbar > div { gap: 20px; padding-left: 28px !important; padding-right: 28px !important; }
+.admin-body .admin-logo { width: 56px; height: 56px; }
+.admin-body .brand-vi { font-size: 20px !important; font-weight: 600; line-height: 1.45; }
+.admin-body .brand-en { font-size: 11px; line-height: 1.5; font-weight: 400; margin-top: 4px; color: var(--utc-muted); }
+.admin-body .admin-actions { gap: 12px !important; }
+.admin-body .admin-overview-link { min-width: 180px; }
+.admin-body .user-btn { min-width: 0; max-width: 240px; padding: 9px 14px; font-weight: 400; }
+.admin-body .user-btn::after { display: none; }
+.admin-body .admin-account-role { font-size: 14px; color: var(--utc-muted); }
+.admin-body .dropdown-menu { padding: 8px; border: 1px solid var(--utc-line); border-radius: 6px; box-shadow: 0 6px 20px rgb(0 0 0 / 6%); }
+.admin-body .dropdown-item { padding: 9px 12px; border-radius: 4px; font-size: 15px; }
+.admin-body .admin-wrapper, .admin-body .admin-content { background: var(--utc-cream); }
+.admin-body .admin-content { padding: 32px !important; }
+.admin-body .admin-sidebar { background: var(--utc-header-bg, #176a9e) !important; border-right: 0; padding: 24px 16px; }
+.admin-body .sidebar-category { color: #ddefff; font-size: 14px; font-weight: 400; margin-bottom: 18px; }
+.admin-body .sidebar-nav { gap: 6px; }
+.admin-body .admin-sidebar .sidebar-nav { flex: 0 1 auto; }
+.admin-body .sidebar-link { color: #fff; min-height: 44px; padding: 11px 14px; border-radius: 5px; font-weight: 400; }
+.admin-body .sidebar-link:hover { color: #fff; background: rgb(255 255 255 / 12%); }
+.admin-body .sidebar-link.active, .admin-body .sidebar-link:active { color: #075a92 !important; background: #fff !important; border-color: transparent !important; font-weight: 600; }
+.admin-body .admin-sidebar-heading { font-size: 16px; }
+.admin-body .admin-sidebar-heading .btn-close { filter: invert(1); }
+.admin-body .sidebar-footer { border-top: 1px solid rgb(255 255 255 / 20%); padding-top: 16px; }
+.admin-body .btn-back-web { font-weight: 400; }
+.admin-body :is(.admin-page-title, .report-header h1) { margin-bottom: 0; font-size: 27px; font-weight: 600; line-height: 1.4; color: var(--utc-navy); }
+.admin-body .utc-dashboard > .admin-page-title { margin-bottom: 24px; }
+.admin-body :is(.utc-dashboard-section-title, .admin-content h3, .admin-content h5:not(.modal-title)) { font-size: 18px; font-weight: 600 !important; line-height: 1.5; }
+.admin-body .admin-content .fw-bold { font-weight: 600 !important; }
+.admin-body :is(.btn, .btn-utc-primary, .btn-outline-utc) { border-radius: 5px !important; min-height: 42px; padding: 9px 18px; font-size: 15px; font-weight: 500; line-height: 1.5; box-shadow: none !important; transform: none !important; transition: background-color 120ms ease, border-color 120ms ease; }
+.admin-body :is(.btn, .btn-utc-primary):hover { box-shadow: none !important; transform: none !important; }
+.admin-body :is(.btn-utc-primary, .btn-primary) { background: #0079ba !important; border-color: #0079ba !important; color: #fff !important; }
+.admin-body :is(.btn-utc-primary, .btn-primary):hover { background: #00679e !important; }
+.admin-body :is(.btn-secondary, .btn-outline-secondary, .btn-outline-primary, .btn-outline-utc, .btn-utc-secondary) { background: #fff !important; border: 1px solid var(--utc-line) !important; color: var(--utc-navy) !important; }
+.admin-body :is(.btn-secondary, .btn-outline-secondary, .btn-outline-primary, .btn-outline-utc, .btn-utc-secondary):hover { background: var(--utc-cream) !important; }
+.admin-body .btn-danger { background: #a5444d !important; border-color: #a5444d !important; }
+.admin-body .btn-outline-danger { background: #fff; border-color: #e1c7ca; color: #a5444d; }
+.admin-body .btn-close { min-height: 24px; min-width: 24px; padding: 8px; border-radius: 4px; }
+.admin-body :is(.form-control, .form-select, .form-control-utc) { border: 1px solid #d7dfe6; border-radius: 5px !important; min-height: 44px; font-size: 15px; line-height: 1.5; padding: 10px 12px; box-shadow: none; }
+.admin-body .form-select { padding-right: 34px; }
+.admin-body :is(.form-control.is-invalid, .form-select.is-invalid, .input-validation-error) { border-color: #a5444d; }
+.admin-body .input-group .form-control { min-width: 0; }
+.admin-body :is(.form-label, .form-label-utc) { display: inline-block; margin-bottom: 8px; font-size: 15px !important; font-weight: 500 !important; color: #34495c; }
+.admin-body :is(.small, small, .form-text, .admin-info-desc) { font-size: 14px !important; line-height: 1.5; }
+.admin-body .form-control[readonly] { background: #f6f8fa !important; font-weight: 400 !important; }
+.admin-body :is(.admin-table-card, .report-panel, .report-filters, .report-summary > div) { background: #fff !important; border: 1px solid var(--utc-line) !important; border-radius: 6px !important; box-shadow: none !important; }
+.admin-body .kpi-card { height: 100%; padding: 20px 22px; border: 1px solid var(--utc-line); border-radius: 6px; box-shadow: none !important; }
+.admin-body .kpi-card::before, .admin-body .kpi-card::after { content: none !important; }
+.admin-body .kpi-card .kpi-title { font-size: 15px; font-weight: 400 !important; margin-bottom: 8px; }
+.admin-body .kpi-card .kpi-value { font-size: clamp(24px, 2.2vw, 30px); font-weight: 600; line-height: 1.4; }
+.admin-body .utc-summary-grid { gap: 20px; margin-bottom: 28px; }
+.admin-body .utc-dashboard-tasks { margin-bottom: 32px; }
+.admin-body :is(.shadow-sm, .shadow, .shadow-lg) { box-shadow: none !important; }
+.admin-body .table-utc { width: 100%; min-width: 860px; margin-bottom: 0; border-collapse: collapse; }
+.admin-body .admin-catalog-table .table-utc { min-width: 1180px; }
+.admin-body .table-utc thead th { padding: 16px 20px; background: var(--utc-blue); font-size: 14px; line-height: 1.5; font-weight: 600; color: var(--utc-navy); border-bottom: 1px solid var(--utc-line); text-transform: none; letter-spacing: 0; }
+.admin-body .table-utc tbody td { padding: 17px 20px; font-size: 15px; line-height: 1.6; vertical-align: middle; border-bottom: 1px solid #edf0f3; }
+.admin-body .table-utc tbody tr:last-child td { border-bottom: 0; }
+.admin-body .table-utc tbody tr:hover { background: #fafbfc; }
+.admin-body .table-utc tfoot td { padding: 18px 20px; border-top: 1px solid var(--utc-line); background: #fafbfc; font-size: 15px; }
+.admin-body .table-utc :is(strong, .fw-bold, .fw-semibold) { font-weight: 500 !important; }
+.admin-body .table-utc .btn { min-height: 36px; padding: 6px 10px !important; font-size: 14px !important; white-space: nowrap; }
+.admin-body .admin-row-actions { gap: 8px !important; }
+.admin-body .admin-content .text-truncate { white-space: normal; overflow: visible; text-overflow: clip; }
+.admin-body :is(.badge, .badge-status, .badge-role-admin, .badge-role-reader, .badge-role-catalog) { border: 0 !important; border-radius: 0 !important; background: transparent !important; padding: 0 !important; font-size: 14px !important; font-weight: 500 !important; line-height: 1.5; white-space: normal; }
+.admin-body :is(.badge-role-admin, .badge-role-reader, .badge-role-catalog) { color: #34495c; }
+.admin-body :is(.badge.text-white, .badge.bg-light) { color: #34495c !important; }
+.admin-body :is(.badge.bg-danger, .badge-status.badge-overdue) { color: #a5444d !important; }
+.admin-body :is(.badge.bg-success, .badge-status.badge-available) { color: #36725a !important; }
+.admin-body :is(.badge.bg-primary, .badge-status.badge-borrowed) { color: #1d5c85 !important; }
+.admin-body :is(.badge-status, .badge-available, .badge-overdue, .badge-borrowed)::before { content: none !important; display: none !important; }
+.admin-body .alert { border-radius: 5px !important; border-width: 1px !important; padding: 14px 18px; font-size: 15px; line-height: 1.55; box-shadow: none !important; }
+.admin-body .admin-info-box { background: #fff; border: 1px solid var(--utc-line); border-radius: 5px; padding: 16px 20px; box-shadow: none; }
+.admin-body .admin-info-title { font-size: 15px; font-weight: 500; }
+.admin-body .modal-content { border-radius: 6px !important; box-shadow: 0 10px 30px rgb(0 0 0 / 10%) !important; }
+.admin-body .modal-title { font-size: 20px; font-weight: 600 !important; }
+.admin-body .modal .card { background: #fff !important; border-radius: 5px !important; box-shadow: none !important; }
+.admin-body .modal :is(.modal-header, .modal-footer) { background: #fff !important; border-color: var(--utc-line); }
+.admin-body .report-summary dd { font-size: 29px; }
+.admin-body .report-panel-heading h2 { font-size: 17px; }
+.admin-body .report-pagination > :is(a, span) { border-radius: 5px; }
+@media (max-width: 1199.98px) {
+    .admin-body .brand-vi { font-size: 17px !important; }
+    .admin-body .admin-logo { width: 48px; height: 48px; }
+    .admin-body .admin-topbar > div { padding-left: 24px !important; padding-right: 24px !important; }
+    .admin-body .sidebar-category { display: none; }
+    .admin-body .admin-content { padding: 24px !important; }
+    .admin-body .admin-navbar > div { padding-left: 24px !important; padding-right: 24px !important; }
+}
+@media (max-width: 575.98px) {
+    .admin-body .admin-topbar > div { padding-left: 16px !important; padding-right: 16px !important; }
+    .admin-body .topbar-links { display: none; }
+    .admin-body .admin-content { padding: 24px 16px !important; }
+    .admin-body .admin-navbar > div { padding-left: 16px !important; padding-right: 16px !important; gap: 12px; }
+    .admin-body .brand-vi { font-size: 15px !important; }
+    .admin-body .admin-logo { width: 36px; height: 36px; }
+    .admin-body :is(.admin-page-title, .report-header h1) { font-size: 24px; }
+    .admin-body .user-btn { max-width: 180px; }
+    .admin-body .utc-summary-grid { gap: 12px; }
+    .admin-body .table-utc .btn { min-height: 42px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .admin-body :is(.btn, .btn-utc-primary) { transition: none; }
+}

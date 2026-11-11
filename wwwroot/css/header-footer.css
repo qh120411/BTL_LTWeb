@@ -33,7 +33,7 @@
 
 .utc-institutional-topbar,
 .utc-utility-bar {
-    background: linear-gradient(90deg, #005b8c 0%, #0079ba 100%);
+    background: var(--utc-header-bg, #176a9e);
     color: #FFFFFF;
     font-size: 11.5px;
     height: 30px;
