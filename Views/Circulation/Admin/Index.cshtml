@@ -48,7 +48,7 @@
 </form>
 
 <!-- Bảng danh sách giao dịch mượn trả -->
-<div class="admin-table-card">
+<div class="admin-table-card admin-paged-list" id="circulationList">
     <div class="table-responsive">
         <table class="table-utc">
             <thead>
@@ -71,7 +71,7 @@
                         </td>
                     </tr>
                 }
-                @foreach (var item in Model.Transactions)
+                @foreach (var item in Model.TransactionsOnPage)
                 {
                     <tr>
                         <td>
@@ -128,6 +128,7 @@
                                         data-hoten="@item.HoTen"
                                         data-tensach="@item.TenSach"
                                         data-quahan="@(item.IsQuaHan ? "true" : "false")"
+                                        data-returnurl="@(Context.Request.Path + Context.Request.QueryString)"
                                         title="Tiếp nhận trả sách tại quầy">
                                      Trả sách
                                 </button>
@@ -140,6 +141,7 @@
             </tbody>
         </table>
     </div>
+    <partial name="~/Views/Shared/Admin/_AdminListPagination.cshtml" model="Model.Pagination" />
 </div>
 
 <!-- ========================================== -->
@@ -158,6 +160,7 @@
             <form asp-area="Admin" asp-controller="Circulation" asp-action="CreateBorrow" method="post" id="formCreateBorrow" class="d-flex flex-column overflow-hidden"
                   data-reader-search-url="@Url.Action("SearchReaders", "Circulation", new { area = "Admin" })"
                   data-can-borrow="@(canBorrow ? "true" : "false")">
+                <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
                 @Html.AntiForgeryToken()
                 <div class="modal-body p-4">
                     <!-- Bước 1: Chọn bạn đọc -->

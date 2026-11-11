@@ -100,6 +100,16 @@
 .admin-body .report-summary dd { font-size: 29px; }
 .admin-body .report-panel-heading h2 { font-size: 17px; }
 .admin-body .report-pagination > :is(a, span) { border-radius: 5px; }
+.admin-body .admin-paged-list, .admin-body .admin-reader-list { scroll-margin-top: calc(var(--admin-header-height, 132px) + 24px); }
+.admin-body .admin-paged-list .table-responsive { overflow-x: auto; border: 0; border-radius: 0; }
+.admin-body .admin-list-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; padding: 20px 24px; border-top: 1px solid var(--utc-line); color: var(--utc-muted); font-size: 15px; }
+.admin-body .admin-list-pagination { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.admin-body .admin-list-pagination > :is(a, span) { display: inline-flex; align-items: center; justify-content: center; min-width: 40px; min-height: 40px; padding: 7px 11px; border: 1px solid var(--utc-line); border-radius: 5px; background: #fff; text-decoration: none; }
+.admin-body .admin-list-pagination a:hover { background: var(--utc-blue); }
+.admin-body .admin-list-pagination [aria-current] { color: #fff; background: var(--utc-brand); border-color: var(--utc-brand); }
+.admin-body .admin-list-pagination [aria-disabled] { color: #8797a5; background: #f7fafc; }
+.admin-body .admin-list-pagination .admin-list-page-gap { min-width: 20px; padding: 0; border-color: transparent; }
+.admin-body .admin-list-pagination .admin-list-page-context { display: none; }
 @media (max-width: 1199.98px) {
     .admin-body .brand-vi { font-size: 17px !important; }
     .admin-body .admin-logo { width: 48px; height: 48px; }
@@ -109,6 +119,11 @@
     .admin-body .admin-navbar > div { padding-left: 24px !important; padding-right: 24px !important; }
 }
 @media (max-width: 575.98px) {
+    .admin-body .admin-list-footer { justify-content: center; padding: 18px 16px; }
+    .admin-body .admin-list-pagination { width: 100%; justify-content: center; flex-wrap: nowrap; gap: 12px; }
+    .admin-body .admin-list-pagination .admin-list-page-number, .admin-body .admin-list-pagination .admin-list-page-gap { display: none; }
+    .admin-body .admin-list-pagination .admin-list-page-context { display: inline-flex; border: 0; padding: 7px 0; white-space: nowrap; }
+    .admin-body .admin-list-pagination .admin-list-page-direction { flex: 1; max-width: 100px; }
     .admin-body .admin-topbar > div { padding-left: 16px !important; padding-right: 16px !important; }
     .admin-body .topbar-links { display: none; }
     .admin-body .admin-content { padding: 24px 16px !important; }

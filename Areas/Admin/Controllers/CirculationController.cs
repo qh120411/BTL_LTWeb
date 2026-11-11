@@ -25,7 +25,7 @@ public class CirculationController : AdminBaseController
         _dbContext = dbContext;
     }
 
-    public IActionResult Index(string? search, string? status)
+    public IActionResult Index(string? search, string? status, int page = 1)
     {
         ViewBag.ActiveMenu = "Circulation";
 
@@ -66,7 +66,13 @@ public class CirculationController : AdminBaseController
             SearchKeyword = search,
             SelectedStatus = status ?? "Tất cả trạng thái",
             Transactions = loans,
-            AvailableBooks = books
+            AvailableBooks = books,
+            Pagination = new AdminPaginationViewModel
+            {
+                TotalItems = loans.Count, RequestedPage = page,
+                Controller = "Circulation", Fragment = "circulationList", Unit = "giao dịch",
+                Filters = new() { ["search"] = search, ["status"] = status }
+            }
         };
 
         return View(model);
@@ -82,12 +88,12 @@ public class CirculationController : AdminBaseController
     // Xử lý tạo giao dịch mượn tài liệu học liệu mới tại quầy
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult CreateBorrow(string maBD, int bookId)
+    public IActionResult CreateBorrow(string maBD, int bookId, string? returnUrl = null)
     {
         if (string.IsNullOrWhiteSpace(maBD) || bookId <= 0)
         {
             TempData["ErrorMessage"] = "Thông tin tạo giao dịch mượn không hợp lệ! Vui lòng chọn bạn đọc và học liệu.";
-            return RedirectToAction(nameof(Index));
+            return RedirectToLocal(returnUrl);
         }
 
         var success = _readerService.BorrowBook(maBD, bookId, out string bookTitle, out string errorMessage, User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -101,7 +107,7 @@ public class CirculationController : AdminBaseController
             TempData["ErrorMessage"] = errorMessage;
         }
 
-        return RedirectToAction(nameof(Index));
+        return RedirectToLocal(returnUrl);
     }
 
     // Xử lý thu hồi / trả sách ngay tại quầy lưu thông

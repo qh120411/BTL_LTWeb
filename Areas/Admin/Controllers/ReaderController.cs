@@ -18,10 +18,32 @@ public class ReaderController : AdminBaseController
 
     // Figma 03: Quản lý bạn đọc
     [HttpGet]
-    public IActionResult Index(string? search, string? group)
+    public IActionResult Index(string? search, string? group, int borrowingPage = 1, int nonBorrowingPage = 1)
     {
         ViewBag.ActiveMenu = "Reader";
         var model = _readerService.GetReaders(search, group);
+        model.BorrowingPagination = new AdminPaginationViewModel
+        {
+            TotalItems = model.BorrowingReaders.Count, RequestedPage = borrowingPage,
+            Controller = "Reader", Fragment = "borrowingReaders", Unit = "bạn đọc",
+            PageParameter = "borrowingPage", AriaLabel = "Trang bạn đọc đang mượn"
+        };
+        model.NonBorrowingPagination = new AdminPaginationViewModel
+        {
+            TotalItems = model.NonBorrowingReaders.Count, RequestedPage = nonBorrowingPage,
+            Controller = "Reader", Fragment = "nonBorrowingReaders", Unit = "bạn đọc",
+            PageParameter = "nonBorrowingPage", AriaLabel = "Trang bạn đọc chưa mượn"
+        };
+        model.BorrowingPagination.Filters = new()
+        {
+            ["search"] = model.SearchKeyword, ["group"] = model.SelectedGroup,
+            ["nonBorrowingPage"] = model.NonBorrowingPagination.CurrentPage.ToString(System.Globalization.CultureInfo.InvariantCulture)
+        };
+        model.NonBorrowingPagination.Filters = new()
+        {
+            ["search"] = model.SearchKeyword, ["group"] = model.SelectedGroup,
+            ["borrowingPage"] = model.BorrowingPagination.CurrentPage.ToString(System.Globalization.CultureInfo.InvariantCulture)
+        };
         return View(model);
     }
 

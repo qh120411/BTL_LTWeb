@@ -15,6 +15,7 @@
 
 <!-- Bộ lọc tìm kiếm -->
 <form method="get" asp-action="Index" class="mb-4">
+    <input type="hidden" name="level" value="@Model.SelectedLevel" />
     <div class="row g-3">
         <div class="col-md-8">
             <label class="form-label-utc">Tra cứu bạn đọc quá hạn</label>
@@ -30,7 +31,7 @@
 </form>
 
 <!-- Bảng danh sách quá hạn -->
-<div class="admin-table-card">
+<div class="admin-table-card admin-paged-list" id="overdueList">
     <div class="table-responsive">
         <table class="table-utc">
             <thead>
@@ -45,7 +46,11 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.OverdueList)
+                @if (Model.OverdueList.Count == 0)
+                {
+                    <tr><td colspan="7" class="text-center py-4 text-muted">Không có lượt quá hạn phù hợp.</td></tr>
+                }
+                @foreach (var item in Model.OverduesOnPage)
                 {
                     <tr>
                         <td><strong>@item.MaGD</strong></td>
@@ -76,7 +81,7 @@
                                     data-hoten="@item.HoTen"
                                     data-tensach="@item.TenSach"
                                     data-quahan="true"
-                                    data-returnurl="/Admin/Overdue"
+                                    data-returnurl="@(Context.Request.Path + Context.Request.QueryString)"
                                     title="Tiếp nhận trả sách hoặc bồi thường mất/hỏng">
                                  Trả sách
                             </button>
@@ -97,7 +102,8 @@
             </tfoot>
         </table>
     </div>
+    <partial name="~/Views/Shared/Admin/_AdminListPagination.cshtml" model="Model.Pagination" />
 </div>
 
 <!-- MODAL DÙNG CHUNG: XÁC NHẬN TRẢ SÁCH HOẶC BỒI THƯỜNG MẤT/HỎNG -->
-<partial name="_ReturnAndCompensationModal" />
+<!-- Modal dùng chung đã được nhúng tại _AdminLayout -->

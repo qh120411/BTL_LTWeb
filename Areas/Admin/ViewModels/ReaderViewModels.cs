@@ -32,6 +32,10 @@ public class ReaderIndexViewModel
     public string? SelectedGroup { get; set; }
     public List<string> Groups { get; set; } = new() { "Tất cả nhóm", "Sinh viên", "Giảng viên", "Ngoài trường" };
     public List<ReaderListItemViewModel> Readers { get; set; } = new();
+    public AdminPaginationViewModel BorrowingPagination { get; set; } = new();
+    public AdminPaginationViewModel NonBorrowingPagination { get; set; } = new();
+    public IEnumerable<ReaderListItemViewModel> BorrowingReadersOnPage => BorrowingReaders.Skip(BorrowingPagination.Skip).Take(BorrowingPagination.PageSize);
+    public IEnumerable<ReaderListItemViewModel> NonBorrowingReadersOnPage => NonBorrowingReaders.Skip(NonBorrowingPagination.Skip).Take(NonBorrowingPagination.PageSize);
 
     // 2 Bảng tách biệt: Đang mượn sách vs Không mượn sách
     public List<ReaderListItemViewModel> BorrowingReaders => Readers.Where(r => r.SoSachDangMuon > 0).ToList();

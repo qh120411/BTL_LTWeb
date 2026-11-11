@@ -1,0 +1,53 @@
+@using Microsoft.AspNetCore.Routing
+@model AdminPaginationViewModel
+@{
+    string PageUrl(int page)
+    {
+        var values = new RouteValueDictionary { ["area"] = "Admin", [Model.PageParameter] = page };
+        foreach (var filter in Model.Filters)
+        {
+            if (!string.IsNullOrWhiteSpace(filter.Value)) values[filter.Key] = filter.Value;
+        }
+        return Url.Action("Index", Model.Controller, values) + "#" + Model.Fragment;
+    }
+}
+<div class="admin-list-footer" data-page="@Model.CurrentPage" data-total="@Model.TotalItems" data-pages="@Model.TotalPages">
+    <span>@Model.FirstItem–@Model.LastItem / @Model.TotalItems @Model.Unit</span>
+    @if (Model.TotalPages > 1)
+    {
+        <nav class="admin-list-pagination" aria-label="@Model.AriaLabel">
+            @if (Model.CurrentPage > 1)
+            {
+                <a href="@PageUrl(Model.CurrentPage - 1)" class="admin-list-page-direction" rel="prev">Trước</a>
+            }
+            else
+            {
+                <span class="admin-list-page-direction" aria-disabled="true">Trước</span>
+            }
+            <span class="admin-list-page-context">Trang @Model.CurrentPage / @Model.TotalPages</span>
+            @foreach (var p in Model.Pages)
+            {
+                if (!p.HasValue)
+                {
+                    <span class="admin-list-page-gap" aria-hidden="true">…</span>
+                }
+                else if (p == Model.CurrentPage)
+                {
+                    <span class="admin-list-page-number" aria-current="page" aria-label="Trang @p">@p</span>
+                }
+                else
+                {
+                    <a href="@PageUrl(p.Value)" class="admin-list-page-number" aria-label="Trang @p">@p</a>
+                }
+            }
+            @if (Model.CurrentPage < Model.TotalPages)
+            {
+                <a href="@PageUrl(Model.CurrentPage + 1)" class="admin-list-page-direction" rel="next">Sau</a>
+            }
+            else
+            {
+                <span class="admin-list-page-direction" aria-disabled="true">Sau</span>
+            }
+        </nav>
+    }
+</div>

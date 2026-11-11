@@ -47,7 +47,7 @@
 <!-- ======================================================= -->
 <!-- BẢNG 1 (BẢNG TRÊN): DANH SÁCH BẠN ĐỌC ĐANG MƯỢN SÁCH -->
 <!-- ======================================================= -->
-<div class="mb-5">
+<div class="mb-5 admin-reader-list" id="borrowingReaders">
     <div class="d-flex justify-content-between align-items-center mb-2 px-1">
         <div class="d-flex align-items-center gap-2">
 
@@ -61,7 +61,7 @@
 
     </div>
 
-    <div class="admin-table-card shadow-sm border" style="border-radius: 8px; overflow: hidden;">
+    <div class="admin-table-card admin-paged-list shadow-sm border" style="border-radius: 8px; overflow: hidden;">
         <div class="table-responsive">
             <table class="table-utc mb-0">
                 <thead>
@@ -87,7 +87,7 @@
                     }
                     else
                     {
-                        @foreach (var r in Model.BorrowingReaders)
+                        @foreach (var r in Model.BorrowingReadersOnPage)
                         {
                             <tr>
                                 <td>
@@ -136,13 +136,14 @@
                 </tbody>
             </table>
         </div>
+        <partial name="~/Views/Shared/Admin/_AdminListPagination.cshtml" model="Model.BorrowingPagination" />
     </div>
 </div>
 
 <!-- ======================================================= -->
 <!-- BẢNG 2 (BẢNG DƯỚI): DANH SÁCH BẠN ĐỌC KHÔNG MƯỢN SÁCH -->
 <!-- ======================================================= -->
-<div class="mb-4">
+<div class="mb-4 admin-reader-list" id="nonBorrowingReaders">
     <div class="d-flex justify-content-between align-items-center mb-2 px-1">
         <div class="d-flex align-items-center gap-2">
 
@@ -156,7 +157,7 @@
 
     </div>
 
-    <div class="admin-table-card shadow-sm border" style="border-radius: 8px; overflow: hidden;">
+    <div class="admin-table-card admin-paged-list shadow-sm border" style="border-radius: 8px; overflow: hidden;">
         <div class="table-responsive">
             <table class="table-utc mb-0">
                 <thead>
@@ -182,7 +183,7 @@
                     }
                     else
                     {
-                        @foreach (var r in Model.NonBorrowingReaders)
+                        @foreach (var r in Model.NonBorrowingReadersOnPage)
                         {
                             <tr>
                                 <td>
@@ -222,5 +223,6 @@
                 </tbody>
             </table>
         </div>
+        <partial name="~/Views/Shared/Admin/_AdminListPagination.cshtml" model="Model.NonBorrowingPagination" />
     </div>
 </div>

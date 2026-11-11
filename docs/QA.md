@@ -30,6 +30,8 @@
 17. Trên desktop, menu trái cố định dưới header, dành khoảng trống riêng đúng chiều rộng menu để không đè nội dung. Chiều cao menu theo viewport và chiều cao header đo thực tế; danh sách mục cuộn bên trong khi màn hình thấp. Màn nhỏ tiếp tục dùng menu mở/đóng dạng drawer. Body có chiều cao tự động để header sticky đi theo toàn bộ trang dài.
 18. Khung điều hướng giữ bố cục tham chiếu: dải trường nền xanh đậm, hàng logo/tên thư viện Việt–Anh, nút Tổng quan và tài khoản bên phải, menu xanh với tên mục đầy đủ bên trái. Menu và header giữ vị trí khi cuộn. Nội dung biểu mẫu/bảng vẫn theo cách trình bày tối giản; không khôi phục icon trang trí.
 19. Quản lý học liệu dùng thẻ ảnh bìa, bộ lọc bên trái và 12 học liệu/trang. Bộ lọc gồm loại tài liệu, chuyên ngành, ngôn ngữ và tình trạng kho; tìm tên/tác giả/ISBN, giữ điều kiện khi đổi trang. Các nút Bản sách/Sửa/Xóa liên kết đúng mã trên từng thẻ; giữ nguyên form thêm/sửa/xóa và CSRF. Trang đọc và quản lý tiếp tục dùng cùng dịch vụ danh mục hiện có. Không chuyển nguồn danh mục từ JSON sang SQL trong thay đổi giao diện này.
+20. Mượn trả và quá hạn hiển thị 10 dòng/trang, giữ từ khóa và bộ lọc khi chuyển trang. Tổng số lượt và tiền phạt tính trên toàn bộ kết quả lọc. Form mượn/trả giữ URL trang đang xem, được kiểm tra là đường dẫn nội bộ trước khi chuyển hướng; trang ngoài phạm vi được đưa về trang hợp lệ. Bộ kiểm tra HTTP đối chiếu toàn bộ 49 giao dịch/5 trang, 14 lượt quá hạn/2 trang với API; không thiếu/trùng dòng, bộ lọc và tổng phí đều đúng. Kiểm tra form mượn chỉ gửi dữ liệu không hợp lệ, không tạo hay trả sách trên database hiện có.
+21. Quản lý bạn đọc phân trang riêng bảng đang mượn và chưa mượn, 10 người/trang. Hai tham số `borrowingPage`/`nonBorrowingPage` độc lập; liên kết mỗi bảng giữ trang hiện tại của bảng kia, từ khóa và nhóm bạn đọc. Tìm kiếm hoặc đổi nhóm bắt đầu lại từ trang đầu. Kiểm tra HTTP đối chiếu đủ 69 bạn đọc với API (8 đang mượn, 61 chưa mượn/7 trang), các nhóm, tìm có/không dấu, kết quả rỗng và số trang ngoài phạm vi. Các trang mượn trả/quá hạn dùng chung bộ phân trang vẫn đạt kiểm tra.
 
 Kiểm tra danh mục dạng thẻ: 90 học liệu qua 8 trang; 14 tổ hợp bộ lọc/từ khóa, trường hợp rỗng và trang ngoài phạm vi đều đạt. Dữ liệu cho hộp thoại sửa và bản sách khớp mã học liệu. Bộ kiểm tra tải trang đạt 53 lượt/118 tài nguyên/548 đoạn JavaScript và sự kiện. Không gửi thao tác thêm/sửa/xóa hợp lệ lên dữ liệu đang dùng để kiểm tra giao diện.
 
@@ -50,6 +52,8 @@ dotnet build BTL_LTWEB.csproj --no-restore
 python -X utf8 tests/Smoke/check_pages.py
 python -X utf8 tests/Smoke/check_security.py
 python -X utf8 tests/Smoke/check_catalog.py
+python -X utf8 tests/Smoke/check_circulation_pagination.py
+python -X utf8 tests/Smoke/check_reader_pagination.py
 node --test tests/Borrowing/reader-search.test.cjs
 ```
 

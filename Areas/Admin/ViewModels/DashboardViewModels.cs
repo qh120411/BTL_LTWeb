@@ -102,6 +102,8 @@ namespace BTL_LTWEB.Areas.Admin.ViewModels
         public string? SearchKeyword { get; set; }
         public string? SelectedStatus { get; set; }
         public List<CirculationTransactionItem> Transactions { get; set; } = new();
+        public AdminPaginationViewModel Pagination { get; set; } = new();
+        public IEnumerable<CirculationTransactionItem> TransactionsOnPage => Transactions.Skip(Pagination.Skip).Take(Pagination.PageSize);
         public List<BookItem> AvailableBooks { get; set; } = new();
     }
 
@@ -123,6 +125,8 @@ namespace BTL_LTWEB.Areas.Admin.ViewModels
         public string? SearchKeyword { get; set; }
         public string? SelectedLevel { get; set; }
         public List<OverdueItemViewModel> OverdueList { get; set; } = new();
+        public AdminPaginationViewModel Pagination { get; set; } = new();
+        public IEnumerable<OverdueItemViewModel> OverduesOnPage => OverdueList.Skip(Pagination.Skip).Take(Pagination.PageSize);
         public decimal TongTienPhat => OverdueList.Sum(x => x.TienPhat);
     }
 
