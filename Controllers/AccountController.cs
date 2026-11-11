@@ -286,43 +286,6 @@ namespace BTL_LTWEB.Controllers
             }
         }
 
-        // Đăng nhập nhanh SSO Microsoft / Email UTC (Mặc định tài khoản Đỗ Văn Đạt - 242630923)
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LoginWithMicrosoft()
-        {
-            var studentId = "242630923";
-            var account = await _dbContext.TaiKhoans
-                .Include(t => t.MaBanDocNavigation)
-                .FirstOrDefaultAsync(t => t.TenDangNhap == studentId);
-
-            string fullName = account?.MaBanDocNavigation?.HoTen ?? "Đỗ Văn Đạt";
-
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, studentId),
-                new Claim(ClaimTypes.Name, fullName),
-                new Claim(ClaimTypes.Role, "Reader"),
-                new Claim(ClaimTypes.Role, "READER"),
-                new Claim(ClaimTypes.Email, $"{studentId}@utc.edu.vn"),
-                new Claim("Class", "K65.CLCCNTT1")
-            };
-
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var authProperties = new AuthenticationProperties
-            {
-                IsPersistent = true,
-                ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7)
-            };
-
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(identity),
-                authProperties);
-
-            return RedirectToAction("Index", "Home", new { area = "Reader" });
-        }
-
         [HttpGet]
         public async Task<IActionResult> Logout()
         {
