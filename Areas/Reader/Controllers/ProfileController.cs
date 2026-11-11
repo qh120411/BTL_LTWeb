@@ -34,13 +34,14 @@ namespace BTL_LTWEB.Areas.Reader.Controllers
             var studentId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "242630923";
             var studentName = User.Identity?.Name ?? "Đỗ Văn Đạt";
 
-            model.MaSinhVien = studentId;
-            if (string.IsNullOrWhiteSpace(model.HoTen))
-            {
-                model.HoTen = studentName;
-            }
-
-            _profileService.UpdateProfile(model);
+            // Only contact/bank fields belong to this form. Identity and loans stay server-owned.
+            var profile = _profileService.GetProfile(studentId, studentName);
+            profile.SoDienThoai = model.SoDienThoai;
+            profile.DiaChiNha = model.DiaChiNha;
+            profile.SoTaiKhoanNganHang = model.SoTaiKhoanNganHang;
+            profile.TenNganHang = model.TenNganHang;
+            profile.Email = model.Email;
+            _profileService.UpdateProfile(profile);
 
             TempData["SuccessMessage"] = "Cập nhật thông tin cá nhân và ngân hàng thành công!";
             return RedirectToAction(nameof(Index));

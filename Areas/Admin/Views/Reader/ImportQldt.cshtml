@@ -1,4 +1,4 @@
-﻿@model ImportQldtViewModel
+@model ImportQldtViewModel
 @{
     ViewData["Title"] = "Nhập dữ liệu QLĐT";
 }
@@ -10,10 +10,10 @@
 <!-- Khung giới thiệu nghiệp vụ -->
 <div class="admin-info-box">
     <div class="admin-info-title">Nhập dữ liệu từ phòng quản lý đào tạo</div>
-    <div class="admin-info-desc">Đối chiếu theo mã sinh viên. Chỉ cập nhật dữ liệu nhận diện, không ghi đè lịch sử mượn và trạng thái nghiệp vụ.</div>
+    <div class="admin-info-desc">Đối chiếu mã sinh viên; giữ nguyên lịch sử mượn và trạng thái thẻ.</div>
 </div>
 
-<form asp-action="ConfirmImportQldt" method="post">
+<form asp-action="ProcessImport" method="post">
     @Html.AntiForgeryToken()
 
     <!-- Chọn nguồn dữ liệu & Tệp trực tiếp trên nền -->

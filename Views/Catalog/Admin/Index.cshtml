@@ -1,4 +1,4 @@
-﻿@model BTL_LTWEB.Areas.Admin.ViewModels.CatalogIndexViewModel
+@model BTL_LTWEB.Areas.Admin.ViewModels.CatalogIndexViewModel
 @{
     ViewData["Title"] = "Quản lý học liệu";
     ViewBag.ActiveMenu = "Catalog";
@@ -13,7 +13,7 @@
     </div>
     <button class="btn btn-utc-primary shadow-sm d-inline-flex align-items-center gap-2" type="button" data-bs-toggle="modal" data-bs-target="#createBookModal">
         <i class="bi bi-plus-circle-fill"></i>
-        <span>+ Thêm học liệu mới</span>
+        <span>+ Thêm học liệu</span>
     </button>
 </div>
 
@@ -21,7 +21,7 @@
 <div class="row g-3 mb-4">
     <div class="col-md-3 col-sm-6">
         <div class="kpi-card shadow-sm" style="background-color: #e7f5ff; border: 1px solid #d4ebf9;">
-            <div class="kpi-title" style="color: var(--utc-text-muted);">Tổng đầu sách CSDL</div>
+            <div class="kpi-title" style="color: var(--utc-text-muted);">Tổng đầu sách</div>
             <div class="kpi-value" style="color: #0079ba;">@Model.TongDauSach</div>
         </div>
     </div>
@@ -65,7 +65,7 @@
             </div>
         </div>
         <div class="col-md-4">
-            <label class="form-label-utc">Chuyên ngành đào tạo</label>
+            <label class="form-label-utc">Chuyên ngành</label>
             <select name="major" class="form-select form-control-utc" onchange="this.form.submit()">
                 <option value="Tất cả chuyên ngành" selected="@(Model.SelectedMajor == "Tất cả chuyên ngành")">Tất cả chuyên ngành</option>
                 <option value="Công nghệ thông tin" selected="@(Model.SelectedMajor == "Công nghệ thông tin")">Công nghệ thông tin</option>
@@ -123,8 +123,8 @@
                                          style="width: 42px; height: 58px; object-fit: cover;"
                                          onerror="this.src='/images/covers/sach_01.jpg'" />
                                     <div>
-                                        <strong class="font-monospace text-primary d-block" style="font-size: 11.5px;">@book.MaHocLieu</strong>
-                                        <span class="badge bg-light text-muted border" style="font-size: 10px;">@book.DinhDang</span>
+                                        <strong class="font-monospace text-primary d-block" style="font-size: 14px;">@book.MaHocLieu</strong>
+                                        <span class="badge bg-light text-muted border" style="font-size: 14px;">@book.DinhDang</span>
                                     </div>
                                 </div>
                             </td>
@@ -141,7 +141,7 @@
                                 <div class="text-muted small">@book.NhaXuatBan</div>
                             </td>
                             <td>
-                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle px-2 py-1" style="font-size: 11px;">
+                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle px-2 py-1" style="font-size: 14px;">
                                     @book.TheLoai
                                 </span>
                             </td>
@@ -153,13 +153,13 @@
                             <td style="text-align: center;">
                                 @if (book.SanCo > 0)
                                 {
-                                    <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1" style="font-size: 11.5px;">
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1" style="font-size: 14px;">
                                         Có sẵn (@book.SanCo/@book.TongBan)
                                     </span>
                                 }
                                 else
                                 {
-                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1" style="font-size: 11.5px;">
+                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1" style="font-size: 14px;">
                                         Hết sách (0/@book.TongBan)
                                     </span>
                                 }
@@ -173,13 +173,13 @@
                                     </button>
                                     <!-- Sửa học liệu -->
                                     <button type="button" class="btn btn-sm btn-outline-secondary px-2 py-1 btn-edit-book"
-                                            data-id="@book.Id" title="Chỉnh sửa thông tin học liệu">
+                                            data-id="@book.Id" title="Sửa học liệu">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
                                     <!-- Xóa học liệu -->
                                     <button type="button" class="btn btn-sm btn-outline-danger px-2 py-1 btn-delete-book"
                                             data-id="@book.Id" data-title="@book.TenHocLieu" data-copies="@book.SanCo" data-total="@book.TongBan"
-                                            title="Xóa học liệu khỏi CSDL">
+                                            title="Xóa học liệu">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </div>
@@ -196,11 +196,11 @@
 <!-- MODAL 1: THÊM HỌC LIỆU MỚI VÀO CSDL THƯ VIỆN UTC -->
 <!-- ======================================================== -->
 <div class="modal fade" id="createBookModal" tabindex="-1" aria-labelledby="createBookModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden;">
             <div class="modal-header bg-white text-dark py-3 px-4 border-bottom" style="background: #ffffff !important; border-bottom: 1px solid #e2eaf2 !important;">
                 <h5 class="modal-title fw-bold mb-0 text-dark" id="createBookModalLabel" style="color: #163b5c !important;">
-                    <i class="bi bi-journal-plus text-primary me-2"></i>Thêm học liệu mới
+                    Thêm học liệu
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -210,22 +210,22 @@
                 <div class="modal-body p-4">
                     <div class="row g-3">
                         <div class="col-md-12">
-                            <label class="form-label-utc fw-bold">Tên học liệu / Giáo trình <span class="text-danger">*</span></label>
-                            <input type="text" name="title" class="form-control form-control-utc" placeholder="VD: Giáo trình Kỹ thuật Vi điều khiển và IoT..." required />
+                            <label class="form-label-utc fw-bold">Tên học liệu <span class="text-danger">*</span></label>
+                            <input type="text" name="title" class="form-control form-control-utc" placeholder="Tên sách hoặc giáo trình" required />
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label-utc fw-bold">Tác giả / Chủ biên <span class="text-danger">*</span></label>
-                            <input type="text" name="authors" class="form-control form-control-utc" placeholder="VD: PGS. TS. Nguyễn Văn A, ThS. Trần B..." required />
+                            <label class="form-label-utc fw-bold">Tác giả <span class="text-danger">*</span></label>
+                            <input type="text" name="authors" class="form-control form-control-utc" placeholder="Tên tác giả" required />
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label-utc fw-bold">Nhà xuất bản</label>
-                            <input type="text" name="publisher" class="form-control form-control-utc" placeholder="VD: NXB Giao thông Vận tải / NXB Bách Khoa..." />
+                            <input type="text" name="publisher" class="form-control form-control-utc" placeholder="Tên nhà xuất bản" />
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label-utc fw-bold">Chuyên ngành đào tạo <span class="text-danger">*</span></label>
+                            <label class="form-label-utc fw-bold">Chuyên ngành <span class="text-danger">*</span></label>
                             <select name="major" class="form-select form-control-utc" required>
                                 <option value="cntt">Công nghệ thông tin</option>
                                 <option value="xaydung">Kỹ thuật xây dựng &amp; Giao thông</option>
@@ -236,7 +236,7 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label-utc fw-bold">Mã số chuẩn ISBN</label>
+                            <label class="form-label-utc fw-bold">ISBN</label>
                             <input type="text" name="isbn" class="form-control form-control-utc" placeholder="VD: 978-604-0-32451-2" />
                         </div>
 
@@ -251,31 +251,31 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label-utc fw-bold">Vị trí xếp kệ (Kho Nhà A8)</label>
+                            <label class="form-label-utc fw-bold">Vị trí kệ</label>
                             <input type="text" name="shelf" class="form-control form-control-utc" value="Kệ IT-01 - Tầng 2 Nhà A8" />
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label-utc fw-bold">Số lượng bản sao nhập kho</label>
+                            <label class="form-label-utc fw-bold">Số bản sao</label>
                             <input type="number" name="copiesCount" class="form-control form-control-utc" value="4" min="1" max="20" />
                         </div>
 
                         <div class="col-md-12">
-                            <label class="form-label-utc fw-bold">Đường dẫn ảnh bìa (Cover Image URL)</label>
+                            <label class="form-label-utc fw-bold">Đường dẫn ảnh bìa</label>
                             <input type="text" name="coverImage" class="form-control form-control-utc" value="/images/covers/sach_01.jpg" />
                         </div>
 
                         <div class="col-md-12">
-                            <label class="form-label-utc fw-bold">Mô tả tóm tắt nội dung học liệu</label>
-                            <textarea name="description" class="form-control form-control-utc" rows="3" placeholder="Tóm tắt nội dung giáo trình, đối tượng phục vụ, kiến thức trọng tâm..."></textarea>
+                            <label class="form-label-utc fw-bold">Mô tả</label>
+                            <textarea name="description" class="form-control form-control-utc" rows="3" placeholder="Tóm tắt nội dung"></textarea>
                         </div>
                     </div>
                 </div>
 
                 <div class="modal-footer bg-light px-4 py-3">
-                    <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Hủy bỏ</button>
+                    <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Hủy</button>
                     <button type="submit" class="btn btn-utc-primary px-4 fw-bold">
-                        <i class="bi bi-cloud-arrow-up-fill me-1"></i> Lưu vào CSDL Thư viện
+                        Thêm học liệu
                     </button>
                 </div>
             </form>
@@ -287,11 +287,11 @@
 <!-- MODAL 2: CHỈNH SỬA THÔNG TIN HỌC LIỆU TRONG CSDL -->
 <!-- ======================================================== -->
 <div class="modal fade" id="editBookModal" tabindex="-1" aria-labelledby="editBookModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden;">
             <div class="modal-header bg-white text-dark py-3 px-4 border-bottom" style="background: #ffffff !important; border-bottom: 1px solid #e2eaf2 !important;">
                 <h5 class="modal-title fw-bold mb-0 text-dark" id="editBookModalLabel" style="color: #163b5c !important;">
-                    <i class="bi bi-pencil-square text-primary me-2"></i>Chỉnh sửa thông tin học liệu
+                    Sửa học liệu
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -303,12 +303,12 @@
                 <div class="modal-body p-4">
                     <div class="row g-3">
                         <div class="col-md-12">
-                            <label class="form-label-utc fw-bold">Tên học liệu / Giáo trình <span class="text-danger">*</span></label>
+                            <label class="form-label-utc fw-bold">Tên học liệu <span class="text-danger">*</span></label>
                             <input type="text" name="title" id="editBookTitle" class="form-control form-control-utc" required />
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label-utc fw-bold">Tác giả / Chủ biên <span class="text-danger">*</span></label>
+                            <label class="form-label-utc fw-bold">Tác giả <span class="text-danger">*</span></label>
                             <input type="text" name="authors" id="editBookAuthors" class="form-control form-control-utc" required />
                         </div>
 
@@ -318,7 +318,7 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label-utc fw-bold">Chuyên ngành đào tạo</label>
+                            <label class="form-label-utc fw-bold">Chuyên ngành</label>
                             <select name="major" id="editBookMajor" class="form-select form-control-utc">
                                 <option value="cntt">Công nghệ thông tin</option>
                                 <option value="xaydung">Kỹ thuật xây dựng &amp; Giao thông</option>
@@ -344,7 +344,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label-utc fw-bold">Vị trí xếp kệ (Kho Nhà A8)</label>
+                            <label class="form-label-utc fw-bold">Vị trí kệ</label>
                             <input type="text" name="shelf" id="editBookShelf" class="form-control form-control-utc" />
                         </div>
 
@@ -363,7 +363,7 @@
                 <div class="modal-footer bg-light px-4 py-3">
                     <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Hủy</button>
                     <button type="submit" class="btn btn-primary px-4 fw-bold">
-                        <i class="bi bi-save me-1"></i> Lưu thay đổi CSDL
+                        Lưu thay đổi
                     </button>
                 </div>
             </form>
@@ -375,11 +375,11 @@
 <!-- MODAL 3: XEM CHI TIẾT BẢN SAO VẬT LÝ & MÃ VẠCH (BARCODE) -->
 <!-- ======================================================== -->
 <div class="modal fade" id="bookCopiesModal" tabindex="-1" aria-labelledby="bookCopiesModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden;">
             <div class="modal-header bg-white text-dark py-3 px-4 border-bottom" style="background: #ffffff !important; border-bottom: 1px solid #e2eaf2 !important;">
                 <h5 class="modal-title fw-bold mb-0 text-dark" id="bookCopiesModalLabel" style="color: #163b5c !important;">
-                    <i class="bi bi-upc-scan text-primary me-2"></i>Danh sách bản sao vật lý &amp; Mã vạch lưu thông
+                    Bản sao học liệu
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -399,7 +399,7 @@
                         <thead class="table-light">
                             <tr>
                                 <th style="width: 15%;">Mã bản sao</th>
-                                <th style="width: 25%;">Mã vạch (Barcode)</th>
+                                <th style="width: 25%;">Mã vạch</th>
                                 <th style="width: 25%;">Vị trí kệ</th>
                                 <th style="width: 15%;">Tình trạng</th>
                                 <th style="width: 20%; text-align: center;">Trạng thái kho</th>
@@ -427,7 +427,7 @@
         <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden;">
             <div class="modal-header bg-danger text-white py-3 px-4">
                 <h5 class="modal-title fw-bold mb-0" id="deleteBookModalLabel">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i>Xác nhận xóa học liệu
+                    Xác nhận xóa học liệu
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -438,20 +438,19 @@
 
                 <div class="modal-body p-4">
                     <div class="alert alert-warning py-2 px-3 small mb-3">
-                        <i class="bi bi-info-circle-fill me-1"></i>
-                        Thao tác này sẽ xóa đầu sách và toàn bộ mã vạch bản sao vật lý liên quan khỏi CSDL Thư viện UTC.
+                        Xóa học liệu và toàn bộ bản sao liên quan.
                     </div>
                     <div class="text-dark">
-                        Bạn có chắc chắn muốn xóa học liệu:
+                        Xóa học liệu này?
                         <div class="fw-bold text-danger mt-1 fs-6" id="deleteBookTitle"></div>
                     </div>
                     <div class="mt-2 text-muted small" id="deleteBookWarning"></div>
                 </div>
 
                 <div class="modal-footer bg-light px-4 py-3">
-                    <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Hủy bỏ</button>
+                    <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Hủy</button>
                     <button type="submit" class="btn btn-danger px-4 fw-bold">
-                        <i class="bi bi-trash-fill me-1"></i> Xác nhận xóa khỏi CSDL
+                        Xóa học liệu
                     </button>
                 </div>
             </form>
@@ -474,7 +473,7 @@
             btn.addEventListener("click", function () {
                 var bookId = this.getAttribute("data-id");
 
-                copiesTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-3 text-muted">Đang tải danh sách bản sao từ CSDL...</td></tr>';
+                copiesTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-3 text-muted">Đang tải bản sao...</td></tr>';
                 copiesModal.show();
 
                 fetch('/Admin/Catalog/GetCopies/' + bookId)
@@ -561,7 +560,7 @@
 
                 var warningEl = document.getElementById("deleteBookWarning");
                 if (available < total) {
-                    warningEl.innerHTML = '<span class="text-danger fw-bold"><i class="bi bi-shield-exclamation me-1"></i> Cảnh báo: Hiện có ' + (total - available) + ' bản sao đang được sinh viên mượn. Hệ thống sẽ từ chối xóa để bảo vệ toàn vẹn CSDL.</span>';
+                    warningEl.innerHTML = '<span class="text-danger fw-bold"><i class="bi bi-shield-exclamation me-1"></i> Có ' + (total - available) + ' bản đang mượn. Không thể xóa.</span>';
                 } else {
                     warningEl.textContent = 'Tất cả ' + total + ' bản sao hiện đang có sẵn trong kho, đủ điều kiện để xóa.';
                 }

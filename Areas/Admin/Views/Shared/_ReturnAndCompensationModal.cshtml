@@ -1,17 +1,17 @@
-﻿<!-- ========================================================================= -->
+<!-- ========================================================================= -->
 <!-- MODAL DÙNG CHUNG: XÁC NHẬN TRẢ SÁCH HOẶC BỒI THƯỜNG (MẤT / HỎNG SÁCH) -->
 <!-- ========================================================================= -->
 <div class="modal fade" id="returnAndCompensationModal" tabindex="-1" aria-labelledby="rcModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
             <div class="modal-header bg-white text-dark py-3 px-4 border-bottom" style="background: #ffffff !important; border-bottom: 1px solid #e2eaf2 !important;">
                 <h5 class="modal-title fw-bold mb-0 text-dark" id="rcModalLabel" style="color: #163b5c !important;">
-                    <i class="bi bi-arrow-left-right text-primary me-2"></i>Xác nhận trả sách &amp; Bồi thường sự cố
+                    Trả sách / bồi thường
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <form action="/Admin/Circulation/ProcessReturnOrCompensation" method="post" id="formReturnAndCompensation">
+            <form action="/Admin/Circulation/ProcessReturnOrCompensation" method="post" id="formReturnAndCompensation" class="d-flex flex-column overflow-hidden">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="maBD" id="rcInputMaBD" value="" />
                 <input type="hidden" name="maGD" id="rcInputMaGD" value="" />
@@ -27,15 +27,15 @@
                                     <div class="fw-bold text-navy fs-6 mb-1" id="rcDisplayTenSach">Tên sách</div>
                                     <div class="text-muted small">
                                         Bạn đọc: <strong id="rcDisplayHoTen" class="text-dark"></strong> &middot; 
-                                        Mã SV/GV: <span id="rcDisplayMaBD" class="font-monospace"></span>
+                                        Mã bạn đọc: <span id="rcDisplayMaBD" class="font-monospace"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-5 text-md-end">
                                     <div id="rcOverdueBadge" class="badge-status badge-overdue d-none" style="font-size: 12.5px;">
-                                        <i class="bi bi-exclamation-triangle-fill me-1"></i> Quá hạn (Phạt 100.000 đ)
+                                        Quá hạn (Phạt 100.000 đ)
                                     </div>
                                     <div id="rcOnTimeBadge" class="badge-status badge-available d-none" style="font-size: 12.5px;">
-                                        <i class="bi bi-check-circle-fill me-1"></i> Còn hạn mượn (0 đ)
+                                        Còn hạn
                                     </div>
                                 </div>
                             </div>
@@ -45,7 +45,7 @@
                     <!-- LỰA CHỌN PHƯƠNG ÁN XỬ LÝ -->
                     <div class="mb-4">
                         <label class="form-label fw-bold text-navy mb-2">
-                            <span class="badge bg-primary me-1">Bước 1</span> Chọn hình thức xử lý tài liệu <span class="text-danger">*</span>
+                            Cách xử lý <span class="text-danger">*</span>
                         </label>
                         
                         <!-- Radio 1: Trả sách bình thường -->
@@ -53,10 +53,10 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="actionType" id="radioNormalReturn" value="NormalReturn" checked>
                                 <label class="form-check-label fw-bold text-navy" for="radioNormalReturn">
-                                    <i class="bi bi-check-circle text-success me-1"></i> 1. Trả sách bình thường (Tài liệu nguyên vẹn)
+                                    Trả sách
                                 </label>
                                 <div class="text-muted small mt-1 ms-1">
-                                    Thu hồi sách vật lý nhập lại kho. Nếu quá hạn sẽ thu tiền phạt nộp muộn <strong>100.000 VNĐ</strong> và tự động ghi vào <em>Quỹ thu nộp muộn</em>.
+                                    Nhận lại sách, thu phí quá hạn nếu có.
                                 </div>
                             </div>
                         </div>
@@ -66,17 +66,17 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="actionType" id="radioCompensation" value="Compensation">
                                 <label class="form-check-label fw-bold text-danger" for="radioCompensation">
-                                    <i class="bi bi-exclamation-octagon text-danger me-1"></i> 2. Báo mất / hỏng sách &amp; Bồi thường
+                                    Mất hoặc hỏng
                                 </label>
                                 <div class="text-muted small mt-1 ms-1">
-                                    Áp dụng khi bạn đọc làm mất hoặc hư hại học liệu. Bạn đọc có thể lựa chọn <strong>Đền sách mới</strong> hoặc <strong>Đền tiền</strong> theo quy chế thư viện.
+                                    Chọn đền sách mới hoặc đền tiền.
                                 </div>
                             </div>
 
                             <!-- KHỐI LỰA CHỌN BỒI THƯỜNG (Chỉ mở khi chọn Bồi thường) -->
                             <div id="compensationDetailSection" class="mt-3 ps-3 border-top pt-3 d-none">
                                 <div class="fw-bold text-dark mb-2" style="font-size: 13.5px;">
-                                    <i class="bi bi-arrow-return-right text-primary me-1"></i> Lựa chọn hình thức bồi thường:
+                                    Bồi thường
                                 </div>
 
                                 <div class="row g-2 mb-3">
@@ -89,7 +89,7 @@
                                                     Đền sách mới
                                                 </label>
                                                 <div class="text-muted small" style="font-size: 11.5px;">
-                                                    Bạn đọc tự mua và bàn giao lại 01 cuốn sách mới tương đương để bổ sung vào kho. (Tiền đền bù: <strong>0 đ</strong>).
+                                                    Bàn giao một cuốn sách mới tương đương.
                                                 </div>
                                             </div>
                                         </div>
@@ -101,10 +101,10 @@
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="compensationType" id="compCash" value="Cash">
                                                 <label class="form-check-label fw-bold text-dark" for="compCash">
-                                                    Đền tiền bồi thường
+                                                    Đền tiền
                                                 </label>
                                                 <div class="text-muted small" style="font-size: 11.5px;">
-                                                    Nộp tiền bồi hoàn tài liệu vào quỹ thư viện (ghi vào <em>Quỹ thu đền bù mất/hỏng</em>).
+                                                    Nhập số tiền theo biên bản.
                                                 </div>
                                             </div>
                                         </div>
@@ -113,20 +113,20 @@
 
                                 <!-- Ô nhập số tiền đền bù (Khi chọn Đền tiền) -->
                                 <div id="cashAmountSection" class="mb-3 d-none">
-                                    <label class="form-label-utc" for="inputCompensationAmount">Mức tiền bồi thường tài liệu (VNĐ):</label>
+                                    <label class="form-label-utc" for="inputCompensationAmount">Tiền bồi thường</label>
                                     <div class="input-group">
                                         <input type="number" class="form-control form-control-utc" id="inputCompensationAmount" 
-                                               name="compensationAmount" value="150000" step="10000" min="0" />
+                                               name="compensationAmount" value="150000" step="1" min="1" max="100000000" />
                                         <span class="input-group-text bg-light">VNĐ</span>
                                     </div>
-                                    <div class="form-text small text-muted">Định mức theo giá bìa học liệu hoặc biên bản sự cố UTC (Mặc định: 150.000 VNĐ).</div>
+                                    <div class="form-text small text-muted">Theo giá bìa hoặc biên bản.</div>
                                 </div>
 
                                 <!-- Checkbox nộp quá hạn kèm theo nếu có quá hạn -->
                                 <div id="overdueCheckboxSection" class="form-check mb-2 d-none">
                                     <input class="form-check-input" type="checkbox" name="payOverdue" id="rcPayOverdueCheck" value="true" checked>
                                     <label class="form-check-label text-dark small fw-medium" for="rcPayOverdueCheck">
-                                        Thu kèm phí phạt quá hạn <span class="badge bg-danger">100.000 VNĐ</span> (hạch toán vào Quỹ nộp muộn)
+                                        Thu phí quá hạn <strong>100.000 đ</strong>
                                     </label>
                                 </div>
                             </div>
@@ -134,35 +134,35 @@
                     </div>
 
                     <!-- BẢNG TÍNH TOÁN TỔNG THU TÀI CHÍNH THỜI GIAN THỰC -->
-                    <div class="card border-0 p-3 mb-3" style="background-color: #ecfdf5; border-radius: 8px; border-left: 4px solid #10b981 !important;">
+                    <div class="card border-0 p-3 mb-3" style="background-color: #f8fafc; border-radius: 8px;">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <span class="fw-bold text-dark">
-                                <i class="bi bi-wallet2 text-success me-1"></i> TỔNG TIỀN PHẢI NỘP / THU VÀO CSDL:
+                                Tổng cần thu
                             </span>
                             <span id="rcTotalAmount" class="fs-5 fw-bold text-success font-monospace">0 VNĐ</span>
                         </div>
                         <div class="row g-2 small border-top pt-2 text-muted">
                             <div class="col-sm-6">
-                                &bull; Phạt nộp muộn: <strong id="rcOverdueAmount" class="text-warning-emphasis">0 VNĐ</strong>
+                                Phạt quá hạn: <strong id="rcOverdueAmount" class="text-warning-emphasis">0 VNĐ</strong>
                             </div>
                             <div class="col-sm-6">
-                                &bull; Đền bù mất/hỏng: <strong id="rcCompensationAmount" class="text-danger">0 VNĐ</strong>
+                                Bồi thường: <strong id="rcCompensationAmount" class="text-danger">0 VNĐ</strong>
                             </div>
                         </div>
                     </div>
 
                     <!-- Ghi chú nghiệp vụ -->
                     <div>
-                        <label class="form-label-utc mb-1" for="inputNote">Ghi chú phiếu thu / Biên bản (Tùy chọn):</label>
+                        <label class="form-label-utc mb-1" for="inputNote">Ghi chú (không bắt buộc)</label>
                         <input type="text" class="form-control form-control-utc" id="inputNote" name="note" 
-                               placeholder="VD: Trả sách đúng hẹn / Báo mất khi đi học quân sự / Đã nộp bản mới..." />
+                               placeholder="Nội dung ghi chú" />
                     </div>
                 </div>
 
                 <div class="modal-footer bg-light px-4 py-3">
-                    <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Hủy bỏ</button>
+                    <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Hủy</button>
                     <button type="submit" class="btn btn-utc-primary px-4 fw-bold">
-                        <i class="bi bi-check2-circle me-1"></i> Xác nhận thực hiện &amp; Lưu CSDL
+                        Xác nhận
                     </button>
                 </div>
             </form>
@@ -260,6 +260,12 @@
                 if (cashAmountSection) cashAmountSection.classList.remove("d-none");
             } else {
                 if (cashAmountSection) cashAmountSection.classList.add("d-none");
+            }
+
+            if (inputCompensationAmount) {
+                var needsCash = !!(compCash && radioCompensation && compCash.checked && radioCompensation.checked);
+                inputCompensationAmount.disabled = !needsCash;
+                inputCompensationAmount.required = needsCash;
             }
 
             if (currentIsOverdue && radioCompensation && radioCompensation.checked) {

@@ -95,9 +95,7 @@ namespace BTL_LTWEB.Areas.Admin.ViewModels
         public string? SearchKeyword { get; set; }
         public string? SelectedStatus { get; set; }
         public List<CirculationTransactionItem> Transactions { get; set; } = new();
-        public List<ReaderListItemViewModel> AvailableReaders { get; set; } = new();
         public List<BookItem> AvailableBooks { get; set; } = new();
-        public Dictionary<string, List<string>> ReaderBorrowedTitlesMap { get; set; } = new();
     }
 
     public class OverdueItemViewModel

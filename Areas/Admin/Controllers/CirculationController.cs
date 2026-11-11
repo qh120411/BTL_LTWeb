@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using BTL_LTWEB.Areas.Admin.Services;
 using BTL_LTWEB.Areas.Admin.ViewModels;
 using BTL_LTWEB.Areas.Reader.Services;
@@ -51,44 +52,31 @@ public class CirculationController : AdminBaseController
             }
         }
 
-        var readers = _readerService.GetReaders(null, null).Readers;
-        var books = _catalogService.GetAll().ToList();
+        var books = _catalogService.GetAll().Where(b => !b.IsOnline).ToList();
 
         // Đồng bộ số bản sao sẵn có chính xác từ SQL Server
         try
         {
-            var availableCounts = _dbContext.BanSaos
-                .Where(bs => bs.TrangThai == "Có sẵn")
-                .GroupBy(bs => bs.MaTaiLieu)
-                .ToDictionary(g => g.Key, g => g.Count());
-
-            foreach (var b in books)
-            {
-                if (availableCounts.TryGetValue(b.Id, out int realCount))
-                {
-                    b.AvailableCopies = realCount;
-                }
-                else
-                {
-                    b.AvailableCopies = 0;
-                }
-            }
+            CatalogSqlBridge.RefreshAvailability(books, _dbContext);
         }
         catch { }
-
-        var borrowedMap = _readerService.GetReaderBorrowedTitlesMap();
 
         var model = new CirculationIndexViewModel
         {
             SearchKeyword = search,
             SelectedStatus = status ?? "Tất cả trạng thái",
             Transactions = loans,
-            AvailableReaders = readers,
-            AvailableBooks = books,
-            ReaderBorrowedTitlesMap = borrowedMap
+            AvailableBooks = books
         };
 
         return View(model);
+    }
+
+    [HttpGet]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+    public async Task<IActionResult> SearchReaders(string? query, CancellationToken cancellationToken)
+    {
+        return Json(new { readers = await _readerService.SearchBorrowReadersAsync(query, cancellationToken) });
     }
 
     // Xử lý tạo giao dịch mượn tài liệu học liệu mới tại quầy
@@ -102,11 +90,11 @@ public class CirculationController : AdminBaseController
             return RedirectToAction(nameof(Index));
         }
 
-        var success = _readerService.BorrowBook(maBD, bookId, out string bookTitle, out string errorMessage);
+        var success = _readerService.BorrowBook(maBD, bookId, out string bookTitle, out string errorMessage, User.FindFirstValue(ClaimTypes.NameIdentifier));
         if (success)
         {
-            string dueDateStr = DateTime.Today.AddYears(1).ToString("dd/MM/yyyy");
-            TempData["SuccessMessage"] = $"Tạo giao dịch mượn thành công! Bạn đọc mã '{maBD}' đã mượn cuốn sách '{bookTitle}'. Thời hạn mượn luôn là 1 năm (Hạn trả: {dueDateStr}). CSDL đã được cập nhật.";
+            string dueDateStr = BTL_LTWEB.Common.LoanTermPolicy.TryGetDueDate(DateOnly.FromDateTime(DateTime.Today), out var dueDate) ? dueDate.ToString("dd/MM/yyyy") : "theo phiếu mượn";
+            TempData["SuccessMessage"] = $"Tạo giao dịch mượn thành công! Bạn đọc mã '{maBD}' đã mượn cuốn sách '{bookTitle}'. Hạn trả cuối kỳ: {dueDateStr}.";
         }
         else
         {
@@ -127,7 +115,7 @@ public class CirculationController : AdminBaseController
             return RedirectToAction(nameof(Index));
         }
 
-        var success = _readerService.ReturnBook(maBD, maGD, out string bookTitle, out decimal reducedFine);
+        var success = _readerService.ReturnBook(maBD, maGD, out string bookTitle, out decimal reducedFine, User.FindFirstValue(ClaimTypes.NameIdentifier));
         if (success)
         {
             string fineMsg = reducedFine > 0 
@@ -174,7 +162,7 @@ public class CirculationController : AdminBaseController
             compAmount, 
             payOverdue, 
             note, 
-            out string message);
+            out string message, User.FindFirstValue(ClaimTypes.NameIdentifier));
 
         if (success)
         {

@@ -1,3 +1,4 @@
+using System.Security.Claims;
 ﻿using Microsoft.AspNetCore.Mvc;
 using BTL_LTWEB.Areas.Admin.Services;
 using BTL_LTWEB.Areas.Admin.ViewModels;
@@ -76,7 +77,7 @@ public class ReaderController : AdminBaseController
             return RedirectToAction(nameof(Index));
         }
 
-        var success = _readerService.ReturnBook(maBD, maGD, out string bookTitle, out decimal reducedFine);
+        var success = _readerService.ReturnBook(maBD, maGD, out string bookTitle, out decimal reducedFine, User.FindFirstValue(ClaimTypes.NameIdentifier));
         if (success)
         {
             string fineMsg = reducedFine > 0 ? " Toàn bộ tiền phạt quá hạn của sách đã được tất toán (0 VNĐ)." : "";
@@ -101,11 +102,11 @@ public class ReaderController : AdminBaseController
             return RedirectToAction(nameof(Index));
         }
 
-        var success = _readerService.BorrowBook(maBD, bookId, out string bookTitle, out string errorMessage);
+        var success = _readerService.BorrowBook(maBD, bookId, out string bookTitle, out string errorMessage, User.FindFirstValue(ClaimTypes.NameIdentifier));
         if (success)
         {
-            string dueDateStr = DateTime.Today.AddYears(1).ToString("dd/MM/yyyy");
-            TempData["SuccessMessage"] = $"Xác nhận cho mượn thành công cuốn sách '{bookTitle}'! Thời hạn mượn luôn là 1 năm (Hạn trả: {dueDateStr}). CSDL đã được cập nhật.";
+            string dueDateStr = BTL_LTWEB.Common.LoanTermPolicy.TryGetDueDate(DateOnly.FromDateTime(DateTime.Today), out var dueDate) ? dueDate.ToString("dd/MM/yyyy") : "theo phiếu mượn";
+            TempData["SuccessMessage"] = $"Xác nhận cho mượn thành công cuốn sách '{bookTitle}'! Hạn trả cuối kỳ: {dueDateStr}.";
         }
         else
         {

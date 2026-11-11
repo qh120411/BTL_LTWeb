@@ -1,4 +1,4 @@
-﻿@model BTL_LTWEB.Areas.Admin.ViewModels.IncidentIndexViewModel
+@model BTL_LTWEB.Areas.Admin.ViewModels.IncidentIndexViewModel
 @{
     ViewData["Title"] = "Mất / hỏng & Bồi thường";
     ViewBag.ActiveMenu = "Incident";
@@ -8,10 +8,10 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h1 class="admin-page-title mb-1">Sổ quỹ tài chính &amp; Bồi thường sự cố (@Model.Receipts.Count giao dịch)</h1>
+        <h1 class="admin-page-title mb-1">Thu phí &amp; bồi thường</h1>
     </div>
     <a href="/Admin/Circulation" class="btn btn-utc-primary">
-        <i class="bi bi-journal-arrow-down me-1"></i> Quầy lưu thông mượn trả
+        <i class="bi bi-journal-arrow-down me-1"></i> Mượn trả
     </a>
 </div>
 
@@ -19,19 +19,19 @@
 <div class="row g-3 mb-4">
     <div class="col-md-4">
         <div class="kpi-card kpi-card-success">
-            <div class="kpi-title text-success fw-bold">Tổng quỹ tiền đã thu</div>
+            <div class="kpi-title text-success fw-bold">Tổng đã thu</div>
             <div class="kpi-value text-success">@Model.TongThu.ToString("N0") đ</div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="kpi-card kpi-card-warning">
-            <div class="kpi-title text-warning fw-bold">Thu từ phạt nộp muộn</div>
+            <div class="kpi-title text-warning fw-bold">Phạt quá hạn</div>
             <div class="kpi-value text-warning">@Model.ThuNopMuon.ToString("N0") đ</div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="kpi-card kpi-card-danger">
-            <div class="kpi-title text-danger fw-bold">Thu từ đền bù mất / hỏng</div>
+            <div class="kpi-title text-danger fw-bold">Bồi thường mất / hỏng</div>
             <div class="kpi-value text-danger">@Model.ThuDenBu.ToString("N0") đ</div>
         </div>
     </div>
@@ -43,7 +43,7 @@
 <form method="get" asp-action="Index" class="mb-4">
     <div class="row g-3">
         <div class="col-md-7">
-            <label class="form-label-utc">Tra cứu phiếu thu / Bạn đọc</label>
+            <label class="form-label-utc">Tìm phiếu thu</label>
             <div class="input-group">
                 <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
                 <input type="text" name="search" class="form-control form-control-utc border-start-0" 
@@ -60,7 +60,7 @@
             <label class="form-label-utc">Khoản thu</label>
             <select name="type" class="form-select form-control-utc" onchange="this.form.submit()">
                 <option value="Tất cả" selected="@(Model.SelectedType == "Tất cả")">Tất cả khoản thu</option>
-                <option value="Nộp muộn" selected="@(Model.SelectedType == "Nộp muộn")">Phạt nộp muộn (Quá hạn)</option>
+                <option value="Nộp muộn" selected="@(Model.SelectedType == "Nộp muộn")">Phạt quá hạn</option>
                 <option value="Đền bù mất/hỏng" selected="@(Model.SelectedType == "Đền bù mất/hỏng")">Đền bù mất / hỏng sách</option>
             </select>
         </div>
@@ -75,7 +75,7 @@
                 <tr style="background-color: #f1f8fc;">
                     <th style="width: 13%;">Mã phiếu</th>
                     <th style="width: 20%;">Người nộp tiền</th>
-                    <th style="width: 25%;">Tài liệu / Sách liên quan</th>
+                    <th style="width: 25%;">Sách</th>
                     <th style="width: 14%;">Khoản thu</th>
                     <th style="width: 14%;">Hình thức xử lý</th>
                     <th style="width: 14%; text-align: right;">Số tiền thu</th>
@@ -87,7 +87,7 @@
                     <tr>
                         <td colspan="6" class="py-4 text-center text-muted">
                             <i class="bi bi-inbox fs-3 d-block mb-1 text-secondary"></i>
-                            Không có giao dịch tài chính nào phù hợp với bộ lọc hiện tại.
+                            Chưa có phiếu thu phù hợp.
                         </td>
                     </tr>
                 }
@@ -98,11 +98,11 @@
                         <tr>
                             <td>
                                 <strong class="font-monospace text-primary">@r.MaPhieuThu</strong>
-                                <div class="text-muted" style="font-size: 11px;">@r.NgayThu</div>
+                                <div class="text-muted" style="font-size: 14px;">@r.NgayThu</div>
                             </td>
                             <td>
                                 <div class="fw-bold text-navy">@r.NguoiNop</div>
-                                <div class="text-muted small">MSV/GV: <code>@r.MaBD</code></div>
+                                <div class="text-muted small">Mã bạn đọc: <code>@r.MaBD</code></div>
                             </td>
                             <td>
                                 <div class="fw-medium text-dark text-truncate" style="max-width: 240px;" title="@r.TenSach">
@@ -110,7 +110,7 @@
                                 </div>
                                 @if (!string.IsNullOrWhiteSpace(r.GhiChu))
                                 {
-                                    <div class="text-muted" style="font-size: 11.5px;">
+                                    <div class="text-muted" style="font-size: 14px;">
                                         <em>@r.GhiChu</em>
                                     </div>
                                 }
@@ -118,19 +118,19 @@
                             <td>
                                 @if (r.LoaiKhoanThu.Contains("Nộp muộn"))
                                 {
-                                    <span class="badge bg-warning text-dark px-2 py-1" style="font-size: 11.5px;">
+                                    <span class="badge bg-warning text-dark px-2 py-1" style="font-size: 14px;">
                                         <i class="bi bi-clock-history me-1"></i> Nộp muộn
                                     </span>
                                 }
                                 else
                                 {
-                                    <span class="badge bg-danger text-white px-2 py-1" style="font-size: 11.5px;">
+                                    <span class="badge bg-danger text-white px-2 py-1" style="font-size: 14px;">
                                         <i class="bi bi-shield-exclamation me-1"></i> Đền bù mất/hỏng
                                     </span>
                                 }
                             </td>
                             <td>
-                                <span class="badge bg-light text-dark border px-2 py-1" style="font-size: 11.5px;">
+                                <span class="badge bg-light text-dark border px-2 py-1" style="font-size: 14px;">
                                     @r.HinhThucXuLy
                                 </span>
                             </td>

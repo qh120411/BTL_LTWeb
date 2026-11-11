@@ -3,7 +3,7 @@
   "info": {
     "title": "UTC Library API",
     "version": "1.0",
-    "description": "Tài liệu 11 endpoint JSON hiện có của Thư viện UTC. Ví dụ là dữ liệu minh họa.\n\nAPI dùng camelCase, chưa có envelope lỗi chung. Các endpoint hiện chưa bắt buộc đăng nhập/vai trò; cookie UTC_Library_Auth_v3 chỉ nhận diện phiên cho /api/auth/profile. POST mượn/trả ghi dữ liệu thật.\n\nDữ liệu kết hợp SQL Server, catalog JSON và hồ sơ JSON; fallback không bảo đảm đồng bộ mọi nguồn. Controller chưa có [ApiController] và không kiểm tra ModelState, vì vậy không bảo đảm mọi JSON sai kiểu/cú pháp được chuẩn hóa thành lỗi validation. Lỗi chưa xử lý có thể trả 500 với nội dung tùy môi trường.\n\nHướng dẫn và ví dụ PowerShell: docs/API.md trong repository."
+    "description": "Tài liệu 11 endpoint JSON của Thư viện UTC. Danh mục công khai; dữ liệu bạn đọc, mượn trả và thống kê yêu cầu cookie cán bộ. POST mượn/trả yêu cầu anti-forgery token và dùng cùng nghiệp vụ SQL với Admin; không tạo giao dịch dự phòng trong JSON. Swagger UI tự gửi token từ trang /ApiDoc. Ví dụ là dữ liệu minh họa; POST thực sự ghi dữ liệu. Xem docs/API.md."
   },
   "servers": [
     {
@@ -123,7 +123,7 @@
         ],
         "operationId": "getBooks",
         "summary": "Tìm kiếm và phân trang học liệu",
-        "description": "Chỉ hỗ trợ keyword, page, pageSize. total là số kết quả trước phân trang. Không có kết quả trả data=[]. page<=0 tính offset như trang 1 nhưng phản hồi page gốc; pageSize<=0 cho danh sách rỗng. Chưa có giới hạn pageSize phía server. Dữ liệu từ catalog JSON/bộ nhớ.",
+        "description": "Danh mục công khai; hỗ trợ keyword, page và pageSize. Server chuẩn hóa page >= 1, pageSize trong khoảng 1–100. Không có kết quả trả data=[].",
         "responses": {
           "200": {
             "description": "Danh sách học liệu.",
@@ -169,7 +169,7 @@
             "name": "page",
             "in": "query",
             "required": false,
-            "description": "Nên gửi số >=1; server chưa validation giá trị này.",
+            "description": "Trang, được chuẩn hóa tối thiểu 1.",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -180,7 +180,7 @@
             "name": "pageSize",
             "in": "query",
             "required": false,
-            "description": "Nên gửi số >0; server chưa giới hạn kích thước trang.",
+            "description": "Kích thước trang, được chuẩn hóa trong khoảng 1–100.",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -326,11 +326,31 @@
                       "tacGia": "Bùi Việt Hà",
                       "coverImage": "/images/covers/sach_01.jpg",
                       "ngayMuon": "10/11/2026",
-                      "hanTra": "10/11/2027",
+                      "hanTra": "31/12/2026",
                       "trangThai": "Còn hạn",
                       "isQuaHan": false
                     }
                   ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Cần đăng nhập tài khoản cán bộ.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Không đủ quyền cán bộ.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -347,6 +367,11 @@
               "example": "242630923"
             }
           }
+        ],
+        "security": [
+          {
+            "staffCookie": []
+          }
         ]
       }
     },
@@ -357,7 +382,7 @@
         ],
         "operationId": "borrowBook",
         "summary": "Mượn một đầu sách (ghi dữ liệu)",
-        "description": "Thao tác thực sự ghi SQL/JSON. Nhánh SQL: tối đa 5 cuốn cho sinh viên, 10 cho mã GV/CB, chặn trùng đầu sách, hạn trả một năm; tự tạo bản sao nếu hết bản sẵn có. Các lỗi khác ngoài vượt giới hạn/trùng đầu sách chuyển fallback hồ sơ JSON. Fallback chỉ kiểm tra trùng tiêu đề, chưa áp dụng quota SQL. Không có idempotency; không tự gửi lại sau timeout. API hiện chưa kiểm tra đăng nhập/vai trò hoặc anti-forgery token.",
+        "description": "Cán bộ tạo phiếu qua SQL: tối đa 5 sách cho sinh viên, 10 cho GV/CB; chặn trùng đầu sách, hết bản, học liệu điện tử và bạn đọc không tồn tại. Kỳ 1 từ 11/08–31/12, hạn 31/12 cùng năm; kỳ 2 từ 02/01–31/05, hạn 31/05 cùng năm. Không ghi mượn dự phòng vào JSON.",
         "responses": {
           "200": {
             "description": "Mượn thành công; maGD fallback chỉ có trong message.",
@@ -386,7 +411,7 @@
             }
           },
           "400": {
-            "description": "Thiếu dữ liệu, vượt giới hạn hoặc trùng đầu sách.",
+            "description": "Dữ liệu không hợp lệ, vi phạm nghiệp vụ hoặc thiếu/sai anti-forgery token.",
             "content": {
               "application/json": {
                 "schema": {
@@ -403,26 +428,39 @@
                       "success": false,
                       "message": "Bạn đọc đã mượn đầu sách này rồi!"
                     }
+                  },
+                  "outsideSemester": {
+                    "value": {
+                      "success": false,
+                      "message": "Chỉ cho mượn trong học kỳ: 11/08–31/12 hoặc 02/01–31/05."
+                    }
                   }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "SQL không mượn được và sách không có trong catalog.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                },
-                "example": {
-                  "message": "Không tìm thấy sách ID: 999999"
                 }
               }
             }
           },
           "415": {
             "description": "Content-Type không được JSON input formatter hỗ trợ."
+          },
+          "401": {
+            "description": "Cần đăng nhập tài khoản cán bộ.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Không đủ quyền cán bộ.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -434,7 +472,23 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "staffCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "RequestVerificationToken",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Anti-forgery token của cùng phiên cookie; Swagger UI tự thêm."
+          }
+        ]
       }
     },
     "/api/circulation/return": {
@@ -444,7 +498,7 @@
         ],
         "operationId": "returnBook",
         "summary": "Trả sách (ghi dữ liệu)",
-        "description": "Bỏ trống maGD để chọn giao dịch đầu tiên từ SQL rồi hồ sơ. Nếu SQL trả thất bại, fallback tìm maGD trong hồ sơ; nếu không khớp vẫn trả cuốn đầu tiên. 200 không đảm bảo mã yêu cầu được xử lý đúng; đối chiếu message và dữ liệu sau thao tác. Không có 404 riêng cho giao dịch. API hiện chưa kiểm tra đăng nhập/vai trò hoặc anti-forgery token.",
+        "description": "Bắt buộc maBD và maGD. Chỉ trả giao dịch đang mượn thuộc bạn đọc này, không tự chọn sách khác. Trả lặp bị từ chối. Tiền phạt và trạng thái sách được lưu cùng transaction SQL.",
         "responses": {
           "200": {
             "description": "Đã xử lý trả sách theo nhánh SQL hoặc fallback.",
@@ -473,7 +527,7 @@
             }
           },
           "400": {
-            "description": "Thiếu maBD hoặc không có sách để trả sau khi SQL thất bại.",
+            "description": "Dữ liệu không hợp lệ, vi phạm nghiệp vụ hoặc thiếu/sai anti-forgery token.",
             "content": {
               "application/json": {
                 "schema": {
@@ -497,6 +551,26 @@
           },
           "415": {
             "description": "Content-Type không được JSON input formatter hỗ trợ."
+          },
+          "401": {
+            "description": "Cần đăng nhập tài khoản cán bộ.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Không đủ quyền cán bộ.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -508,7 +582,23 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "staffCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "RequestVerificationToken",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Anti-forgery token của cùng phiên cookie; Swagger UI tự thêm."
+          }
+        ]
       }
     },
     "/api/readers": {
@@ -543,6 +633,26 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Cần đăng nhập tài khoản cán bộ.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Không đủ quyền cán bộ.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -565,6 +675,11 @@
               "example": "Sinh viên"
             }
           }
+        ],
+        "security": [
+          {
+            "staffCookie": []
+          }
         ]
       }
     },
@@ -575,21 +690,14 @@
         ],
         "operationId": "getReaderDetail",
         "summary": "Lấy chi tiết bạn đọc",
-        "description": "Ưu tiên mã sinh viên; thử MaBanDoc nếu ID là số, không tìm trực tiếp SoThe. Nhánh tra cứu khóa số truy vấn SQL ngoài try/catch, có thể lỗi 500 khi SQL offline trước khi fallback. GetProfile có thể tạo hồ sơ mặc định cho mã chưa biết: 200 fallback không xác nhận có bạn đọc trong SQL. Schema data và borrowTransactions khác nhau theo mode.",
+        "description": "Tra cứu theo mã sinh viên hoặc khóa số MaBanDoc. Không tạo hồ sơ mẫu. Mã không tồn tại trả 404; mất kết nối SQL có thể trả 500.",
         "responses": {
           "200": {
             "description": "Chi tiết SQL hoặc hồ sơ fallback.",
             "content": {
               "application/json": {
                 "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/SqlReaderResponse"
-                    },
-                    {
-                      "$ref": "#/components/schemas/OfflineReaderResponse"
-                    }
-                  ]
+                  "$ref": "#/components/schemas/SqlReaderResponse"
                 }
               }
             }
@@ -622,6 +730,26 @@
           },
           "500": {
             "description": "Lỗi SQL chưa được xử lý trong nhánh tra cứu khóa số; nội dung tùy môi trường, không đảm bảo JSON."
+          },
+          "401": {
+            "description": "Cần đăng nhập tài khoản cán bộ.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Không đủ quyền cán bộ.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -634,6 +762,11 @@
               "type": "string",
               "example": "242630923"
             }
+          }
+        ],
+        "security": [
+          {
+            "staffCookie": []
           }
         ]
       }
@@ -656,8 +789,33 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Cần đăng nhập tài khoản cán bộ.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Không đủ quyền cán bộ.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "staffCookie": []
+          }
+        ]
       }
     }
   },
@@ -691,8 +849,7 @@
           "mode": {
             "type": "string",
             "enum": [
-              "SQL_Server",
-              "Offline_Fallback"
+              "SQL_Server"
             ]
           },
           "message": {
@@ -1047,7 +1204,7 @@
           },
           "hanTra": {
             "type": "string",
-            "example": "10/11/2027"
+            "example": "31/12/2026"
           },
           "trangThai": {
             "type": "string"
@@ -1107,13 +1264,14 @@
           },
           "maGD": {
             "type": "string",
-            "nullable": true,
+            "nullable": false,
             "example": "GD261110-001",
-            "description": "Tùy chọn. Bỏ trống để chọn giao dịch đầu tiên; xem lưu ý fallback của endpoint."
+            "description": "Mã giao dịch đang mượn của đúng bạn đọc, bắt buộc."
           }
         },
         "required": [
-          "maBD"
+          "maBD",
+          "maGD"
         ]
       },
       "ReaderListItem": {
@@ -1187,7 +1345,7 @@
           },
           "ngayHenTra": {
             "type": "string",
-            "example": "10/11/2027"
+            "example": "31/12/2026"
           },
           "ngayTra": {
             "type": "string",
@@ -1356,7 +1514,7 @@
           "mode": {
             "type": "string",
             "enum": [
-              "Offline_Fallback"
+              "SQL_Server"
             ]
           },
           "data": {
@@ -1502,6 +1660,14 @@
             }
           }
         }
+      }
+    },
+    "securitySchemes": {
+      "staffCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "UTC_Library_Auth_v3",
+        "description": "Đăng nhập tài khoản cán bộ qua /Account/Login."
       }
     }
   }

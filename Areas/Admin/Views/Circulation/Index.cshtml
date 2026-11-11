@@ -3,46 +3,28 @@
     ViewData["Title"] = "Quản lý mượn trả & Lưu thông";
     ViewBag.ActiveMenu = "Circulation";
     string todayStr = DateTime.Today.ToString("dd/MM/yyyy");
-    string dueDateStr = DateTime.Today.AddYears(1).ToString("dd/MM/yyyy");
+    bool canBorrow = BTL_LTWEB.Common.LoanTermPolicy.TryGetDueDate(DateOnly.FromDateTime(DateTime.Today), out var dueDate);
+    string dueDateStr = canBorrow ? dueDate.ToString("dd/MM/yyyy") : "Ngoài học kỳ";
 }
 
 <div class="admin-breadcrumb">THƯ VIỆN UTC / QUẢN TRỊ</div>
-
-<!-- Thông báo thao tác thành công / thất bại -->
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 mb-4" role="alert" >
-        <div class="d-flex align-items-center">
-            <i class="bi bi-check-circle-fill fs-5 me-2 text-success"></i>
-            <div>
-                <strong>Thao tác thành công:</strong> @TempData["SuccessMessage"]
-            </div>
-        </div>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
-
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0 mb-4" role="alert" >
-        <div class="d-flex align-items-center">
-            <i class="bi bi-exclamation-triangle-fill fs-5 me-2 text-danger"></i>
-            <div>
-                <strong>Thông báo lỗi:</strong> @TempData["ErrorMessage"]
-            </div>
-        </div>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
 
 <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
     <div>
         <h1 class="admin-page-title mb-1">Quản lý lưu thông &amp; Mượn trả (@Model.Transactions.Count giao dịch)</h1>
     </div>
+    <button type="button" class="btn btn-utc-primary" data-bs-toggle="modal" data-bs-target="#createBorrowModal" disabled="@(!canBorrow)" aria-describedby="@(!canBorrow ? "borrowTermNotice" : null)">
+        Cho mượn sách
+    </button>
     
 </div>
 
 
+
+@if (!canBorrow)
+{
+    <p id="borrowTermNotice" class="text-danger mb-4">@BTL_LTWEB.Common.LoanTermPolicy.BorrowingWindowMessage</p>
+}
 
 <!-- Bộ lọc tìm kiếm & trạng thái -->
 <form method="get" asp-action="Index" class="mb-4">
@@ -75,7 +57,7 @@
                     <th style="width: 13%;">Mã giao dịch</th>
                     <th style="width: 20%;">Bạn đọc</th>
                     <th style="width: 32%;">Tài liệu / Sách học liệu</th>
-                    <th style="width: 12%;">Hạn trả (1 năm)</th>
+                    <th style="width: 12%;">Hạn trả</th>
                     <th style="width: 11%;">Trạng thái</th>
                     <th style="width: 12%; text-align: center;">Thao tác</th>
                 </tr>
@@ -172,57 +154,53 @@
 <!-- MODAL 1: TẠO GIAO DỊCH MƯỢN MỚI TẠI QUẦY -->
 <!-- ========================================== -->
 <div class="modal fade" id="createBorrowModal" tabindex="-1" aria-labelledby="createBorrowModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden;">
             <div class="modal-header bg-white text-dark py-3 px-4 border-bottom" style="background: #ffffff !important; border-bottom: 1px solid #e2eaf2 !important;">
                 <h5 class="modal-title fw-bold mb-0 text-dark" id="createBorrowModalLabel" style="color: #163b5c !important;">
-                    <i class="bi bi-journal-plus text-primary me-2"></i>Tạo giao dịch mượn tài liệu mới
+                    Cho mượn sách
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <form action="/Admin/Circulation/CreateBorrow" method="post" id="formCreateBorrow">
+            <form asp-area="Admin" asp-controller="Circulation" asp-action="CreateBorrow" method="post" id="formCreateBorrow" class="d-flex flex-column overflow-hidden"
+                  data-reader-search-url="@Url.Action("SearchReaders", "Circulation", new { area = "Admin" })"
+                  data-can-borrow="@(canBorrow ? "true" : "false")">
                 @Html.AntiForgeryToken()
                 <div class="modal-body p-4">
                     <!-- Bước 1: Chọn bạn đọc -->
                     <div class="mb-4">
-                        <label class="form-label fw-bold text-navy mb-1" for="selectReader">
-                            <span class="badge bg-primary me-1">Bước 1</span> Chọn bạn đọc / Sinh viên mượn sách <span class="text-danger">*</span>
+                        <label class="form-label fw-bold text-navy mb-1" for="readerSearch">
+                            Bạn đọc <span class="text-danger">*</span>
                         </label>
-                        <select id="selectReader" name="maBD" class="form-select form-control-utc select-searchable" required>
-                            <option value="">-- Chọn sinh viên theo Mã sinh viên / Họ tên / Lớp --</option>
-                            @foreach (var reader in Model.AvailableReaders)
-                            {
-                                <option value="@reader.MaBD" 
-                                        data-name="@reader.HoTen"
-                                        data-class="@reader.LopKhoa"
-                                        data-count="@reader.SoSachDangMuon"
-                                        data-quahan="@reader.SoSachQuaHan">
-                                    @reader.MaBD - @reader.HoTen (@reader.LopKhoa) [Đang mượn: @reader.SoSachDangMuon/@(reader.Nhom == "Giảng viên" ? "10" : "5") cuốn]
-                                </option>
-                            }
-                        </select>
+                        <div id="readerSearchContainer" class="reader-search">
+                            <input type="text" id="readerSearch" class="form-control form-control-utc"
+                                   placeholder="Nhập tên hoặc mã bạn đọc" maxlength="100" autocomplete="off" spellcheck="false" required
+                                   role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="readerSearchResults"
+                                   aria-describedby="readerSearchStatus" />
+                            <input type="hidden" id="selectedReaderId" name="maBD" />
+                            <div id="readerSearchResults" class="reader-search-results" role="listbox" aria-label="Bạn đọc phù hợp" hidden></div>
+                            <div id="readerSearchStatus" class="form-text" role="status" aria-live="polite"></div>
+                        </div>
 
                         <!-- Card tóm tắt tình trạng bạn đọc -->
                         <div id="readerInfoCard" class="card mt-2 border bg-light d-none" style="border-radius: 8px;">
                             <div class="card-body p-3">
                                 <div class="row align-items-center">
                                     <div class="col-md-7">
-                                        <div class="fw-bold text-navy" id="infoReaderName">Đỗ Văn Đạt</div>
+                                        <div class="fw-bold text-navy" id="infoReaderName">—</div>
                                         <div class="text-muted small">
-                                            Mã bạn đọc: <strong id="infoReaderId" class="text-dark">242630923</strong> &middot; 
-                                            Lớp: <span id="infoReaderClass">CLC CNTT 1 K65</span>
+                                            Mã bạn đọc: <strong id="infoReaderId" class="text-dark">—</strong> &middot;
+                                            Lớp: <span id="infoReaderClass">—</span>
                                         </div>
                                     </div>
                                     <div class="col-md-5 text-md-end mt-2 mt-md-0">
-                                        <span id="infoReaderBadge" class="badge bg-primary px-2 py-1">Đang mượn 3/5 cuốn</span>
-                                        <div id="infoReaderStatus" class="small text-muted mt-1">Trạng thái: Hoạt động</div>
+                                        <span id="infoReaderBadge" class="badge bg-primary px-2 py-1">—</span>
                                     </div>
                                 </div>
                                 <!-- Cảnh báo nếu bạn đọc đã mượn 5 cuốn -->
                                 <div id="readerLimitAlert" class="alert alert-danger py-2 px-3 mt-2 mb-0 small d-none" role="alert">
-                                    <i class="bi bi-exclamation-octagon-fill me-1"></i>
-                                    <strong>Cảnh báo hạn mức:</strong> Bạn đọc này đã mượn tối đa <strong>5/5 cuốn sách</strong> theo quy định. Vui lòng hoàn tất trả sách trước khi tạo giao dịch mượn mới!
+                                    Đã đủ hạn mức <strong>5/5 cuốn</strong>. Vui lòng trả bớt sách.
                                 </div>
                             </div>
                         </div>
@@ -231,10 +209,10 @@
                     <!-- Bước 2: Chọn sách cần mượn -->
                     <div class="mb-4">
                         <label class="form-label fw-bold text-navy mb-1" for="selectBook">
-                            <span class="badge bg-primary me-1">Bước 2</span> Chọn tài liệu / Sách học liệu cần mượn <span class="text-danger">*</span>
+                            Sách cần mượn <span class="text-danger">*</span>
                         </label>
                         <select id="selectBook" name="bookId" class="form-select form-control-utc" required disabled>
-                            <option value="">-- Vui lòng chọn bạn đọc ở Bước 1 trước --</option>
+                            <option value="">-- Chọn bạn đọc trước --</option>
                             @foreach (var book in Model.AvailableBooks)
                             {
                                 <option value="@book.Id"
@@ -243,11 +221,11 @@
                                         data-cover="@book.CoverImage"
                                         data-major="@book.MajorName"
                                         data-copies="@book.AvailableCopies">
-                                    [@book.MajorName] @book.Title - @book.Authors (Kho: @book.AvailableCopies bản sẵn có)
+                                    @book.Title
                                 </option>
                             }
                         </select>
-                        <div class="form-text small text-muted">Quy tắc nghiệp vụ: Mỗi sinh viên chỉ được mượn <strong>1 cuốn / 1 đầu sách</strong>. Các sách đã mượn sẽ tự động bị khóa.</div>
+                        <div class="form-text small text-muted">Mỗi đầu sách mượn 1 bản.</div>
 
                         <!-- Card xem trước sách được chọn -->
                         <div id="bookPreviewCard" class="card mt-2 border d-none" style="border-radius: 8px; background-color: #f8fafc;">
@@ -255,13 +233,12 @@
                                 <div class="d-flex align-items-start gap-3">
                                     <img id="previewBookCover" src="/images/covers/sach_01.jpg" alt="Bìa sách" 
                                          class="rounded border shadow-sm flex-shrink-0" 
-                                         style="width: 65px; height: 90px; object-fit: cover;" />
+                                         style="width: 52px; height: 72px; object-fit: cover;" />
                                     <div class="flex-grow-1">
-                                        <span id="previewBookMajor" class="badge bg-secondary mb-1" style="font-size: 11px;">CÔNG NGHỆ THÔNG TIN</span>
                                         <h6 id="previewBookTitle" class="fw-bold text-navy mb-1" style="font-size: 14.5px;">Tên sách</h6>
                                         <div class="text-muted small mb-1">Tác giả: <span id="previewBookAuthor" class="text-dark">Tác giả</span></div>
                                         <div class="small">
-                                            Tình trạng kho: <span id="previewBookStock" class="badge bg-success">4 bản sẵn có</span>
+                                            Còn: <span id="previewBookStock" class="badge bg-success">—</span>
                                         </div>
                                     </div>
                                 </div>
@@ -269,35 +246,17 @@
                         </div>
                     </div>
 
-                    <!-- Bước 3: Điều khoản thời hạn lưu thông -->
-                    <div class="card border-0 bg-info bg-opacity-10 p-3" style="border-radius: 8px; border-left: 4px solid #0079ba !important;">
-                        <div class="fw-bold text-navy mb-2 d-flex align-items-center gap-2">
-                            <i class="bi bi-shield-check text-primary"></i> Điều khoản &amp; Thời hạn lưu thông (Cố định UTC)
-                        </div>
-                        <div class="row g-2 small text-dark">
-                            <div class="col-sm-4">
-                                <div class="text-muted">Ngày mượn:</div>
-                                <div class="fw-bold text-primary">@todayStr</div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="text-muted">Thời hạn mượn:</div>
-                                <div class="fw-bold text-success">1 năm (365 ngày)</div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="text-muted">Hạn trả quy định:</div>
-                                <div class="fw-bold text-danger">@dueDateStr</div>
-                            </div>
-                        </div>
-                        <div class="mt-2 text-muted" style="font-size: 11.5px;">
-                            * Nếu quá hạn trả, hệ thống sẽ tự động chuyển trạng thái "Đang quá hạn" và tính phí phạt <strong>100.000 VNĐ / cuốn</strong> theo quy chế thư viện.
-                        </div>
-                    </div>
+                    <dl class="borrow-dates mb-2">
+                        <div><dt>Ngày mượn</dt><dd>@todayStr</dd></div>
+                        <div><dt>Hạn trả</dt><dd>@dueDateStr</dd></div>
+                    </dl>
+                    <p class="form-text mb-0">Phạt quá hạn: 100.000 đ/cuốn.</p>
                 </div>
 
                 <div class="modal-footer bg-light px-4 py-3">
-                    <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Hủy bỏ</button>
+                    <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Hủy</button>
                     <button type="submit" id="btnConfirmBorrow" class="btn btn-utc-primary px-4 fw-bold" disabled>
-                        <i class="bi bi-check2-circle me-1"></i> Xác nhận tạo phiếu mượn
+                        Cho mượn
                     </button>
                 </div>
             </form>
@@ -311,137 +270,5 @@
 <!-- Modal dùng chung đã được nhúng tại _AdminLayout -->
 
 @section Scripts {
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Bản đồ danh sách sách đã mượn của từng bạn đọc từ CSDL
-        var readerBorrowedMap = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ReaderBorrowedTitlesMap));
-
-        var selectReader = document.getElementById("selectReader");
-        var selectBook = document.getElementById("selectBook");
-        var readerInfoCard = document.getElementById("readerInfoCard");
-        var infoReaderName = document.getElementById("infoReaderName");
-        var infoReaderId = document.getElementById("infoReaderId");
-        var infoReaderClass = document.getElementById("infoReaderClass");
-        var infoReaderBadge = document.getElementById("infoReaderBadge");
-        var readerLimitAlert = document.getElementById("readerLimitAlert");
-
-        var bookPreviewCard = document.getElementById("bookPreviewCard");
-        var previewBookCover = document.getElementById("previewBookCover");
-        var previewBookMajor = document.getElementById("previewBookMajor");
-        var previewBookTitle = document.getElementById("previewBookTitle");
-        var previewBookAuthor = document.getElementById("previewBookAuthor");
-        var previewBookStock = document.getElementById("previewBookStock");
-
-        var btnConfirmBorrow = document.getElementById("btnConfirmBorrow");
-
-        // 1. Khi chọn Bạn đọc
-        selectReader.addEventListener("change", function () {
-            var selectedOpt = selectReader.options[selectReader.selectedIndex];
-            var mabd = selectReader.value;
-
-            if (!mabd) {
-                readerInfoCard.classList.add("d-none");
-                selectBook.disabled = true;
-                selectBook.value = "";
-                bookPreviewCard.classList.add("d-none");
-                btnConfirmBorrow.disabled = true;
-                return;
-            }
-
-            var name = selectedOpt.getAttribute("data-name");
-            var lop = selectedOpt.getAttribute("data-class");
-            var count = parseInt(selectedOpt.getAttribute("data-count") || "0");
-            var quahan = parseInt(selectedOpt.getAttribute("data-quahan") || "0");
-
-            infoReaderName.textContent = name;
-            infoReaderId.textContent = mabd;
-            infoReaderClass.textContent = lop;
-            var maxLimit = (mabd.toUpperCase().startsWith("GV") || mabd.toUpperCase().startsWith("CB")) ? 10 : 5;
-            infoReaderBadge.textContent = "Đang mượn " + count + "/" + maxLimit + " cuốn";
-
-            if (count >= maxLimit) {
-                infoReaderBadge.className = "badge bg-danger px-2 py-1";
-                var limitSpan = readerLimitAlert.querySelector("strong:nth-of-type(2)");
-                if (limitSpan) limitSpan.textContent = maxLimit + "/" + maxLimit + " cuốn sách";
-                readerLimitAlert.classList.remove("d-none");
-                selectBook.disabled = true;
-                selectBook.value = "";
-                bookPreviewCard.classList.add("d-none");
-                btnConfirmBorrow.disabled = true;
-                readerInfoCard.classList.remove("d-none");
-                return;
-            } else {
-                infoReaderBadge.className = "badge bg-primary px-2 py-1";
-                readerLimitAlert.classList.add("d-none");
-                selectBook.disabled = false;
-                readerInfoCard.classList.remove("d-none");
-            }
-
-            // Lọc danh mục sách theo quy tắc: 1 bạn đọc chỉ được mượn 1 cuốn / 1 đầu sách
-            var borrowedTitles = readerBorrowedMap[mabd] || [];
-            var bookOptions = selectBook.options;
-
-            for (var i = 1; i < bookOptions.length; i++) {
-                var opt = bookOptions[i];
-                var title = opt.getAttribute("data-title") || "";
-                var copies = parseInt(opt.getAttribute("data-copies") || "0");
-
-                var isBorrowed = borrowedTitles.some(function(t) {
-                    return t.toLowerCase().trim() === title.toLowerCase().trim();
-                });
-
-                var baseText = opt.textContent.replace(/ \[(ĐÃ MƯỢN|HẾT SÁCH TRONG KHO)\].*$/, "");
-
-                if (isBorrowed) {
-                    opt.disabled = true;
-                    opt.textContent = baseText + " [ĐÃ MƯỢN ĐẦU SÁCH NÀY]";
-                } else if (copies <= 0) {
-                    opt.disabled = true;
-                    opt.textContent = baseText + " [HẾT SÁCH TRONG KHO]";
-                } else {
-                    opt.disabled = false;
-                    opt.textContent = baseText;
-                }
-            }
-
-            // Reset lựa chọn sách
-            selectBook.value = "";
-            bookPreviewCard.classList.add("d-none");
-            btnConfirmBorrow.disabled = true;
-        });
-
-        // 2. Khi chọn Sách
-        selectBook.addEventListener("change", function () {
-            var selectedOpt = selectBook.options[selectBook.selectedIndex];
-            var bookId = selectBook.value;
-
-            if (!bookId) {
-                bookPreviewCard.classList.add("d-none");
-                btnConfirmBorrow.disabled = true;
-                return;
-            }
-
-            var title = selectedOpt.getAttribute("data-title");
-            var author = selectedOpt.getAttribute("data-author");
-            var cover = selectedOpt.getAttribute("data-cover");
-            var major = selectedOpt.getAttribute("data-major");
-            var copies = selectedOpt.getAttribute("data-copies");
-
-            previewBookTitle.textContent = title;
-            previewBookAuthor.textContent = author;
-            previewBookCover.src = cover || "/images/covers/sach_01.jpg";
-            previewBookMajor.textContent = major;
-            previewBookStock.textContent = copies + " bản sẵn có";
-
-            bookPreviewCard.classList.remove("d-none");
-
-            // Kiểm tra nút xác nhận
-            var selectedReaderOpt = selectReader.options[selectReader.selectedIndex];
-            var mabd = selectReader.value;
-            var count = parseInt(selectedReaderOpt ? selectedReaderOpt.getAttribute("data-count") || "0" : "0");
-            var maxLimit = (mabd.toUpperCase().startsWith("GV") || mabd.toUpperCase().startsWith("CB")) ? 10 : 5;
-            btnConfirmBorrow.disabled = (!bookId || count >= maxLimit);
-        });
-    });
-</script>
+    <script src="~/js/circulation-borrow.js" asp-append-version="true"></script>
 }

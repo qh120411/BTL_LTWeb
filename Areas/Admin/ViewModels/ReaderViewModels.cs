@@ -3,6 +3,18 @@ using BTL_LTWEB.Areas.Reader.Models;
 
 namespace BTL_LTWEB.Areas.Admin.ViewModels;
 
+public class BorrowReaderSearchItem
+{
+    [System.Text.Json.Serialization.JsonIgnore]
+    public int ReaderId { get; set; }
+    public string MaBD { get; set; } = string.Empty;
+    public string HoTen { get; set; } = string.Empty;
+    public string LopKhoa { get; set; } = string.Empty;
+    public int SoSachDangMuon { get; set; }
+    public int GioiHanSach { get; set; }
+    public List<string> BorrowedTitles { get; set; } = new();
+}
+
 public class ReaderListItemViewModel
 {
     public string MaBD { get; set; } = string.Empty;

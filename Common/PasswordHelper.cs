@@ -31,7 +31,7 @@ namespace BTL_LTWEB.Common
                 return true;
 
             // 2. Dự phòng trường hợp dữ liệu cũ lưu dạng thường hoặc linh hoạt
-            if (string.Equals(inputPassword, storedHash, StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(inputPassword, storedHash, StringComparison.Ordinal))
                 return true;
 
             return false;

@@ -16,6 +16,7 @@
     </style>
 </head>
 <body>
+    <div hidden>@Html.AntiForgeryToken()</div>
     <div id="swagger-ui"></div>
 
     <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
@@ -27,6 +28,12 @@
                 dom_id: '#swagger-ui',
                 deepLinking: true,
                 docExpansion: "list",
+                requestInterceptor: function(request) {
+                    if (request.method.toUpperCase() === 'POST') {
+                        request.headers['RequestVerificationToken'] = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                    }
+                    return request;
+                },
                 presets: [
                     SwaggerUIBundle.presets.apis,
                     SwaggerUIStandalonePreset

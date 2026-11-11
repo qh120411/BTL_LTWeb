@@ -1,6 +1,8 @@
-# Tài liệu API — Thư viện UTC
+- Danh mục học liệu, health và phiên đăng nhập được đọc công khai. Danh sách bạn đọc, hồ sơ, giao dịch và thống kê yêu cầu tài khoản cán bộ; chưa đăng nhập trả `401`, sai quyền trả `403`. POST mượn/trả còn yêu cầu cookie anti-forgery và header `RequestVerificationToken`; token lấy từ trang `/ApiDoc` hoặc một form cùng phiên. Swagger UI tự thêm header này. Phiên đăng nhập không cấp quyền cho bạn đọc tự mượn/trả qua API.
 
 Tài liệu mô tả 11 endpoint JSON đang có trong `Controllers/ApiDocController.cs`, đối chiếu với các service và model hiện tại. Các route MVC trả về HTML không thuộc phạm vi này.
+
+Ô chọn bạn đọc trong quầy mượn trả dùng endpoint riêng `GET /Admin/Circulation/SearchReaders?query=...`, yêu cầu phiên đăng nhập cán bộ có quyền vào trang mượn trả. Tên có/không dấu hoặc mã bạn đọc được lọc tại SQL, tối đa 10 kết quả; từ khóa sau khi bỏ khoảng trắng đầu/cuối phải dài 2–100 ký tự. Phản hồi `{ readers: [...] }` gồm `maBD`, `hoTen`, `lopKhoa`, `soSachDangMuon`, `gioiHanSach`, `borrowedTitles`; không cache. Đây là endpoint nội bộ của giao diện Admin, chưa đưa vào Swagger của `ApiDocController`.
 
 ## Chạy và mở tài liệu
 
@@ -116,7 +118,7 @@ Ví dụ phản hồi `200` (dữ liệu minh họa):
 
 `total` là tổng kết quả trước phân trang; không có kết quả hoặc vượt trang trả `data: []`. `status` là `Có sẵn` khi `availableCopies > 0`, ngược lại là `Hết sách`. Tên trường tác giả tại đây là `author`, trong chi tiết sách là `authors`.
 
-Hiện API chỉ nhận ba query trên, chưa nhận bộ lọc `category`, `major`, `language`, `availability` của giao diện tra cứu. Chưa kiểm tra giới hạn `pageSize`; client nên gửi `page >= 1`, `pageSize > 0`. Khi `page <= 0`, action tính offset như trang 1 nhưng vẫn phản hồi giá trị `page` đã gửi; `pageSize <= 0` cho danh sách rỗng, không tự trả `400`.
+API chỉ nhận ba query trên. Server chuẩn hóa `page >= 1`, `pageSize` trong khoảng 1–100; metadata phản ánh giá trị sau chuẩn hóa. Offset dùng phép tính không tràn số.
 
 ## 4. Chi tiết học liệu
 
@@ -171,7 +173,7 @@ Không có học liệu hoặc bản sao vẫn trả `200` với `copies: []`, k
       "tacGia": "Bùi Việt Hà",
       "coverImage": "/images/covers/sach_01.jpg",
       "ngayMuon": "10/11/2026",
-      "hanTra": "10/11/2027",
+      "hanTra": "31/12/2026",
       "trangThai": "Còn hạn",
       "isQuaHan": false
     }
@@ -194,7 +196,8 @@ Ví dụ PowerShell, có ghi dữ liệu:
 
 ```powershell
 $body = @{ maBD = "242630923"; bookId = 1 } | ConvertTo-Json
-Invoke-RestMethod -Method Post -Uri "http://localhost:5124/api/circulation/borrow" -ContentType "application/json" -Body $body
+# $session là WebRequestSession đã đăng nhập cán bộ; $token lấy từ form của cùng phiên.
+Invoke-RestMethod -WebSession $session -Headers @{ RequestVerificationToken = $token } -Method Post -Uri "http://localhost:5124/api/circulation/borrow" -ContentType "application/json" -Body $body
 ```
 
 Ví dụ `200`:
@@ -207,13 +210,13 @@ Ví dụ `200`:
 }
 ```
 
-- `200`: `mode` là `SQL_Server` hoặc `Offline_Fallback`. Mã giao dịch fallback nằm trong `message`, không có trường `maGD` riêng.
+- `200`: `mode` là `SQL_Server`; giao dịch đã được ghi SQL.
 - `400`: thiếu `maBD`/`bookId <= 0` trả `{ "message": "Vui lòng nhập maBD và bookId." }`; vượt giới hạn hoặc trùng đầu sách trả `{ "success": false, "message": "..." }`.
-- `404`: không tìm thấy sách trong catalog sau khi nhánh SQL không mượn được, trả `{ "message": "Không tìm thấy sách ID: 999999" }`.
+- `400`: sách không hợp lệ, hết bản sẵn có, học liệu điện tử hoặc mã bạn đọc không tồn tại. Không có nhánh ghi mượn dự phòng vào JSON.
 
-Nhánh SQL giới hạn 5 cuốn cho sinh viên, 10 cuốn cho mã bắt đầu bằng `GV`/`CB`, chặn mượn trùng đầu sách, hạn trả một năm. Nếu hết bản sao sẵn có, service hiện tự tạo bản sao mới; không có phản hồi hết kho riêng.
+Nhánh SQL giới hạn 5 cuốn cho sinh viên, 10 cuốn cho mã bắt đầu bằng `GV`/`CB`, chặn mượn trùng đầu sách, hạn trả cuối học kỳ (kỳ 1: mượn 11/08–31/12, hạn 31/12 cùng năm; kỳ 2: mượn 02/01–31/05, hạn 31/05 cùng năm; từ chối tạo phiếu mới ngoài hai khoảng này). Khi xác nhận mượn một đầu sách có trong catalog nhưng chưa có ở SQL, service ghi đầu sách và các bản sao theo tồn kho catalog vào SQL trong cùng transaction với phiếu mượn. Học liệu được đối chiếu theo ISBN/tên, không giả định ID JSON trùng khóa SQL. Nếu hết bản sẵn có, service từ chối mượn; không tự tăng tồn kho. Hồ sơ cán bộ còn thiếu được liên kết với tài khoản quản trị đang lập phiếu.
 
-Controller chuyển sang fallback cho các lỗi SQL/service khác ngoài thông báo vượt giới hạn hoặc trùng đầu sách. Fallback thêm sách vào hồ sơ, hạn trả một năm, giảm số bản sẵn có của catalog xuống tối thiểu 0; nhánh này chỉ kiểm tra trùng tiêu đề, chưa áp dụng giới hạn số sách như SQL. Không tự gửi lại POST sau timeout vì endpoint chưa có cơ chế idempotency.
+Mọi lỗi nghiệp vụ hoặc SQL đều từ chối tạo phiếu; không chuyển sang ghi hồ sơ JSON để bỏ qua kiểm tra. Không tự gửi lại POST sau timeout vì endpoint chưa có khóa idempotency.
 
 ## 8. Trả sách
 
@@ -222,17 +225,17 @@ Controller chuyển sang fallback cho các lỗi SQL/service khác ngoài thông
 | Body | Kiểu | Bắt buộc | Quy tắc |
 | --- | --- | --- | --- |
 | `maBD` | string | Có | Không rỗng/khoảng trắng; được trim |
-| `maGD` | string hoặc null | Không | Mã giao dịch muốn trả; được trim |
+| `maGD` | string | Có | Mã giao dịch đang mượn của đúng bạn đọc; được trim |
 
 ```powershell
 $body = @{ maBD = "242630923"; maGD = "GD261110-001" } | ConvertTo-Json
-Invoke-RestMethod -Method Post -Uri "http://localhost:5124/api/circulation/return" -ContentType "application/json" -Body $body
+# $session là WebRequestSession đã đăng nhập cán bộ; $token lấy từ form của cùng phiên.
+Invoke-RestMethod -WebSession $session -Headers @{ RequestVerificationToken = $token } -Method Post -Uri "http://localhost:5124/api/circulation/return" -ContentType "application/json" -Body $body
 ```
 
-- `200`: `{ "success": true, "mode": "SQL_Server", "message": "..." }` hoặc `mode: "Offline_Fallback"`.
-- `400`: thiếu `maBD` trả `{ "message": "Vui lòng nhập maBD." }`; không có sách trong hồ sơ để trả sau khi SQL không trả được thì trả `{ "success": false, "message": "..." }`.
-- Bỏ trống `maGD`: controller chọn giao dịch đầu tiên của bạn đọc từ ReaderService, sau đó thử sách đầu tiên trong hồ sơ.
-- **Nếu nhánh SQL thất bại và `maGD` không khớp hồ sơ, fallback hiện vẫn trả cuốn đầu tiên trong hồ sơ.** Client không nên xem `200` là bằng chứng giao dịch yêu cầu đã được trả đúng; cần đối chiếu `message` và dữ liệu sau thao tác. Endpoint chưa có lỗi `404` riêng cho mã giao dịch không tồn tại.
+- `200`: `{ "success": true, "mode": "SQL_Server", "message": "..." }`.
+- `400`: thiếu mã bạn đọc/giao dịch, giao dịch không thuộc bạn đọc, đã trả hoặc chưa lưu được.
+- Không tự chọn cuốn khác khi mã không đúng. Trả lặp không thu phí lần nữa. Khoản thu dùng mã cán bộ thật và được lưu cùng giao dịch SQL; phiếu thu JSON chỉ ghi sau khi SQL thành công.
 
 ## 9. Danh sách bạn đọc
 
@@ -252,10 +255,9 @@ Phản hồi `200` là `{ "total": 1, "data": [ReaderListItem] }`, mỗi phần 
 `GET /api/readers/{id}` — ưu tiên truyền mã sinh viên; controller còn thử khóa số `MaBanDoc` nếu chuỗi là số, không tra cứu trực tiếp theo số thẻ `SoThe`.
 
 - `200`, `mode: "SQL_Server"`: `data` là `ReaderDetailViewModel`, gồm `maBD`, `hoTen`, `lopKhoa`, `trangThaiHocTap`, `nhom`, `quyenSuDung`, `gioiHanSach`, `hieuLucQuyen`, `soSachDangMuon`, `soSachQuaHan`, `tongTienPhat`, `borrowTransactions`, `availableBooks`.
-- `200`, `mode: "Offline_Fallback"`: `data` chỉ gồm `maBD`, `hoTen`, `lopKhoa`, `soSachDangMuon`, `borrowTransactions`. Danh sách mượn dùng `BorrowedBookItem`, khác schema `BorrowTransactionViewModel` trong nhánh SQL.
-- `400` nếu action nhận `id` chỉ có khoảng trắng; `404` nếu không lấy được hồ sơ có họ tên.
+- `400` nếu `id` chỉ có khoảng trắng; `404` nếu không có bạn đọc. Không tạo hồ sơ mẫu cho mã không tồn tại.
 
-Lưu ý hành vi hiện tại: nhánh tra cứu khóa số gọi SQL trực tiếp ngoài `try/catch`, nên ID dạng số có thể lỗi `500` khi SQL mất kết nối trước khi tới fallback. `GetProfile` có thể tạo hồ sơ mặc định cho mã chưa biết, vì vậy `200` fallback không chứng minh bạn đọc tồn tại trong SQL, và không thể dựa vào `404` để xác minh mã sinh viên.
+Nhánh tra cứu khóa số vẫn có thể trả `500` nếu SQL mất kết nối. API không dùng hồ sơ JSON để khẳng định mã bạn đọc có tồn tại.
 
 ## 11. Thống kê dashboard
 
@@ -275,7 +277,8 @@ Nếu truy vấn đếm SQL lỗi, service giữ giá trị mặc định 30 đ�
 
 | HTTP | Hành vi |
 | --- | --- |
-| `200` | Thành công theo action; có thể dùng dữ liệu fallback hoặc danh sách rỗng khi SQL lỗi |
+| `200` | Thành công theo action; một số danh sách trả rỗng khi SQL lỗi |
+| `401` / `403` | Chưa đăng nhập cán bộ / không đủ quyền |
 | `400` | Dữ liệu/nghiệp vụ không hợp lệ theo từng POST hoặc ID bạn đọc chỉ chứa khoảng trắng |
 | `404` | Không khớp route hoặc không tìm thấy tài nguyên theo các action có kiểm tra |
 | `415` | POST dùng kiểu nội dung không được JSON input formatter hỗ trợ |

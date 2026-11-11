@@ -8,7 +8,7 @@
         public string TacGia { get; set; } = string.Empty;
         public string CoverImage { get; set; } = string.Empty;
         public DateTime NgayMuon { get; set; }
-        public DateTime HanTra { get; set; } // Quy định mượn luôn là 1 năm: NgayMuon.AddYears(1)
+        public DateTime HanTra { get; set; } // Hạn trả cuối học kỳ theo LoanTermPolicy.
         public bool IsQuaHan { get; set; }
         public int SoNgayQuaHan { get; set; }
         public int SoNgayConLai { get; set; }

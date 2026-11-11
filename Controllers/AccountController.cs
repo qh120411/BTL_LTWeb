@@ -84,7 +84,7 @@ namespace BTL_LTWEB.Controllers
             }
 
             ViewBag.ReturnUrl = returnUrl;
-            return View("~/Views/Home/Index.cshtml");
+            return View("~/Views/Account/Login.cshtml");
         }
 
         [HttpPost]
@@ -96,11 +96,11 @@ namespace BTL_LTWEB.Controllers
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
             {
                 ViewBag.Error = "Vui lòng nhập đầy đủ tài khoản và mật khẩu.";
-                return View("~/Views/Home/Index.cshtml");
+                return View("~/Views/Account/Login.cshtml");
             }
 
             var cleanUser = username.Trim();
-            var cleanPwd = password.Trim();
+            var cleanPwd = password;
 
             // 1. TRUY VẤN TÀI KHOẢN TRỰC TIẾP TỪ BẢNG TaiKhoan TRONG CSDL SQL SERVER
             var account = await _dbContext.TaiKhoans
@@ -117,81 +117,25 @@ namespace BTL_LTWEB.Controllers
                     .FirstOrDefaultAsync(t => t.TenDangNhap == userPrefix);
             }
 
-            // Tự động khởi tạo tài khoản admin nếu CSDL ban đầu chưa có
-            if (account == null && cleanUser.Equals("admin", StringComparison.OrdinalIgnoreCase))
-            {
-                account = new TaiKhoan
-                {
-                    TenDangNhap = "admin",
-                    EmailDangNhap = "admin@utc.edu.vn",
-                    MatKhauHash = PasswordHelper.HashPassword("Admin@123"),
-                    VaiTro = "ADMIN",
-                    TrangThai = "Hoạt động",
-                    NgayTao = DateTime.Now
-                };
-                _dbContext.TaiKhoans.Add(account);
-                await _dbContext.SaveChangesAsync();
-            }
-
             if (account == null)
             {
                 ViewBag.Error = $"Tài khoản '{cleanUser}' không tồn tại trong hệ thống Thư viện UTC!";
-                return View("~/Views/Home/Index.cshtml");
+                return View("~/Views/Account/Login.cshtml");
             }
 
             // 2. XÁC THỰC MẬT KHẨU THÔNG QUA HÀM BĂM SHA-256 (BẢO VỆ AN TOÀN TUYỆT ĐỐI)
             bool isPasswordCorrect = PasswordHelper.VerifyPassword(cleanPwd, account.MatKhauHash);
 
-            // Kiểm tra quy tắc dự phòng linh hoạt
-            if (!isPasswordCorrect)
-            {
-                // Kiểm tra sinh viên: Tên + Mã sinh viên (hoặc 123456)
-                if (account.MaBanDocNavigation != null || Students.ContainsKey(account.TenDangNhap))
-                {
-                    if (Students.TryGetValue(account.TenDangNhap, out var stInfo))
-                    {
-                        string expectedPwd = $"{stInfo.FirstName}{account.TenDangNhap}";
-                        string lastWord = stInfo.FullName.Trim().Split(' ').Last();
-                        string expectedPwdWithAccent = $"{lastWord}{account.TenDangNhap}";
-
-                        if (cleanPwd.Equals(expectedPwd, StringComparison.OrdinalIgnoreCase) ||
-                            cleanPwd.Equals(expectedPwdWithAccent, StringComparison.OrdinalIgnoreCase) ||
-                            cleanPwd.Equals("123456", StringComparison.OrdinalIgnoreCase) ||
-                            cleanPwd.Equals(account.TenDangNhap, StringComparison.OrdinalIgnoreCase) ||
-                            cleanPwd.Equals(stInfo.FirstName, StringComparison.OrdinalIgnoreCase))
-                        {
-                            isPasswordCorrect = true;
-                            // Cập nhật lại mật khẩu hash SHA-256 chuẩn vào CSDL
-                            account.MatKhauHash = PasswordHelper.HashPassword(expectedPwd);
-                            await _dbContext.SaveChangesAsync();
-                        }
-                    }
-                }
-                // Kiểm tra Quản trị viên (Admin tối cao)
-                else if (account.VaiTro == "ADMIN" || account.TenDangNhap.Equals("admin", StringComparison.OrdinalIgnoreCase))
-                {
-                    if (cleanPwd.Equals("Admin@123", StringComparison.OrdinalIgnoreCase) ||
-                        cleanPwd.Equals("admin", StringComparison.OrdinalIgnoreCase) ||
-                        cleanPwd.Equals("123456", StringComparison.OrdinalIgnoreCase) ||
-                        cleanPwd.Equals("admin123", StringComparison.OrdinalIgnoreCase))
-                    {
-                        isPasswordCorrect = true;
-                        account.MatKhauHash = PasswordHelper.HashPassword("Admin@123");
-                        await _dbContext.SaveChangesAsync();
-                    }
-                }
-                // Kiểm tra Cán bộ nhân viên khác
-                else if (cleanPwd.Equals("123456", StringComparison.OrdinalIgnoreCase) ||
-                         (account.MaNhanVienNavigation?.MaSoNhanVien != null && cleanPwd.Equals(account.MaNhanVienNavigation.MaSoNhanVien, StringComparison.OrdinalIgnoreCase)))
-                {
-                    isPasswordCorrect = true;
-                }
-            }
-
             if (!isPasswordCorrect)
             {
                 ViewBag.Error = "Mật khẩu không chính xác! Vui lòng kiểm tra lại.";
-                return View("~/Views/Home/Index.cshtml");
+                return View("~/Views/Account/Login.cshtml");
+            }
+
+            if (!AccountStatus.IsActive(account.TrangThai))
+            {
+                ViewBag.Error = "Tài khoản đang bị khóa. Vui lòng liên hệ thư viện.";
+                return View("~/Views/Account/Login.cshtml");
             }
 
             // Cập nhật thời điểm đăng nhập cuối cùng vào SQL Server
@@ -286,41 +230,13 @@ namespace BTL_LTWEB.Controllers
             }
         }
 
-        // Đăng nhập nhanh SSO Microsoft / Email UTC (Mặc định tài khoản Đỗ Văn Đạt - 242630923)
+        // Do not impersonate a demo reader when Microsoft authentication is not configured.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LoginWithMicrosoft()
+        public IActionResult LoginWithMicrosoft()
         {
-            var studentId = "242630923";
-            var account = await _dbContext.TaiKhoans
-                .Include(t => t.MaBanDocNavigation)
-                .FirstOrDefaultAsync(t => t.TenDangNhap == studentId);
-
-            string fullName = account?.MaBanDocNavigation?.HoTen ?? "Đỗ Văn Đạt";
-
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, studentId),
-                new Claim(ClaimTypes.Name, fullName),
-                new Claim(ClaimTypes.Role, "Reader"),
-                new Claim(ClaimTypes.Role, "READER"),
-                new Claim(ClaimTypes.Email, $"{studentId}@utc.edu.vn"),
-                new Claim("Class", "K65.CLCCNTT1")
-            };
-
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var authProperties = new AuthenticationProperties
-            {
-                IsPersistent = true,
-                ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7)
-            };
-
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(identity),
-                authProperties);
-
-            return RedirectToAction("Index", "Home", new { area = "Reader" });
+            ViewBag.Error = "Đăng nhập Microsoft chưa được cấu hình. Vui lòng dùng tài khoản thư viện.";
+            return View("~/Views/Account/Login.cshtml");
         }
 
         [HttpGet]

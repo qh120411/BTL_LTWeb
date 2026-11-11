@@ -1008,3 +1008,17 @@
 .profile-alert-success i {
     color: var(--utc-success, #668d7b) !important;
 }
+.profile-page-wrapper .profile-section-text {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+.profile-page-wrapper .profile-table thead th,
+.profile-page-wrapper .profile-table .col-info-name,
+.profile-page-wrapper .profile-input-field,
+.profile-page-wrapper .student-data-label {
+    font-size: 14px;
+    line-height: 1.5;
+}

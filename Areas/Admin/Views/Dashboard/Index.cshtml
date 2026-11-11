@@ -1,4 +1,4 @@
-﻿@model BTL_LTWEB.Areas.Admin.ViewModels.DashboardViewModel
+@model BTL_LTWEB.Areas.Admin.ViewModels.DashboardViewModel
 @{
     ViewData["Title"] = "Tổng quan";
     ViewBag.ActiveMenu = "Dashboard";
@@ -66,7 +66,7 @@
             <tbody>
                 <tr>
                     <td class="fw-medium text-navy">
-                        <i class="bi bi-clock-history text-danger me-2"></i> Lượt mượn quá hạn (quy định 1 năm)
+                        <i class="bi bi-clock-history text-danger me-2"></i> Lượt mượn quá hạn (theo học kỳ)
                     </td>
                     <td>
                         <span class="badge-status badge-overdue" style="font-size: 12.5px;">
@@ -153,7 +153,7 @@
     <div class="admin-table-card shadow-sm border" style="border-radius: 8px; overflow: hidden;">
         <div class="p-3 bg-white border-bottom d-flex justify-content-between align-items-center">
             <span class="fw-bold" style="color: var(--utc-navy); font-size: 15px;">
-                <i class="bi bi-receipt me-1 text-success"></i> Giao dịch thu tiền gần đây (Từ CSDL)
+                <i class="bi bi-receipt me-1 text-success"></i> Khoản thu gần đây
             </span>
             <a href="/Admin/Incident" class="small text-brand fw-medium">Xem tất cả (@Model.RecentReceipts.Count phiếu) &rarr;</a>
         </div>
@@ -236,7 +236,7 @@
 <div class="admin-table-card mb-4">
     <div class="p-3 bg-white border-bottom d-flex justify-content-between align-items-center">
         <span class="fw-bold" style="color: var(--utc-navy); font-size: 16px;">
-            <i class="bi bi-arrow-left-right me-1 text-primary"></i> Giao dịch mượn trả gần đây (Từ CSDL)
+            <i class="bi bi-arrow-left-right me-1 text-primary"></i> Mượn trả gần đây
         </span>
         <a href="/Admin/Circulation" class="small text-brand fw-medium">Xem tất cả (@Model.DangMuon giao dịch) &rarr;</a>
     </div>
@@ -247,7 +247,7 @@
                     <th style="width: 14%;">Mã GD</th>
                     <th style="width: 24%;">Bạn đọc</th>
                     <th style="width: 28%;">Tài liệu / Sách</th>
-                    <th style="width: 15%;">Hạn trả (1 năm)</th>
+                    <th style="width: 15%;">Hạn trả</th>
                     <th style="width: 19%;">Trạng thái</th>
                 </tr>
             </thead>

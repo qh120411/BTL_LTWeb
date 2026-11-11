@@ -23,12 +23,9 @@ namespace BTL_LTWEB.Areas.Reader.Controllers
 
         public IActionResult Details(int? id)
         {
-            var bookId = id ?? 1;
-            var book = _catalogService.GetById(bookId);
-            if (book == null)
-            {
-                book = _catalogService.GetAll().FirstOrDefault();
-            }
+            if (!id.HasValue) return RedirectToAction("Index", "Search");
+            var book = _catalogService.GetById(id.Value);
+            if (book == null) return NotFound();
 
             return View(book);
         }

@@ -15,7 +15,7 @@
             <h1 class="admin-page-title mb-0">Tài khoản &amp; phân quyền</h1>
             @if (Model.IsCurrentUserSuperAdmin)
             {
-                <span class="badge" style="background: #e0f2fe; color: #0284c7; font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 20px; border: 1px solid #bae6fd;">
+                <span class="badge" style="background: #e0f2fe; color: #0284c7; font-size: 14px; font-weight: 600; padding: 5px 10px; border-radius: 20px; border: 1px solid #bae6fd;">
                     <i class="bi bi-shield-fill-check me-1"></i> Admin tối cao
                 </span>
             }
@@ -46,7 +46,7 @@
         <div>
             <div class="fw-bold" style="font-size: 14px;">Chế độ chỉ xem phân quyền</div>
             <div class="small" style="font-size: 13px;">
-                Bạn đang đăng nhập với tài khoản <strong>@Model.CurrentUsername</strong>. Theo quy định bảo mật hệ thống: <strong>Chỉ Quản trị viên tối cao (admin) mới có quyền thay đổi phân quyền và thêm mới tài khoản cán bộ.</strong>
+                Chỉ tài khoản <strong>admin</strong> được thêm cán bộ và sửa quyền.
             </div>
         </div>
     </div>
@@ -109,7 +109,7 @@
                             </strong>
                             @if (s.IsSuperAdminAccount)
                             {
-                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle ms-1" style="font-size: 10px;" title="Tài khoản Quản trị viên cấp cao nhất">
+                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle ms-1" style="font-size: 14px;" title="Tài khoản Quản trị viên cấp cao nhất">
                                     <i class="bi bi-star-fill"></i> Tối cao
                                 </span>
                             }
@@ -122,7 +122,7 @@
                                 </div>
                                 <div>
                                     <div class="fw-semibold text-dark" style="font-size: 14px;">@s.HoTen</div>
-                                    <div class="text-muted" style="font-size: 11.5px;">@s.Email</div>
+                                    <div class="text-muted" style="font-size: 14px;">@s.Email</div>
                                 </div>
                             </div>
                         </td>
@@ -130,7 +130,7 @@
                             <span class="text-secondary small font-monospace">@s.TenDangNhap</span>
                             @if (s.IsCurrentLoggedInUser)
                             {
-                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle ms-1" style="font-size: 10px;">
+                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle ms-1" style="font-size: 14px;">
                                     <i class="bi bi-person-fill"></i> Bạn
                                 </span>
                             }
@@ -164,7 +164,7 @@
                             @if (s.IsCurrentLoggedInUser)
                             {
                                 <!-- Quy tắc: Không tự sửa được chính mình -->
-                                <span class="badge bg-light text-secondary border px-2 py-1" style="font-size: 11.5px; cursor: not-allowed;" title="Bạn không thể tự sửa quyền của chính mình">
+                                <span class="badge bg-light text-secondary border px-2 py-1" style="font-size: 14px; cursor: not-allowed;" title="Bạn không thể tự sửa quyền của chính mình">
                                     <i class="bi bi-lock-fill text-muted me-1"></i>Chính bạn
                                 </span>
                             }
@@ -172,15 +172,16 @@
                             {
                                 <!-- Quy tắc: Chỉ admin tối cao mới sửa quyền được các cán bộ khác -->
                                 <button type="button" class="btn btn-sm btn-outline-primary px-2 py-1" 
-                                        style="border-radius: 8px; font-size: 12.5px; font-weight: 500;"
-                                        onclick="openEditRoleModal('@s.MaTaiKhoan', '@s.MaNV', '@s.HoTen', '@s.VaiTroCode', '@s.TenDangNhap')">
+                                        style="border-radius: 8px; font-size: 14px; font-weight: 500;"
+                                        data-account-id="@s.MaTaiKhoan" data-staff-code="@s.MaNV" data-staff-name="@s.HoTen" data-role="@s.VaiTroCode" data-login="@s.TenDangNhap"
+                                        onclick="openEditRoleModal(this.dataset.accountId, this.dataset.staffCode, this.dataset.staffName, this.dataset.role, this.dataset.login)">
                                     <i class="bi bi-pencil-square me-1"></i>Sửa quyền
                                 </button>
                             }
                             else
                             {
                                 <!-- Không có quyền chỉnh sửa -->
-                                <span class="badge bg-light text-muted border px-2 py-1" style="font-size: 11.5px; cursor: not-allowed;" title="Chỉ Quản trị viên tối cao (admin) mới có quyền chỉnh sửa quyền cán bộ">
+                                <span class="badge bg-light text-muted border px-2 py-1" style="font-size: 14px; cursor: not-allowed;" title="Chỉ Quản trị viên tối cao (admin) mới có quyền chỉnh sửa quyền cán bộ">
                                     <i class="bi bi-shield-lock-fill text-secondary me-1"></i>Khóa sửa
                                 </span>
                             }
@@ -201,52 +202,48 @@
     </table>
 </div>
 
-<div class="admin-table-note">
-    <i class="bi bi-info-circle-fill text-primary"></i>
-    <span>Mỗi tài khoản được cấp quyền truy cập vào các phân hệ nghiệp vụ tương ứng theo tiêu chuẩn quản trị Thư viện UTC. Chỉ Quản trị viên tối cao mới được cấp hoặc thay đổi quyền.</span>
-</div>
-
 <!-- Modal Thêm cán bộ (Chỉ Quản trị viên tối cao mới thực hiện được) -->
 <div class="modal fade" id="addStaffModal" tabindex="-1" aria-labelledby="addStaffModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 20px; border: 1px solid #e2eef8; box-shadow: 0 20px 45px rgba(2, 132, 199, 0.16);">
             <div class="modal-header bg-white text-dark py-3 px-4 border-bottom" style="background: #ffffff !important; border-bottom: 1px solid #e2eaf2 !important;">
                 <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2" id="addStaffModalLabel">
-                    <i class="bi bi-person-plus-fill text-primary"></i> Thêm tài khoản cán bộ thư viện
+                    Thêm cán bộ
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
                 <form id="addStaffForm" onsubmit="submitAddStaff(event)">
+                    @Html.AntiForgeryToken()
                     <div class="mb-3">
-                        <label class="form-label-utc">Mã cán bộ (Mã NV) <span class="text-danger">*</span></label>
-                        <input type="text" id="newStaffMa" class="form-control form-control-utc" placeholder="VD: NV26-04" required />
+                        <label class="form-label-utc">Mã cán bộ <span class="text-danger">*</span></label>
+                        <input type="text" id="newStaffMa" maxlength="20" pattern="[A-Za-z0-9_-]{2,20}" class="form-control form-control-utc" placeholder="VD: NV26-04" required />
                     </div>
                     <div class="mb-3">
-                        <label class="form-label-utc">Họ và tên cán bộ <span class="text-danger">*</span></label>
-                        <input type="text" id="newStaffName" class="form-control form-control-utc" placeholder="VD: Hoàng Minh Châu" required />
+                        <label class="form-label-utc">Họ tên <span class="text-danger">*</span></label>
+                        <input type="text" id="newStaffName" maxlength="100" class="form-control form-control-utc" placeholder="VD: Hoàng Minh Châu" required />
                     </div>
                     <div class="mb-3">
                         <label class="form-label-utc">Email đăng nhập <span class="text-danger">*</span></label>
-                        <input type="email" id="newStaffEmail" class="form-control form-control-utc" placeholder="VD: chau.demo@utc.edu.vn" required />
+                        <input type="email" id="newStaffEmail" maxlength="150" class="form-control form-control-utc" placeholder="VD: chau.demo@utc.edu.vn" required />
                     </div>
                     <div class="mb-3">
-                        <label class="form-label-utc">Phân quyền vai trò <span class="text-danger">*</span></label>
+                        <label class="form-label-utc">Vai trò <span class="text-danger">*</span></label>
                         <select id="newStaffRole" class="form-select form-control-utc">
-                            <option value="ADMIN">Quản trị viên (QTV) - Toàn bộ quyền</option>
-                            <option value="QUANLY_BANDOC" selected>Quản lý bạn đọc (QLB) - Lưu thông, Thẻ, Phạt</option>
-                            <option value="QUANLY_TAILIEU">Thủ thư mượn trả (TTM) - Quản lý học liệu</option>
+                            <option value="ADMIN">Quản trị viên</option>
+                            <option value="QUANLY_BANDOC" selected>Quản lý bạn đọc</option>
+                            <option value="QUANLY_TAILIEU">Quản lý học liệu</option>
                         </select>
                     </div>
                     <div class="p-3 mb-2 rounded-3" style="background-color: #f8fbff; border: 1px dashed #bae6fd;">
                         <div class="small text-muted">
-                            <i class="bi bi-shield-lock-fill text-primary me-1"></i> Mật khẩu ban đầu: <strong>Tên + Mã nhân viên</strong> (ví dụ: <em>ChauNV26-04</em>).
+                            Mật khẩu ban đầu: <strong>Tên + Mã nhân viên</strong> (ví dụ: <em>ChauNV26-04</em>).
                         </div>
                     </div>
                     <div class="modal-footer px-0 pb-0 pt-3" style="border-top: 1px solid #f1f5f9;">
-                        <button type="button" class="btn btn-outline-utc" data-bs-dismiss="modal">Hủy bỏ</button>
+                        <button type="button" class="btn btn-outline-utc" data-bs-dismiss="modal">Hủy</button>
                         <button type="submit" class="btn btn-utc-primary" id="btnAddStaffSubmit">
-                            <i class="bi bi-check-lg"></i> Cấp tài khoản
+                            Tạo tài khoản
                         </button>
                     </div>
                 </form>
@@ -261,7 +258,7 @@
         <div class="modal-content" style="border-radius: 20px; border: 1px solid #e2eef8; box-shadow: 0 20px 45px rgba(2, 132, 199, 0.16);">
             <div class="modal-header bg-white text-dark py-3 px-4 border-bottom" style="background: #ffffff !important; border-bottom: 1px solid #e2eaf2 !important;">
                 <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2" id="editRoleModalLabel">
-                    <i class="bi bi-shield-lock-fill text-primary"></i> Phân quyền tài khoản cán bộ
+                    Phân quyền cán bộ
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -276,18 +273,18 @@
                     <input type="text" id="editStaffLogin" class="form-control form-control-utc" readonly style="background-color: #f8fafc;" />
                 </div>
                 <div class="mb-3">
-                    <label class="form-label-utc">Chọn vai trò phân quyền mới</label>
+                    <label class="form-label-utc">Vai trò</label>
                     <select id="editStaffRole" class="form-select form-control-utc">
-                        <option value="ADMIN">Quản trị viên (QTV) - Toàn bộ quyền</option>
-                        <option value="QUANLY_BANDOC">Quản lý bạn đọc (QLB) - Mượn trả, quá hạn, thẻ bạn đọc</option>
-                        <option value="QUANLY_TAILIEU">Thủ thư mượn trả (TTM) - Quản lý học liệu sách/tài liệu</option>
+                        <option value="ADMIN">Quản trị viên</option>
+                        <option value="QUANLY_BANDOC">Quản lý bạn đọc</option>
+                        <option value="QUANLY_TAILIEU">Quản lý học liệu</option>
                     </select>
                 </div>
             </div>
             <div class="modal-footer" style="border-top: 1px solid #f1f5f9; padding: 16px 24px;">
                 <button type="button" class="btn btn-outline-utc" data-bs-dismiss="modal">Đóng</button>
                 <button type="button" class="btn btn-utc-primary" id="btnSaveRole" onclick="saveStaffRole()">
-                    <i class="bi bi-save2-fill me-1"></i> Lưu phân quyền
+                    Lưu thay đổi
                 </button>
             </div>
         </div>
@@ -296,8 +293,8 @@
 
 @section Scripts {
 <script>
-    var isSuperAdmin = @(Model.IsCurrentUserSuperAdmin ? "true" : "false");
-    var currentUsername = '@Model.CurrentUsername';
+    var isSuperAdmin = @(Model?.IsCurrentUserSuperAdmin == true ? "true" : "false");
+    var currentUsername = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model?.CurrentUsername ?? string.Empty));
 
     function openEditRoleModal(maTaiKhoan, manv, hoten, role, login) {
         if (!isSuperAdmin) {
@@ -341,6 +338,7 @@
         var formData = new URLSearchParams();
         formData.append('maTaiKhoan', maTaiKhoan);
         formData.append('vaiTro', role);
+        formData.append('__RequestVerificationToken', document.querySelector('#addStaffForm input[name="__RequestVerificationToken"]').value);
 
         fetch('/Admin/User/UpdateRole', {
             method: 'POST',
@@ -354,7 +352,7 @@
         })
         .then(function(data) {
             btn.disabled = false;
-            btn.innerHTML = '<i class="bi bi-save2-fill me-1"></i> Lưu phân quyền';
+            btn.textContent = 'Lưu thay đổi';
 
             if (data.success) {
                 alert(data.message || 'Đã cập nhật phân quyền cán bộ thành công!');
@@ -368,7 +366,7 @@
         })
         .catch(function(err) {
             btn.disabled = false;
-            btn.innerHTML = '<i class="bi bi-save2-fill me-1"></i> Lưu phân quyền';
+            btn.textContent = 'Lưu thay đổi';
             alert('Đã xảy ra lỗi khi gửi yêu cầu tới máy chủ: ' + err);
         });
     }
@@ -395,6 +393,7 @@
         formData.append('hoTen', hoTen);
         formData.append('email', email);
         formData.append('vaiTro', role);
+        formData.append('__RequestVerificationToken', document.querySelector('#addStaffForm input[name="__RequestVerificationToken"]').value);
 
         fetch('/Admin/User/AddStaff', {
             method: 'POST',
@@ -406,7 +405,7 @@
         .then(function(res) { return res.json(); })
         .then(function(data) {
             btn.disabled = false;
-            btn.innerHTML = '<i class="bi bi-check-lg"></i> Cấp tài khoản';
+            btn.textContent = 'Tạo tài khoản';
 
             if (data.success) {
                 alert(data.message);
@@ -420,7 +419,7 @@
         })
         .catch(function(err) {
             btn.disabled = false;
-            btn.innerHTML = '<i class="bi bi-check-lg"></i> Cấp tài khoản';
+            btn.textContent = 'Tạo tài khoản';
             alert('Đã xảy ra lỗi kết nối: ' + err);
         });
     }

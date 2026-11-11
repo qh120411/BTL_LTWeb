@@ -25,3 +25,7 @@ packages/
 
 .agent/
 .agents/
+
+## Python smoke checks
+__pycache__/
+*.py[cod]

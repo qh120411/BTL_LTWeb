@@ -98,6 +98,7 @@ public class UserController : AdminBaseController
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateRole(int maTaiKhoan, string vaiTro)
     {
         var currentUsername = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.Identity?.Name ?? "";
@@ -170,6 +171,7 @@ public class UserController : AdminBaseController
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddStaff(string maNv, string hoTen, string email, string vaiTro)
     {
         var currentUsername = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.Identity?.Name ?? "";
@@ -189,11 +191,18 @@ public class UserController : AdminBaseController
             return Json(new { success = false, message = "Vui lòng nhập đầy đủ Mã NV, Họ tên và Email của cán bộ!" });
         }
 
+        var validRoles = new[] { "ADMIN", "QUANLY_BANDOC", "QUANLY_TAILIEU" };
+        if (!validRoles.Contains(vaiTro)) return Json(new { success = false, message = "Vai trò không hợp lệ." });
+        if (!System.Text.RegularExpressions.Regex.IsMatch(maNv.Trim(), @"^[A-Za-z0-9_-]{2,20}$") || hoTen.Trim().Length > 100 || email.Trim().Length > 150 ||
+            !new System.ComponentModel.DataAnnotations.EmailAddressAttribute().IsValid(email.Trim()))
+            return Json(new { success = false, message = "Mã, họ tên hoặc email không hợp lệ." });
+
         maNv = maNv.Trim().ToUpper();
         hoTen = hoTen.Trim();
         email = email.Trim().ToLower();
 
-        if (await _dbContext.TaiKhoans.AnyAsync(t => t.TenDangNhap == maNv || t.EmailDangNhap == email))
+        if (await _dbContext.TaiKhoans.AnyAsync(t => t.TenDangNhap == maNv || t.EmailDangNhap == email) ||
+            await _dbContext.NhanViens.AnyAsync(n => n.MaSoNhanVien == maNv))
         {
             return Json(new { success = false, message = $"Mã cán bộ '{maNv}' hoặc Email '{email}' đã tồn tại trong hệ thống!" });
         }
@@ -212,8 +221,7 @@ public class UserController : AdminBaseController
             Email = email,
             TrangThai = "Đang làm việc"
         };
-        _dbContext.NhanViens.Add(nv);
-        await _dbContext.SaveChangesAsync();
+
 
         // Mật khẩu mặc định: Tên + Mã NV (VD: LanNV26-04)
         string lastName = hoTen.Split(' ', StringSplitOptions.RemoveEmptyEntries).Last();
@@ -226,11 +234,19 @@ public class UserController : AdminBaseController
             MatKhauHash = PasswordHelper.HashPassword(defaultPassword),
             VaiTro = vaiTro,
             TrangThai = "Hoạt động",
-            MaNhanVien = nv.MaNhanVien,
+            MaNhanVienNavigation = nv,
             NgayTao = DateTime.Now
         };
         _dbContext.TaiKhoans.Add(acc);
-        await _dbContext.SaveChangesAsync();
+        try
+        {
+            await _dbContext.SaveChangesAsync();
+        }
+        catch (DbUpdateException)
+        {
+            _dbContext.ChangeTracker.Clear();
+            return Json(new { success = false, message = "Chưa tạo được tài khoản. Vui lòng kiểm tra mã cán bộ và email." });
+        }
 
         return Json(new
         {

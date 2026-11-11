@@ -1,6 +1,6 @@
 @model BTL_LTWEB.Areas.Reader.Models.UserProfileViewModel
 @{
-    ViewData["Title"] = "Hồ sơ cá nhân - Tự nhập hồ sơ";
+    ViewData["Title"] = "Hồ sơ cá nhân";
 }
 
 @section Styles {
@@ -11,26 +11,15 @@
     <div class="container-xl px-3 px-md-4">
         <!-- 1. Breadcrumb -->
         <div class="utc-profile-breadcrumb">
-            <a href="/Reader/Home">Profile</a>
+            <a href="/Reader/Home">Trang chủ</a>
             <span>&gt;</span>
-            <span class="active">Tự nhập hồ sơ</span>
+            <span class="active">Hồ sơ cá nhân</span>
         </div>
 
         <!-- 2. Tiêu đề với dải màu cam -->
         <div class="profile-main-title">
             <span class="profile-accent-bar"></span>
-            <h1>THÔNG TIN CÁ NHÂN</h1>
-        </div>
-
-        <!-- 3. Kế hoạch nhập hồ sơ banner -->
-        <div class="profile-plan-box">
-            <div class="profile-plan-label">
-                <i class="bi bi-file-earmark-check text-primary fs-5"></i>
-                <span>KẾ HOẠCH NHẬP HỒ SƠ</span>
-            </div>
-            <div class="profile-plan-tag">
-                Cập nhật thông tin sinh viên &amp; Ngân hàng
-            </div>
+            <h1>Thông tin cá nhân</h1>
         </div>
 
         <!-- 4. Thông báo thành công nếu vừa lưu -->
@@ -50,11 +39,8 @@
             <!-- Dải tiêu đề màu xanh đen I -->
             <div class="profile-section-bar">
                 <div class="profile-section-bar-left">
-                    <div class="profile-section-icon">
-                        <i class="bi bi-person-fill"></i>
-                    </div>
                     <div class="profile-section-text">
-                        I. PHẦN BẢN THÂN HỌC SINH, SINH VIÊN
+                        Thông tin bạn đọc
                     </div>
                 </div>
             </div>
@@ -100,17 +86,15 @@
                                 <table class="profile-table">
                                     <thead>
                                         <tr>
-                                            <th style="width: 25%;">NHÓM</th>
-                                            <th style="width: 32%;">TÊN THÔNG TIN</th>
-                                            <th style="width: 43%;">DỮ LIỆU CẦN NHẬP</th>
+                                            <th style="width: 38%;">Thông tin</th>
+                                            <th style="width: 62%;">Nội dung</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <!-- 1. Số điện thoại -->
                                         <tr>
-                                            <td></td>
                                             <td class="col-info-name">
-                                                <span>SĐT di động cá nhân</span>
+                                                <span>Số điện thoại</span>
                                             </td>
                                             <td>
                                                 <input type="tel" 
@@ -122,9 +106,8 @@
 
                                         <!-- 2. Địa chỉ nhà (Người dùng yêu cầu bổ sung) -->
                                         <tr>
-                                            <td></td>
                                             <td class="col-info-name">
-                                                <span>Địa chỉ thường trú / Nơi ở hiện nay</span>
+                                                <span>Địa chỉ liên hệ</span>
                                             </td>
                                             <td>
                                                 <input type="text" 
@@ -136,7 +119,6 @@
 
                                         <!-- 3. Số tài khoản ngân hàng -->
                                         <tr>
-                                            <td class="col-group-title">SỐ TÀI KHOẢN NGÂN HÀNG</td>
                                             <td class="col-info-name">
                                                 <span>Số tài khoản ngân hàng</span>
                                             </td>
@@ -150,7 +132,6 @@
 
                                         <!-- 4. Tên ngân hàng -->
                                         <tr>
-                                            <td class="col-group-title">TÊN NGÂN HÀNG</td>
                                             <td class="col-info-name">
                                                 <span>Tên ngân hàng</span>
                                             </td>
@@ -164,9 +145,8 @@
 
                                         <!-- 5. Email liên hệ -->
                                         <tr>
-                                            <td class="col-group-title">EMAIL LIÊN HỆ</td>
                                             <td class="col-info-name">
-                                                <span>Email cá nhân / trường</span>
+                                                <span>Email liên hệ</span>
                                             </td>
                                             <td>
                                                 <input type="email" 
@@ -191,16 +171,13 @@
             </div>
         </div>
 
-        <!-- 6. PHẦN II: DANH SÁCH SÁCH ĐANG MƯỢN & HẠN TRẢ (QUY ĐỊNH 1 NĂM - PHẠT 100K/QUYỂN QUÁ HẠN) -->
+        <!-- 6. PHẦN II: DANH SÁCH SÁCH ĐANG MƯỢN & HẠN TRẢ (THEO HỌC KỲ - PHẠT 100K/QUYỂN QUÁ HẠN) -->
         <div class="profile-portal-card mt-4">
             <!-- Dải tiêu đề màu xanh đen II -->
             <div class="profile-section-bar">
                 <div class="profile-section-bar-left">
-                    <div class="profile-section-icon">
-                        <i class="bi bi-book-half"></i>
-                    </div>
                     <div class="profile-section-text">
-                        II. DANH SÁCH TÀI LIỆU / SÁCH ĐANG MƯỢN (THỜI GIAN MƯỢN 1 NĂM)
+                        Sách đang mượn
                     </div>
                 </div>
 
@@ -213,7 +190,7 @@
                     <div class="profile-rule-text">
                         <i class="bi bi-info-circle-fill text-success fs-5"></i>
                         <span>
-                            Quy chế mượn: <strong>Thời gian mượn luôn là 1 năm</strong> kể từ ngày mượn. Nếu quá hạn, mức phạt quy định là <strong>100.000 đ / cuốn</strong>.
+                            Kỳ mượn: <strong>11/08–31/12 (kỳ 1), 02/01–31/05 (kỳ 2)</strong>. Phạt quá hạn: <strong>100.000 đ/cuốn</strong>.
                         </span>
                     </div>
                     <div class="profile-rule-pills">
@@ -284,7 +261,7 @@
                                         Tác giả: <strong>@book.TacGia</strong>
                                     </div>
 
-                                    <!-- Khung thời gian mượn & hạn trả 1 năm -->
+                                    <!-- Khung thời gian mượn & hạn trả theo học kỳ -->
                                     <div class="book-date-timeline">
                                         <div class="date-timeline-item">
                                             <span class="date-label">Ngày mượn</span>
@@ -292,7 +269,7 @@
                                         </div>
                                         <div class="date-timeline-arrow">&rarr;</div>
                                         <div class="date-timeline-item">
-                                            <span class="date-label">Hạn trả (1 năm)</span>
+                                            <span class="date-label">Hạn trả</span>
                                             <span class="date-val fw-bold @(book.IsQuaHan ? "text-danger" : "text-success")">
                                                 @book.HanTra.ToString("dd/MM/yyyy")
                                             </span>
@@ -356,13 +333,11 @@
                             Tổng số sách đang mượn: <strong class="text-primary">@Model.TongSoSachDangMuon cuốn</strong> 
                             (@Model.SoSachConHan cuốn còn hạn, <span class="text-danger fw-bold">@Model.SoSachQuaHan cuốn quá hạn</span>)
                         </div>
-                        <div class="profile-summary-sub">
-                            * Quy định: Các cuốn sách quá hạn chịu mức phí nộp phạt 100.000 đ/cuốn theo quy định thư viện Đại học GTVT.
-                        </div>
+
                     </div>
                     <div class="profile-summary-right">
                         <div class="total-due-box">
-                            <div class="total-due-label">TỔNG PHẢI THANH TOÁN:</div>
+                            <div class="total-due-label">Tổng cần thanh toán:</div>
                             <div class="total-due-amount">
                                 @Model.TongTienPhaiThanhToan.ToString("N0") VNĐ
                             </div>

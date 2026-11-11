@@ -1,0 +1,189 @@
+/* Readable forms and details across the administration pages. */
+.admin-body .reader-search-results {
+    max-height: 260px;
+    margin-top: 6px;
+    overflow-y: auto;
+    border: 1px solid #dce5ec;
+    border-radius: 5px;
+}
+
+.admin-body .reader-search-option {
+    display: block;
+    width: 100%;
+    padding: 12px 14px;
+    border: 0;
+    border-bottom: 1px solid #edf1f5;
+    background: #fff;
+    text-align: left;
+    line-height: 1.5;
+}
+
+.admin-body .reader-search-option:last-child {
+    border-bottom: 0;
+}
+
+.admin-body .reader-search-option:hover,
+.admin-body .reader-search-option[aria-selected="true"] {
+    background: #edf6fc;
+}
+
+.admin-body .reader-search-name,
+.admin-body .reader-search-meta {
+    display: block;
+    overflow-wrap: anywhere;
+}
+
+.admin-body .reader-search-name {
+    color: #163b5c;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.admin-body .reader-search-meta {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.admin-body #readerSearchStatus:empty {
+    display: none;
+}
+
+.admin-body .admin-content .form-label-utc {
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.admin-body .admin-table-card .small,
+.admin-body .admin-table-card .badge {
+    font-size: 14px !important;
+    line-height: 1.5;
+}
+
+.admin-body .admin-table-card .table-utc td {
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+.admin-body .modal-content {
+    border: 1px solid #dce5ec !important;
+    border-radius: 8px !important;
+    box-shadow: 0 12px 36px rgba(22, 59, 92, .12) !important;
+}
+
+.admin-body .modal-header,
+.admin-body .modal-footer {
+    flex-shrink: 0;
+    padding: 18px 24px !important;
+    background: #fff !important;
+}
+
+.admin-body .modal-title {
+    color: #163b5c !important;
+    font-size: 20px;
+    font-weight: 600 !important;
+    line-height: 1.4;
+}
+
+.admin-body .modal-header .btn-close {
+    filter: none;
+}
+
+.admin-body .modal-body {
+    padding: 24px !important;
+    color: #243b50;
+    font-size: 15px;
+    line-height: 1.55;
+}
+
+.admin-body .modal-dialog-scrollable .modal-content > form {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.admin-body .modal .form-label,
+.admin-body .modal .form-label-utc {
+    margin-bottom: 8px;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+}
+
+.admin-body .modal .small,
+.admin-body .modal .form-text,
+.admin-body .modal .badge,
+.admin-body .modal .badge-status {
+    font-size: 14px !important;
+    line-height: 1.5;
+}
+
+.admin-body .modal .form-control,
+.admin-body .modal .form-select {
+    min-height: 44px;
+    font-size: 15px;
+}
+
+.admin-body .modal .btn {
+    min-height: 42px;
+    padding: 9px 18px;
+    border-radius: 5px;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    line-height: 1.5;
+}
+
+.admin-body .modal .card {
+    box-shadow: none !important;
+}
+
+.admin-body .borrow-dates {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 24px;
+    padding-top: 20px;
+    border-top: 1px solid #dce5ec;
+}
+
+.admin-body .borrow-dates dt {
+    margin-bottom: 4px;
+    color: #64748b;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.admin-body .borrow-dates dd {
+    margin: 0;
+    color: #163b5c;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.admin-body #opacBorrowModal .opac-book-card-item h6,
+.admin-body #previewBookTitle {
+    font-size: 16px !important;
+    line-height: 1.5 !important;
+}
+
+.admin-body #opacBorrowModal .modal-body {
+    background: #fff !important;
+}
+
+@media (max-width: 575.98px) {
+    .admin-body .modal-header,
+    .admin-body .modal-body,
+    .admin-body .modal-footer {
+        padding: 16px !important;
+    }
+
+    .admin-body .modal-title {
+        font-size: 18px;
+    }
+
+    .admin-body .modal-footer {
+        gap: 8px;
+    }
+
+    .admin-body .modal-footer .btn {
+        margin: 0;
+    }
+}
