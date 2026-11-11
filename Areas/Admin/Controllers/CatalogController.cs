@@ -1,4 +1,4 @@
-﻿using BTL_LTWEB.Areas.Admin.ViewModels;
+using BTL_LTWEB.Areas.Admin.ViewModels;
 using BTL_LTWEB.Areas.Reader.Models;
 using BTL_LTWEB.Areas.Reader.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -16,53 +16,31 @@ public class CatalogController : AdminBaseController
         _catalogService = catalogService;
     }
 
-    public IActionResult Index(string? search, string? major, string? status)
+    public IActionResult Index(
+        string? search, 
+        string? category, 
+        string? major, 
+        string? language, 
+        string? status)
     {
         ViewBag.ActiveMenu = "Catalog";
 
-        var books = _catalogService.GetAll();
+        var cat = string.IsNullOrWhiteSpace(category) ? "all" : category.Trim();
+        var maj = string.IsNullOrWhiteSpace(major) ? "all" : major.Trim();
+        var lang = string.IsNullOrWhiteSpace(language) ? "all" : language.Trim();
+        var avail = string.IsNullOrWhiteSpace(status) ? "all" : (status == "Có sẵn" ? "available" : status.Trim());
+        var kw = search?.Trim() ?? string.Empty;
 
-        if (!string.IsNullOrWhiteSpace(search))
-        {
-            var kw = search.Trim().ToLower();
-            books = books.Where(b => b.Title.ToLower().Contains(kw) ||
-                                     b.Authors.ToLower().Contains(kw) ||
-                                     b.Publisher.ToLower().Contains(kw) ||
-                                     b.ISBN.ToLower().Contains(kw));
-        }
-
-        if (!string.IsNullOrWhiteSpace(major) && major != "all" && major != "Tất cả chuyên ngành")
-        {
-            var m = major.Trim().ToLower();
-            books = books.Where(b => 
-                b.Major.Equals(major, StringComparison.OrdinalIgnoreCase) ||
-                b.MajorName.Equals(major, StringComparison.OrdinalIgnoreCase) ||
-                (m.Contains("thông tin") && b.Major == "cntt") ||
-                ((m.Contains("xây dựng") || m.Contains("công trình") || m.Contains("giao thông")) && b.Major == "xaydung") ||
-                ((m.Contains("kinh tế") || m.Contains("quản trị") || m.Contains("logistics")) && b.Major == "kinhte") ||
-                ((m.Contains("khoa học") || m.Contains("cơ bản") || m.Contains("toán")) && b.Major == "toanly") ||
-                ((m.Contains("chính trị") || m.Contains("pháp luật")) && b.Major == "chinhtri")
-            );
-        }
-
-        if (!string.IsNullOrWhiteSpace(status) && status != "Tất cả")
-        {
-            if (status == "Có sẵn")
-            {
-                books = books.Where(b => b.AvailableCopies > 0);
-            }
-            else if (status == "Hết sách")
-            {
-                books = books.Where(b => b.AvailableCopies <= 0);
-            }
-        }
+        var items = _catalogService.Search(kw, cat, maj, lang, avail).ToList();
 
         var model = new CatalogIndexViewModel
         {
-            SearchKeyword = search,
-            SelectedMajor = major ?? "Tất cả chuyên ngành",
-            SelectedStatus = status ?? "Tất cả",
-            Books = books.Select(b => new CatalogItemViewModel
+            SearchKeyword = kw,
+            SelectedCategory = cat,
+            SelectedMajor = maj,
+            SelectedLanguage = lang,
+            SelectedStatus = avail,
+            Books = items.Select(b => new CatalogItemViewModel
             {
                 Id = b.Id,
                 MaHocLieu = $"TLVN26-{b.Id:D3}",

@@ -1,4 +1,4 @@
-﻿using BTL_LTWEB.Areas.Reader.Models;
+using BTL_LTWEB.Areas.Reader.Models;
 
 namespace BTL_LTWEB.Areas.Admin.ViewModels
 {
@@ -64,9 +64,10 @@ namespace BTL_LTWEB.Areas.Admin.ViewModels
     public class CatalogIndexViewModel
     {
         public string? SearchKeyword { get; set; }
-        public string? SelectedCategory { get; set; }
-        public string? SelectedMajor { get; set; }
-        public string? SelectedStatus { get; set; }
+        public string? SelectedCategory { get; set; } = "all";
+        public string? SelectedMajor { get; set; } = "all";
+        public string? SelectedLanguage { get; set; } = "all";
+        public string? SelectedStatus { get; set; } = "all";
         public List<CatalogItemViewModel> Books { get; set; } = new();
 
         public int TongDauSach => Books.Count;

@@ -163,20 +163,29 @@
                         <td style="text-align: center;">
                             @if (s.IsCurrentLoggedInUser)
                             {
-                                <!-- Quy tắc: Không tự sửa được chính mình -->
-                                <span class="badge bg-light text-secondary border px-2 py-1" style="font-size: 11.5px; cursor: not-allowed;" title="Bạn không thể tự sửa quyền của chính mình">
+                                <!-- Quy tắc: Không tự sửa / tự xóa chính mình -->
+                                <span class="badge bg-light text-secondary border px-2 py-1" style="font-size: 11.5px; cursor: not-allowed;" title="Bạn không thể tự sửa quyền hoặc xóa chính mình">
                                     <i class="bi bi-lock-fill text-muted me-1"></i>Chính bạn
                                 </span>
                                 <div class="text-muted" style="font-size: 10px; margin-top: 2px;">(Không thể tự sửa)</div>
                             }
                             else if (s.CanEdit)
                             {
-                                <!-- Quy tắc: Chỉ admin tối cao mới sửa quyền được các cán bộ khác -->
-                                <button type="button" class="btn btn-sm btn-outline-primary px-2 py-1" 
-                                        style="border-radius: 8px; font-size: 12.5px; font-weight: 500;"
-                                        onclick="openEditRoleModal('@s.MaTaiKhoan', '@s.MaNV', '@s.HoTen', '@s.VaiTroCode', '@s.TenDangNhap')">
-                                    <i class="bi bi-pencil-square me-1"></i>Sửa quyền
-                                </button>
+                                <!-- Quy tắc: Chỉ admin tối cao mới sửa quyền và xóa được các cán bộ khác -->
+                                <div class="d-inline-flex align-items-center gap-1">
+                                    <button type="button" class="btn btn-sm btn-outline-primary px-2 py-1" 
+                                            style="border-radius: 8px; font-size: 12.5px; font-weight: 500;"
+                                            title="Sửa phân quyền cán bộ"
+                                            onclick="openEditRoleModal('@s.MaTaiKhoan', '@s.MaNV', '@s.HoTen', '@s.VaiTroCode', '@s.TenDangNhap')">
+                                        <i class="bi bi-pencil-square me-1"></i>Sửa quyền
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-danger px-2 py-1" 
+                                            style="border-radius: 8px; font-size: 12.5px; font-weight: 500;"
+                                            title="Xóa tài khoản cán bộ này"
+                                            onclick="openDeleteStaffModal('@s.MaTaiKhoan', '@s.MaNV', '@s.HoTen', '@s.TenDangNhap')">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </div>
                             }
                             else
                             {
@@ -234,10 +243,12 @@
                     <div class="mb-3">
                         <label class="form-label-utc">Phân quyền vai trò <span class="text-danger">*</span></label>
                         <select id="newStaffRole" class="form-select form-control-utc">
-                            <option value="ADMIN">Quản trị viên (QTV) - Toàn bộ quyền</option>
                             <option value="QUANLY_BANDOC" selected>Quản lý bạn đọc (QLB) - Lưu thông, Thẻ, Phạt</option>
                             <option value="QUANLY_TAILIEU">Thủ thư mượn trả (TTM) - Quản lý học liệu</option>
                         </select>
+                        <div class="form-text text-muted" style="font-size: 11.5px;">
+                            <i class="bi bi-shield-lock text-primary"></i> Quyền Quản trị viên (Admin) chỉ dành riêng cho Admin tối cao, không cấp cho người khác.
+                        </div>
                     </div>
                     <div class="p-3 mb-2 rounded-3" style="background-color: #f8fbff; border: 1px dashed #bae6fd;">
                         <div class="small text-muted">
@@ -279,10 +290,12 @@
                 <div class="mb-3">
                     <label class="form-label-utc">Chọn vai trò phân quyền mới</label>
                     <select id="editStaffRole" class="form-select form-control-utc">
-                        <option value="ADMIN">Quản trị viên (QTV) - Toàn bộ quyền</option>
                         <option value="QUANLY_BANDOC">Quản lý bạn đọc (QLB) - Mượn trả, quá hạn, thẻ bạn đọc</option>
                         <option value="QUANLY_TAILIEU">Thủ thư mượn trả (TTM) - Quản lý học liệu sách/tài liệu</option>
                     </select>
+                    <div class="form-text text-muted" style="font-size: 11.5px;">
+                        <i class="bi bi-shield-lock text-primary"></i> Quyền Quản trị viên (Admin) chỉ dành riêng cho Admin tối cao, không cấp cho người khác.
+                    </div>
                 </div>
                 <div class="p-3 rounded-3" style="background-color: #f0fdf4; border: 1px solid #bbf7d0;">
                     <div class="small text-success">
@@ -294,6 +307,37 @@
                 <button type="button" class="btn btn-outline-utc" data-bs-dismiss="modal">Đóng</button>
                 <button type="button" class="btn btn-utc-primary" id="btnSaveRole" onclick="saveStaffRole()">
                     <i class="bi bi-save2-fill me-1"></i> Lưu phân quyền
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Xác nhận xóa cán bộ -->
+<div class="modal fade" id="deleteStaffModal" tabindex="-1" aria-labelledby="deleteStaffModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 20px; border: 1px solid #fee2e2; box-shadow: 0 20px 45px rgba(239, 68, 68, 0.16);">
+            <div class="modal-header bg-white text-dark py-3 px-4 border-bottom" style="background: #ffffff !important; border-bottom: 1px solid #fee2e2 !important;">
+                <h5 class="modal-title fw-bold text-danger d-flex align-items-center gap-2" id="deleteStaffModalLabel">
+                    <i class="bi bi-exclamation-triangle-fill"></i> Xác nhận xóa cán bộ
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <input type="hidden" id="deleteStaffAccountId" />
+                <p class="mb-3 text-secondary" style="font-size: 14.5px;">
+                    Bạn có chắc chắn muốn xóa tài khoản cán bộ <strong id="deleteStaffNameDisplay" class="text-dark"></strong> (<code id="deleteStaffLoginDisplay"></code>)?
+                </p>
+                <div class="p-3 rounded-3" style="background-color: #fef2f2; border: 1px dashed #fca5a5;">
+                    <div class="small text-danger">
+                        <i class="bi bi-info-circle-fill me-1"></i> <strong>Lưu ý nghiệp vụ:</strong> Nếu cán bộ đã có lịch sử lập phiếu mượn, gia hạn hoặc thu phạt, hệ thống sẽ lưu trữ hồ sơ với trạng thái <em>"Đã nghỉ việc"</em> và thu hồi tài khoản đăng nhập để đảm bảo toàn vẹn dữ liệu kế toán thư viện.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid #f1f5f9; padding: 16px 24px;">
+                <button type="button" class="btn btn-outline-utc" data-bs-dismiss="modal">Hủy bỏ</button>
+                <button type="button" class="btn btn-danger px-3" id="btnConfirmDeleteStaff" onclick="confirmDeleteStaff()">
+                    <i class="bi bi-trash-fill me-1"></i> Xóa cán bộ
                 </button>
             </div>
         </div>
@@ -427,6 +471,65 @@
         .catch(function(err) {
             btn.disabled = false;
             btn.innerHTML = '<i class="bi bi-check-lg"></i> Cấp tài khoản';
+            alert('Đã xảy ra lỗi kết nối: ' + err);
+        });
+    }
+
+    function openDeleteStaffModal(maTaiKhoan, manv, hoten, login) {
+        if (!isSuperAdmin) {
+            alert('Từ chối quyền: Chỉ Quản trị viên tối cao (admin) mới có quyền xóa cán bộ!');
+            return;
+        }
+
+        if (login && login.toLowerCase() === currentUsername.toLowerCase()) {
+            alert('Bạn không thể tự xóa tài khoản của chính mình!');
+            return;
+        }
+
+        document.getElementById('deleteStaffAccountId').value = maTaiKhoan;
+        document.getElementById('deleteStaffNameDisplay').textContent = hoten + ' (' + manv + ')';
+        document.getElementById('deleteStaffLoginDisplay').textContent = login;
+
+        var modal = new bootstrap.Modal(document.getElementById('deleteStaffModal'));
+        modal.show();
+    }
+
+    function confirmDeleteStaff() {
+        var maTaiKhoan = document.getElementById('deleteStaffAccountId').value;
+        if (!maTaiKhoan) return;
+
+        var btn = document.getElementById('btnConfirmDeleteStaff');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Đang xóa...';
+
+        var formData = new URLSearchParams();
+        formData.append('maTaiKhoan', maTaiKhoan);
+
+        fetch('/Admin/User/DeleteStaff', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: formData.toString()
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-trash-fill me-1"></i> Xóa cán bộ';
+
+            if (data.success) {
+                alert(data.message);
+                var modalEl = document.getElementById('deleteStaffModal');
+                var modal = bootstrap.Modal.getInstance(modalEl);
+                if (modal) modal.hide();
+                window.location.reload();
+            } else {
+                alert('Lỗi: ' + data.message);
+            }
+        })
+        .catch(function(err) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-trash-fill me-1"></i> Xóa cán bộ';
             alert('Đã xảy ra lỗi kết nối: ' + err);
         });
     }

@@ -142,7 +142,11 @@ public class UserController : AdminBaseController
             });
         }
 
-        var validRoles = new[] { "ADMIN", "QUANLY_BANDOC", "QUANLY_TAILIEU" };
+        var validRoles = new[] { "QUANLY_BANDOC", "QUANLY_TAILIEU" };
+        if (string.Equals(vaiTro, "ADMIN", StringComparison.OrdinalIgnoreCase))
+        {
+            return Json(new { success = false, message = "Quy định hệ thống: Quyền Admin chỉ dành riêng duy nhất cho Quản trị viên tối cao, không được cấp quyền Admin cho người khác!" });
+        }
         if (!validRoles.Contains(vaiTro))
         {
             return Json(new { success = false, message = "Vai trò phân quyền không hợp lệ!" });
@@ -154,7 +158,6 @@ public class UserController : AdminBaseController
         string staffName = targetAccount.MaNhanVienNavigation?.HoTen ?? targetAccount.TenDangNhap;
         string roleDisplay = vaiTro switch
         {
-            "ADMIN" => "Quản trị viên (QTV)",
             "QUANLY_BANDOC" => "Quản lý bạn đọc (QLB)",
             "QUANLY_TAILIEU" => "Thủ thư mượn trả (TTM)",
             _ => vaiTro
@@ -167,6 +170,97 @@ public class UserController : AdminBaseController
             roleCode = vaiTro,
             roleText = roleDisplay
         });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteStaff(int maTaiKhoan)
+    {
+        var currentUsername = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.Identity?.Name ?? "";
+        bool isCurrentUserSuperAdmin = IsSuperAdmin(currentUsername);
+
+        // 1. Chỉ Quản trị viên tối cao (admin) mới được xóa cán bộ
+        if (!isCurrentUserSuperAdmin)
+        {
+            return Json(new
+            {
+                success = false,
+                message = "Từ chối quyền: Chỉ Quản trị viên tối cao (tài khoản admin) mới có quyền xóa tài khoản cán bộ!"
+            });
+        }
+
+        var targetAccount = await _dbContext.TaiKhoans
+            .Include(t => t.MaNhanVienNavigation)
+            .FirstOrDefaultAsync(t => t.MaTaiKhoan == maTaiKhoan);
+
+        if (targetAccount == null)
+        {
+            return Json(new { success = false, message = "Không tìm thấy tài khoản cán bộ trong hệ thống!" });
+        }
+
+        // 2. Không được tự xóa tài khoản của chính mình
+        if (string.Equals(targetAccount.TenDangNhap, currentUsername, StringComparison.OrdinalIgnoreCase))
+        {
+            return Json(new
+            {
+                success = false,
+                message = "Bạn không thể tự xóa tài khoản của chính mình!"
+            });
+        }
+
+        // 3. Tuyệt đối không được xóa tài khoản Quản trị viên tối cao (admin)
+        if (IsSuperAdmin(targetAccount.TenDangNhap))
+        {
+            return Json(new
+            {
+                success = false,
+                message = "Nghiêm cấm xóa tài khoản Quản trị viên tối cao của hệ thống!"
+            });
+        }
+
+        string staffName = targetAccount.MaNhanVienNavigation?.HoTen ?? targetAccount.TenDangNhap;
+        string staffCode = targetAccount.MaNhanVienNavigation?.MaSoNhanVien ?? targetAccount.TenDangNhap;
+
+        var nv = targetAccount.MaNhanVienNavigation;
+
+        // Kiểm tra xem nhân viên có liên kết dữ liệu giao dịch nghiệp vụ (Phiếu mượn, Gia hạn, Thanh toán, Vi phạm) hay không
+        bool hasHistory = false;
+        if (nv != null)
+        {
+            hasHistory = await _dbContext.PhieuMuons.AnyAsync(p => p.MaNhanVien == nv.MaNhanVien)
+                         || await _dbContext.ThanhToans.AnyAsync(t => t.MaNhanVien == nv.MaNhanVien)
+                         || await _dbContext.ViPhams.AnyAsync(v => v.MaNhanVienThu == nv.MaNhanVien)
+                         || await _dbContext.GiaHans.AnyAsync(g => g.MaNhanVienDuyet == nv.MaNhanVien);
+        }
+
+        if (hasHistory && nv != null)
+        {
+            // Nếu có lịch sử giao dịch thì chuyển trạng thái nhân viên sang "Đã nghỉ việc" và xóa tài khoản đăng nhập để bảo toàn toàn vẹn dữ liệu
+            nv.TrangThai = "Đã nghỉ việc";
+            _dbContext.TaiKhoans.Remove(targetAccount);
+            await _dbContext.SaveChangesAsync();
+
+            return Json(new
+            {
+                success = true,
+                message = $"Đã xóa tài khoản cán bộ '{staffName}' ({staffCode}) khỏi hệ thống. Hồ sơ nghiệp vụ được lưu trữ với trạng thái 'Đã nghỉ việc' để đảm bảo toàn vẹn dữ liệu mượn trả."
+            });
+        }
+        else
+        {
+            // Nếu không có ràng buộc giao dịch, xóa tài khoản và cả hồ sơ nhân viên
+            _dbContext.TaiKhoans.Remove(targetAccount);
+            if (nv != null)
+            {
+                _dbContext.NhanViens.Remove(nv);
+            }
+            await _dbContext.SaveChangesAsync();
+
+            return Json(new
+            {
+                success = true,
+                message = $"Đã xóa vĩnh viễn cán bộ '{staffName}' ({staffCode}) và tài khoản đăng nhập thành công!"
+            });
+        }
     }
 
     [HttpPost]
@@ -192,6 +286,22 @@ public class UserController : AdminBaseController
         maNv = maNv.Trim().ToUpper();
         hoTen = hoTen.Trim();
         email = email.Trim().ToLower();
+
+        // Không cho phép đặt tên đăng nhập/mã NV là admin để ngăn tạo/mạo danh admin tối cao
+        if (IsSuperAdmin(maNv) || email.StartsWith("admin@", StringComparison.OrdinalIgnoreCase))
+        {
+            return Json(new { success = false, message = "Không được phép tạo tài khoản có định danh Quản trị viên tối cao!" });
+        }
+
+        var validRoles = new[] { "QUANLY_BANDOC", "QUANLY_TAILIEU" };
+        if (string.Equals(vaiTro, "ADMIN", StringComparison.OrdinalIgnoreCase))
+        {
+            return Json(new { success = false, message = "Quy định hệ thống: Quyền Admin chỉ dành riêng duy nhất cho Quản trị viên tối cao, không được cấp quyền Admin cho người khác!" });
+        }
+        if (!validRoles.Contains(vaiTro))
+        {
+            return Json(new { success = false, message = "Vai trò phân quyền không hợp lệ!" });
+        }
 
         if (await _dbContext.TaiKhoans.AnyAsync(t => t.TenDangNhap == maNv || t.EmailDangNhap == email))
         {
