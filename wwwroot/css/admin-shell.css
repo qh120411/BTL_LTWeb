@@ -1,0 +1,129 @@
+.admin-body { --admin-header-height: 153px; --admin-sidebar-width: 240px; }
+.admin-body .admin-main-header { position: sticky; top: 0; z-index: 1030; }
+.admin-body .admin-navbar > div { flex-wrap: nowrap; gap: 16px; }
+.admin-body .admin-brand-group { flex: 1 1 0; min-width: 0; }
+.admin-body .admin-brand { flex: 1 1 0; min-width: 0; }
+.admin-body .admin-brand-text { min-width: 0; }
+.admin-body .brand-vi { white-space: normal; overflow-wrap: anywhere; }
+.admin-body .brand-en { white-space: normal; }
+.admin-body .admin-actions { min-width: 0; flex: 0 0 auto; }
+.admin-body .admin-overview-link { min-width: 0; white-space: nowrap; }
+.admin-body .user-btn { min-width: 0; max-width: 240px; justify-content: center; }
+.admin-body .admin-account-name { min-width: 0; max-width: 160px; }
+.admin-body .user-btn::after { flex-shrink: 0; }
+.admin-body .admin-actions .dropdown-menu { max-width: calc(100vw - 32px); }
+.admin-body .admin-actions :is(.dropdown-item, .dropdown-item-text) { white-space: normal; overflow-wrap: anywhere; }
+.admin-body .admin-sidebar-toggler,
+.admin-body .admin-sidebar-heading { display: none; }
+.admin-body .admin-sidebar-backdrop { display: none !important; }
+.admin-body .admin-sidebar { display: flex; flex-direction: column; box-sizing: border-box; overflow: hidden !important; }
+.admin-body .admin-sidebar .sidebar-nav {
+    flex: 1 1 auto;
+    min-height: 0;
+    gap: 4px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+}
+.admin-body .sidebar-link { flex-shrink: 0; min-height: 44px; padding: 10px 12px; white-space: normal; overflow-wrap: anywhere; }
+.admin-body .sidebar-category,
+.admin-body .sidebar-footer { flex-shrink: 0; }
+.admin-body .admin-sidebar .sidebar-footer { margin-top: 12px; padding-top: 12px; }
+.admin-body .admin-sidebar .btn-back-web { min-height: 44px; min-width: 0; padding: 10px 12px; font-size: 14px; }
+
+@media (min-width: 1200px) {
+    .admin-body .admin-wrapper { flex-direction: row; }
+    .admin-body .admin-sidebar {
+        position: sticky !important;
+        top: var(--admin-header-height) !important;
+        align-self: flex-start;
+        flex: 0 0 var(--admin-sidebar-width);
+        width: var(--admin-sidebar-width) !important;
+        min-width: var(--admin-sidebar-width) !important;
+        max-width: var(--admin-sidebar-width) !important;
+        height: calc(100vh - var(--admin-header-height)) !important;
+        height: calc(100dvh - var(--admin-header-height)) !important;
+        max-height: calc(100dvh - var(--admin-header-height)) !important;
+        min-height: 0;
+        overflow: hidden !important;
+        transform: none !important;
+    }
+    .admin-body .admin-content { flex: 1 1 0; width: 0 !important; min-width: 0; max-width: none !important; }
+}
+
+@media (min-width: 1200px) and (max-width: 1399.98px) {
+    .admin-body { --admin-sidebar-width: 232px; }
+    .admin-body .admin-content { padding: 24px; }
+    .admin-body .admin-logo { width: 52px; height: 52px; }
+}
+
+@media (max-width: 1199.98px) {
+    .admin-body.sidebar-open { overflow: hidden !important; }
+    .admin-body .admin-navbar { padding: 16px 0; }
+    .admin-body .admin-navbar > div { flex-wrap: wrap; }
+    .admin-body .admin-sidebar-toggler { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+    .admin-body .admin-sidebar-heading { display: flex; flex-shrink: 0; }
+    .admin-body .admin-sidebar-heading .text-primary { color: #fff !important; }
+    .admin-body .admin-sidebar-heading .btn-close { filter: invert(1); }
+    .admin-body .admin-wrapper { flex-direction: column; }
+    .admin-body .admin-content { width: 100% !important; max-width: 100% !important; min-width: 0; padding: 24px !important; }
+    .admin-body .admin-sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+        flex: none;
+        width: min(290px, calc(100vw - 32px)) !important;
+        min-width: 0 !important;
+        max-width: calc(100vw - 32px) !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+        padding: 20px 16px !important;
+        background: #176a9e !important;
+        border: 0 !important;
+        z-index: 1045 !important;
+        overflow: hidden !important;
+        transform: translateX(-100%) !important;
+        transition: transform 0.2s ease;
+    }
+    .admin-body .admin-sidebar.show { transform: translateX(0) !important; }
+    .admin-body .admin-sidebar-backdrop {
+        display: block !important;
+        position: fixed !important;
+        inset: 0;
+        background: rgb(15 23 42 / 40%);
+        z-index: 1040 !important;
+        opacity: 0;
+        visibility: hidden;
+    }
+    .admin-body .admin-sidebar-backdrop.show { opacity: 1 !important; visibility: visible !important; }
+}
+
+@media (max-height: 760px) {
+    .admin-body .admin-navbar { padding: 12px 0; }
+    .admin-body .admin-logo { width: 44px; height: 44px; }
+    .admin-body .admin-brand-text .brand-en { display: none !important; }
+    .admin-body .admin-sidebar { padding: 16px 12px !important; }
+    .admin-body .sidebar-nav { gap: 4px; }
+    .admin-body .sidebar-link { min-height: 42px; padding: 10px 12px; font-size: 14px; }
+}
+
+@media (max-width: 767.98px) {
+    .admin-body .admin-brand-text .brand-en { display: none !important; }
+    .admin-body .admin-topbar > div,
+    .admin-body .admin-navbar > div { padding-left: 16px !important; padding-right: 16px !important; }
+    .admin-body .admin-logo { width: 44px; height: 44px; }
+    .admin-body .admin-brand-text .brand-vi { font-size: 14px !important; }
+}
+
+@media (max-width: 575.98px) {
+    .admin-body .admin-brand-group { flex-basis: 100%; }
+    .admin-body .admin-actions { margin-left: auto; }
+    .admin-body .admin-content { padding: 24px 16px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .admin-body .admin-sidebar { transition: none; }
+}

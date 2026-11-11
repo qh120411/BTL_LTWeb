@@ -21,357 +21,113 @@
 
    ========================================================================== */
 
-/* 1. Reset khung, nen, vien, padding, do bong cho moi badge va status span trong bang */
+/* Status badges - SIMPLE theo Figma design: chỉ màu text + icon, không background phức tạp */
 
 .admin-content table td .badge,
-
-.admin-content table th .badge,
-
-.admin-content table td [class*="badge-"],
-
-.admin-content table th [class*="badge-"],
-
-.admin-content table td .badge-status,
-
 .admin-table-card table td .badge,
-
-.admin-table-card table td [class*="badge-"],
-
-.admin-table-card table td .badge-status,
-
 .table-utc td .badge,
-
-.table-utc th .badge,
-
-.table-utc td [class*="badge-"],
-
-.table-utc td .badge-status,
-
 .table td .badge,
-
-.table th .badge,
-
-.table td [class*="badge-"],
-
-.table td .badge-status,
-
-table.table td .badge,
-
-table.table td [class*="badge-"],
-
-table.table td .badge-status,
-
-table td .badge,
-
-table td [class*="badge-"],
-
-table td .badge-status,
-
-table td .badge-available,
-
-table td .badge-borrowed,
-
-table td .badge-overdue,
-
-table td .badge-warning {
-
+table td .badge {
     background: transparent !important;
-
-    background-color: transparent !important;
-
     border: none !important;
-
-    border-color: transparent !important;
-
-    box-shadow: none !important;
-
     padding: 0 !important;
-
-    border-radius: 0 !important;
-
     font-size: 13px !important;
-
     font-weight: 600 !important;
-
     display: inline-flex !important;
-
     align-items: center !important;
-
-    gap: 4px !important;
-
-    vertical-align: middle !important;
-
-    line-height: 1.4 !important;
-
-    white-space: nowrap !important;
-
-    text-shadow: none !important;
-
+    gap: 6px !important;
 }
 
-/* 2. An dau cham tron gia (pseudo-elements) cua badge-status ben trong bang */
-
+/* Status dots - simple indicators */
 .admin-content table td .badge-status::before,
-
-.admin-table-card table td .badge-status::before,
-
 .table-utc td .badge-status::before,
-
 .table td .badge-status::before,
-
-table td .badge-status::before,
-
 table td .badge-available::before,
-
 table td .badge-borrowed::before,
+table td .badge-overdue::before {
+    content: "" !important;
+    display: inline-block !important;
+    width: 6px !important;
+    height: 6px !important;
+    border-radius: 50% !important;
+    margin-right: 4px !important;
+}
+
+/* Color theo semantic - CHỈ MÀU CHỮ, đơn giản theo Figma */
+
+/* Success / Available */
+.admin-content table td .badge.bg-success,
+.admin-content table td .badge-available,
+.table-utc td .badge.bg-success,
+.table-utc td .badge-available,
+.table td .badge-available,
+table td .badge-available {
+    color: #668d7b !important;
+}
+
+table td .badge-available::before {
+    background-color: #668d7b !important;
+}
+
+/* Danger / Overdue */
+.admin-content table td .badge.bg-danger,
+.admin-content table td .badge-overdue,
+.table-utc td .badge.bg-danger,
+.table-utc td .badge-overdue,
+.table td .badge-overdue,
+table td .badge-overdue {
+    color: #a96d72 !important;
+}
 
 table td .badge-overdue::before {
-
-    display: none !important;
-
-    content: none !important;
-
+    background-color: #a96d72 !important;
 }
 
-/* 3. Giu nguyen mau chu va icon theo dung ngu nghia trang thai */
-
-/* Trang thai Thanh cong / San co / Dung han / Binh thuong: Soft Green #668D7B */
-
-.admin-content table td .badge.bg-success,
-
-.admin-content table td .badge.bg-success-subtle,
-
-.admin-content table td .badge-status.badge-available,
-
-.admin-content table td .badge-available,
-
-.admin-content table td .text-success,
-
-.admin-content table td .badge-role-catalog,
-
-.table-utc td .badge.bg-success,
-
-.table-utc td .badge.bg-success-subtle,
-
-.table-utc td .badge-status.badge-available,
-
-.table-utc td .badge-available,
-
-.table td .badge.bg-success,
-
-.table td .badge.bg-success-subtle,
-
-.table td .badge-status.badge-available,
-
-.table td .badge-available,
-
-table td .badge.bg-success,
-
-table td .badge.bg-success-subtle,
-
-table td .badge-status.badge-available,
-
-table td .badge-available,
-
-table td .badge-role-catalog {
-
-    color: var(--utc-success, #668d7b) !important;
-
-}
-
-/* Trang thai Canh bao / Qua han / Mat sach / Phat: Soft Red #A96D72 */
-
-.admin-content table td .badge.bg-danger,
-
-.admin-content table td .badge.bg-danger-subtle,
-
-.admin-content table td .badge-status.badge-overdue,
-
-.admin-content table td .badge-overdue,
-
-.admin-content table td .badge-role-admin,
-
-.table-utc td .badge.bg-danger,
-
-.table-utc td .badge.bg-danger-subtle,
-
-.table-utc td .badge-status.badge-overdue,
-
-.table-utc td .badge-overdue,
-
-.table td .badge.bg-danger,
-
-.table td .badge.bg-danger-subtle,
-
-.table td .badge-status.badge-overdue,
-
-.table td .badge-overdue,
-
-table td .badge.bg-danger,
-
-table td .badge.bg-danger-subtle,
-
-table td .badge-status.badge-overdue,
-
-table td .badge-overdue,
-
-table td .badge-role-admin {
-
-    color: var(--utc-danger, #a96d72) !important;
-
-}
-
-/* Trang thai Canh bao nhe / Nop muon / Cho boi thuong: Soft Amber #B28A52 */
-
+/* Warning */
 .admin-content table td .badge.bg-warning,
-
-.admin-content table td .badge.bg-warning-subtle,
-
-.admin-content table td .badge-status.badge-warning,
-
 .table-utc td .badge.bg-warning,
-
-.table-utc td .badge.bg-warning-subtle,
-
-.table-utc td .badge-status.badge-warning,
-
-.table td .badge.bg-warning,
-
-.table td .badge.bg-warning-subtle,
-
-.table td .badge-status.badge-warning,
-
-table td .badge.bg-warning,
-
-table td .badge.bg-warning-subtle,
-
-table td .badge-status.badge-warning {
-
-    color: var(--utc-warning, #b28a52) !important;
-
+.table td .badge-warning,
+table td .badge-warning {
+    color: #b28a52 !important;
 }
 
-/* Trang thai Thong tin / Dang muon / Chuyen nganh / QLT: Soft Blue #087DBB */
-
+/* Primary / Borrowed */
 .admin-content table td .badge.bg-primary,
-
-.admin-content table td .badge.bg-primary-subtle,
-
-.admin-content table td .badge.text-primary,
-
-.admin-content table td .badge-status.badge-borrowed,
-
 .admin-content table td .badge-borrowed,
-
 .table-utc td .badge.bg-primary,
-
-.table-utc td .badge.bg-primary-subtle,
-
-.table-utc td .badge-status.badge-borrowed,
-
 .table-utc td .badge-borrowed,
-
-.table td .badge.bg-primary,
-
-.table td .badge.bg-primary-subtle,
-
-.table td .badge-status.badge-borrowed,
-
 .table td .badge-borrowed,
-
-table td .badge.bg-primary,
-
-table td .badge.bg-primary-subtle,
-
-table td .badge-status.badge-borrowed,
-
 table td .badge-borrowed {
-
-    color: var(--utc-primary, #087dbb) !important;
-
+    color: #0079ba !important;
 }
 
+table td .badge-borrowed::before {
+    background-color: #0079ba !important;
+}
+
+/* Info */
 .admin-content table td .badge.bg-info,
-
-.admin-content table td .badge.bg-info-subtle,
-
-.admin-content table td .badge-role-reader,
-
 .table-utc td .badge.bg-info,
-
-.table-utc td .badge.bg-info-subtle,
-
-.table td .badge.bg-info,
-
-.table td .badge.bg-info-subtle,
-
-table td .badge.bg-info,
-
-table td .badge.bg-info-subtle,
-
-table td .badge-role-reader {
-
-    color: var(--utc-info, #537fa5) !important;
-
+table td .badge.bg-info {
+    color: #537fa5 !important;
 }
 
-/* Nhan phu / Vi tri / Dinh dang / Secondary: Muted Slate #64748B */
-
-.admin-content table td .badge.bg-light,
-
+/* Secondary */
 .admin-content table td .badge.bg-secondary,
-
-.admin-content table td .badge.bg-secondary-subtle,
-
-.table-utc td .badge.bg-light,
-
+.admin-content table td .badge.bg-light,
 .table-utc td .badge.bg-secondary,
-
-.table-utc td .badge.bg-secondary-subtle,
-
-.table td .badge.bg-light,
-
-.table td .badge.bg-secondary,
-
-.table td .badge.bg-secondary-subtle,
-
-table td .badge.bg-light,
-
-table td .badge.bg-secondary,
-
-table td .badge.bg-secondary-subtle {
-
-    color: var(--utc-text-muted, #64748b) !important;
-
+.table-utc td .badge.bg-light,
+table td .badge.bg-light {
+    color: #64748b !important;
 }
 
-/* Dam bao icon trong bang dong mau voi text */
-
+/* Icons trong badges - giữ đơn giản */
 .admin-content table td .badge i,
-
-.admin-content table td .badge-status i,
-
-.admin-content table td [class*="badge-"] i,
-
 .table-utc td .badge i,
-
-.table-utc td .badge-status i,
-
 .table td .badge i,
-
-.table td .badge-status i,
-
-table td .badge i,
-
-table td .badge-status i {
-
+table td .badge i {
     color: inherit !important;
-
-    font-size: 13.5px !important;
-
-    margin-right: 2px !important;
-
-    display: inline-block !important;
-
+    font-size: 14px !important;
+    margin-right: 3px !important;
 }
 

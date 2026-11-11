@@ -12,7 +12,9 @@
     --utc-table-th-bg: var(--utc-blue); --utc-primary-light: var(--utc-cream);
     --utc-radius-card: 8px; --utc-radius-btn: 6px; --utc-radius-input: 6px;
     --utc-radius-md: 6px; --utc-radius-lg: 8px;
-    --utc-shadow-card: none; --utc-shadow-md: none; --utc-shadow-btn: none;
+    --utc-shadow-card: none; 
+    --utc-shadow-md: none; 
+    --utc-shadow-btn: none;
     --utc-font-family: 'Be Vietnam Pro', 'Segoe UI', sans-serif;
 }
 .reader-body,.admin-body { font-family: var(--utc-font-family); font-size: 15px; line-height: 1.45; color: var(--utc-ink); }
@@ -20,9 +22,10 @@
 .reader-body main { min-width: 0; }
 :is(.reader-body,.admin-body) :is(button,input,select,textarea) { font-family: inherit; }
 :is(.reader-body,.admin-body) :is(a,button,input,select,textarea,summary):focus-visible { outline: 3px solid var(--utc-sky); outline-offset: 3px; }
-:is(.reader-body,.admin-body) :is(.btn,.btn-utc-primary,.btn-outline-utc) { font-size: 14px; line-height: 20px; font-weight: 500; padding: 12px 24px; box-shadow: none !important; }
+:is(.reader-body,.admin-body) :is(.btn,.btn-utc-primary,.btn-outline-utc) { font-size: 14px; line-height: 20px; font-weight: 600; padding: 12px 24px; box-shadow: none; }
 :is(.reader-body,.admin-body) :is(.btn-outline-primary,.btn-outline-utc,.btn-utc-secondary) { background: white; border: 1px solid var(--utc-line); color: var(--utc-navy); }
-:is(.reader-body,.admin-body) :is(.btn-outline-primary,.btn-outline-utc,.btn-utc-secondary):hover { background: var(--utc-cream); border-color: var(--utc-brand); color: var(--utc-brand); }
+:is(.reader-body,.admin-body) :is(.btn,.btn-utc-primary):hover { box-shadow: 0 4px 8px rgba(0, 121, 186, 0.2); transform: translateY(-1px); }
+:is(.reader-body,.admin-body) :is(.btn-outline-primary,.btn-outline-utc,.btn-utc-secondary):hover { background: var(--utc-cream); border-color: var(--utc-brand); color: var(--utc-brand); box-shadow: 0 2px 4px rgba(0, 121, 186, 0.1); }
 :is(.reader-body,.admin-body) :is(.form-control,.form-select,.form-control-utc) { min-height: 44px; border: 1px solid var(--utc-line); border-radius: 6px; box-shadow: none; font-size: 14px; }
 :is(.reader-body,.admin-body) :is(.form-control,.form-select,.form-control-utc):focus { border-color: var(--utc-brand); box-shadow: 0 0 0 3px rgb(0 121 186 / 12%); }
 .utc-site-header { background: white; border: 0; box-shadow: none; position: relative; }
@@ -44,9 +47,7 @@
 .utc-site-header .utc-header-account-actions > a:hover { border-color: var(--utc-brand); }
 .utc-site-header .utc-user-name { max-width: 180px; overflow: hidden; text-overflow: ellipsis; }
 .utc-site-header .utc-header-btn-user { min-width: 144px; text-align: center; }
-/* Text headings and labels carry their own meaning; keep icons on action-only controls. */
-:is(.reader-body,.admin-body) :is(h1,h2,h3,h4,h5,h6,.badge,.badge-status,.utc-badge,.sidebar-link,.sidebar-category) > .bi { display: none; }
-.reader-body :is(.profile-section-icon,.profile-plan-label > .bi,.profile-rule-text > .bi) { display: none; }
+/* Icons are important for UI/UX - keeping them visible with proper styling */
 .utc-site-header .utc-main-navbar { padding: 0; background: white; border: 1px solid var(--utc-line); border-left: 0; border-right: 0; box-shadow: none; }
 .utc-site-header .utc-navbar-inner { min-height: 52px; display: flex; align-items: center; }
 .utc-site-header .utc-navbar-menu { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 32px; list-style: none; margin: 0; padding: 0; }
@@ -81,7 +82,7 @@
 /* Admin shell from Figma 66:141; existing role checks and modal workflows are retained. */
 .admin-body { background: var(--utc-cream); }
 .admin-body .admin-main-header { position: relative; top: auto; box-shadow: none; border: 0; }
-.admin-body .admin-topbar { background: var(--utc-navy); padding: 12px 0; font-size: 12px; line-height: 1.45; letter-spacing: 0; }
+.admin-body .admin-topbar { background: #176a9e; padding: 12px 0; font-size: 12px; line-height: 1.45; letter-spacing: 0; }
 .admin-body .admin-topbar > div,.admin-body .admin-navbar > div { padding-left: 48px !important; padding-right: 48px !important; gap: 24px; }
 .admin-body .topbar-title { font-weight: 400; }
 .admin-body .admin-navbar { padding: 24px 0; }

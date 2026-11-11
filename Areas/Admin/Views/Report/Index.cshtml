@@ -12,13 +12,13 @@
         <h1>Báo cáo thư viện</h1>
         <a asp-area="Admin" asp-controller="Report" asp-action="ExportExcel"
            asp-route-period="@Model.KyBaoCao" asp-route-scope="@Model.PhamVi"
-           class="btn btn-outline-utc">Xuất Excel</a>
+           class="btn btn-utc-primary report-export">Xuất Excel</a>
     </header>
 
     <form method="get" asp-area="Admin" asp-controller="Report" asp-action="Index" class="report-filters">
         <div class="report-field">
             <label for="reportPeriod">Kỳ báo cáo</label>
-            <select id="reportPeriod" name="period" class="form-select">
+            <select id="reportPeriod" name="period" class="form-select" onchange="this.form.requestSubmit()">
                 @foreach (var period in Model.DanhSachKyBaoCao)
                 {
                     <option value="@period" selected="@(period == Model.KyBaoCao)">@period</option>
@@ -27,14 +27,14 @@
         </div>
         <div class="report-field">
             <label for="reportScope">Phạm vi</label>
-            <select id="reportScope" name="scope" class="form-select">
+            <select id="reportScope" name="scope" class="form-select" onchange="this.form.requestSubmit()">
                 @foreach (var scope in Model.DanhSachPhamVi)
                 {
                     <option value="@scope" selected="@(scope == Model.PhamVi)">@scope</option>
                 }
             </select>
         </div>
-        <button type="submit" class="btn btn-utc-primary">Xem báo cáo</button>
+        <noscript><button type="submit" class="btn btn-utc-primary">Xem báo cáo</button></noscript>
     </form>
 
     <dl class="report-summary" aria-label="Số liệu tổng hợp">
@@ -45,9 +45,13 @@
     </dl>
 
     <section class="report-books" aria-labelledby="reportBooksTitle">
-        <h2 id="reportBooksTitle">Số lượng sách</h2>
+        <h2 id="reportBooksTitle" class="visually-hidden">Số lượng sách</h2>
         <div class="report-table-wrap" role="region" aria-label="Số lượng sách theo đầu sách" tabindex="0">
             <table class="report-table">
+                <colgroup>
+                    <col class="report-title-column" />
+                    <col span="4" />
+                </colgroup>
                 <thead>
                     <tr>
                         <th scope="col">Tên sách</th>
