@@ -179,7 +179,7 @@
 
     <div class="admin-table-card shadow-sm border" style="border-radius: 8px; overflow: hidden;">
         <div class="table-responsive">
-            <table class="table-utc mb-0">
+            <table class="table-utc mb-0" id="nonBorrowingTable">
                 <thead>
                     <tr style="background-color: #f8fafc;">
                         <th style="width: 14%;">Mã SV / Mã GV</th>
@@ -191,7 +191,7 @@
                         <th style="width: 7%; text-align: right;">Thao tác</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="nonBorrowingTbody">
                     @if (Model.NonBorrowingReaders.Count == 0)
                     {
                         <tr>
@@ -205,7 +205,7 @@
                     {
                         @foreach (var r in Model.NonBorrowingReaders)
                         {
-                            <tr>
+                            <tr class="non-borrowing-row">
                                 <td>
                                     <strong class="font-monospace text-dark">@r.MaBD</strong>
                                     @if (r.Nhom == "Giảng viên")
@@ -243,5 +243,126 @@
                 </tbody>
             </table>
         </div>
+
+        @if (Model.NonBorrowingReaders.Count > 0)
+        {
+            <!-- Thanh phân trang cho Bảng 2 -->
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 p-3 bg-white border-top" id="nonBorrowingPaginationWrapper">
+                <div class="text-muted small" id="nonBorrowingPageInfo">
+                    Hiển thị <strong id="nbStartIdx">1</strong> - <strong id="nbEndIdx">10</strong> trong tổng số <strong>@Model.NonBorrowingReaders.Count</strong> bạn đọc
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <div class="d-flex align-items-center gap-1 me-2">
+                        <span class="text-muted small" style="font-size: 12.5px;">Số dòng/trang:</span>
+                        <select id="nbPageSizeSelect" class="form-select form-select-sm" style="width: auto; font-size: 12.5px; padding: 2px 24px 2px 8px; border-radius: 4px;">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                    <ul class="pagination pagination-sm mb-0 gap-1" id="nonBorrowingPagination">
+                        <!-- Render các nút trang tự động bằng JS -->
+                    </ul>
+                </div>
+            </div>
+        }
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const rows = document.querySelectorAll('#nonBorrowingTbody .non-borrowing-row');
+            const totalRows = rows.length;
+            if (totalRows === 0) return;
+
+            const pageSizeSelect = document.getElementById('nbPageSizeSelect');
+            const paginationUl = document.getElementById('nonBorrowingPagination');
+            const startIdxSpan = document.getElementById('nbStartIdx');
+            const endIdxSpan = document.getElementById('nbEndIdx');
+
+            let currentPage = 1;
+            let pageSize = parseInt(pageSizeSelect.value, 10) || 10;
+
+            function renderTable() {
+                const totalPages = Math.ceil(totalRows / pageSize);
+                if (currentPage > totalPages) currentPage = totalPages;
+                if (currentPage < 1) currentPage = 1;
+
+                const start = (currentPage - 1) * pageSize;
+                const end = Math.min(start + pageSize, totalRows);
+
+                rows.forEach((row, index) => {
+                    if (index >= start && index < end) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+
+                startIdxSpan.textContent = totalRows === 0 ? 0 : (start + 1);
+                endIdxSpan.textContent = end;
+
+                // Render nút trang
+                paginationUl.innerHTML = '';
+
+                // Nút Trước
+                const prevLi = document.createElement('li');
+                prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+                prevLi.innerHTML = `<a class="page-link" href="javascript:void(0)" aria-label="Trước" style="border-radius: 4px; padding: 4px 8px; font-size: 12px;"><i class="bi bi-chevron-left"></i></a>`;
+                prevLi.addEventListener('click', () => {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        renderTable();
+                    }
+                });
+                paginationUl.appendChild(prevLi);
+
+                // Các trang số
+                for (let i = 1; i <= totalPages; i++) {
+                    if (totalPages > 7) {
+                        if (i !== 1 && i !== totalPages && Math.abs(i - currentPage) > 2) {
+                            if (i === 2 || i === totalPages - 1) {
+                                const dotsLi = document.createElement('li');
+                                dotsLi.className = 'page-item disabled';
+                                dotsLi.innerHTML = `<span class="page-link" style="border:none; padding: 4px 4px; font-size: 12px;">...</span>`;
+                                paginationUl.appendChild(dotsLi);
+                            }
+                            continue;
+                        }
+                    }
+
+                    const pageLi = document.createElement('li');
+                    pageLi.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                    pageLi.innerHTML = `<a class="page-link" href="javascript:void(0)" style="border-radius: 4px; padding: 4px 10px; font-size: 12px; font-weight: 600;">${i}</a>`;
+                    pageLi.addEventListener('click', () => {
+                        currentPage = i;
+                        renderTable();
+                    });
+                    paginationUl.appendChild(pageLi);
+                }
+
+                // Nút Sau
+                const nextLi = document.createElement('li');
+                nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+                nextLi.innerHTML = `<a class="page-link" href="javascript:void(0)" aria-label="Sau" style="border-radius: 4px; padding: 4px 8px; font-size: 12px;"><i class="bi bi-chevron-right"></i></a>`;
+                nextLi.addEventListener('click', () => {
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        renderTable();
+                    }
+                });
+                paginationUl.appendChild(nextLi);
+            }
+
+            pageSizeSelect.addEventListener('change', function () {
+                pageSize = parseInt(this.value, 10);
+                currentPage = 1;
+                renderTable();
+            });
+
+            renderTable();
+        });
+    </script>
+}

@@ -179,10 +179,10 @@
                                 </table>
                             </div>
 
-                            <!-- Nút Lưu thông tin màu cam ở góc dưới bên phải -->
+                            <!-- Nút Lưu thông tin ở góc dưới bên phải -->
                             <div class="d-flex justify-content-end mt-4 pt-2">
                                 <button type="submit" class="btn-orange-save">
-                                    Lưu thông tin <i class="bi bi-floppy-fill"></i>
+                                    <i class="bi bi-floppy-fill"></i> Lưu thông tin
                                 </button>
                             </div>
                         </div>
@@ -217,7 +217,6 @@
                         </span>
                     </div>
                     <div class="profile-rule-pills">
-                        <span class="rule-pill-item rule-pill-total">Đang mượn: @Model.TongSoSachDangMuon cuốn</span>
                         <span class="rule-pill-item rule-pill-valid">Còn hạn: @Model.SoSachConHan cuốn</span>
                         @if (Model.SoSachQuaHan > 0)
                         {
@@ -358,9 +357,6 @@
                         <div class="profile-summary-title">
                             Tổng số sách đang mượn: <strong class="text-primary">@Model.TongSoSachDangMuon cuốn</strong> 
                             (@Model.SoSachConHan cuốn còn hạn, <span class="text-danger fw-bold">@Model.SoSachQuaHan cuốn quá hạn</span>)
-                        </div>
-                        <div class="profile-summary-sub">
-                            * Quy định: Các cuốn sách quá hạn chịu mức phí nộp phạt 100.000 đ/cuốn theo quy định thư viện Đại học GTVT.
                         </div>
                     </div>
                     <div class="profile-summary-right">

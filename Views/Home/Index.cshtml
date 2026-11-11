@@ -39,7 +39,6 @@
             color: #ffffff;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
             position: relative;
             overflow-x: hidden;
         }
@@ -56,7 +55,10 @@
             width: 100%;
             max-width: 1240px;
             margin: 0 auto;
-            padding: 24px 20px 10px;
+            padding: 24px 20px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         /* Header Bar */
@@ -64,7 +66,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 24px;
+            margin-bottom: 10px;
             flex-wrap: wrap;
             gap: 16px;
         }
@@ -119,19 +121,23 @@
             font-weight: 400;
         }
 
-        /* Main 2-Card Layout */
+        /* Main Login Layout - Căn giữa cả chiều dọc lẫn chiều ngang màn hình */
         .utc-portal-grid {
-            display: grid;
-            grid-template-columns: 1.25fr 0.95fr;
-            gap: 32px;
-            align-items: stretch;
-            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            width: 100%;
+            padding: 40px 0 60px;
         }
 
-        @@media (max-width: 991px) {
-            .utc-portal-grid {
-                grid-template-columns: 1fr;
-            }
+        /* Right Card - Login Form Căn giữa */
+        .utc-login-card {
+            width: 100%;
+            max-width: 460px;
+            padding: 44px 34px 34px;
+            position: relative;
+            box-shadow: 0 24px 60px -10px rgba(0, 0, 0, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.9);
         }
 
         /* White Rounded Cards */
@@ -412,12 +418,104 @@
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .utc-btn-submit:hover {
             background: linear-gradient(180deg, #1a5bb8 0%, #0f4088 100%);
             box-shadow: 0 6px 16px rgba(12, 54, 116, 0.45);
             transform: translateY(-1px);
+        }
+
+        .utc-btn-submit:disabled {
+            opacity: 0.85;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Spinner Loading */
+        .utc-spinner {
+            width: 18px;
+            height: 18px;
+            border: 2.5px solid rgba(255, 255, 255, 0.35);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: utcSpin 0.75s linear infinite;
+            display: inline-block;
+        }
+
+        @@keyframes utcSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Fullscreen Glassmorphism Loading Overlay */
+        .utc-login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(7, 43, 97, 0.45);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 99999;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .utc-login-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .utc-overlay-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 32px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+            animation: utcScaleIn 0.25s ease-out;
+            max-width: 340px;
+            text-align: center;
+        }
+
+        @@keyframes utcScaleIn {
+            from { transform: scale(0.92); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .utc-pulse-loader {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3.5px solid #e0f2fe;
+            border-top-color: #0284c7;
+            animation: utcSpin 0.8s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        .utc-overlay-title {
+            color: #072b61;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .utc-overlay-subtitle {
+            color: #64748b;
+            font-size: 12.5px;
+            font-weight: 500;
         }
 
         /* Divider */
@@ -664,80 +762,9 @@
             </div>
         </header>
 
-        <!-- Main 2-Column Cards Grid -->
+        <!-- Main Login Layout: Căn giữa màn hình -->
         <main class="utc-portal-grid">
-            <!-- Left Card: Welcome & 4 Library Functions -->
-            <section class="utc-white-card">
-                <div>
-                    <div class="utc-welcome-header">
-                        <div class="utc-welcome-icon-circle">
-                            <i class="bi bi-mortarboard-fill"></i>
-                        </div>
-                        <h2 class="utc-welcome-title">CHÀO MỪNG ĐẾN VỚI CỔNG THÔNG TIN THƯ VIỆN</h2>
-                    </div>
-
-                    <p class="utc-welcome-desc-main">
-                        <strong>Trường Đại học Giao thông Vận tải</strong> — nơi đào tạo nguồn nhân lực chất lượng cao trong lĩnh vực Giao thông Vận tải, Kinh tế, Kỹ thuật và Công nghệ thông tin.
-                    </p>
-                    <p class="utc-welcome-desc-sub">
-                        Đăng nhập để tra cứu sách, theo dõi hạn mượn trả, quản lý thẻ bạn đọc và học liệu số cá nhân.
-                    </p>
-
-                    <!-- 4 Chức năng thư viện như người dùng yêu cầu -->
-                    <div class="utc-lib-features-grid">
-                        <!-- Chức năng 1: Tìm sách / tài liệu -->
-                        <div class="utc-feature-box">
-                            <div class="utc-feature-icon-square">
-                                <i class="bi bi-search"></i>
-                            </div>
-                            <div class="utc-feature-info">
-                                <span class="utc-feature-title">Tìm sách &amp; tài liệu</span>
-                                <span class="utc-feature-sub">Mục lục OPAC, giáo trình và tài liệu số</span>
-                            </div>
-                        </div>
-
-                        <!-- Chức năng 2: Tra cứu hạn mượn trả -->
-                        <div class="utc-feature-box">
-                            <div class="utc-feature-icon-square">
-                                <i class="bi bi-clock-history"></i>
-                            </div>
-                            <div class="utc-feature-info">
-                                <span class="utc-feature-title">Tra cứu hạn mượn trả</span>
-                                <span class="utc-feature-sub">Xem sách đang mượn &amp; hạn trả trực tuyến</span>
-                            </div>
-                        </div>
-
-                        <!-- Chức năng 3: Thẻ thư viện số -->
-                        <div class="utc-feature-box">
-                            <div class="utc-feature-icon-square">
-                                <i class="bi bi-person-vcard-fill"></i>
-                            </div>
-                            <div class="utc-feature-info">
-                                <span class="utc-feature-title">Thẻ thư viện số</span>
-                                <span class="utc-feature-sub">Thông tin thẻ bạn đọc &amp; lịch sử mượn</span>
-                            </div>
-                        </div>
-
-                        <!-- Chức năng 4: Đặt trước & Luận văn -->
-                        <div class="utc-feature-box">
-                            <div class="utc-feature-icon-square">
-                                <i class="bi bi-journal-bookmark-fill"></i>
-                            </div>
-                            <div class="utc-feature-info">
-                                <span class="utc-feature-title">Đặt trước &amp; Luận văn</span>
-                                <span class="utc-feature-sub">Đặt giữ sách quầy &amp; đọc luận án số</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-4 pt-3 border-top d-flex justify-content-between align-items-center text-muted small">
-                    <span><i class="bi bi-geo-alt-fill text-danger me-1"></i> Tầng 4 - 7, Nhà A8, Số 3 Cầu Giấy, Hà Nội</span>
-                    <span><i class="bi bi-telephone-fill text-primary me-1"></i> 024 3766 4075</span>
-                </div>
-            </section>
-
-            <!-- Right Card: Login Form -->
+            <!-- Card: Login Form -->
             <section class="utc-white-card utc-login-card">
                 <!-- Floating Lock Circle Badge -->
                 <div class="utc-floating-lock-badge">
@@ -785,7 +812,7 @@
                     </div>
 
                     <div class="utc-login-help-row">
-                        <a href="javascript:void(0)" onclick="alert('Vui lòng liên hệ Quầy thủ thư Tầng 5 - Nhà A8 hoặc gửi email tới thuvien@utc.edu.vn để được cấp lại mật khẩu.')">
+                        <a href="javascript:void(0)" onclick="toggleDemoChips()" id="forgotPasswordLink">
                             Quên mật khẩu?
                         </a>
                         <a href="javascript:void(0)" onclick="alert('QUY TẮC ĐĂNG NHẬP THƯ VIỆN UTC:\n\n1. Sinh viên (Bạn đọc):\n- Tài khoản: Mã sinh viên (VD: 242630923)\n- Mật khẩu: Tên + Mã sinh viên (VD: Đỗ Văn Đạt -> Dat242630923, Nguyễn Văn An -> An242630899)\n\n2. Quản trị viên (Admin):\n- Tài khoản: admin\n- Mật khẩu: Admin@123')">
@@ -794,15 +821,13 @@
                     </div>
 
                     <!-- Nút Đăng nhập chính -->
-                    <button type="submit" class="utc-btn-submit">
-                        ĐĂNG NHẬP
+                    <button type="submit" class="utc-btn-submit" id="loginSubmitBtn">
+                        <span id="btnSubmitText">ĐĂNG NHẬP</span>
                     </button>
                 </form>
 
-
-
-                <!-- Quick Fill Chips for Demo -->
-                <div class="utc-demo-chips">
+                <!-- Quick Fill Chips for Demo (Mặc định ẩn, ấn Quên mật khẩu mới hiện ra) -->
+                <div class="utc-demo-chips" id="demoChipsWrapper" style="display: none;">
                     <span class="utc-demo-title"><i class="bi bi-lightning-charge-fill text-warning me-1"></i>Đăng nhập nhanh (Demo):</span>
                     <div class="utc-chips-row">
                         <button type="button" class="utc-chip" onclick="fillAccount('242630923', 'Dat242630923')">
@@ -821,41 +846,15 @@
                 </div>
             </section>
         </main>
+    </div>
 
-        <!-- 4 Bottom Feature Badges -->
-        <section class="utc-bottom-features-row">
-            <div class="utc-badge-card">
-                <i class="bi bi-shield-check utc-badge-icon"></i>
-                <div>
-                    <div class="utc-badge-text-title">Bảo mật tuyệt đối</div>
-                    <div class="utc-badge-text-sub">Thông tin bạn đọc được bảo mật an toàn tuyệt đối</div>
-                </div>
-            </div>
-
-            <div class="utc-badge-card">
-                <i class="bi bi-clock-history utc-badge-icon"></i>
-                <div>
-                    <div class="utc-badge-text-title">Dịch vụ tiện lợi</div>
-                    <div class="utc-badge-text-sub">Hệ thống tra cứu OPAC trực tuyến phục vụ 24/7</div>
-                </div>
-            </div>
-
-            <div class="utc-badge-card">
-                <i class="bi bi-headset utc-badge-icon"></i>
-                <div>
-                    <div class="utc-badge-text-title">Hỗ trợ 24/7</div>
-                    <div class="utc-badge-text-sub">Đội ngũ thủ thư luôn sẵn sàng giải đáp mọi thắc mắc</div>
-                </div>
-            </div>
-
-            <div class="utc-badge-card">
-                <i class="bi bi-check-circle-fill utc-badge-icon"></i>
-                <div>
-                    <div class="utc-badge-text-title">Xác nhận nhanh chóng</div>
-                    <div class="utc-badge-text-sub">Xử lý mượn trả và gia hạn tài liệu tức thì</div>
-                </div>
-            </div>
-        </section>
+    <!-- Loading Overlay khi nhấn Đăng nhập -->
+    <div class="utc-login-overlay" id="loginLoadingOverlay">
+        <div class="utc-overlay-card">
+            <div class="utc-pulse-loader"></div>
+            <div class="utc-overlay-title">Đang xác thực tài khoản...</div>
+            <div class="utc-overlay-subtitle">Vui lòng chờ trong giây lát</div>
+        </div>
     </div>
 
 
@@ -883,6 +882,36 @@
             document.getElementById('loginUsername').value = username;
             document.getElementById('loginPassword').value = password;
         }
+
+        // Bật/tắt hiện danh sách tài khoản demo khi ấn Quên mật khẩu
+        function toggleDemoChips() {
+            const chips = document.getElementById('demoChipsWrapper');
+            if (chips) {
+                chips.style.display = (chips.style.display === 'none' || chips.style.display === '') ? 'flex' : 'none';
+            }
+        }
+
+        // Hiệu ứng Loading khi gửi form Đăng nhập
+        const loginForm = document.getElementById('loginForm');
+        const loginSubmitBtn = document.getElementById('loginSubmitBtn');
+        const btnSubmitText = document.getElementById('btnSubmitText');
+        const loginLoadingOverlay = document.getElementById('loginLoadingOverlay');
+
+        loginForm.addEventListener('submit', function (e) {
+            const usernameVal = document.getElementById('loginUsername').value.trim();
+            const passwordVal = document.getElementById('loginPassword').value.trim();
+
+            if (usernameVal && passwordVal) {
+                // Đổi nút thành trạng thái xoay spinner
+                loginSubmitBtn.disabled = true;
+                loginSubmitBtn.innerHTML = '<span class="utc-spinner"></span> Đang đăng nhập...';
+
+                // Bật full-screen glassmorphism overlay loading
+                if (loginLoadingOverlay) {
+                    loginLoadingOverlay.classList.add('show');
+                }
+            }
+        });
     </script>
 </body>
 </html>

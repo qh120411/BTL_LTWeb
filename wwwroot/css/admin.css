@@ -2157,3 +2157,110 @@ table td .badge-status i {
 
 }
 
+
+
+/* ==========================================================================
+   ADMIN SIDEBAR - FIGMA / HUYV2 STYLE (Blue Solid Navy Theme #176a9e)
+   ========================================================================== */
+.admin-sidebar {
+    background: #176a9e !important;
+    width: 256px !important;
+    min-width: 256px !important;
+    padding: 24px 16px !important;
+    border-right: none !important;
+    box-shadow: none !important;
+    position: sticky !important;
+    top: 78px !important;
+    height: calc(100vh - 78px) !important;
+    overflow-y: auto !important;
+}
+
+.sidebar-category {
+    color: #ddefff !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px !important;
+    padding: 0 4px !important;
+    margin-bottom: 14px !important;
+    text-transform: uppercase !important;
+}
+
+.sidebar-nav {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    padding: 0 !important;
+}
+
+.sidebar-link {
+    color: #ffffff !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 6px !important;
+    min-height: 46px !important;
+    padding: 10px 14px !important;
+    font-size: 14.5px !important;
+    font-weight: 500 !important;
+    box-shadow: none !important;
+    transform: none !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    text-decoration: none !important;
+    transition: background 0.2s ease, color 0.2s ease !important;
+}
+
+.sidebar-link i {
+    font-size: 16px !important;
+    color: #ffffff !important;
+    opacity: 0.9 !important;
+    transition: none !important;
+}
+
+.sidebar-link:hover {
+    background: rgba(255, 255, 255, 0.12) !important;
+    color: #ffffff !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.sidebar-link:hover i {
+    color: #ffffff !important;
+    opacity: 1 !important;
+}
+
+.sidebar-link.active,
+.sidebar-link:active {
+    background: #ffffff !important;
+    color: #075a92 !important;
+    font-weight: 700 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+.sidebar-link.active i,
+.sidebar-link:active i {
+    color: #075a92 !important;
+    opacity: 1 !important;
+}
+
+.sidebar-footer {
+    margin-top: auto !important;
+    padding-top: 16px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+.sidebar-footer .btn-back-web {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 6px !important;
+    font-weight: 500 !important;
+    font-size: 13.5px !important;
+    padding: 9px 12px !important;
+    transition: background 0.2s ease !important;
+}
+
+.sidebar-footer .btn-back-web:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+}

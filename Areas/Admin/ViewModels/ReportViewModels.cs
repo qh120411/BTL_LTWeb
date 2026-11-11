@@ -1,4 +1,4 @@
-﻿namespace BTL_LTWEB.Areas.Admin.ViewModels;
+namespace BTL_LTWEB.Areas.Admin.ViewModels;
 
 public class BookReportItemViewModel
 {
@@ -11,26 +11,10 @@ public class BookReportItemViewModel
 
 public class ReportViewModel
 {
-    public string KyBaoCao { get; set; } = "Tháng 10/2026";
-    public string PhamVi { get; set; } = "Toàn thư viện";
-
-    public List<string> DanhSachKyBaoCao { get; set; } = new()
-    {
-        "Tháng 10/2026",
-        "Tháng 09/2026",
-        "Tháng 08/2026",
-        "Quý 3/2026",
-        "Năm học 2025 - 2026"
-    };
-
-    public List<string> DanhSachPhamVi { get; set; } = new()
-    {
-        "Toàn thư viện",
-        "Cơ sở chính (Số 3 Cầu Giấy)",
-        "Phân hiệu TP. Hồ Chí Minh",
-        "Phòng mượn tự chọn",
-        "Phòng đọc chuyên ngành"
-    };
+    public DateTime? TuNgay { get; set; }
+    public DateTime? DenNgay { get; set; }
+    public string KyBaoCao { get; set; } = string.Empty;
+    public string PhamVi { get; set; } = "Thư viện Đại học Giao thông Vận tải (Nhà A8)";
 
     // 4 Card Thống Kê
     public int LuotMuonTrongThang { get; set; } = 42;
@@ -40,6 +24,24 @@ public class ReportViewModel
 
     // Chi tiết từng đầu sách
     public List<BookReportItemViewModel> ChiTietDauSach { get; set; } = new();
+
+    // Dữ liệu cho các biểu đồ (Charts)
+    public List<string> MonthlyLabels { get; set; } = new();
+    public List<int> MonthlyBorrowData { get; set; } = new();
+    public List<int> MonthlyReturnData { get; set; } = new();
+
+    // Tỷ lệ phân bố tình trạng sách
+    public int TyLeSanCo { get; set; }
+    public int TyLeDangMuon { get; set; }
+    public int TyLeMatHong { get; set; }
+
+    // Top 5 sách mượn nhiều nhất
+    public List<string> TopBookLabels { get; set; } = new();
+    public List<int> TopBookBorrowCounts { get; set; } = new();
+
+    // Phân bố bạn đọc mượn sách theo nhóm
+    public int SoLuongSinhVienMuon { get; set; }
+    public int SoLuongGiangVienMuon { get; set; }
 
     // Dòng TỔNG
     public int TongCongSoBan => ChiTietDauSach.Sum(x => x.TongBan);

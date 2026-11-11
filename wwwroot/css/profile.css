@@ -288,29 +288,38 @@
     font-size: 0.84rem;
 }
 
-/* Orange Save Button */
+/* Nút Lưu thông tin - Đồng bộ 100% với các nút Header (Đỗ Văn Đạt, Tìm học liệu) */
 .btn-orange-save {
-    background: #f97316;
-    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-    color: #ffffff;
-    font-weight: 600;
-    font-size: 0.88rem;
-    padding: 9px 24px;
-    border-radius: 6px;
-    border: none;
-    box-shadow: 0 3px 10px rgba(249, 115, 22, 0.35);
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    transition: transform 0.15s, box-shadow 0.15s, background-color 0.15s;
+    height: 40px !important;
+    padding: 0 18px !important;
+    background-color: var(--utc-primary, #0079ba) !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 4px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    text-decoration: none !important;
+    box-shadow: none !important;
+    transform: none !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s ease, opacity 0.2s ease !important;
+}
+
+.btn-orange-save i {
+    color: #ffffff !important;
+    font-size: 15px !important;
 }
 
 .btn-orange-save:hover {
-    background: #ea580c;
-    color: #ffffff;
-    transform: translateY(-1px);
-    box-shadow: 0 5px 14px rgba(249, 115, 22, 0.45);
+    background-color: var(--utc-primary-hover, #00649b) !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+    transform: none !important;
 }
 
 /* Success Toast / Alert */
@@ -363,7 +372,7 @@
 .rule-pill-item {
     font-size: 0.76rem;
     padding: 3px 10px;
-    border-radius: var(--utc-radius-input, 6px);
+    border-radius: 4px;
     font-weight: 600;
 }
 
@@ -654,11 +663,11 @@
     align-items: flex-end;
 }
 
-/* Badge trạng thái thuần chữ - KHÔNG DÙNG ICON THEO YÊU CẦU */
+/* Badge trạng thái thuần chữ - Bo góc 4px phẳng theo quy chuẩn */
 .status-pill-overdue {
     display: inline-block;
-    padding: 5px 16px;
-    border-radius: 999px;
+    padding: 4px 12px;
+    border-radius: 4px;
     background: #f8eeee;
     color: #a96d72;
     border: 1px solid #eacfd2;
@@ -677,8 +686,8 @@
 
 .status-pill-active {
     display: inline-block;
-    padding: 5px 16px;
-    border-radius: 999px;
+    padding: 4px 12px;
+    border-radius: 4px;
     background: #edf4ef;
     color: #668d7b;
     border: 1px solid #d2e4d8;
@@ -873,8 +882,8 @@
 /* Sắp đến hạn status pill */
 .status-pill-expiring {
     display: inline-block;
-    padding: 5px 16px;
-    border-radius: 999px;
+    padding: 4px 12px;
+    border-radius: 4px;
     background: #f8f3e9;
     color: #b28a52;
     border: 1px solid #eaddc7;

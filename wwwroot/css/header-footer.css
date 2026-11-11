@@ -1321,3 +1321,115 @@
 
 }
 
+
+
+/* ==========================================================================
+   HEADER ACTIONS - ĐỒNG BỘ KIỂU DÁNG VỚI NÚT TÌM HỌC LIỆU (FIGMA CLEAN FLAT)
+   Bo góc 4px, chiều cao cân đối, phẳng hoàn toàn, chữ trắng sắc nét
+   ========================================================================== */
+.utc-header-account-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.utc-header-btn-admin,
+.utc-header-btn-user,
+.utc-header-btn-login {
+    height: 40px !important;
+    padding: 0 18px !important;
+    background-color: var(--utc-primary, #0079ba) !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 4px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    text-decoration: none !important;
+    box-shadow: none !important;
+    transform: none !important;
+    transition: background-color 0.2s ease, opacity 0.2s ease !important;
+}
+
+.utc-header-btn-admin i,
+.utc-header-btn-user i,
+.utc-header-btn-login i {
+    color: #ffffff !important;
+    font-size: 15px !important;
+}
+
+.utc-header-btn-admin:hover,
+.utc-header-btn-user:hover,
+.utc-header-btn-login:hover {
+    background-color: var(--utc-primary-hover, #00649b) !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+
+/* Nút Đăng xuất theo kiểu btn-utc-outline (Nền trắng, viền xanh nhạt, chữ và icon xanh) */
+.utc-header-btn-logout {
+    height: 40px !important;
+    padding: 0 18px !important;
+    background-color: #FFFFFF !important;
+    color: var(--utc-primary, #0079BA) !important;
+    border: 1px solid #D0E0EC !important;
+    border-radius: var(--utc-radius-btn, 6px) !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    text-decoration: none !important;
+    box-shadow: none !important;
+    transform: none !important;
+    transition: all 0.2s ease !important;
+}
+
+.utc-header-btn-logout i {
+    color: var(--utc-primary, #0079BA) !important;
+    font-size: 15px !important;
+}
+
+.utc-header-btn-logout:hover {
+    background-color: var(--utc-primary-light, #F0F7FC) !important;
+    border-color: var(--utc-primary, #0079BA) !important;
+    color: var(--utc-primary-hover, #00679E) !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+.utc-header-btn-logout:hover i {
+    color: var(--utc-primary-hover, #00679E) !important;
+}
+
+
+
+/* Dải 3 màu nhận diện thương hiệu UTC ở Top Menu */
+.utc-menu-stripes {
+    display: flex;
+    width: 100%;
+    height: 4px;
+}
+
+.utc-menu-stripes .utc-stripe-blue {
+    flex: 1;
+    background-color: #0524FF; /* Xanh biển: C:98 M:86 Y:0 K:0 */
+}
+
+.utc-menu-stripes .utc-stripe-gray {
+    flex: 1;
+    background-color: #999999; /* Ghi: C:0 M:0 Y:0 K:40 */
+}
+
+.utc-menu-stripes .utc-stripe-yellow {
+    flex: 1;
+    background-color: #FFD100; /* Vàng: C:0 M:18 Y:100 K:0 */
+}

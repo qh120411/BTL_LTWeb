@@ -1,4 +1,4 @@
-﻿using BTL_LTWEB.Areas.Admin.ViewModels;
+using BTL_LTWEB.Areas.Admin.ViewModels;
 
 namespace BTL_LTWEB.Areas.Admin.Services;
 
@@ -28,6 +28,6 @@ public interface IReaderService
 
 public interface IReportService
 {
-    ReportViewModel GetReport(string? period, string? scope);
-    byte[] GenerateExcelReport(string? period, string? scope);
+    ReportViewModel GetReport(DateTime? fromDate, DateTime? toDate);
+    byte[] GenerateExcelReport(DateTime? fromDate, DateTime? toDate);
 }

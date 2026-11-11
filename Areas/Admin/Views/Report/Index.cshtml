@@ -5,100 +5,281 @@
 
 <div class="admin-breadcrumb">THƯ VIỆN UTC / QUẢN TRỊ</div>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="admin-page-title mb-0">Báo cáo &amp; thống kê</h1>
-    <a asp-action="ExportExcel" asp-route-period="@Model.KyBaoCao" asp-route-scope="@Model.PhamVi" class="btn btn-utc-primary">
-        Xuất báo cáo Excel
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+        <h1 class="admin-page-title mb-1">Báo cáo &amp; thống kê lưu thông</h1>
+        <div class="text-muted small">
+            <i class="bi bi-geo-alt-fill text-danger me-1"></i> @Model.PhamVi
+        </div>
+    </div>
+    <a asp-action="ExportExcel" asp-route-fromDate="@(Model.TuNgay?.ToString("yyyy-MM-dd"))" asp-route-toDate="@(Model.DenNgay?.ToString("yyyy-MM-dd"))" class="btn btn-utc-primary">
+        <i class="bi bi-file-earmark-excel me-1"></i> Xuất báo cáo Excel
     </a>
 </div>
 
-<!-- Bộ lọc Kỳ báo cáo & Phạm vi -->
-<form method="get" asp-action="Index" class="mb-4">
-    <div class="row g-3">
-        <div class="col-md-6">
-            <label class="form-label-utc">Kỳ báo cáo</label>
-            <select name="period" class="form-select form-control-utc" onchange="this.form.submit()">
-                @foreach (var k in Model.DanhSachKyBaoCao)
-                {
-                    <option value="@k" selected="@(k == Model.KyBaoCao)">@k</option>
-                }
-            </select>
+<!-- Bộ lọc: Thời gian bắt đầu và kết thúc (Bỏ Kỳ và Phạm vi) -->
+<div class="card p-3 mb-4 shadow-sm border-0" style="background: #ffffff; border-radius: 8px;">
+    <form method="get" asp-action="Index" class="row g-3 align-items-end">
+        <div class="col-md-4 col-sm-6">
+            <label class="form-label-utc mb-1 fw-bold text-navy" style="font-size: 13px;">
+                <i class="bi bi-calendar-event me-1 text-primary"></i> Thời gian bắt đầu:
+            </label>
+            <input type="date" name="fromDate" class="form-control form-control-utc" 
+                   value="@(Model.TuNgay?.ToString("yyyy-MM-dd"))" />
         </div>
-        <div class="col-md-6">
-            <label class="form-label-utc">Phạm vi</label>
-            <select name="scope" class="form-select form-control-utc" onchange="this.form.submit()">
-                @foreach (var p in Model.DanhSachPhamVi)
-                {
-                    <option value="@p" selected="@(p == Model.PhamVi)">@p</option>
-                }
-            </select>
+        <div class="col-md-4 col-sm-6">
+            <label class="form-label-utc mb-1 fw-bold text-navy" style="font-size: 13px;">
+                <i class="bi bi-calendar-check me-1 text-primary"></i> Thời gian kết thúc:
+            </label>
+            <input type="date" name="toDate" class="form-control form-control-utc" 
+                   value="@(Model.DenNgay?.ToString("yyyy-MM-dd"))" />
         </div>
-    </div>
-</form>
+        <div class="col-md-4 col-sm-12 d-flex gap-2">
+            <button type="submit" class="btn btn-utc-primary w-100" style="height: 38px;">
+                <i class="bi bi-funnel-fill me-1"></i> Lọc dữ liệu báo cáo
+            </button>
+            <a href="/Admin/Report" class="btn btn-outline-secondary" style="height: 38px; display: inline-flex; align-items: center;" title="Đặt lại bộ lọc">
+                <i class="bi bi-arrow-counterclockwise"></i>
+            </a>
+        </div>
+    </form>
+</div>
 
-<!-- 4 Card KPI -->
+<!-- 4 Card KPI Tổng quan -->
 <div class="row g-3 mb-4">
     <div class="col-md-3 col-sm-6">
-        <div class="kpi-card">
-            <div class="kpi-title">Lượt mượn trong tháng</div>
-            <div class="kpi-value">@Model.LuotMuonTrongThang</div>
+        <div class="kpi-card h-100">
+            <div class="kpi-title">Lượt mượn trong kỳ</div>
+            <div class="kpi-value text-primary">@Model.LuotMuonTrongThang</div>
         </div>
     </div>
     <div class="col-md-3 col-sm-6">
-        <div class="kpi-card">
-            <div class="kpi-title">Lượt trả trong tháng</div>
-            <div class="kpi-value">@Model.LuotTraTrongThang</div>
+        <div class="kpi-card h-100">
+            <div class="kpi-title">Lượt trả trong kỳ</div>
+            <div class="kpi-value text-success">@Model.LuotTraTrongThang</div>
         </div>
     </div>
     <div class="col-md-3 col-sm-6">
-        <div class="kpi-card">
+        <div class="kpi-card h-100">
             <div class="kpi-title">Quá hạn hiện tại</div>
-            <div class="kpi-value">@Model.QuaHanHienTai</div>
+            <div class="kpi-value text-danger">@Model.QuaHanHienTai</div>
         </div>
     </div>
     <div class="col-md-3 col-sm-6">
-        <div class="kpi-card">
-            <div class="kpi-title">Tổng bản sách</div>
-            <div class="kpi-value">@Model.TongBanSach</div>
+        <div class="kpi-card h-100">
+            <div class="kpi-title">Tổng số bản sách</div>
+            <div class="kpi-value text-navy">@Model.TongBanSach</div>
         </div>
     </div>
 </div>
 
-<!-- Bảng chi tiết lưu thông theo đầu sách -->
-<div class="admin-table-card">
-    <table class="table-utc">
-        <thead>
-            <tr>
-                <th style="width: 38%;">Đầu sách</th>
-                <th style="width: 15%;">Tổng bản</th>
-                <th style="width: 15%;">Sẵn có</th>
-                <th style="width: 16%;">Đang mượn</th>
-                <th style="width: 16%;">Mất / hỏng</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var book in Model.ChiTietDauSach)
-            {
-                <tr>
-                    <td>@book.DauSach</td>
-                    <td>@book.TongBan</td>
-                    <td>@book.SanCo</td>
-                    <td>@book.DangMuon</td>
-                    <td>@book.MatHong</td>
-                </tr>
-            }
-            <tr class="fw-bold">
-                <td>TỔNG</td>
-                <td>@Model.TongCongSoBan</td>
-                <td>@Model.TongCongSanCo</td>
-                <td>@Model.TongCongDangMuon</td>
-                <td>@Model.TongCongMatHong</td>
-            </tr>
-        </tbody>
-    </table>
+<!-- ========================================================================= -->
+<!-- KHU VỰC CÁC BIỂU ĐỒ TRỰC QUAN (CHARTS) THAY THẾ TOÀN BỘ BẢNG TRUYỀN THỐNG -->
+<!-- ========================================================================= -->
+<div class="row g-4 mb-4">
+    <!-- Biểu đồ 1: Xu hướng Mượn & Trả sách -->
+    <div class="col-lg-8 col-12">
+        <div class="card p-3 shadow-sm border-0 h-100" style="background: #ffffff; border-radius: 8px;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold text-navy mb-0" style="font-size: 15px;">
+                    <i class="bi bi-graph-up text-primary me-2"></i> Xu hướng Lưu thông Mượn &amp; Trả sách
+                </h5>
+                <span class="badge bg-light text-muted border">6 tháng gần nhất</span>
+            </div>
+            <div style="position: relative; height: 320px; width: 100%;">
+                <canvas id="circulationTrendChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Biểu đồ 2: Tỷ lệ phân bố tình trạng sách -->
+    <div class="col-lg-4 col-12">
+        <div class="card p-3 shadow-sm border-0 h-100" style="background: #ffffff; border-radius: 8px;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold text-navy mb-0" style="font-size: 15px;">
+                    <i class="bi bi-pie-chart-fill text-primary me-2"></i> Trạng thái kho học liệu
+                </h5>
+                <span class="badge bg-light text-muted border">Toàn kho (@Model.TongBanSach bản)</span>
+            </div>
+            <div style="position: relative; height: 320px; width: 100%; display: flex; align-items: center; justify-content: center;">
+                <canvas id="bookStatusDoughnutChart"></canvas>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="admin-table-note">
-    Báo cáo gồm lượt mượn / trả theo tháng, đầu sách và trạng thái từng bản sách. Số liệu minh họa.
+<div class="row g-4 mb-4">
+    <!-- Biểu đồ 3: Top 5 học liệu được mượn nhiều nhất -->
+    <div class="col-lg-8 col-12">
+        <div class="card p-3 shadow-sm border-0 h-100" style="background: #ffffff; border-radius: 8px;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold text-navy mb-0" style="font-size: 15px;">
+                    <i class="bi bi-bar-chart-line-fill text-primary me-2"></i> Top 5 Giáo trình &amp; Tài liệu được mượn nhiều nhất
+                </h5>
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle">Học liệu tiêu biểu</span>
+            </div>
+            <div style="position: relative; height: 280px; width: 100%;">
+                <canvas id="topBooksBarChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Biểu đồ 4: Cơ cấu bạn đọc đang mượn sách -->
+    <div class="col-lg-4 col-12">
+        <div class="card p-3 shadow-sm border-0 h-100" style="background: #ffffff; border-radius: 8px;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold text-navy mb-0" style="font-size: 15px;">
+                    <i class="bi bi-people-fill text-primary me-2"></i> Đối tượng Bạn đọc mượn
+                </h5>
+                <span class="badge bg-light text-muted border">Sinh viên / Giảng viên</span>
+            </div>
+            <div style="position: relative; height: 280px; width: 100%; display: flex; align-items: center; justify-content: center;">
+                <canvas id="readerGroupChart"></canvas>
+            </div>
+        </div>
+    </div>
 </div>
 
+@section Scripts {
+    <!-- Thư viện Chart.js chính thức qua CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Cấu hình phông chữ mặc định của biểu đồ
+            Chart.defaults.font.family = "'Be Vietnam Pro', 'Segoe UI', sans-serif";
+            Chart.defaults.color = "#475569";
+
+            // 1. Biểu đồ Đường: Xu hướng Mượn & Trả sách
+            const ctxTrend = document.getElementById('circulationTrendChart').getContext('2d');
+            new Chart(ctxTrend, {
+                type: 'line',
+                data: {
+                    labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyLabels)),
+                    datasets: [
+                        {
+                            label: 'Lượt mượn sách',
+                            data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyBorrowData)),
+                            borderColor: '#0079BA',
+                            backgroundColor: 'rgba(0, 121, 186, 0.12)',
+                            fill: true,
+                            tension: 0.35,
+                            borderWidth: 2.5,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#0079BA'
+                        },
+                        {
+                            label: 'Lượt trả sách',
+                            data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyReturnData)),
+                            borderColor: '#10B981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.08)',
+                            fill: true,
+                            tension: 0.35,
+                            borderWidth: 2.5,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#10B981'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top', align: 'end' },
+                        tooltip: { padding: 10, cornerRadius: 6 }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#F1F5F9' },
+                            ticks: { precision: 0 }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+
+            // 2. Biểu đồ Tròn (Doughnut): Trạng thái sách trong kho
+            const ctxStatus = document.getElementById('bookStatusDoughnutChart').getContext('2d');
+            new Chart(ctxStatus, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Sẵn có trên giá', 'Đang cho mượn', 'Mất / Hỏng chờ xử lý'],
+                    datasets: [{
+                        data: [@Model.TyLeSanCo, @Model.TyLeDangMuon, @Model.TyLeMatHong],
+                        backgroundColor: ['#10B981', '#0079BA', '#EF4444'],
+                        borderWidth: 2,
+                        borderColor: '#FFFFFF'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // 3. Biểu đồ Cột Ngang: Top 5 sách mượn nhiều nhất
+            const ctxTop = document.getElementById('topBooksBarChart').getContext('2d');
+            new Chart(ctxTop, {
+                type: 'bar',
+                data: {
+                    labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.TopBookLabels)),
+                    datasets: [{
+                        label: 'Số lượt mượn (cuốn)',
+                        data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.TopBookBorrowCounts)),
+                        backgroundColor: '#0079BA',
+                        borderRadius: 4,
+                        barThickness: 20
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { padding: 10, cornerRadius: 6 }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: { color: '#F1F5F9' },
+                            ticks: { precision: 0 }
+                        },
+                        y: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+
+            // 4. Biểu đồ Tròn: Đối tượng bạn đọc mượn
+            const ctxReader = document.getElementById('readerGroupChart').getContext('2d');
+            new Chart(ctxReader, {
+                type: 'pie',
+                data: {
+                    labels: ['Sinh viên', 'Giảng viên'],
+                    datasets: [{
+                        data: [@Model.SoLuongSinhVienMuon, @Model.SoLuongGiangVienMuon],
+                        backgroundColor: ['#0284C7', '#F59E0B'],
+                        borderWidth: 2,
+                        borderColor: '#FFFFFF'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        });
+    </script>
+}
