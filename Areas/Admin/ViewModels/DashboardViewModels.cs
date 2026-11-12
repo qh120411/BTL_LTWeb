@@ -70,10 +70,15 @@ namespace BTL_LTWEB.Areas.Admin.ViewModels
         public string? SelectedStatus { get; set; } = "all";
         public List<CatalogItemViewModel> Books { get; set; } = new();
 
-        public int TongDauSach => Books.Count;
-        public int TongBanSao => Books.Sum(b => b.TongBan);
-        public int TongSanCo => Books.Sum(b => b.SanCo);
-        public int TongDangMuon => Books.Sum(b => b.DangMuon);
+        public int? TotalCatalogBooks { get; set; }
+        public int? TotalCatalogCopies { get; set; }
+        public int? TotalCatalogAvailable { get; set; }
+        public int? TotalCatalogBorrowed { get; set; }
+
+        public int TongDauSach => TotalCatalogBooks ?? Books.Count;
+        public int TongBanSao => TotalCatalogCopies ?? Books.Sum(b => b.TongBan);
+        public int TongSanCo => TotalCatalogAvailable ?? Books.Sum(b => b.SanCo);
+        public int TongDangMuon => TotalCatalogBorrowed ?? Books.Sum(b => b.DangMuon);
     }
 
     public class CirculationTransactionItem

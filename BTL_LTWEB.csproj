@@ -10,6 +10,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="BTL_LTWeb\**" />
+    <Compile Remove="New folder\**" />
+    <Compile Remove="scratch\**" />
+    <Content Remove="BTL_LTWeb\**" />
+    <Content Remove="New folder\**" />
+    <Content Remove="scratch\**" />
+    <EmbeddedResource Remove="BTL_LTWeb\**" />
+    <EmbeddedResource Remove="New folder\**" />
+    <EmbeddedResource Remove="scratch\**" />
+    <None Remove="BTL_LTWeb\**" />
+    <None Remove="New folder\**" />
+    <None Remove="scratch\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.11">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>

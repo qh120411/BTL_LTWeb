@@ -11,5 +11,7 @@ public partial class TacGium
 
     public string? QuocTich { get; set; }
 
+    public int? NamSinh { get; set; }
+
     public virtual ICollection<TaiLieuTacGium> TaiLieuTacGia { get; set; } = new List<TaiLieuTacGium>();
 }

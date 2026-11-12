@@ -28,33 +28,18 @@ public class ReaderRecord
 
 public class ReaderService : IReaderService
 {
-    private static readonly List<FinancialReceiptViewModel> _financialReceipts = new();
-    private static readonly object _initLock = new();
-    private static bool _receiptsLoaded = false;
-
     private readonly QLThuVienUtcContext _dbContext;
     private readonly IBookCatalogService _catalogService;
     private readonly IUserProfileService _userProfileService;
-    private readonly string _receiptsFilePath;
 
     public ReaderService(
         QLThuVienUtcContext dbContext,
         IBookCatalogService catalogService, 
-        IUserProfileService userProfileService, 
-        IWebHostEnvironment env)
+        IUserProfileService userProfileService)
     {
         _dbContext = dbContext;
         _catalogService = catalogService;
         _userProfileService = userProfileService;
-
-        var dataDir = Path.Combine(env.ContentRootPath, "App_Data");
-        if (!Directory.Exists(dataDir))
-        {
-            Directory.CreateDirectory(dataDir);
-        }
-        _receiptsFilePath = Path.Combine(dataDir, "financial_receipts.json");
-
-        EnsureFinancialReceipts();
     }
 
     private static string RemoveDiacritics(string text)
@@ -73,107 +58,8 @@ public class ReaderService : IReaderService
         return sb.ToString().Normalize(NormalizationForm.FormC).Replace('đ', 'd').Replace('Đ', 'D');
     }
 
-    private void EnsureFinancialReceipts()
-    {
-        if (_receiptsLoaded) return;
-        lock (_initLock)
-        {
-            if (_receiptsLoaded) return;
-            try
-            {
-                if (File.Exists(_receiptsFilePath))
-                {
-                    var json = File.ReadAllText(_receiptsFilePath, Encoding.UTF8);
-                    var list = JsonSerializer.Deserialize<List<FinancialReceiptViewModel>>(json);
-                    if (list != null && list.Count > 0)
-                    {
-                        _financialReceipts.Clear();
-                        _financialReceipts.AddRange(list);
-                        _receiptsLoaded = true;
-                        return;
-                    }
-                }
-            }
-            catch { }
-
-            if (_financialReceipts.Count == 0)
-            {
-                _financialReceipts.Add(new FinancialReceiptViewModel
-                {
-                    MaPhieuThu = "PT261015-001",
-                    MaGD = "GD250810-088",
-                    MaBD = "242630923",
-                    NguoiNop = "Đỗ Văn Đạt",
-                    TenSach = "Giáo trình Lập trình Hướng đối tượng Java",
-                    LoaiKhoanThu = "Nộp muộn",
-                    HinhThucXuLy = "Trả sách & nộp phạt nộp muộn",
-                    SoTien = 100000m,
-                    TienNopMuon = 100000m,
-                    TienDenBu = 0,
-                    NgayThu = "15/10/2026 09:30",
-                    GhiChu = "Nộp phạt quá hạn 18 ngày khi trả sách tại quầy"
-                });
-
-                _financialReceipts.Add(new FinancialReceiptViewModel
-                {
-                    MaPhieuThu = "PT261022-002",
-                    MaGD = "GD250912-092",
-                    MaBD = "242630899",
-                    NguoiNop = "Nguyễn Văn An",
-                    TenSach = "Giáo trình Truyền số liệu và Mạng máy tính",
-                    LoaiKhoanThu = "Đền bù mất/hỏng",
-                    HinhThucXuLy = "Bồi thường bằng tiền",
-                    SoTien = 150000m,
-                    TienNopMuon = 0,
-                    TienDenBu = 150000m,
-                    NgayThu = "22/10/2026 14:15",
-                    GhiChu = "Báo mất sách khi đi thực tập. Đền bù bằng tiền mặt theo giá bìa"
-                });
-
-                _financialReceipts.Add(new FinancialReceiptViewModel
-                {
-                    MaPhieuThu = "PT261030-003",
-                    MaGD = "GD250720-095",
-                    MaBD = "242630909",
-                    NguoiNop = "Trương Đức Bình",
-                    TenSach = "Cơ sở Dữ liệu Nâng cao",
-                    LoaiKhoanThu = "Đền bù mất/hỏng",
-                    HinhThucXuLy = "Đền sách mới (Đã bàn giao sách thay thế)",
-                    SoTien = 0,
-                    TienNopMuon = 0,
-                    TienDenBu = 0,
-                    NgayThu = "30/10/2026 16:45",
-                    GhiChu = "Làm ướt sách. Bạn đọc tự mua và nộp lại 01 cuốn sách mới tương đương"
-                });
-
-                SaveReceiptsToFile();
-            }
-
-            _receiptsLoaded = true;
-        }
-    }
-
-    private void SaveReceiptsToFile()
-    {
-        try
-        {
-            lock (_initLock)
-            {
-                var options = new JsonSerializerOptions
-                {
-                    WriteIndented = true,
-                    Encoder = JavaScriptEncoder.Create(UnicodeRanges.All)
-                };
-                var json = JsonSerializer.Serialize(_financialReceipts, options);
-                File.WriteAllText(_receiptsFilePath, json, Encoding.UTF8);
-            }
-        }
-        catch { }
-    }
-
     public ReaderIndexViewModel GetReaders(string? searchKeyword, string? selectedGroup)
     {
-        EnsureFinancialReceipts();
 
         try
         {
@@ -258,7 +144,6 @@ public class ReaderService : IReaderService
 
     public ReaderDetailViewModel? GetReaderById(string id)
     {
-        EnsureFinancialReceipts();
 
         try
         {
@@ -434,7 +319,6 @@ public class ReaderService : IReaderService
         string? note, 
         out string message)
     {
-        EnsureFinancialReceipts();
         message = string.Empty;
 
         try
@@ -536,9 +420,6 @@ public class ReaderService : IReaderService
                             ? $"Báo mất/hỏng. Bạn đọc đền 01 cuốn sách mới bổ sung kho.{(overdueFee > 0 ? " Nộp kèm 100.000 đ phạt nộp muộn." : "")}" 
                             : note
                     };
-                    _financialReceipts.Insert(0, receipt);
-                    SaveReceiptsToFile();
-
                     message = $"Đã tiếp nhận 01 cuốn sách mới đền bù cho tài liệu '{bookTitle}' từ bạn đọc '{readerName}'.{(overdueFee > 0 ? " Thu phạt nộp muộn: 100.000 VNĐ." : "")} CSDL SQL Server đã cập nhật vĩnh viễn.";
                 }
                 else
@@ -571,9 +452,6 @@ public class ReaderService : IReaderService
                             ? $"Báo mất sách. Bồi thường tiền mặt {cashCompensation:N0} VNĐ{(overdueFee > 0 ? $" + Phạt nộp muộn {overdueFee:N0} VNĐ" : "")}." 
                             : note
                     };
-                    _financialReceipts.Insert(0, receipt);
-                    SaveReceiptsToFile();
-
                     message = $"Đã lập phiếu thu #{receiptCode}: Tiếp nhận đền bù bằng tiền {totalCash:N0} VNĐ (Đền sách: {cashCompensation:N0} VNĐ{(overdueFee > 0 ? $", Phạt quá hạn: {overdueFee:N0} VNĐ" : "")}) cho cuốn '{bookTitle}' từ bạn đọc '{readerName}'. Đã lưu vào CSDL SQL Server.";
                 }
             }
@@ -606,9 +484,6 @@ public class ReaderService : IReaderService
                         NgayThu = todayStr,
                         GhiChu = string.IsNullOrWhiteSpace(note) ? $"Hoàn tất trả sách và nộp phạt nộp muộn ({ctm.TrangThai})" : note
                     };
-                    _financialReceipts.Insert(0, receipt);
-                    SaveReceiptsToFile();
-
                     message = $"Đã tiếp nhận thu hồi cuốn sách '{bookTitle}' từ bạn đọc '{readerName}' thành công! Thu phạt nộp muộn 100.000 VNĐ đã được cộng vào quỹ tài chính và lưu vào CSDL SQL Server.";
                 }
                 else
@@ -977,72 +852,106 @@ public class ReaderService : IReaderService
 
     public FinancialSummaryViewModel GetFinancialSummary()
     {
-        EnsureFinancialReceipts();
+        var payments = _dbContext.ThanhToans
+            .AsNoTracking()
+            .Include(t => t.MaBanDocNavigation)
+            .OrderByDescending(t => t.NgayThanhToan)
+            .ToList();
+
+        var receipts = payments.Select(t => new FinancialReceiptViewModel
+        {
+            MaPhieuThu = $"PT{t.NgayThanhToan:yyMMdd}-{t.MaThanhToan:D3}",
+            MaGD = $"GD{t.NgayThanhToan:yyMMdd}-{t.MaThanhToan:D3}",
+            MaBD = t.MaBanDocNavigation?.MaSinhVien ?? "242630923",
+            NguoiNop = t.MaBanDocNavigation?.HoTen ?? "Bạn đọc UTC",
+            TenSach = t.NoiDung ?? "Phí dịch vụ thư viện",
+            LoaiKhoanThu = t.NoiDung?.Contains("Đền") == true ? "Đền bù mất/hỏng" : "Nộp muộn",
+            HinhThucXuLy = t.PhuongThuc ?? "Tiền mặt",
+            SoTien = t.TongTien,
+            TienNopMuon = t.NoiDung?.Contains("Đền") == true ? 0 : t.TongTien,
+            TienDenBu = t.NoiDung?.Contains("Đền") == true ? t.TongTien : 0,
+            NgayThu = t.NgayThanhToan.ToString("dd/MM/yyyy HH:mm"),
+            GhiChu = t.NoiDung ?? ""
+        }).ToList();
+
         return new FinancialSummaryViewModel
         {
-            TongThu = _financialReceipts.Sum(r => r.SoTien),
-            ThuNopMuon = _financialReceipts.Sum(r => r.TienNopMuon),
-            ThuDenBu = _financialReceipts.Sum(r => r.TienDenBu),
-            TongPhieuThu = _financialReceipts.Count,
-            RecentReceipts = _financialReceipts.Take(10).ToList()
+            TongThu = payments.Sum(r => r.TongTien),
+            ThuNopMuon = payments.Where(t => t.NoiDung == null || !t.NoiDung.Contains("Đền")).Sum(r => r.TongTien),
+            ThuDenBu = payments.Where(t => t.NoiDung != null && t.NoiDung.Contains("Đền")).Sum(r => r.TongTien),
+            TongPhieuThu = payments.Count,
+            RecentReceipts = receipts.Take(10).ToList()
         };
     }
 
     public List<FinancialReceiptViewModel> GetAllFinancialReceipts(string? searchKeyword, string? selectedType)
     {
-        EnsureFinancialReceipts();
-        var query = _financialReceipts.AsEnumerable();
+        var payments = _dbContext.ThanhToans
+            .AsNoTracking()
+            .Include(t => t.MaBanDocNavigation)
+            .OrderByDescending(t => t.NgayThanhToan)
+            .ToList();
+
+        var receipts = payments.Select(t => new FinancialReceiptViewModel
+        {
+            MaPhieuThu = $"PT{t.NgayThanhToan:yyMMdd}-{t.MaThanhToan:D3}",
+            MaGD = $"GD{t.NgayThanhToan:yyMMdd}-{t.MaThanhToan:D3}",
+            MaBD = t.MaBanDocNavigation?.MaSinhVien ?? "242630923",
+            NguoiNop = t.MaBanDocNavigation?.HoTen ?? "Bạn đọc UTC",
+            TenSach = t.NoiDung ?? "Phí dịch vụ thư viện",
+            LoaiKhoanThu = t.NoiDung?.Contains("Đền") == true ? "Đền bù mất/hỏng" : "Nộp muộn",
+            HinhThucXuLy = t.PhuongThuc ?? "Tiền mặt",
+            SoTien = t.TongTien,
+            TienNopMuon = t.NoiDung?.Contains("Đền") == true ? 0 : t.TongTien,
+            TienDenBu = t.NoiDung?.Contains("Đền") == true ? t.TongTien : 0,
+            NgayThu = t.NgayThanhToan.ToString("dd/MM/yyyy HH:mm"),
+            GhiChu = t.NoiDung ?? ""
+        }).AsEnumerable();
 
         if (!string.IsNullOrWhiteSpace(searchKeyword))
         {
             var kw = searchKeyword.Trim().ToLower();
-            query = query.Where(r => r.MaPhieuThu.ToLower().Contains(kw) ||
-                                     r.MaBD.ToLower().Contains(kw) ||
-                                     r.NguoiNop.ToLower().Contains(kw) ||
-                                     r.TenSach.ToLower().Contains(kw));
+            receipts = receipts.Where(r => r.MaPhieuThu.ToLower().Contains(kw) ||
+                                           r.MaBD.ToLower().Contains(kw) ||
+                                           r.NguoiNop.ToLower().Contains(kw) ||
+                                           r.TenSach.ToLower().Contains(kw));
         }
 
         if (!string.IsNullOrWhiteSpace(selectedType) && selectedType != "Tất cả")
         {
             if (selectedType == "Nộp muộn")
             {
-                query = query.Where(r => r.LoaiKhoanThu.Contains("Nộp muộn"));
+                receipts = receipts.Where(r => r.LoaiKhoanThu.Contains("Nộp muộn"));
             }
             else if (selectedType == "Đền bù mất/hỏng")
             {
-                query = query.Where(r => r.LoaiKhoanThu.Contains("Đền bù"));
+                receipts = receipts.Where(r => r.LoaiKhoanThu.Contains("Đền bù"));
             }
         }
 
-        return query.OrderByDescending(r => r.NgayThu).ToList();
+        return receipts.ToList();
     }
 
     public DashboardViewModel GetDashboardStatistics()
     {
-        EnsureFinancialReceipts();
         var allLoans = GetAllCirculationTransactions();
         var overdueLoans = GetAllOverdueLoans();
         var financial = GetFinancialSummary();
 
-        int totalBooks = 30;
-        int totalCopies = 120;
-        int totalReaders = 49;
+        int totalBooks = _dbContext.TaiLieus.Count();
+        int totalCopies = _dbContext.BanSaos.Count();
+        int totalReaders = _dbContext.BanDocs.Count();
 
-        try
-        {
-            totalBooks = _dbContext.TaiLieus.Count();
-            totalCopies = _dbContext.BanSaos.Count();
-            totalReaders = _dbContext.BanDocs.Count();
-        }
-        catch { }
+        int dangMuon = _dbContext.BanSaos.Count(b => b.TrangThai == "Đang mượn");
+        int sanCo = _dbContext.BanSaos.Count(b => b.TrangThai == "Có sẵn" || b.TrangThai == "Sẵn sàng");
 
         return new DashboardViewModel
         {
             TongDauSach = totalBooks,
             TongBanSao = totalCopies,
-            DangMuon = allLoans.Count,
-            BanSanCo = Math.Max(0, totalCopies - allLoans.Count),
-            MatChoBoiThuong = 0,
+            DangMuon = dangMuon,
+            BanSanCo = sanCo,
+            MatChoBoiThuong = _dbContext.BanSaos.Count(b => b.TrangThai == "Đã mất" || b.TinhTrang == "Mất"),
             LuotQuaHan = overdueLoans.Count,
             TongBanDoc = totalReaders,
             TongQuyTaiChinh = financial.TongThu,

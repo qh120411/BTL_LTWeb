@@ -231,19 +231,19 @@
                         <div class="d-flex justify-content-end align-items-center gap-1 mt-2 pt-2 border-top">
                             <!-- Xem bản sao vật lý -->
                             <button type="button" class="btn btn-sm btn-outline-primary px-2 py-1 btn-view-copies" 
-                                    data-id="@book.Id" title="Xem danh sách bản sao vật lý & mã vạch">
-                                <i class="bi bi-upc-scan"></i>
+                                    data-id="@book.Id" style="font-size: 12px; font-weight: 500;">
+                                Bản sao
                             </button>
                             <!-- Sửa học liệu -->
                             <button type="button" class="btn btn-sm btn-outline-secondary px-2 py-1 btn-edit-book"
-                                    data-id="@book.Id" title="Chỉnh sửa thông tin học liệu">
-                                <i class="bi bi-pencil-square"></i>
+                                    data-id="@book.Id" style="font-size: 12px; font-weight: 500;">
+                                Sửa
                             </button>
                             <!-- Xóa học liệu -->
                             <button type="button" class="btn btn-sm btn-outline-danger px-2 py-1 btn-delete-book"
                                     data-id="@book.Id" data-title="@book.TenHocLieu" data-copies="@book.SanCo" data-total="@book.TongBan"
-                                    title="Xóa học liệu khỏi CSDL">
-                                <i class="bi bi-trash"></i>
+                                    style="font-size: 12px; font-weight: 500;">
+                                Xóa
                             </button>
                         </div>
                     </div>
@@ -440,9 +440,12 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden;">
             <div class="modal-header bg-white text-dark py-3 px-4 border-bottom" style="background: #ffffff !important; border-bottom: 1px solid #e2eaf2 !important;">
-                <h5 class="modal-title fw-bold mb-0 text-dark" id="bookCopiesModalLabel" style="color: #163b5c !important;">
-                    <i class="bi bi-upc-scan text-primary me-2"></i>Danh sách bản sao vật lý &amp; Mã vạch lưu thông
-                </h5>
+                <div>
+                    <h5 class="modal-title fw-bold mb-0 text-dark" id="bookCopiesModalLabel" style="color: #163b5c !important;">
+                        <i class="bi bi-upc-scan text-primary me-2"></i>Danh sách bản sao vật lý &amp; Mã vạch lưu thông
+                    </h5>
+                    <div class="small text-muted mt-1" id="copiesModalBookTitle"></div>
+                </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -539,17 +542,23 @@
                 copiesTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-3 text-muted">Đang tải danh sách bản sao từ CSDL...</td></tr>';
                 copiesModal.show();
 
-                fetch('/Admin/Catalog/GetCopies/' + bookId)
-                    .then(function (res) { return res.json(); })
+                fetch('/Admin/Catalog/GetCopies?id=' + encodeURIComponent(bookId))
+                    .then(function (res) {
+                        if (!res.ok) {
+                            throw new Error('HTTP ' + res.status);
+                        }
+                        return res.json();
+                    })
                     .then(function (data) {
-                        copiesModalBookTitle.textContent = data.title;
-                        copiesModalShelf.textContent = data.shelf;
-                        copiesModalStatsBadge.textContent = data.availableCopies + "/" + data.totalCopies + " bản sẵn có";
-
-                        if (data.availableCopies > 0) {
-                            copiesModalStatsBadge.className = "badge bg-success px-3 py-1 fs-6 font-monospace";
-                        } else {
-                            copiesModalStatsBadge.className = "badge bg-danger px-3 py-1 fs-6 font-monospace";
+                        if (copiesModalBookTitle) copiesModalBookTitle.textContent = data.title || "";
+                        if (copiesModalShelf) copiesModalShelf.textContent = data.shelf || "Chưa cập nhật";
+                        if (copiesModalStatsBadge) {
+                            copiesModalStatsBadge.textContent = (data.availableCopies || 0) + "/" + (data.totalCopies || 0) + " bản sẵn có";
+                            if (data.availableCopies > 0) {
+                                copiesModalStatsBadge.className = "badge bg-success px-3 py-1 fs-6 font-monospace";
+                            } else {
+                                copiesModalStatsBadge.className = "badge bg-danger px-3 py-1 fs-6 font-monospace";
+                            }
                         }
 
                         if (!data.copies || data.copies.length === 0) {
@@ -573,8 +582,9 @@
                         });
                         copiesTableBody.innerHTML = rows;
                     })
-                    .catch(function () {
-                        copiesTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-3 text-danger">Lỗi kết nối khi tải bản sao!</td></tr>';
+                    .catch(function (err) {
+                        console.error("Lỗi khi tải bản sao:", err);
+                        copiesTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-3 text-danger">Lỗi kết nối khi tải bản sao: ' + (err.message || err) + '</td></tr>';
                     });
             });
         });
@@ -587,8 +597,13 @@
             btn.addEventListener("click", function () {
                 var bookId = this.getAttribute("data-id");
 
-                fetch('/Admin/Catalog/GetBook/' + bookId)
-                    .then(function (res) { return res.json(); })
+                fetch('/Admin/Catalog/GetBook?id=' + encodeURIComponent(bookId))
+                    .then(function (res) {
+                        if (!res.ok) {
+                            throw new Error('HTTP ' + res.status);
+                        }
+                        return res.json();
+                    })
                     .then(function (data) {
                         document.getElementById("editBookId").value = data.id;
                         document.getElementById("editBookTitle").value = data.title;

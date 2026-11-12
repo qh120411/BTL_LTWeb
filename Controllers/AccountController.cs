@@ -287,6 +287,7 @@ namespace BTL_LTWEB.Controllers
         }
 
         [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

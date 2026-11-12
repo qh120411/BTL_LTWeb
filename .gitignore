@@ -20,5 +20,17 @@ packages/
 ## Logs
 *.log
 
+## Temporary / Local work directories
 .agent/
 .agents/
+BTL_LTWeb/
+New folder/
+scratch/
+screens_crop/
+*.bak
+cookie.txt
+schema_dump.txt
+GAN_3_CUON_QUA_HAN_DEMO.txt
+admin_canvas.png
+UTC Library (2)/
+App_Data/

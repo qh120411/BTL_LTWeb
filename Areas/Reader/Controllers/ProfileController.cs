@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using BTL_LTWEB.Areas.Reader.Models;
 using BTL_LTWEB.Areas.Reader.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -19,10 +19,15 @@ namespace BTL_LTWEB.Areas.Reader.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var studentId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "242630923";
-            var studentName = User.Identity?.Name ?? "Đỗ Văn Đạt";
+            var studentId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var studentName = User.Identity?.Name;
 
-            var profile = _profileService.GetProfile(studentId, studentName);
+            if (string.IsNullOrEmpty(studentId))
+            {
+                return RedirectToAction("Login", "Account", new { area = "" });
+            }
+
+            var profile = _profileService.GetProfile(studentId, studentName ?? "");
             return View(profile);
         }
 
@@ -31,11 +36,16 @@ namespace BTL_LTWEB.Areas.Reader.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Index(UserProfileViewModel model)
         {
-            var studentId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "242630923";
-            var studentName = User.Identity?.Name ?? "Đỗ Văn Đạt";
+            var studentId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var studentName = User.Identity?.Name;
+
+            if (string.IsNullOrEmpty(studentId))
+            {
+                return RedirectToAction("Login", "Account", new { area = "" });
+            }
 
             model.MaSinhVien = studentId;
-            if (string.IsNullOrWhiteSpace(model.HoTen))
+            if (string.IsNullOrWhiteSpace(model.HoTen) && !string.IsNullOrWhiteSpace(studentName))
             {
                 model.HoTen = studentName;
             }

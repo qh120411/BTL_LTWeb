@@ -21,9 +21,12 @@ namespace BTL_LTWEB.Areas.Reader.Controllers
             UserProfileViewModel? profile = null;
             if (User.Identity?.IsAuthenticated == true)
             {
-                var studentId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "242630923";
-                var studentName = User.Identity?.Name ?? "Đỗ Văn Đạt";
-                profile = _profileService.GetProfile(studentId, studentName);
+                var studentId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var studentName = User.Identity?.Name;
+                if (!string.IsNullOrEmpty(studentId))
+                {
+                    profile = _profileService.GetProfile(studentId, studentName ?? "Bạn đọc UTC");
+                }
             }
 
             return View("~/Views/Home/Reader/Index.cshtml", profile);

@@ -31,6 +31,10 @@ public partial class BanDoc
 
     public string? TrangThaiThe { get; set; }
 
+    public string? SoTaiKhoanNganHang { get; set; }
+
+    public string? TenNganHang { get; set; }
+
     public string TrangThai { get; set; } = null!;
 
     public DateTime NgayTao { get; set; }

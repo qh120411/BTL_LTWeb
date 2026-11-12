@@ -32,6 +32,7 @@ public class CatalogController : AdminBaseController
         var kw = search?.Trim() ?? string.Empty;
 
         var items = _catalogService.Search(kw, cat, maj, lang, avail).ToList();
+        var allBooks = _catalogService.GetAll().ToList();
 
         var model = new CatalogIndexViewModel
         {
@@ -40,6 +41,10 @@ public class CatalogController : AdminBaseController
             SelectedMajor = maj,
             SelectedLanguage = lang,
             SelectedStatus = avail,
+            TotalCatalogBooks = allBooks.Count,
+            TotalCatalogCopies = allBooks.Sum(b => b.TotalCopies),
+            TotalCatalogAvailable = allBooks.Sum(b => b.AvailableCopies),
+            TotalCatalogBorrowed = allBooks.Sum(b => Math.Max(0, b.TotalCopies - b.AvailableCopies)),
             Books = items.Select(b => new CatalogItemViewModel
             {
                 Id = b.Id,
@@ -198,9 +203,16 @@ public class CatalogController : AdminBaseController
 
     // API LẤY CHI TIẾT BẢN SAO CHO MODAL AJAX
     [HttpGet]
-    public IActionResult GetCopies(int id)
+    [Route("/Admin/Catalog/GetCopies/{id?}")]
+    [Route("/Admin/Catalog/GetCopies")]
+    public IActionResult GetCopies(int? id)
     {
-        var book = _catalogService.GetById(id);
+        if (!id.HasValue || id.Value <= 0)
+        {
+            return BadRequest(new { message = "Mã học liệu không hợp lệ!" });
+        }
+
+        var book = _catalogService.GetById(id.Value);
         if (book == null)
         {
             return NotFound(new { message = "Không tìm thấy học liệu!" });
@@ -220,12 +232,19 @@ public class CatalogController : AdminBaseController
 
     // API LẤY THÔNG TIN HỌC LIỆU ĐỂ ĐIỀN VÀO MODAL SỬA
     [HttpGet]
-    public IActionResult GetBook(int id)
+    [Route("/Admin/Catalog/GetBook/{id?}")]
+    [Route("/Admin/Catalog/GetBook")]
+    public IActionResult GetBook(int? id)
     {
-        var book = _catalogService.GetById(id);
+        if (!id.HasValue || id.Value <= 0)
+        {
+            return BadRequest(new { message = "Mã học liệu không hợp lệ!" });
+        }
+
+        var book = _catalogService.GetById(id.Value);
         if (book == null)
         {
-            return NotFound();
+            return NotFound(new { message = "Không tìm thấy học liệu!" });
         }
 
         return Json(new
