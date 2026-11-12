@@ -348,44 +348,44 @@
     "StockBadgeText": "3 bản sẵn có · Sách in",
     "Copies": [
       {
-        "Id": 61,
+        "Id": 181,
         "BookId": 6,
         "Barcode": "UTC-06-01",
         "Shelf": "Kệ IT-03",
-        "Condition": "Mới",
-        "Status": "Đang mượn",
-        "ImportDate": "15/01/2024",
-        "IsAvailable": false
+        "Condition": "Tốt",
+        "Status": "Có sẵn",
+        "ImportDate": "11/11/2026",
+        "IsAvailable": true
       },
       {
-        "Id": 62,
+        "Id": 182,
         "BookId": 6,
         "Barcode": "UTC-06-02",
         "Shelf": "Kệ IT-03",
         "Condition": "Tốt",
         "Status": "Có sẵn",
-        "ImportDate": "15/01/2024",
+        "ImportDate": "11/11/2026",
         "IsAvailable": true
       },
       {
-        "Id": 63,
+        "Id": 183,
         "BookId": 6,
         "Barcode": "UTC-06-03",
         "Shelf": "Kệ IT-03",
         "Condition": "Tốt",
         "Status": "Có sẵn",
-        "ImportDate": "15/01/2024",
+        "ImportDate": "11/11/2026",
         "IsAvailable": true
       },
       {
-        "Id": 64,
+        "Id": 184,
         "BookId": 6,
         "Barcode": "UTC-06-04",
         "Shelf": "Kệ IT-03",
         "Condition": "Tốt",
-        "Status": "Có sẵn",
-        "ImportDate": "15/01/2024",
-        "IsAvailable": true
+        "Status": "Đang mượn",
+        "ImportDate": "11/11/2026",
+        "IsAvailable": false
       }
     ]
   },
