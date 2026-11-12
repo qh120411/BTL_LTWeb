@@ -66,7 +66,21 @@ namespace BTL_LTWEB.Areas.Reader.Services
             };
         }
         public IEnumerable<BookItem> GetAll() => Query().OrderBy(t => t.MaTaiLieu).ToList().Select(Map).ToList();
-        public BookItem? GetById(int id) { var t = Query().SingleOrDefault(t => t.MaTaiLieu == id); return t == null ? null : Map(t); }
+        public BookItem? GetById(int id)
+        {
+            var document = Query().SingleOrDefault(t => t.MaTaiLieu == id);
+            if (document == null) return null;
+            var book = Map(document);
+            var dueDates = _db.ChiTietMuons.AsNoTracking()
+                .Where(c => c.MaBanSaoNavigation.MaTaiLieu == id && c.NgayTra == null &&
+                    c.TrangThai != "Đã trả" && c.TrangThai != "Đã đền sách mới" && c.TrangThai != "Đã đền tiền")
+                .GroupBy(c => c.MaBanSao)
+                .Select(g => new { CopyId = g.Key, DueDate = g.Max(c => c.HanTra) })
+                .ToDictionary(c => c.CopyId, c => c.DueDate);
+            foreach (var copy in book.Copies)
+                copy.DueDate = dueDates.TryGetValue(copy.Id, out var dueDate) ? dueDate : null;
+            return book;
+        }
         public List<BookCopyItem> GetCopiesByBookId(int id) => GetById(id)?.Copies ?? new();
         public IEnumerable<BookItem> Search(string? keyword, string? category, string? major, string? language, string? availability)
         {
@@ -82,6 +96,7 @@ namespace BTL_LTWEB.Areas.Reader.Services
         {
             t.TenTaiLieu = b.Title.Trim(); t.Isbn = string.IsNullOrWhiteSpace(b.ISBN) ? null : b.ISBN.Trim();
             t.NamXuatBan = (short)Math.Clamp(b.Year, 0, short.MaxValue); t.SoTrang = b.Pages; t.MoTa = b.Description; t.AnhBia = b.CoverImage;
+            t.NgonNgu = string.IsNullOrWhiteSpace(b.LanguageName) ? null : b.LanguageName.Trim();
             t.MaTheLoaiNavigation = _db.TheLoais.Local.FirstOrDefault(x => MajorCode(x.TenTheLoai) == b.Major) ?? _db.TheLoais.ToList().FirstOrDefault(x => MajorCode(x.TenTheLoai) == b.Major);
             t.MaNhaXuatBanNavigation = string.IsNullOrWhiteSpace(b.Publisher) ? null :
                 _db.NhaXuatBans.Local.FirstOrDefault(x => x.TenNhaXuatBan == b.Publisher) ?? _db.NhaXuatBans.FirstOrDefault(x => x.TenNhaXuatBan == b.Publisher) ?? new NhaXuatBan { TenNhaXuatBan = b.Publisher.Trim() };
@@ -104,7 +119,7 @@ namespace BTL_LTWEB.Areas.Reader.Services
             else if (b.Year < 1 || b.Year > 9999 || b.Pages <= 0 ||
                 !new[] { "cntt", "xaydung", "kinhte", "toanly", "chinhtri" }.Contains(b.Major) ||
                 (!b.IsOnline && string.IsNullOrWhiteSpace(b.Shelf))) error = "Thông tin chuyên ngành, năm xuất bản, số trang hoặc vị trí kệ không hợp lệ.";
-            else if (b.Title.Length > 255 || b.ISBN.Length > 20 || b.Publisher.Length > 150 || b.Authors.Split(',').Any(a => a.Trim().Length > 100)) error = "Thông tin học liệu vượt độ dài cho phép.";
+            else if (b.Title.Length > 255 || b.ISBN.Length > 20 || b.Publisher.Length > 150 || b.LanguageName.Length > 100 || b.Authors.Split(',').Any(a => a.Trim().Length > 100)) error = "Thông tin học liệu vượt độ dài cho phép.";
             return error.Length == 0;
         }
         public bool AddBook(BookItem book, int copiesCount, out int newId, out string errorMessage)

@@ -85,10 +85,10 @@ public class CatalogController : AdminBaseController
                 MajorCode = b.Major,
                 DinhDang = b.IsOnline ? "Bản điện tử" : "Sách in",
                 IsOnline = b.IsOnline,
-                CoverImage = string.IsNullOrWhiteSpace(b.CoverImage) ? "/images/covers/cover-placeholder.png" : b.CoverImage,
+                CoverImage = string.IsNullOrWhiteSpace(b.CoverImage) ? "/images/covers/cover-placeholder.svg" : b.CoverImage,
                 TongBan = b.TotalCopies,
                 SanCo = b.AvailableCopies,
-                DangMuon = b.Copies.Count(c => c.Status == "Đang mượn"),
+                DangMuon = b.BorrowedCopies,
                 ViTriKe = b.Shelf,
                 MoTa = b.Description,
                 Copies = b.Copies ?? new List<BookCopyItem>()
@@ -114,7 +114,8 @@ public class CatalogController : AdminBaseController
         string shelf,
         int copiesCount,
         string? coverImage,
-        string? description)
+        string? description,
+        string? language)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
         if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(authors) ||
@@ -122,6 +123,7 @@ public class CatalogController : AdminBaseController
             year < 1 || year > 9999 || pages <= 0 || string.IsNullOrWhiteSpace(shelf))
             return BadRequest("Vui lòng nhập đầy đủ tên, tác giả, chuyên ngành, năm xuất bản, số trang và vị trí kệ hợp lệ.");
         if (copiesCount <= 0 || copiesCount > 1000) return BadRequest("Vui lòng nhập số bản sách từ 1 đến 1000.");
+        if (language != "vie" && language != "eng") return BadRequest("Vui lòng chọn ngôn ngữ của học liệu.");
 
         string majorName = major switch
         {
@@ -148,6 +150,7 @@ public class CatalogController : AdminBaseController
             Shelf = shelf.Trim(),
             CoverImage = coverImage?.Trim() ?? string.Empty,
             Description = description?.Trim() ?? string.Empty,
+            LanguageName = language == "eng" ? "Tiếng Anh" : "Tiếng Việt",
             IsOnline = false
         };
 
@@ -178,7 +181,8 @@ public class CatalogController : AdminBaseController
         string? isbn,
         string shelf,
         string? coverImage,
-        string? description)
+        string? description,
+        string? languageName)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
         if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(authors) ||
@@ -210,7 +214,8 @@ public class CatalogController : AdminBaseController
             ISBN = isbn?.Trim() ?? string.Empty,
             Shelf = shelf.Trim(),
             CoverImage = coverImage?.Trim() ?? string.Empty,
-            Description = description?.Trim() ?? string.Empty
+            Description = description?.Trim() ?? string.Empty,
+            LanguageName = languageName?.Trim() ?? string.Empty
         };
 
         var success = _catalogService.UpdateBook(book, out string errorMessage);
@@ -289,7 +294,8 @@ public class CatalogController : AdminBaseController
             isbn = book.ISBN,
             shelf = book.Shelf,
             coverImage = book.CoverImage,
-            description = book.Description
+            description = book.Description,
+            languageName = book.LanguageName
         });
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using BTL_LTWEB.Areas.Reader.Models;
 
 namespace BTL_LTWEB.Areas.Admin.ViewModels;
@@ -59,7 +59,7 @@ public class ReaderDetailViewModel
     public string GioiHanSach { get; set; } = "5 cuốn";
 
     [Display(Name = "Hiệu lực quyền sử dụng")]
-    public string HieuLucQuyen { get; set; } = "2028-06-30";
+    public string HieuLucQuyen { get; set; } = string.Empty;
 
     public int SoSachDangMuon => BorrowTransactions.Count;
     public int SoSachQuaHan => BorrowTransactions.Count(b => b.IsQuaHan);

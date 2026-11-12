@@ -3,6 +3,11 @@
     ViewData["Title"] = "Mất / hỏng & Bồi thường";
     ViewBag.ActiveMenu = "Incident";
 }
+@if (Model.TongThu - Model.ThuNopMuon - Model.ThuDenBu != 0)
+{
+    <p class="text-muted">Khoản thu chưa phân loại: @((Model.TongThu - Model.ThuNopMuon - Model.ThuDenBu).ToString("N0")) đ. Chưa có đủ thông tin tách khoản trong dữ liệu lưu.</p>
+}
+
 
 <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
     <div>

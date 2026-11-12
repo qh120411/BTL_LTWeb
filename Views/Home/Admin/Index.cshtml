@@ -11,7 +11,7 @@
         <div class="kpi-card utc-kpi-catalog"><div class="kpi-title">Đầu sách</div><div class="kpi-value">@Model.TongDauSach</div></div>
         <div class="kpi-card utc-kpi-available"><div class="kpi-title">Bản sẵn có</div><div class="kpi-value">@Model.BanSanCo</div></div>
         <div class="kpi-card utc-kpi-borrowed"><div class="kpi-title">Đang mượn</div><div class="kpi-value">@Model.DangMuon</div></div>
-        <div class="kpi-card utc-kpi-pending"><div class="kpi-title">Mất / chờ bồi thường</div><div class="kpi-value">@Model.MatChoBoiThuong</div></div>
+        <div class="kpi-card utc-kpi-pending"><div class="kpi-title">Bản mất / hỏng</div><div class="kpi-value">@Model.MatChoBoiThuong</div></div>
     </div>
     <section class="utc-dashboard-tasks" aria-labelledby="utc-tasks-title">
         <h2 id="utc-tasks-title" class="utc-dashboard-section-title">Theo dõi</h2>
@@ -20,7 +20,7 @@
                 <thead><tr><th scope="col">Nội dung</th><th scope="col">Số lượng</th><th scope="col">Thao tác</th></tr></thead>
                 <tbody>
                     <tr><td>Lượt mượn quá hạn</td><td>@Model.LuotQuaHan</td><td><a href="/Admin/Overdue">Xem quá hạn</a></td></tr>
-                    <tr><td>Sách mất chưa hoàn tất bồi thường</td><td>@Model.MatChoBoiThuong</td><td><a href="/Admin/Incident">Mở hồ sơ</a></td></tr>
+                    <tr><td>Bản sách được ghi nhận mất / hỏng</td><td>@Model.MatChoBoiThuong</td><td><a href="/Admin/Report">Xem tồn kho</a></td></tr>
                     <tr><td>Học liệu và bản sách trong kho</td><td>@Model.TongBanSao bản / @Model.TongDauSach đầu sách</td><td><a href="/Admin/Catalog">Xem học liệu</a></td></tr>
                     <tr><td>Bạn đọc thư viện</td><td>@Model.TongBanDoc bạn đọc</td><td><a href="/Admin/Reader">Xem quản lý bạn đọc</a></td></tr>
                 </tbody>
@@ -64,6 +64,10 @@
         </div>
     </div>
 
+    @if (Model.TongQuyTaiChinh - Model.TienThuNopMuon - Model.TienThuDenBu != 0)
+    {
+        <p class="text-muted">Khoản thu chưa phân loại: @((Model.TongQuyTaiChinh - Model.TienThuNopMuon - Model.TienThuDenBu).ToString("N0")) đ. Các phiếu thu này chưa có đủ thông tin tách khoản trong dữ liệu lưu.</p>
+    }
     <!-- Bảng Giao dịch thu tiền gần đây -->
     <div class="admin-table-card shadow-sm border" style="border-radius: 8px; overflow: hidden;">
         <div class="p-3 bg-white border-bottom d-flex justify-content-between align-items-center">

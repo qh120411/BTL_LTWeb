@@ -92,9 +92,12 @@ namespace BTL_LTWEB.Areas.Admin.ViewModels
         public string TacGia { get; set; } = string.Empty;
         public string CoverImage { get; set; } = string.Empty;
         public string NgayMuon { get; set; } = string.Empty;
+        [System.Text.Json.Serialization.JsonIgnore]
+        public DateTime NgayMuonSort { get; set; }
         public string HanTra { get; set; } = string.Empty;
         public string TrangThai { get; set; } = string.Empty;
         public bool IsQuaHan { get; set; }
+        public int SoNgayQuaHan { get; set; }
     }
 
     public class CirculationIndexViewModel

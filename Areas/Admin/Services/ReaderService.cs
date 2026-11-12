@@ -124,7 +124,7 @@ public class ReaderService : IReaderService
                 HoTen = b.HoTen,
                 Nhom = group,
                 LopKhoa = lopKhoa,
-                QuyenSuDung = b.TrangThai == "Hoạt động" ? "Hoạt động" : "Đang khóa",
+                QuyenSuDung = b.TrangThai,
                 SoSachDangMuon = activeLoans.Count,
                 SoSachQuaHan = overdueCount
             });
@@ -189,21 +189,21 @@ public class ReaderService : IReaderService
                 var book = c.MaBanSaoNavigation?.MaTaiLieuNavigation;
                 var hanTraDate = c.HanTra.ToDateTime(TimeOnly.MinValue);
                 var isOverdue = today > hanTraDate || c.TrangThai == "Quá hạn";
-                var daysOverdue = isOverdue ? Math.Max(1, (int)(today - hanTraDate).TotalDays) : 0;
+                var daysOverdue = isOverdue ? Math.Max(0, (int)(today - hanTraDate).TotalDays) : 0;
 
                 var authors = (book != null && book.TaiLieuTacGia.Any())
                     ? string.Join(", ", book.TaiLieuTacGia.Select(tg => tg.MaTacGiaNavigation.HoTen))
-                    : "Nhiều tác giả";
+                    : "Chưa cập nhật tác giả";
 
-                var ngayMuonDate = c.MaPhieuMuonNavigation != null ? c.MaPhieuMuonNavigation.NgayMuon : DateTime.Now;
+                var ngayMuonDate = c.MaPhieuMuonNavigation.NgayMuon;
 
                 return new BorrowTransactionViewModel
                 {
                     MaGD = $"GD{ngayMuonDate:yyMMdd}-{c.MaChiTietMuon:D3}",
-                    MaSach = c.MaBanSaoNavigation?.MaVach ?? $"BS-{c.MaBanSao:D5}",
-                    TenSach = book?.TenTaiLieu ?? "Học liệu UTC",
+                    MaSach = c.MaBanSaoNavigation?.MaVach ?? "Chưa có mã vạch",
+                    TenSach = book?.TenTaiLieu ?? "Chưa có thông tin học liệu",
                     TacGia = authors,
-                    CoverImage = book?.AnhBia ?? "/images/covers/sach_01.jpg",
+                    CoverImage = book?.AnhBia ?? "/images/covers/cover-placeholder.svg",
                     NgayMuon = ngayMuonDate.ToString("dd/MM/yyyy"),
                     NgayHenTra = c.HanTra.ToString("dd/MM/yyyy"),
                     TrangThai = isOverdue ? $"Quá hạn {daysOverdue} ngày" : "Còn hạn",
@@ -224,9 +224,9 @@ public class ReaderService : IReaderService
             MaBD = b.MaSinhVien,
             HoTen = b.HoTen,
             LopKhoa = lopKhoa,
-            TrangThaiHocTap = isLecturer ? "Đang công tác" : "Đang học",
+            TrangThaiHocTap = "Chưa có dữ liệu",
             Nhom = isLecturer ? "Giảng viên" : "Sinh viên",
-            QuyenSuDung = b.TrangThai == "Hoạt động" ? "Hoạt động" : "Đang khóa",
+            QuyenSuDung = b.TrangThai,
             GioiHanSach = isLecturer ? "10 cuốn" : "5 cuốn",
             HieuLucQuyen = b.NgayHetHanThe?.ToString("yyyy-MM-dd") ?? string.Empty,
             BorrowTransactions = activeLoans,
@@ -237,20 +237,27 @@ public class ReaderService : IReaderService
 
     public bool UpdateReaderSettings(ReaderDetailViewModel model)
     {
+        DateOnly? expiresOn = null;
+        if (!string.IsNullOrWhiteSpace(model.HieuLucQuyen))
+        {
+            if (!DateOnly.TryParseExact(model.HieuLucQuyen, "yyyy-MM-dd",
+                System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out var date)) return false;
+            expiresOn = date;
+        }
         try
         {
             var banDoc = _dbContext.BanDocs.FirstOrDefault(b => b.MaSinhVien == model.MaBD);
             if (banDoc != null)
             {
-                if (!string.IsNullOrWhiteSpace(model.QuyenSuDung))
-                {
-                    banDoc.TrangThai = model.QuyenSuDung;
-                }
+                if (model.QuyenSuDung != banDoc.TrangThai &&
+                    !new[] { "Hoạt động", "Tạm khóa", "Đọc tại chỗ" }.Contains(model.QuyenSuDung)) return false;
+                banDoc.TrangThai = model.QuyenSuDung;
+                banDoc.NgayHetHanThe = expiresOn;
                 _dbContext.SaveChanges();
                 return true;
             }
         }
-        catch { }
+        catch (DbUpdateException) { _dbContext.ChangeTracker.Clear(); }
         return false;
     }
 
@@ -413,6 +420,11 @@ public class ReaderService : IReaderService
                 errorMessage = $"Không tìm thấy bạn đọc có mã '{maBD}' trong CSDL!";
                 return false;
             }
+            if (reader.TrangThai != "Hoạt động")
+            {
+                errorMessage = "Quyền sử dụng thư viện của bạn đọc không cho phép mượn sách.";
+                return false;
+            }
             var activeLoans = reader.PhieuMuons.SelectMany(p => p.ChiTietMuons)
                 .Where(c => c.NgayTra == null && c.TrangThai != "Đã trả" &&
                             c.TrangThai != "Đã đền sách mới" && c.TrangThai != "Đã đền tiền").ToList();
@@ -427,7 +439,7 @@ public class ReaderService : IReaderService
             var document = _dbContext.TaiLieus.Include(d => d.BanSaos).SingleOrDefault(d => d.MaTaiLieu == bookId);
             if (document == null) { errorMessage = "Không tìm thấy học liệu trong SQL Server."; return false; }
             if (activeLoans.Any(c => c.MaBanSaoNavigation.MaTaiLieu == bookId)) { errorMessage = "Bạn đọc đã mượn đầu sách này rồi!"; return false; }
-            if (!document.BanSaos.Any(c => c.TrangThai == "Có sẵn")) { errorMessage = "Sách hiện không còn bản sẵn có để cho mượn."; return false; }
+            if (!document.BanSaos.Any(c => c.TrangThai == "Có sẵn" && c.TinhTrang != "Mất" && c.TinhTrang != "Hỏng")) { errorMessage = "Sách hiện không còn bản sẵn có để cho mượn."; return false; }
 
             var staff = ResolveBorrowingStaff(staffUsername);
             if (staff == null)
@@ -435,14 +447,7 @@ public class ReaderService : IReaderService
                 errorMessage = "Không xác định được cán bộ lập phiếu. Vui lòng đăng nhập lại tài khoản quản trị.";
                 return false;
             }
-            var copy = document.BanSaos.First(c => c.TrangThai == "Có sẵn");
-            if (string.IsNullOrEmpty(reader.SoThe))
-            {
-                reader.SoThe = $"THE-{reader.MaSinhVien}";
-                reader.NgayCapThe = DateOnly.FromDateTime(DateTime.Today);
-                reader.NgayHetHanThe = DateOnly.FromDateTime(DateTime.Today.AddYears(4));
-                reader.TrangThaiThe = "Hoạt động";
-            }
+            var copy = document.BanSaos.First(c => c.TrangThai == "Có sẵn" && c.TinhTrang != "Mất" && c.TinhTrang != "Hỏng");
             var loan = new PhieuMuon
             {
                 MaBanDocNavigation = reader,
@@ -488,14 +493,14 @@ public class ReaderService : IReaderService
         {
             NguonDuLieu = "Dữ liệu bạn đọc hiện có trong SQL Server",
             TepDuLieu = string.Empty,
-            PreviewItems = _dbContext.BanDocs.Take(15).Select(r => new ImportQldtItemViewModel
+            PreviewItems = _dbContext.BanDocs.AsNoTracking().OrderBy(r => r.MaSinhVien).Take(15).Select(r => new ImportQldtItemViewModel
             {
                 MaSV = r.MaSinhVien,
                 HoTen = r.HoTen,
                 LopKhoa = r.MaLopNavigation == null ? string.Empty : r.MaLopNavigation.TenLop,
                 TrangThaiKiemTra = "Đang có trong SQL Server",
                 IsNew = false,
-                IsValid = true
+                IsValid = false
             }).ToList()
         };
     }
@@ -529,32 +534,34 @@ public class ReaderService : IReaderService
         foreach (var c in activeLoans)
         {
             var book = c.MaBanSaoNavigation?.MaTaiLieuNavigation;
-            var banDoc = c.MaPhieuMuonNavigation?.MaBanDocNavigation;
+            var banDoc = c.MaPhieuMuonNavigation.MaBanDocNavigation;
             var hanTraDate = c.HanTra.ToDateTime(TimeOnly.MinValue);
             var isOverdue = today > hanTraDate || c.TrangThai == "Quá hạn";
-            var daysOverdue = isOverdue ? Math.Max(1, (int)(today - hanTraDate).TotalDays) : 0;
+            var daysOverdue = isOverdue ? Math.Max(0, (int)(today - hanTraDate).TotalDays) : 0;
 
             var authors = (book != null && book.TaiLieuTacGia.Any())
                 ? string.Join(", ", book.TaiLieuTacGia.Select(tg => tg.MaTacGiaNavigation.HoTen))
-                : "Nhiều tác giả";
+                : "Chưa cập nhật tác giả";
 
             list.Add(new CirculationTransactionItem
             {
-                MaGD = $"GD{(c.MaPhieuMuonNavigation != null ? c.MaPhieuMuonNavigation.NgayMuon : DateTime.Now):yyMMdd}-{c.MaChiTietMuon:D3}",
+                MaGD = $"GD{c.MaPhieuMuonNavigation.NgayMuon:yyMMdd}-{c.MaChiTietMuon:D3}",
                 MaBD = banDoc?.MaSinhVien ?? string.Empty,
                 HoTen = banDoc?.HoTen ?? "Chưa xác định bạn đọc",
-                MaBanSao = c.MaBanSaoNavigation?.MaVach ?? $"BS-{c.MaBanSao:D5}",
-                TenSach = book?.TenTaiLieu ?? "Học liệu UTC",
+                MaBanSao = c.MaBanSaoNavigation?.MaVach ?? "Chưa có mã vạch",
+                TenSach = book?.TenTaiLieu ?? "Chưa có thông tin học liệu",
                 TacGia = authors,
-                CoverImage = book?.AnhBia ?? "/images/covers/sach_01.jpg",
-                NgayMuon = (c.MaPhieuMuonNavigation != null ? c.MaPhieuMuonNavigation.NgayMuon : DateTime.Now).ToString("dd/MM/yyyy"),
+                CoverImage = book?.AnhBia ?? "/images/covers/cover-placeholder.svg",
+                NgayMuon = c.MaPhieuMuonNavigation.NgayMuon.ToString("dd/MM/yyyy"),
+                NgayMuonSort = c.MaPhieuMuonNavigation.NgayMuon,
                 HanTra = c.HanTra.ToString("dd/MM/yyyy"),
                 TrangThai = isOverdue ? $"Quá hạn {daysOverdue} ngày" : "Còn hạn",
-                IsQuaHan = isOverdue
+                IsQuaHan = isOverdue,
+                SoNgayQuaHan = daysOverdue
             });
         }
 
-        return list.OrderByDescending(x => x.IsQuaHan).ThenByDescending(x => x.NgayMuon).ToList();
+        return list.OrderByDescending(x => x.IsQuaHan).ThenByDescending(x => x.NgayMuonSort).ToList();
 
     }
 
@@ -564,16 +571,6 @@ public class ReaderService : IReaderService
         var all = GetAllCirculationTransactions();
         return all.Where(x => x.IsQuaHan).Select(t =>
         {
-            int overdueDays = 5;
-            if (t.TrangThai.Contains("ngày"))
-            {
-                var parts = t.TrangThai.Split(' ');
-                if (parts.Length >= 3 && int.TryParse(parts[2], out int days))
-                {
-                    overdueDays = days;
-                }
-            }
-
             return new OverdueItemViewModel
             {
                 MaGD = t.MaGD,
@@ -582,7 +579,7 @@ public class ReaderService : IReaderService
                 TenSach = t.TenSach,
                 NgayMuon = t.NgayMuon,
                 HanTra = t.HanTra,
-                SoNgayQuaHan = overdueDays,
+                SoNgayQuaHan = t.SoNgayQuaHan,
                 TienPhat = 100000m
             };
         }).OrderByDescending(x => x.SoNgayQuaHan).ToList();
@@ -646,15 +643,16 @@ public class ReaderService : IReaderService
             TongDauSach = totalBooks,
             TongBanSao = totalCopies,
             DangMuon = allLoans.Count,
-            BanSanCo = _dbContext.BanSaos.Count(c => c.TrangThai == "Có sẵn"),
-            MatChoBoiThuong = _dbContext.BanSaos.Count(c => c.TrangThai == "Đã mất" || c.TinhTrang == "Mất" || c.TinhTrang == "Hỏng"),
+            BanSanCo = _dbContext.BanSaos.Count(c => c.TrangThai == "Có sẵn" && c.TinhTrang != "Mất" && c.TinhTrang != "Hỏng"),
+            MatChoBoiThuong = _dbContext.BanSaos.Count(c => c.TrangThai == "Đã mất" || c.TrangThai == "Mất" ||
+                c.TrangThai == "Hỏng" || c.TrangThai == "Đã hỏng" || c.TinhTrang == "Mất" || c.TinhTrang == "Hỏng"),
             LuotQuaHan = overdueLoans.Count,
             TongBanDoc = totalReaders,
             TongQuyTaiChinh = financial.TongThu,
             TienThuNopMuon = financial.ThuNopMuon,
             TienThuDenBu = financial.ThuDenBu,
             RecentReceipts = financial.RecentReceipts,
-            RecentTransactions = allLoans.Take(8).Select(t => new DashboardTransactionItem
+            RecentTransactions = allLoans.OrderByDescending(t => t.NgayMuonSort).Take(8).Select(t => new DashboardTransactionItem
             {
                 MaGD = t.MaGD,
                 MaBD = t.MaBD,

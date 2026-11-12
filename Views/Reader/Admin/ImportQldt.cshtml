@@ -5,6 +5,7 @@
 
 <h1 class="admin-page-title mb-4">Nhập dữ liệu QLĐT</h1>
 
+<div class="alert alert-info">Chưa có nguồn hoặc tệp QLĐT để nhập. Danh sách bên dưới chỉ là bạn đọc đang có trong thư viện.</div>
 <form asp-action="ProcessImport" method="post">
     @Html.AntiForgeryToken()
 
@@ -47,12 +48,12 @@
 
     <!-- Thông báo kết quả kiểm tra trước khi xác nhận -->
     <div class="admin-info-box mb-4">
-        <div class="admin-info-title">@Model.TotalValid dòng hợp lệ · @Model.TotalError dòng lỗi</div>
+        <div class="admin-info-title">@Model.PreviewItems.Count bạn đọc hiện có · Chưa kiểm tra dữ liệu nhập</div>
     </div>
 
     <!-- Hàng nút hành động -->
     <div class="d-flex align-items-center gap-3">
-        <button type="submit" class="btn btn-utc-primary">
+        <button type="submit" class="btn btn-utc-primary" disabled>
             Xác nhận nhập dữ liệu
         </button>
         <a asp-action="Index" class="btn btn-outline-utc">

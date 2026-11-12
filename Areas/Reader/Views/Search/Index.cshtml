@@ -8,10 +8,10 @@
     var language = Model.Language ?? "all";
     var availability = Model.Availability ?? "all";
 
-    bool hasActiveFilter = !string.IsNullOrEmpty(keyword) 
-                           || category != "all" 
-                           || major != "all" 
-                           || language != "all" 
+    bool hasActiveFilter = !string.IsNullOrEmpty(keyword)
+                           || category != "all"
+                           || major != "all"
+                           || language != "all"
                            || availability != "all";
 }
 
@@ -54,11 +54,11 @@
 
             <div class="utc-search-box-field">
                 <label class="utc-field-label">Từ khóa tìm kiếm (nhan đề, tác giả, chuyên ngành, mã ISBN)</label>
-                <input type="text" 
-                       name="keyword" 
+                <input type="text"
+                       name="keyword"
                        id="opacSearchInput"
-                       class="utc-field-input" 
-                       value="@keyword" 
+                       class="utc-field-input"
+                       value="@keyword"
                        placeholder="Nhập từ khóa tìm kiếm (Ví dụ: Python, Cấu trúc dữ liệu, Giải tích, Cầu đường, Triết học...)" />
             </div>
             <button type="submit" class="btn-utc-primary">
@@ -66,7 +66,7 @@
             </button>
             @if (!string.IsNullOrEmpty(keyword))
             {
-                <a href="/Reader/Search?category=@category&major=@major&language=@language&availability=@availability" 
+                <a href="/Reader/Search?category=@category&major=@major&language=@language&availability=@availability"
                    class="btn-utc-secondary">
                     <i class="bi bi-x-lg me-1"></i> Xóa từ khóa
                 </a>
@@ -180,13 +180,13 @@
                         @foreach (var book in Model.Items)
                         {
                             var bookCover = string.IsNullOrWhiteSpace(book.CoverImage)
-                                ? "/images/covers/sach_01.jpg"
+                                ? "/images/covers/cover-placeholder.svg"
                                 : (book.CoverImage.StartsWith("/") ? book.CoverImage : "/" + book.CoverImage.TrimStart('~').TrimStart('/'));
                             <a href="/Reader/Document/Details/@book.Id" class="utc-catalog-book-card">
                                 @if (!string.IsNullOrEmpty(bookCover))
                                 {
                                     <div class="utc-book-cover-wrap">
-                                        <img src="@bookCover" alt="@book.Title" class="utc-book-cover-img" onerror="this.src='/images/covers/sach_01.jpg'" />
+                                        <img src="@bookCover" alt="@book.Title" class="utc-book-cover-img" onerror="this.onerror=null;this.src='/images/covers/cover-placeholder.svg'" />
                                     </div>
                                 }
                                 else

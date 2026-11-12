@@ -52,6 +52,15 @@
                         </div>
 
                         <div class="col-md-4">
+                            <label class="form-label-utc fw-bold">Ngôn ngữ <span class="text-danger">*</span></label>
+                            <select name="language" class="form-select form-control-utc" required>
+                                <option value="">Chọn ngôn ngữ</option>
+                                <option value="vie">Tiếng Việt</option>
+                                <option value="eng">Tiếng Anh</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
                             <label class="form-label-utc fw-bold">ISBN</label>
                             <input type="text" name="isbn" class="form-control form-control-utc" placeholder="VD: 978-604-0-32451-2" />
                         </div>
@@ -78,7 +87,7 @@
 
                         <div class="col-md-12">
                             <label class="form-label-utc fw-bold">Đường dẫn ảnh bìa</label>
-                            <input type="text" name="coverImage" class="form-control form-control-utc" value="/images/covers/sach_01.jpg" />
+                            <input type="text" name="coverImage" class="form-control form-control-utc" placeholder="Đường dẫn ảnh bìa (nếu có)" />
                         </div>
 
                         <div class="col-md-12">
@@ -142,6 +151,20 @@
                                 <option value="toanly">Khoa học cơ bản</option>
                                 <option value="chinhtri">Lý luận chính trị &amp; Pháp luật</option>
                             </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label-utc fw-bold">Ngôn ngữ <span class="text-danger">*</span></label>
+                            <select name="language" class="form-select form-control-utc" required>
+                                <option value="">Chọn ngôn ngữ</option>
+                                <option value="vie">Tiếng Việt</option>
+                                <option value="eng">Tiếng Anh</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label-utc fw-bold">Ngôn ngữ</label>
+                            <input type="text" name="languageName" id="editBookLanguage" maxlength="100" class="form-control form-control-utc" />
                         </div>
 
                         <div class="col-md-4">
@@ -359,6 +382,7 @@
                         document.getElementById("editBookTitle").value = data.title;
                         document.getElementById("editBookAuthors").value = data.authors;
                         document.getElementById("editBookPublisher").value = data.publisher || "";
+                        document.getElementById("editBookLanguage").value = data.languageName || "";
                         document.getElementById("editBookMajor").value = data.major;
                         document.getElementById("editBookIsbn").value = data.isbn || "";
                         document.getElementById("editBookYear").value = data.year;

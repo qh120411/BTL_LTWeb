@@ -1,7 +1,7 @@
 @model BTL_LTWEB.Areas.Reader.Models.BookItem
 
 @{
-    ViewData["Title"] = Model?.Title ?? "Chi tiết học liệu";
+    ViewData["Title"] = Model.Title;
 }
 
 @section Styles {
@@ -19,11 +19,11 @@
                 <span style="color: var(--utc-border);">&bull;</span>
                 <span style="color: var(--utc-text-primary); font-weight: 700;">Chi tiết học liệu</span>
             </nav>
-            <h1 class="utc-page-title-main">@(Model?.Title ?? "Chi tiết học liệu")</h1>
+            <h1 class="utc-page-title-main">@(Model.Title)</h1>
             <div class="text-muted" style="font-size: 14.5px;">
-                <i class="bi bi-person-fill me-1" style="color: var(--utc-primary);"></i> Tác giả: <strong>@(Model?.Authors ?? "Nhiều tác giả")</strong> &middot; 
-                <i class="bi bi-building me-1 ms-2" style="color: var(--utc-primary);"></i> Nhà xuất bản: <strong>@(Model?.Publisher ?? "Đang cập nhật")</strong> &middot; 
-                Năm xuất bản: <strong>@(Model?.Year ?? 2024)</strong>
+                <i class="bi bi-person-fill me-1" style="color: var(--utc-primary);"></i> Tác giả: <strong>@(string.IsNullOrWhiteSpace(Model.Authors) ? "Chưa cập nhật" : Model.Authors)</strong> &middot;
+                <i class="bi bi-building me-1 ms-2" style="color: var(--utc-primary);"></i> Nhà xuất bản: <strong>@(string.IsNullOrWhiteSpace(Model.Publisher) ? "Chưa cập nhật" : Model.Publisher)</strong> &middot;
+                Năm xuất bản: <strong>@(Model.Year > 0 ? Model.Year.ToString() : "Chưa cập nhật")</strong>
             </div>
         </div>
 
@@ -32,7 +32,7 @@
             <!-- Cột trái: Bìa sách thật hoặc Typographic -->
             @{
                 string? detailCover = null;
-                if (!string.IsNullOrWhiteSpace(Model?.CoverImage))
+                if (!string.IsNullOrWhiteSpace(Model.CoverImage))
                 {
                     var clean = Model.CoverImage.Trim().TrimStart('~');
                     detailCover = clean.StartsWith("/") ? clean : "/" + clean;
@@ -41,20 +41,20 @@
             @if (!string.IsNullOrEmpty(detailCover))
             {
                 <div class="utc-detail-cover-card-img-wrap">
-                    <img src="@detailCover" alt="@(Model?.Title ?? "Học liệu")" class="utc-detail-cover-card-img" onerror="this.src='/images/covers/sach_01.jpg'" />
+                    <img src="@detailCover" alt="@(Model.Title ?? "Học liệu")" class="utc-detail-cover-card-img" onerror="this.onerror=null;this.src='/images/covers/cover-placeholder.svg'" />
                 </div>
             }
             else
             {
-                <div class="utc-detail-cover-card" style="background-color: @(Model?.Category == "thesis" ? "#fef3c7" : "#e0f2fe");">
-                    <span class="utc-detail-cover-tag" style="color: @(Model?.Category == "thesis" ? "#92400e" : "var(--utc-navy)");">
-                        UTC / @(Model?.Category == "thesis" ? "CÔNG TRÌNH NGHIÊN CỨU" : "HỌC LIỆU")
+                <div class="utc-detail-cover-card" style="background-color: @(Model.Category == "thesis" ? "#fef3c7" : "#e0f2fe");">
+                    <span class="utc-detail-cover-tag" style="color: @(Model.Category == "thesis" ? "#92400e" : "var(--utc-navy)");">
+                        UTC / @(Model.Category == "thesis" ? "CÔNG TRÌNH NGHIÊN CỨU" : "HỌC LIỆU")
                     </span>
-                    <div class="utc-detail-cover-title" style="color: @(Model?.Category == "thesis" ? "#78350f" : "var(--utc-navy)");">
-                        @Model?.Title
+                    <div class="utc-detail-cover-title" style="color: @(Model.Category == "thesis" ? "#78350f" : "var(--utc-navy)");">
+                        @Model.Title
                     </div>
                     <div class="utc-detail-cover-footer">
-                        <span>@(Model?.CategoryName ?? "Giáo trình đại học chính quy")</span>
+                        <span>@(Model.CategoryName)</span>
                     </div>
                 </div>
             }
@@ -62,55 +62,55 @@
             <!-- Cột phải: Thông tin thư mục & Trạng thái lưu thông -->
             <div class="utc-detail-content">
                 <div class="utc-detail-status-banner">
-                    <i class="bi bi-check-circle-fill"></i> @(Model?.StockBadgeText ?? "Sẵn có tại thư viện")
+                    <i class="bi bi-check-circle-fill"></i> @(Model.StockBadgeText)
                 </div>
 
                 <p class="utc-detail-desc">
-                    @(Model?.Description ?? "Tài liệu học tập và nghiên cứu chính quy dành cho giảng viên và sinh viên trường Đại học Giao thông Vận tải.")
+                    @(string.IsNullOrWhiteSpace(Model.Description) ? "Chưa có mô tả." : Model.Description)
                 </p>
 
                 <!-- Lưới thông tin thư mục -->
                 <div class="utc-metadata-grid">
                     <div class="utc-meta-item">
-                        <span class="utc-meta-label">Mã đầu sách</span>
-                        <div class="utc-meta-value">@(Model?.DocumentCode ?? "DS001")</div>
+                        <span class="utc-meta-label">Mã học liệu</span>
+                        <div class="utc-meta-value">@(Model.DocumentCode)</div>
                     </div>
                     <div class="utc-meta-item">
                         <span class="utc-meta-label">Loại tài liệu</span>
-                        <div class="utc-meta-value">@(Model?.CategoryName ?? "Sách / Giáo trình")</div>
+                        <div class="utc-meta-value">@(Model.CategoryName)</div>
                     </div>
                     <div class="utc-meta-item">
                         <span class="utc-meta-label">Ngôn ngữ</span>
-                        <div class="utc-meta-value">@(Model?.LanguageName ?? "Tiếng Việt")</div>
+                        <div class="utc-meta-value">@(string.IsNullOrWhiteSpace(Model.LanguageName) ? "Chưa cập nhật" : Model.LanguageName)</div>
                     </div>
                     <div class="utc-meta-item">
                         <span class="utc-meta-label">Chuyên ngành</span>
-                        <div class="utc-meta-value">@(Model?.MajorName ?? "Công nghệ thông tin")</div>
+                        <div class="utc-meta-value">@(string.IsNullOrWhiteSpace(Model.MajorName) ? "Chưa cập nhật" : Model.MajorName)</div>
                     </div>
                     <div class="utc-meta-item">
                         <span class="utc-meta-label">Mã chuẩn ISBN</span>
-                        <div class="utc-meta-value">@(Model?.ISBN ?? "Đang cập nhật")</div>
+                        <div class="utc-meta-value">@(string.IsNullOrWhiteSpace(Model.ISBN) ? "Chưa cập nhật" : Model.ISBN)</div>
                     </div>
                     <div class="utc-meta-item">
                         <span class="utc-meta-label">Số trang</span>
-                        <div class="utc-meta-value">@(Model?.Pages ?? 300) trang</div>
+                        <div class="utc-meta-value">@(Model.Pages > 0 ? $"{Model.Pages} trang" : "Chưa cập nhật")</div>
                     </div>
                     <div class="utc-meta-item">
                         <span class="utc-meta-label">Vị trí lưu kho</span>
-                        <div class="utc-meta-value text-primary fw-bold">@(Model?.Shelf ?? string.Empty)</div>
+                        <div class="utc-meta-value text-primary fw-bold">@(Model.Shelf ?? string.Empty)</div>
                     </div>
                     <div class="utc-meta-item">
                         <span class="utc-meta-label">Năm xuất bản</span>
-                        <div class="utc-meta-value">@(Model?.Year ?? 2024)</div>
+                        <div class="utc-meta-value">@(Model.Year > 0 ? Model.Year.ToString() : "Chưa cập nhật")</div>
                     </div>
                 </div>
 
                 <!-- Tóm tắt số lượng kho -->
                 <div class="utc-stock-summary">
-                    <i class="bi bi-pie-chart-fill text-primary"></i> 
-                    <span>Tổng số: <strong>@(Model?.TotalCopies ?? 4) bản</strong></span> &middot; 
-                    <span>Sẵn có: <strong class="text-success">@(Model?.AvailableCopies ?? 4)</strong></span> &middot; 
-                    <span>Đang mượn: <strong class="text-primary">@((Model?.TotalCopies ?? 4) - (Model?.AvailableCopies ?? 4))</strong></span>
+                    <i class="bi bi-pie-chart-fill text-primary"></i>
+                    <span>Tổng số: <strong>@(Model.TotalCopies) bản</strong></span> &middot;
+                    <span>Sẵn có: <strong class="text-success">@(Model.AvailableCopies)</strong></span> &middot;
+                    <span>Đang mượn: <strong class="text-primary">@Model.BorrowedCopies</strong></span>
                 </div>
 
                 <!-- Các nút thao tác -->
@@ -132,7 +132,7 @@
                         <i class="bi bi-info-circle-fill"></i> Bạn muốn mượn tài liệu này?
                     </span>
                     <p class="utc-borrow-guide-desc">
-                        Bạn đọc chỉ cần mang Thẻ sinh viên hoặc Thẻ bạn đọc UTC đến <strong>Quầy thủ thư - Tầng 5 Nhà A8</strong>, cung cấp vị trí <strong>@(Model?.Shelf ?? "Kho sách")</strong> và mã vạch cuốn sách để làm thủ tục. Kỳ 1 mượn từ 11/08, trả trước hoặc trong ngày 31/12 cùng năm; kỳ 2 từ 02/01 đến 31/05 cùng năm.
+                        Bạn đọc chỉ cần mang Thẻ sinh viên hoặc Thẻ bạn đọc UTC đến <strong>Quầy thủ thư - Tầng 5 Nhà A8</strong>, cung cấp vị trí <strong>@(Model.Shelf ?? "Kho sách")</strong> và mã vạch cuốn sách để làm thủ tục. Kỳ 1 mượn từ 11/08, trả trước hoặc trong ngày 31/12 cùng năm; kỳ 2 từ 02/01 đến 31/05 cùng năm.
                     </p>
                 </div>
             </div>
@@ -155,26 +155,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @for (int i = 1; i <= (Model?.TotalCopies ?? 4); i++)
+                        @foreach (var copy in Model.Copies)
                         {
-                            var barcode = $"UTC-{(Model?.Id ?? 1):D2}-{i:D2}";
-                            var isAvailable = i <= (Model?.AvailableCopies ?? 3);
                             <tr>
-                                <td><strong>@barcode</strong></td>
-                                <td>@(Model?.Shelf ?? "Kệ lưu trữ A1"), Thư viện A8</td>
-                                <td>@(i == 1 ? "Mới 98%" : "Tốt (90%)")</td>
-                                <td>
-                                    @if (isAvailable)
-                                    {
-                                        <span class="utc-badge utc-badge-success">Có sẵn tại giá</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="utc-badge utc-badge-warning">Đang cho mượn</span>
-                                    }
-                                </td>
-                                <td>@(isAvailable ? "-" : "28/11/2026")</td>
+                                <td><strong>@copy.Barcode</strong></td>
+                                <td>@(string.IsNullOrWhiteSpace(copy.Shelf) ? "Chưa cập nhật" : copy.Shelf)</td>
+                                <td>@copy.Condition</td>
+                                <td><span class="utc-badge @(copy.IsAvailable ? "utc-badge-success" : "utc-badge-warning")">@copy.Status</span></td>
+                                <td>@(copy.DueDate?.ToString("dd/MM/yyyy") ?? "—")</td>
                             </tr>
+                        }
+                        @if (Model.Copies.Count == 0)
+                        {
+                            <tr><td colspan="5" class="text-center text-muted">Chưa có bản sao lưu hành.</td></tr>
                         }
                     </tbody>
                 </table>

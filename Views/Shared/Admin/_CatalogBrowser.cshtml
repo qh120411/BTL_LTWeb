@@ -89,7 +89,7 @@
                             <a asp-area="Reader" asp-controller="Document" asp-action="Details" asp-route-id="@book.Id"
                                class="catalog-cover" target="_blank" rel="noopener" aria-label="Xem thông tin @book.TenHocLieu">
                                 <img src="@cover" alt="@book.TenHocLieu" loading="lazy"
-                                     onerror="this.onerror=null;this.src='/images/covers/sach_01.jpg'" />
+                                     onerror="this.onerror=null;this.src='/images/covers/cover-placeholder.svg'" />
                             </a>
                             <div class="catalog-book-body">
                                 <p class="catalog-major">@book.TheLoai</p>

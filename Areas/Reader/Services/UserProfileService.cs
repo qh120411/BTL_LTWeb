@@ -53,24 +53,24 @@ public class UserProfileService : IUserProfileService
             var book = ctm.MaBanSaoNavigation?.MaTaiLieuNavigation;
             var hanTraDate = ctm.HanTra.ToDateTime(TimeOnly.MinValue);
             var isOverdue = today > hanTraDate || ctm.TrangThai == "Quá hạn";
-            var daysOverdue = isOverdue ? Math.Max(1, (int)(today - hanTraDate).TotalDays) : 0;
+            var daysOverdue = isOverdue ? Math.Max(0, (int)(today - hanTraDate).TotalDays) : 0;
             var daysLeft = isOverdue ? 0 : Math.Max(0, (int)(hanTraDate - today).TotalDays);
 
             var authors = (book != null && book.TaiLieuTacGia.Any())
                 ? string.Join(", ", book.TaiLieuTacGia.Select(tg => tg.MaTacGiaNavigation.HoTen))
-                : "Nhiều tác giả";
+                : "Chưa cập nhật tác giả";
 
             string coverPath = !string.IsNullOrWhiteSpace(book?.AnhBia)
                 ? (book.AnhBia.StartsWith("/") ? book.AnhBia : "/" + book.AnhBia)
-                : "/images/covers/cover-placeholder.png";
+                : "/images/covers/cover-placeholder.svg";
 
-            var loanDate = ctm.MaPhieuMuonNavigation != null ? ctm.MaPhieuMuonNavigation.NgayMuon : DateTime.Now;
+            var loanDate = ctm.MaPhieuMuonNavigation.NgayMuon;
 
             profile.BorrowedBooks.Add(new BorrowedBookItem
             {
                 MaGD = $"GD{loanDate:yyMMdd}-{ctm.MaChiTietMuon:D3}",
-                MaVach = ctm.MaBanSaoNavigation?.MaVach ?? $"BS-{ctm.MaBanSao:D5}",
-                TenSach = book?.TenTaiLieu ?? "Học liệu UTC",
+                MaVach = ctm.MaBanSaoNavigation?.MaVach ?? "Chưa có mã vạch",
+                TenSach = book?.TenTaiLieu ?? "Chưa có thông tin học liệu",
                 TacGia = authors,
                 CoverImage = coverPath,
                 NgayMuon = loanDate,

@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Data.Common;
 using BTL_LTWEB.Areas.Admin.Services;
 using BTL_LTWEB.Areas.Reader.Models;
 using BTL_LTWEB.Areas.Reader.Services;
@@ -41,18 +42,23 @@ namespace BTL_LTWEB.Controllers
         [HttpGet("/api/system/health")]
         public async Task<IActionResult> GetSystemHealth()
         {
-            bool dbConnected = false;
-            try { dbConnected = await _dbContext.Database.CanConnectAsync(); } catch { }
-
-            return Ok(new
+            var time = _timeProvider.GetLocalNow().ToString("yyyy-MM-dd HH:mm:ss");
+            try
             {
-                status = "Healthy",
-                time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                databaseConnected = dbConnected,
-                totalBooks = _catalogService.GetAll().Count(),
-                totalReaders = _readerService.GetReaders(null, null).Readers.Count,
-                activeLoans = _readerService.GetAllCirculationTransactions().Count
-            });
+                if (!await _dbContext.Database.CanConnectAsync())
+                    return StatusCode(StatusCodes.Status503ServiceUnavailable,
+                        new { status = "Unhealthy", time, databaseConnected = false });
+                var totalBooks = await _dbContext.TaiLieus.CountAsync();
+                var totalReaders = await _dbContext.BanDocs.CountAsync();
+                var activeLoans = await _dbContext.ChiTietMuons.CountAsync(c => c.NgayTra == null &&
+                    c.TrangThai != "Đã trả" && c.TrangThai != "Đã đền sách mới" && c.TrangThai != "Đã đền tiền");
+                return Ok(new { status = "Healthy", time, databaseConnected = true, totalBooks, totalReaders, activeLoans });
+            }
+            catch (Exception ex) when (ex.GetBaseException() is DbException)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable,
+                    new { status = "Unhealthy", time, databaseConnected = false });
+            }
         }
 
         // 2. Phiên đăng nhập hiện tại
@@ -91,7 +97,7 @@ namespace BTL_LTWEB.Controllers
                 b.Shelf,
                 b.AvailableCopies,
                 b.TotalCopies,
-                status = b.AvailableCopies > 0 ? "Có sẵn" : "Hết sách"
+                status = b.IsOnline ? "Bản điện tử" : b.AvailableCopies > 0 ? "Có sẵn" : "Hết sách"
             });
 
             return Ok(new { total = list.Count, page, pageSize, data = paged });
@@ -104,14 +110,16 @@ namespace BTL_LTWEB.Controllers
             var book = _catalogService.GetById(id);
             if (book == null) return NotFound(new { message = $"Không tìm thấy sách ID: {id}" });
 
-            return Ok(new { book, copies = _catalogService.GetCopiesByBookId(id) });
+            return Ok(new { book, copies = book.Copies });
         }
 
         // 5. Danh sách bản sao vật lý của sách
         [HttpGet("/api/catalog/books/{id:int}/copies")]
         public IActionResult GetBookCopies(int id)
         {
-            return Ok(new { bookId = id, copies = _catalogService.GetCopiesByBookId(id) });
+            var book = _catalogService.GetById(id);
+            if (book == null) return NotFound(new { message = $"Không tìm thấy sách ID: {id}" });
+            return Ok(new { bookId = id, copies = book.Copies });
         }
 
         // 6. Danh sách phiếu mượn trả

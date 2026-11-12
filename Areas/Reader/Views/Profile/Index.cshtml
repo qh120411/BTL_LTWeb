@@ -97,9 +97,9 @@
                                                 <span>Số điện thoại</span>
                                             </td>
                                             <td>
-                                                <input type="tel" 
-                                                       asp-for="SoDienThoai" 
-                                                       class="profile-input-field" 
+                                                <input type="tel"
+                                                       asp-for="SoDienThoai"
+                                                       class="profile-input-field"
                                                        placeholder="Nhập số điện thoại (VD: 0986123456)" />
                                             </td>
                                         </tr>
@@ -110,9 +110,9 @@
                                                 <span>Địa chỉ liên hệ</span>
                                             </td>
                                             <td>
-                                                <input type="text" 
-                                                       asp-for="DiaChiNha" 
-                                                       class="profile-input-field" 
+                                                <input type="text"
+                                                       asp-for="DiaChiNha"
+                                                       class="profile-input-field"
                                                        placeholder="Nhập số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành" />
                                             </td>
                                         </tr>
@@ -123,9 +123,9 @@
                                                 <span>Số tài khoản ngân hàng</span>
                                             </td>
                                             <td>
-                                                <input type="text" 
-                                                       asp-for="SoTaiKhoanNganHang" 
-                                                       class="profile-input-field" 
+                                                <input type="text"
+                                                       asp-for="SoTaiKhoanNganHang"
+                                                       class="profile-input-field"
                                                        placeholder="Nhập số tài khoản ngân hàng" />
                                             </td>
                                         </tr>
@@ -136,9 +136,9 @@
                                                 <span>Tên ngân hàng</span>
                                             </td>
                                             <td>
-                                                <input type="text" 
-                                                       asp-for="TenNganHang" 
-                                                       class="profile-input-field" 
+                                                <input type="text"
+                                                       asp-for="TenNganHang"
+                                                       class="profile-input-field"
                                                        placeholder="Ví dụ: Vietcombank, BIDV, Agribank, MB Bank..." />
                                             </td>
                                         </tr>
@@ -149,9 +149,9 @@
                                                 <span>Email liên hệ</span>
                                             </td>
                                             <td>
-                                                <input type="email" 
-                                                       asp-for="Email" 
-                                                       class="profile-input-field" 
+                                                <input type="email"
+                                                       asp-for="Email"
+                                                       class="profile-input-field"
                                                        placeholder="Nhập địa chỉ email" />
                                             </td>
                                         </tr>
@@ -239,10 +239,10 @@
                                 <!-- Cột 1: Bìa sách to rõ ràng, hiệu ứng gáy 3D -->
                                 <div class="book-showcase-cover-wrap">
                                     <div class="book-cover-stage">
-                                        <img src="@(string.IsNullOrEmpty(book.CoverImage) ? "/images/covers/cover-placeholder.png" : (book.CoverImage.StartsWith("/") ? book.CoverImage : "/" + book.CoverImage))" 
-                                             alt="@book.TenSach" 
-                                             class="book-showcase-cover-img" 
-                                             onerror="this.onerror=null; this.src='/images/covers/cover-placeholder.png';" />
+                                        <img src="@(string.IsNullOrEmpty(book.CoverImage) ? "/images/covers/cover-placeholder.svg" : (book.CoverImage.StartsWith("/") ? book.CoverImage : "/" + book.CoverImage))"
+                                             alt="@book.TenSach"
+                                             class="book-showcase-cover-img"
+                                             onerror="this.onerror=null; this.src='/images/covers/cover-placeholder.svg';" />
                                         <span class="book-cover-spine"></span>
                                     </div>
                                     <span class="book-stt-pill">Bản sách #@idx</span>
@@ -330,7 +330,7 @@
                 <div class="profile-summary-bar mt-3">
                     <div class="profile-summary-left">
                         <div class="profile-summary-title">
-                            Tổng số sách đang mượn: <strong class="text-primary">@Model.TongSoSachDangMuon cuốn</strong> 
+                            Tổng số sách đang mượn: <strong class="text-primary">@Model.TongSoSachDangMuon cuốn</strong>
                             (@Model.SoSachConHan cuốn còn hạn, <span class="text-danger fw-bold">@Model.SoSachQuaHan cuốn quá hạn</span>)
                         </div>
 

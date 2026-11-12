@@ -21,8 +21,9 @@ namespace BTL_LTWEB.Areas.Reader.Models
         public string Shelf { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public bool IsOnline { get; set; } = false;
-        public string DocumentCode => Id >= 100 ? $"LA{Id:D3}" : $"DS{Id:D3}";
-        public string StockBadgeText => IsOnline ? "Bản điện tử (Toàn văn)" : $"{AvailableCopies} bản sẵn có · Sách in";
+        public string DocumentCode => Id.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        public int BorrowedCopies => Copies.Count(c => c.Status == "Đang mượn" && c.Condition != "Mất" && c.Condition != "Hỏng");
+        public string StockBadgeText => IsOnline ? "Bản điện tử" : $"{AvailableCopies} bản sẵn có · Sách in";
 
         // Danh sách các bản sao vật lý trong kho (CSDL Thật)
         public List<BookCopyItem> Copies { get; set; } = new();
@@ -37,7 +38,8 @@ namespace BTL_LTWEB.Areas.Reader.Models
         public string Condition { get; set; } = string.Empty;      // Tình trạng: Mới, Tốt, Rách nhẹ
         public string Status { get; set; } = string.Empty;      // Trạng thái: Có sẵn, Đang mượn
         public string ImportDate { get; set; } = string.Empty;
-        public bool IsAvailable => Status == "Có sẵn";
+        public DateOnly? DueDate { get; set; }
+        public bool IsAvailable => Status == "Có sẵn" && Condition != "Mất" && Condition != "Hỏng";
     }
 
     public class BookSearchViewModel
