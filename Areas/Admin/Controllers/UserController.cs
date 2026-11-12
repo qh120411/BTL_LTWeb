@@ -28,7 +28,8 @@ public class UserController : AdminBaseController
     {
         ViewBag.ActiveMenu = "User";
 
-        var currentUsername = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.Identity?.Name ?? "";
+        var currentUsername = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrWhiteSpace(currentUsername)) return Unauthorized("Phiên đăng nhập thiếu định danh.");
         bool isCurrentUserSuperAdmin = IsSuperAdmin(currentUsername);
 
         var query = _dbContext.TaiKhoans
@@ -53,21 +54,21 @@ public class UserController : AdminBaseController
 
         var staffList = accounts.Select(t =>
         {
-            string maNv = t.MaNhanVienNavigation?.MaSoNhanVien ?? (t.TenDangNhap.StartsWith("NV", StringComparison.OrdinalIgnoreCase) ? t.TenDangNhap : "NV-QT01");
-            string hoTen = t.MaNhanVienNavigation?.HoTen ?? "Quản trị viên Hệ thống";
+            string maNv = t.MaNhanVienNavigation?.MaSoNhanVien ?? string.Empty;
+            string hoTen = t.MaNhanVienNavigation?.HoTen ?? string.Empty;
             string roleText = t.VaiTro switch
             {
                 "ADMIN" => "Quản trị viên (QTV)",
                 "QUANLY_BANDOC" => "Quản lý bạn đọc (QLB)",
                 "QUANLY_TAILIEU" => "Thủ thư mượn trả (TTM)",
-                _ => t.VaiTro ?? "Nhân viên"
+                _ => "Chưa xác định"
             };
 
             bool isCurrent = string.Equals(t.TenDangNhap, currentUsername, StringComparison.OrdinalIgnoreCase);
             bool isSuperAcc = IsSuperAdmin(t.TenDangNhap);
 
             // Quy tắc: Chỉ admin tối cao mới sửa quyền được và không tự sửa được chính mình
-            bool canEdit = isCurrentUserSuperAdmin && !isCurrent && !isSuperAcc;
+            bool canEdit = isCurrentUserSuperAdmin && !isCurrent && !isSuperAcc && t.MaNhanVienNavigation != null && !string.IsNullOrWhiteSpace(t.VaiTro);
 
             return new StaffAccountItemViewModel
             {
@@ -75,10 +76,10 @@ public class UserController : AdminBaseController
                 MaNV = maNv,
                 HoTen = hoTen,
                 TenDangNhap = t.TenDangNhap,
-                Email = t.EmailDangNhap ?? "canbo@utc.edu.vn",
-                VaiTroCode = t.VaiTro ?? "ADMIN",
+                Email = t.EmailDangNhap ?? string.Empty,
+                VaiTroCode = t.VaiTro ?? string.Empty,
                 VaiTroText = roleText,
-                TrangThai = t.TrangThai ?? "Hoạt động",
+                TrangThai = string.IsNullOrWhiteSpace(t.TrangThai) ? "Chưa xác định" : t.TrangThai,
                 IsCurrentLoggedInUser = isCurrent,
                 IsSuperAdminAccount = isSuperAcc,
                 CanEdit = canEdit
@@ -101,7 +102,8 @@ public class UserController : AdminBaseController
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateRole(int maTaiKhoan, string vaiTro)
     {
-        var currentUsername = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.Identity?.Name ?? "";
+        var currentUsername = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrWhiteSpace(currentUsername)) return Unauthorized("Phiên đăng nhập thiếu định danh.");
         bool isCurrentUserSuperAdmin = IsSuperAdmin(currentUsername);
 
         // 1. Chỉ Admin tối cao mới có quyền sửa phân quyền
@@ -174,7 +176,8 @@ public class UserController : AdminBaseController
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddStaff(string maNv, string hoTen, string email, string vaiTro)
     {
-        var currentUsername = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.Identity?.Name ?? "";
+        var currentUsername = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrWhiteSpace(currentUsername)) return Unauthorized("Phiên đăng nhập thiếu định danh.");
         bool isCurrentUserSuperAdmin = IsSuperAdmin(currentUsername);
 
         if (!isCurrentUserSuperAdmin)

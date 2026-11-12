@@ -1,8 +1,8 @@
 @model BTL_LTWEB.Areas.Reader.Models.UserProfileViewModel
 @{
     ViewData["Title"] = "Thư viện của tôi";
-    var studentName = Model?.HoTen ?? (User.Identity?.Name ?? "Đỗ Văn Đạt");
-    var studentId = Model?.MaSinhVien ?? (User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "242630923");
+    var studentName = Model?.HoTen ?? (User.Identity?.Name ?? string.Empty);
+    var studentId = Model?.MaSinhVien ?? (User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? string.Empty);
     var totalBorrowed = Model?.TongSoSachDangMuon ?? 5;
     var totalOverdue = Model?.SoSachQuaHan ?? 3;
 }

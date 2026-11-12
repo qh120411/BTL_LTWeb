@@ -23,8 +23,8 @@
         public string HoTen { get; set; } = string.Empty;
         public string NgaySinh { get; set; } = string.Empty;
         public string SoCCCD { get; set; } = string.Empty;
-        public string NganhHoc { get; set; } = "CLC Công nghệ thông tin Việt - Anh";
-        public string LopQuanLy { get; set; } = "CLC Công nghệ thông tin - Anh 1 K65";
+        public string NganhHoc { get; set; } = string.Empty;
+        public string LopQuanLy { get; set; } = string.Empty;
         public string? AvatarUrl { get; set; }
 
         // Thông tin chỉnh sửa được (Người dùng tự nhập & cập nhật)

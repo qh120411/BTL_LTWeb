@@ -12,13 +12,4 @@
         toggle.title = reveal ? "Ẩn mật khẩu" : "Hiện mật khẩu";
         if (icon) icon.className = reveal ? "bi bi-eye-slash" : "bi bi-eye";
     });
-    document.querySelectorAll("[data-login-username]").forEach(button => {
-        button.addEventListener("click", () => {
-            username.value = button.dataset.loginUsername;
-            password.value = button.dataset.loginPassword;
-            username.dispatchEvent(new Event("input", { bubbles: true }));
-            password.dispatchEvent(new Event("input", { bubbles: true }));
-            username.focus();
-        });
-    });
 });

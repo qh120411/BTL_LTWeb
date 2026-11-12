@@ -23,8 +23,6 @@ public partial class NhanVien
 
     public string TrangThai { get; set; } = null!;
 
-    public virtual ICollection<GiaHan> GiaHans { get; set; } = new List<GiaHan>();
-
     public virtual ICollection<PhieuMuon> PhieuMuons { get; set; } = new List<PhieuMuon>();
 
     public virtual TaiKhoan? TaiKhoan { get; set; }

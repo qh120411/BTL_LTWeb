@@ -1,6 +1,5 @@
 ﻿/* Homepage layout from Figma 6:77. Catalogue content and links remain project data. */
 .utc-home-wrapper { background: var(--utc-paper); padding: 16px 0 40px; }
-.utc-home-wrapper > .container-xl { width: 100%; max-width: 1920px; margin: auto; padding: 0 clamp(24px, 4.1667vw, 80px); }
 .utc-search-panel-box { border: 1px solid var(--utc-line); padding: 28px 32px; margin-bottom: 8px; }
 .utc-search-bar-row { display: flex; align-items: center; gap: 16px; }
 .utc-search-input-field { flex: 1; min-width: 0; }
@@ -29,7 +28,7 @@
 .utc-notice-text { color: var(--utc-ink); font-size: 20px; font-weight: 600; line-height: 29px; margin-top: 8px; }
 .utc-quick-nav-title { color: var(--utc-brand); font-size: 20px; font-weight: 600; line-height: 29px; margin: 0 0 20px; }
 .utc-quick-nav-item { display: block; color: var(--utc-ink); text-decoration: none; font-size: 18px; line-height: 26px; }
-.utc-figma-divider { border: 0; border-top: 1px solid var(--utc-line); margin: 32px calc(-1 * clamp(24px, 4.1667vw, 80px)); opacity: 1; }
+.utc-figma-divider { border: 0; border-top: 1px solid var(--utc-line); margin: 32px 0; opacity: 1; }
 .utc-section-tag-heading { font-size: 22px; font-weight: 600; line-height: 32px; color: var(--utc-brand); margin: 0 0 32px; }
 .utc-collections-grid,.utc-books-shelf-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 32px; }
 .utc-collections-grid { gap: 24px; }
@@ -67,7 +66,6 @@
     .utc-service-card-title { font-size: 20px; }
 }
 @media (max-width: 575.98px) {
-    .utc-home-wrapper > .container-xl { padding: 0 16px; }
     .utc-search-panel-box { padding: 16px; margin-bottom: 16px; }
     .utc-search-bar-row { flex-direction: column; align-items: stretch; gap: 12px; }
     .utc-figma-search-btn { flex-basis: auto; min-height: 44px; }
@@ -79,7 +77,7 @@
     .utc-highlight-row-title { font-size: 20px; }
     .utc-collections-grid,.utc-books-shelf-grid,.utc-services-shelf-grid { grid-template-columns: minmax(0,1fr); gap: 16px; }
     .utc-section-tag-heading { font-size: 20px; margin-bottom: 20px; }
-    .utc-figma-divider { margin: 28px -16px; }
+    .utc-figma-divider { margin: 28px 0; }
     .utc-collection-flat-item { padding: 8px 0; min-height: 0; }
     .utc-shelf-card { min-height: 0; }
     .utc-books-shelf-section > .d-flex { flex-wrap: wrap; }

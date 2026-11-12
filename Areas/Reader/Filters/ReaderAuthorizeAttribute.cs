@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -15,7 +16,7 @@ namespace BTL_LTWEB.Areas.Reader.Filters
             }
 
             var user = context.HttpContext.User;
-            if (!user.Identity?.IsAuthenticated ?? true)
+            if (user.Identity?.IsAuthenticated != true || string.IsNullOrWhiteSpace(user.FindFirstValue(ClaimTypes.NameIdentifier)))
             {
                 var returnUrl = context.HttpContext.Request.Path + context.HttpContext.Request.QueryString;
                 context.Result = new RedirectToActionResult("Login", "Account", new { area = "", returnUrl });

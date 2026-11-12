@@ -33,8 +33,6 @@ public partial class TaiLieu
 
     public virtual ICollection<BanSao> BanSaos { get; set; } = new List<BanSao>();
 
-    public virtual ICollection<DatTruoc> DatTruocs { get; set; } = new List<DatTruoc>();
-
     public virtual NhaXuatBan? MaNhaXuatBanNavigation { get; set; }
 
     public virtual TheLoai? MaTheLoaiNavigation { get; set; }

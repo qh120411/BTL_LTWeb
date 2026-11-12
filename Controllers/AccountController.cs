@@ -12,60 +12,6 @@ namespace BTL_LTWEB.Controllers
     {
         private readonly QLThuVienUtcContext _dbContext;
 
-        // Danh sách toàn bộ 49 sinh viên lớp K65.CLCCNTT1 (CNTT Việt Anh 1) chuẩn từ CSDL
-        private static readonly Dictionary<string, (string FullName, string FirstName)> Students = new(StringComparer.OrdinalIgnoreCase)
-        {
-            ["242630899"] = ("Nguyễn Văn An", "An"),
-            ["242624495"] = ("Nguyễn Hoàng Anh", "Anh"),
-            ["242630904"] = ("Phạm Tú Anh", "Anh"),
-            ["242630905"] = ("Vương Duy Anh", "Anh"),
-            ["242630906"] = ("Cao Đắc Bảo", "Bao"),
-            ["242630909"] = ("Trương Đức Bình", "Binh"),
-            ["242630910"] = ("Nguyễn Đức Cảnh", "Canh"),
-            ["242630911"] = ("Dương Linh Chi", "Chi"),
-            ["242630913"] = ("Nguyễn Duy Dũng", "Dung"),
-            ["242630916"] = ("Hà Thế Duy", "Duy"),
-            ["242630917"] = ("Nguyễn Thành Duy", "Duy"),
-            ["242603895"] = ("Bạch Thành Dương", "Duong"),
-            ["242630922"] = ("Nguyễn Viết Tùng Dương", "Duong"),
-            ["242630924"] = ("Đinh Quang Đạt", "Dat"),
-            ["242630923"] = ("Đỗ Văn Đạt", "Dat"),
-            ["242630926"] = ("Lê Tiến Đạt", "Dat"),
-            ["242630928"] = ("Như Mạnh Đạt", "Dat"),
-            ["242603896"] = ("Đinh Việt Đăng", "Dang"),
-            ["242630932"] = ("Bùi Văn Hữu Đức", "Duc"),
-            ["242630933"] = ("Đào Mạnh Đức", "Duc"),
-            ["242630934"] = ("Lê Minh Đức", "Duc"),
-            ["242624497"] = ("Nguyễn Minh Đức", "Duc"),
-            ["242630936"] = ("Phạm Minh Đức", "Duc"),
-            ["242630941"] = ("Nguyễn Thị Hoài", "Hoai"),
-            ["242630942"] = ("Đặng Việt Hoàn", "Hoan"),
-            ["242630943"] = ("Nguyễn Văn Hùng", "Hung"),
-            ["242630944"] = ("Trần Quang Huy", "Huy"),
-            ["242630946"] = ("Vũ Phùng Quang Huy", "Huy"),
-            ["242630954"] = ("Nguyễn Thu Kiều", "Kieu"),
-            ["242630955"] = ("Nguyễn Thành Lâm", "Lam"),
-            ["242630956"] = ("Trương Ngọc Lâm", "Lam"),
-            ["242630957"] = ("Hà Doãn Linh", "Linh"),
-            ["242630958"] = ("Phạm Ngọc Linh", "Linh"),
-            ["242630964"] = ("Nguyễn Tiến Minh", "Minh"),
-            ["242624500"] = ("Phạm Tiến Minh", "Minh"),
-            ["242630967"] = ("Nguyễn Văn Phúc", "Phuc"),
-            ["242630969"] = ("Vũ Trần Bảo Quân", "Quan"),
-            ["242630970"] = ("Phăng Phú Sáng", "Sang"),
-            ["242630971"] = ("Bùi Văn Sơn", "Son"),
-            ["242624501"] = ("Trần Đức Tài", "Tai"),
-            ["242603897"] = ("Lê Đình Thành", "Thanh"),
-            ["242630976"] = ("Nguyễn Quang Thắng", "Thang"),
-            ["242630978"] = ("Trần Minh Tiến", "Tien"),
-            ["242630979"] = ("Đỗ Kiếm Tiêu", "Tieu"),
-            ["242630983"] = ("Đặng Thanh Tùng", "Tung"),
-            ["242630984"] = ("Hoàng Văn Tùng", "Tung"),
-            ["242630985"] = ("Nguyễn Thị Ánh Tuyết", "Tuyet"),
-            ["242630988"] = ("Lê Anh Việt", "Viet"),
-            ["242630991"] = ("Nguyễn Quốc Vương", "Vuong"),
-        };
-
         public AccountController(QLThuVienUtcContext dbContext)
         {
             _dbContext = dbContext;
@@ -138,105 +84,50 @@ namespace BTL_LTWEB.Controllers
                 return View("~/Views/Account/Login.cshtml");
             }
 
-            // Cập nhật thời điểm đăng nhập cuối cùng vào SQL Server
-            account.LanDangNhapCuoi = DateTime.Now;
-            try { await _dbContext.SaveChangesAsync(); } catch { }
-
-            // 3. TẠO CLAIMS VÀ PHÂN QUYỀN CHUẨN XÁC THEO CỘT VaiTro TRONG CSDL
-            var claims = new List<Claim>
+            var roleCode = account.VaiTro?.Trim().ToUpperInvariant();
+            var supportedRoles = new[] { "ADMIN", "QUANLY_BANDOC", "QUANLY_TAILIEU", "THUTHU", "READER", "BANDOC" };
+            if (string.IsNullOrWhiteSpace(roleCode) || !supportedRoles.Contains(roleCode))
             {
-                new Claim(ClaimTypes.NameIdentifier, account.TenDangNhap),
-                new Claim(ClaimTypes.Email, account.EmailDangNhap ?? $"{account.TenDangNhap}@utc.edu.vn")
+                ViewBag.Error = "Vai trò tài khoản chưa được cấu hình hợp lệ. Vui lòng liên hệ thư viện.";
+                return View("~/Views/Account/Login.cshtml");
+            }
+            var isReader = roleCode == "READER" || roleCode == "BANDOC";
+            var fullName = isReader ? account.MaBanDocNavigation?.HoTen : account.MaNhanVienNavigation?.HoTen;
+            var identifier = isReader ? account.MaBanDocNavigation?.MaSinhVien : account.TenDangNhap;
+            if (string.IsNullOrWhiteSpace(fullName) || string.IsNullOrWhiteSpace(identifier))
+            {
+                ViewBag.Error = "Tài khoản chưa có hồ sơ hợp lệ. Vui lòng liên hệ thư viện.";
+                return View("~/Views/Account/Login.cshtml");
+            }
+
+            var claims = new List<Claim> {
+                new Claim(ClaimTypes.NameIdentifier, identifier),
+                new Claim(ClaimTypes.Name, fullName),
+                new Claim(ClaimTypes.Role, roleCode)
             };
-
-            string roleCode = account.VaiTro?.ToUpperInvariant() ?? "READER";
-
-            // VAI TRÒ 1: QUẢN TRỊ VIÊN TỐI CAO (ADMIN)
-            if (roleCode == "ADMIN" || account.TenDangNhap.Equals("admin", StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrWhiteSpace(account.EmailDangNhap)) claims.Add(new Claim(ClaimTypes.Email, account.EmailDangNhap));
+            if (isReader)
             {
-                string fullName = account.MaNhanVienNavigation?.HoTen ?? "Quản trị viên Hệ thống";
-                claims.Add(new Claim(ClaimTypes.Name, fullName));
-                claims.Add(new Claim(ClaimTypes.Role, "Admin"));
-                claims.Add(new Claim(ClaimTypes.Role, "ADMIN"));
-                claims.Add(new Claim(ClaimTypes.Role, "AdminStaff"));
-                claims.Add(new Claim("RoleTitle", "Quản trị viên (QTV)"));
-
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var authProps = new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7) };
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), authProps);
-
-                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl) && returnUrl.Contains("/Admin", StringComparison.OrdinalIgnoreCase))
-                {
-                    return Redirect(returnUrl);
-                }
-                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
-            }
-            // VAI TRÒ 2: NHÂN VIÊN QUẢN LÝ BẠN ĐỌC (QUANLY_BANDOC)
-            else if (roleCode == "QUANLY_BANDOC")
-            {
-                string fullName = account.MaNhanVienNavigation?.HoTen ?? "Cán bộ quản lý bạn đọc";
-                claims.Add(new Claim(ClaimTypes.Name, fullName));
-                claims.Add(new Claim(ClaimTypes.Role, "QUANLY_BANDOC"));
-                claims.Add(new Claim(ClaimTypes.Role, "AdminStaff"));
-                claims.Add(new Claim("RoleTitle", "Quản lý bạn đọc (QLB)"));
-
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var authProps = new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7) };
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), authProps);
-
-                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl) && returnUrl.Contains("/Admin", StringComparison.OrdinalIgnoreCase))
-                {
-                    return Redirect(returnUrl);
-                }
-                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
-            }
-            // VAI TRÒ 3: NHÂN VIÊN QUẢN LÝ TÀI LIỆU / THỦ THƯ (QUANLY_TAILIEU)
-            else if (roleCode == "QUANLY_TAILIEU")
-            {
-                string fullName = account.MaNhanVienNavigation?.HoTen ?? "Cán bộ quản lý tài liệu";
-                claims.Add(new Claim(ClaimTypes.Name, fullName));
-                claims.Add(new Claim(ClaimTypes.Role, "QUANLY_TAILIEU"));
-                claims.Add(new Claim(ClaimTypes.Role, "AdminStaff"));
-                claims.Add(new Claim("RoleTitle", "Thủ thư mượn trả (TTM)"));
-
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var authProps = new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7) };
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), authProps);
-
-                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl) && returnUrl.Contains("/Admin", StringComparison.OrdinalIgnoreCase))
-                {
-                    return Redirect(returnUrl);
-                }
-                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
-            }
-            // VAI TRÒ 4: BẠN ĐỌC SINH VIÊN (READER)
-            else
-            {
-                string fullName = account.MaBanDocNavigation?.HoTen ?? (Students.TryGetValue(account.TenDangNhap, out var s) ? s.FullName : "Bạn đọc sinh viên");
-                claims.Add(new Claim(ClaimTypes.Name, fullName));
                 claims.Add(new Claim(ClaimTypes.Role, "Reader"));
                 claims.Add(new Claim(ClaimTypes.Role, "READER"));
-                claims.Add(new Claim("Class", "K65.CLCCNTT1"));
-
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var authProps = new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7) };
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), authProps);
-
-                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl) && !returnUrl.Contains("/Admin", StringComparison.OrdinalIgnoreCase))
-                {
-                    return Redirect(returnUrl);
-                }
-                return RedirectToAction("Index", "Home", new { area = "Reader" });
+                if (!string.IsNullOrWhiteSpace(account.MaBanDocNavigation?.MaLop))
+                    claims.Add(new Claim("Class", account.MaBanDocNavigation.MaLop));
             }
-        }
-
-        // Do not impersonate a demo reader when Microsoft authentication is not configured.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult LoginWithMicrosoft()
-        {
-            ViewBag.Error = "Đăng nhập Microsoft chưa được cấu hình. Vui lòng dùng tài khoản thư viện.";
-            return View("~/Views/Account/Login.cshtml");
+            else
+            {
+                claims.Add(new Claim(ClaimTypes.Role, "AdminStaff"));
+                if (roleCode == "ADMIN") claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+                if (roleCode == "THUTHU") claims.Add(new Claim(ClaimTypes.Role, "Thuthu"));
+            }
+            account.LanDangNhapCuoi = DateTime.Now;
+            await _dbContext.SaveChangesAsync();
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var authProps = new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7) };
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), authProps);
+            if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl) &&
+                (isReader ? !returnUrl.Contains("/Admin", StringComparison.OrdinalIgnoreCase) : returnUrl.Contains("/Admin", StringComparison.OrdinalIgnoreCase)))
+                return Redirect(returnUrl);
+            return isReader ? RedirectToAction("Index", "Home", new { area = "Reader" }) : RedirectToAction("Index", "Dashboard", new { area = "Admin" });
         }
 
         [HttpGet]

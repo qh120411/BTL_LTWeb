@@ -15,7 +15,7 @@ public class OverdueController : AdminBaseController
         _readerService = readerService;
     }
 
-    public IActionResult Index(string? search, string? level, int page = 1)
+    public IActionResult Index(string? search, int page = 1)
     {
         ViewBag.ActiveMenu = "Overdue";
 
@@ -32,13 +32,12 @@ public class OverdueController : AdminBaseController
         var model = new OverdueIndexViewModel
         {
             SearchKeyword = search,
-            SelectedLevel = level ?? "Tất cả",
             OverdueList = overdues,
             Pagination = new AdminPaginationViewModel
             {
                 TotalItems = overdues.Count, RequestedPage = page,
                 Controller = "Overdue", Fragment = "overdueList", Unit = "lượt quá hạn",
-                Filters = new() { ["search"] = search, ["level"] = level }
+                Filters = new() { ["search"] = search }
             }
         };
 

@@ -1,4 +1,4 @@
-﻿using BTL_LTWEB.Areas.Reader.Models;
+using BTL_LTWEB.Areas.Reader.Models;
 
 namespace BTL_LTWEB.Areas.Admin.ViewModels
 {
@@ -20,13 +20,13 @@ namespace BTL_LTWEB.Areas.Admin.ViewModels
     public class DashboardViewModel
     {
         // 4 Card Thống kê chuẩn theo CSDL thật
-        public int TongDauSach { get; set; } = 30; // 30 đầu sách trong CSDL
-        public int TongBanSao { get; set; } = 120; // 120 bản sao vật lý
-        public int BanSanCo { get; set; } = 102;   // 102 bản sẵn có
-        public int DangMuon { get; set; } = 18;    // 18 bản đang lưu hành ngoài kho
-        public int MatChoBoiThuong { get; set; } = 1; // 1 sách mất chờ bồi thường
-        public int LuotQuaHan { get; set; } = 8;   // 8 cuốn quá hạn (Đỗ Văn Đạt 3 cuốn,...)
-        public int TongBanDoc { get; set; } = 50;  // 49 sinh viên K65.CLCCNTT1 + 1 giảng viên
+        public int TongDauSach { get; set; }
+        public int TongBanSao { get; set; }
+        public int BanSanCo { get; set; }
+        public int DangMuon { get; set; }
+        public int MatChoBoiThuong { get; set; }
+        public int LuotQuaHan { get; set; }
+        public int TongBanDoc { get; set; }
 
         // Danh sách giao dịch mượn trả gần đây nhất
         public List<DashboardTransactionItem> RecentTransactions { get; set; } = new();
@@ -46,8 +46,8 @@ namespace BTL_LTWEB.Areas.Admin.ViewModels
         public string TacGia { get; set; } = string.Empty;
         public string NhaXuatBan { get; set; } = string.Empty;
         public string ISBN { get; set; } = string.Empty;
-        public int NamXuatBan { get; set; } = 2023;
-        public int SoTrang { get; set; } = 300;
+        public int NamXuatBan { get; set; } = 0;
+        public int SoTrang { get; set; } = 0;
         public string TheLoai { get; set; } = string.Empty;
         public string MajorCode { get; set; } = "cntt";
         public string DinhDang { get; set; } = "Sách in";
@@ -55,8 +55,8 @@ namespace BTL_LTWEB.Areas.Admin.ViewModels
         public string CoverImage { get; set; } = string.Empty;
         public int TongBan { get; set; } = 4;
         public int SanCo { get; set; } = 4;
-        public int DangMuon { get; set; } = 0;
-        public string ViTriKe { get; set; } = "Kệ IT-01";
+        public int DangMuon { get; set; }
+        public string ViTriKe { get; set; } = string.Empty;
         public string MoTa { get; set; } = string.Empty;
         public string TrangThaiText => SanCo > 0 ? $"Có sẵn ({SanCo}/{TongBan})" : $"Hết sách (0/{TongBan})";
         public List<BookCopyItem> Copies { get; set; } = new();
@@ -123,7 +123,6 @@ namespace BTL_LTWEB.Areas.Admin.ViewModels
     public class OverdueIndexViewModel
     {
         public string? SearchKeyword { get; set; }
-        public string? SelectedLevel { get; set; }
         public List<OverdueItemViewModel> OverdueList { get; set; } = new();
         public AdminPaginationViewModel Pagination { get; set; } = new();
         public IEnumerable<OverdueItemViewModel> OverduesOnPage => OverdueList.Skip(Pagination.Skip).Take(Pagination.PageSize);

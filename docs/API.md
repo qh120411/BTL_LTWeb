@@ -21,11 +21,11 @@ dotnet run --launch-profile http
 - Request POST dùng `Content-Type: application/json`; phản hồi thành công dùng JSON, tên thuộc tính theo `camelCase`.
 - `bookId`/`id` sách là số nguyên trong catalog; `maBD` thường là mã sinh viên dạng chuỗi, không phải khóa số `MaBanDoc` của SQL.
 - `maGD` là mã giao dịch, ví dụ `GD261110-001`. Lấy mã thực tế từ danh sách giao dịch thay vì tự tạo.
-- Các chuỗi ngày trong danh sách mượn trả thường có dạng `dd/MM/yyyy`; ngày trong hồ sơ fallback (`BorrowedBookItem`) được serialize theo ISO 8601. `health.time` có dạng `yyyy-MM-dd HH:mm:ss`, theo giờ máy chủ và không kèm múi giờ.
+- Các chuỗi ngày trong danh sách mượn trả thường có dạng `dd/MM/yyyy`; ngày trong hồ sơ SQL (`BorrowedBookItem`) được serialize theo ISO 8601. `health.time` có dạng `yyyy-MM-dd HH:mm:ss`, theo giờ máy chủ và không kèm múi giờ.
 - Chưa có một envelope chung: danh sách thường trả `{ total, data }`, chi tiết sách trả `{ book, copies }`, thống kê trả trực tiếp đối tượng.
 - Ứng dụng dùng cookie `UTC_Library_Auth_v3` để nhận diện phiên. Đăng nhập qua biểu mẫu `/Account/Login` với anti-forgery token; hiện chưa có endpoint đăng nhập JSON hoặc Bearer/JWT.
-- **Các endpoint trong `ApiDocController` hiện chưa có kiểm tra đăng nhập/vai trò bằng `[Authorize]`; các POST mượn/trả cũng chưa có `[ValidateAntiForgeryToken]`.** Đăng nhập chỉ ảnh hưởng nội dung `/api/auth/profile`. OpenAPI không khai báo yêu cầu bảo mật cho những route này. Quyền truy cập các màn hình Admin không đồng nghĩa API được bảo vệ.
-- `Try it out` cho POST thực sự ghi dữ liệu SQL/JSON. Dùng dữ liệu thử khi chạy các ví dụ mượn/trả.
+- Endpoint dữ liệu bạn đọc, giao dịch và thống kê được bảo vệ bằng filter `ApiStaffAuthorize`: chưa đăng nhập trả `401`, sai vai trò trả `403`. POST mượn/trả có thêm `[ValidateAntiForgeryToken]`. Các filter này độc lập với quyền truy cập màn hình Admin.
+- `Try it out` cho POST thực sự ghi nghiệp vụ vào SQL Server. Dùng dữ liệu thử khi chạy các ví dụ mượn/trả; lỗi SQL không được chuyển thành giao dịch thành công trong JSON.
 
 ## Danh sách endpoint
 
@@ -152,7 +152,7 @@ API chỉ nhận ba query trên. Server chuẩn hóa `page >= 1`, `pageSize` tro
 }
 ```
 
-Không có học liệu hoặc bản sao vẫn trả `200` với `copies: []`, khác với endpoint chi tiết sách. Danh sách lấy từ catalog JSON/bộ nhớ, không truy vấn trực tiếp bảng `BanSao`.
+Không có học liệu hoặc bản sao vẫn trả `200` với `copies: []`, khác với endpoint chi tiết sách. Danh sách truy vấn trực tiếp bảng `BanSao` qua `BookCatalogService`; ID học liệu là khóa SQL `TaiLieu.MaTaiLieu`.
 
 ## 6. Giao dịch đang mượn
 
@@ -181,7 +181,7 @@ Không có học liệu hoặc bản sao vẫn trả `200` với `copies: []`, k
 }
 ```
 
-Service chỉ lấy giao dịch chưa trả, loại các trạng thái `Đã trả`, `Đã đền sách mới`, `Đã đền tiền`. Đây không phải lịch sử toàn bộ mượn/trả. Khi truy vấn SQL lỗi, service trả danh sách rỗng; dữ liệu mượn fallback trong hồ sơ JSON không được hợp nhất vào endpoint này.
+Service chỉ lấy giao dịch chưa trả, loại các trạng thái `Đã trả`, `Đã đền sách mới`, `Đã đền tiền`. Đây không phải lịch sử toàn bộ mượn/trả. Khi truy vấn SQL lỗi, filter trả `503`, không trả kết quả rỗng giả hoặc dùng dữ liệu file dự phòng.
 
 ## 7. Mượn sách
 
@@ -214,7 +214,7 @@ Ví dụ `200`:
 - `400`: thiếu `maBD`/`bookId <= 0` trả `{ "message": "Vui lòng nhập maBD và bookId." }`; vượt giới hạn hoặc trùng đầu sách trả `{ "success": false, "message": "..." }`.
 - `400`: sách không hợp lệ, hết bản sẵn có, học liệu điện tử hoặc mã bạn đọc không tồn tại. Không có nhánh ghi mượn dự phòng vào JSON.
 
-Nhánh SQL giới hạn 5 cuốn cho sinh viên, 10 cuốn cho mã bắt đầu bằng `GV`/`CB`, chặn mượn trùng đầu sách, hạn trả cuối học kỳ (kỳ 1: mượn 11/08–31/12, hạn 31/12 cùng năm; kỳ 2: mượn 02/01–31/05, hạn 31/05 cùng năm; từ chối tạo phiếu mới ngoài hai khoảng này). Khi xác nhận mượn một đầu sách có trong catalog nhưng chưa có ở SQL, service ghi đầu sách và các bản sao theo tồn kho catalog vào SQL trong cùng transaction với phiếu mượn. Học liệu được đối chiếu theo ISBN/tên, không giả định ID JSON trùng khóa SQL. Nếu hết bản sẵn có, service từ chối mượn; không tự tăng tồn kho. Hồ sơ cán bộ còn thiếu được liên kết với tài khoản quản trị đang lập phiếu.
+Nhánh SQL giới hạn 5 cuốn cho sinh viên, 10 cuốn cho mã bắt đầu bằng `GV`/`CB`, chặn mượn trùng đầu sách, hạn trả cuối học kỳ (kỳ 1: mượn 11/08–31/12, hạn 31/12 cùng năm; kỳ 2: mượn 02/01–31/05, hạn 31/05 cùng năm; từ chối tạo phiếu mới ngoài hai khoảng này). Catalog đọc trực tiếp SQL; service tìm đầu sách bằng khóa `MaTaiLieu` và không tạo thêm học liệu/bản sách trong thao tác mượn. Nếu hết bản sẵn có, service từ chối mượn; không tự tăng tồn kho. Hồ sơ cán bộ còn thiếu được liên kết với tài khoản quản trị đang lập phiếu.
 
 Mọi lỗi nghiệp vụ hoặc SQL đều từ chối tạo phiếu; không chuyển sang ghi hồ sơ JSON để bỏ qua kiểm tra. Không tự gửi lại POST sau timeout vì endpoint chưa có khóa idempotency.
 
@@ -235,7 +235,7 @@ Invoke-RestMethod -WebSession $session -Headers @{ RequestVerificationToken = $t
 
 - `200`: `{ "success": true, "mode": "SQL_Server", "message": "..." }`.
 - `400`: thiếu mã bạn đọc/giao dịch, giao dịch không thuộc bạn đọc, đã trả hoặc chưa lưu được.
-- Không tự chọn cuốn khác khi mã không đúng. Trả lặp không thu phí lần nữa. Khoản thu dùng mã cán bộ thật và được lưu cùng giao dịch SQL; phiếu thu JSON chỉ ghi sau khi SQL thành công.
+- Không tự chọn cuốn khác khi mã không đúng. Trả lặp không thu phí lần nữa. Khoản thu dùng mã cán bộ thật và được lưu cùng giao dịch SQL; chi tiết phiếu thu nằm trong `ThanhToan`, lưu atomically cùng giao dịch SQL; bồi thường bằng sách cũng lưu phiếu giá trị tiền bằng 0.
 
 ## 9. Danh sách bạn đọc
 
@@ -257,7 +257,7 @@ Phản hồi `200` là `{ "total": 1, "data": [ReaderListItem] }`, mỗi phần 
 - `200`, `mode: "SQL_Server"`: `data` là `ReaderDetailViewModel`, gồm `maBD`, `hoTen`, `lopKhoa`, `trangThaiHocTap`, `nhom`, `quyenSuDung`, `gioiHanSach`, `hieuLucQuyen`, `soSachDangMuon`, `soSachQuaHan`, `tongTienPhat`, `borrowTransactions`, `availableBooks`.
 - `400` nếu `id` chỉ có khoảng trắng; `404` nếu không có bạn đọc. Không tạo hồ sơ mẫu cho mã không tồn tại.
 
-Nhánh tra cứu khóa số vẫn có thể trả `500` nếu SQL mất kết nối. API không dùng hồ sơ JSON để khẳng định mã bạn đọc có tồn tại.
+Lỗi kết nối SQL được trả `503`; không tạo hoặc tìm hồ sơ JSON dự phòng.
 
 ## 11. Thống kê dashboard
 
@@ -286,6 +286,6 @@ Nếu truy vấn đếm SQL lỗi, service giữ giá trị mặc định 30 đ�
 
 Controller kế thừa `Controller`, chưa có `[ApiController]` và không kiểm tra `ModelState` trong các POST. Vì vậy không nên coi mọi JSON sai kiểu/cú pháp là luôn được chuẩn hóa thành cùng một lỗi validation; các schema mô tả request hợp lệ và lỗi nghiệp vụ đã được action xử lý.
 
-Catalog sử dụng `App_Data/catalog_books.json`/bộ nhớ và dữ liệu mẫu; ReaderService chủ yếu truy vấn SQL; hồ sơ dùng SQL kết hợp `App_Data/student_profiles.json`. Các đường đọc hiện có thể tạo/lưu cache hồ sơ hoặc khởi tạo dữ liệu service. Các tập dữ liệu này không được đảm bảo đồng bộ tuyệt đối. Tài liệu phản ánh hành vi đang có, không thay đổi quyền truy cập hoặc nghiệp vụ.
+Catalog, bản sách, mượn trả, hồ sơ và phiếu thu đều dùng SQL Server. Không có đọc/ghi hoặc dữ liệu mẫu dự phòng từ App_Data. JSON phản hồi HTTP và appsettings cấu hình kết nối vẫn là định dạng truyền/cấu hình bình thường.
 
 Khi thêm/sửa API, cập nhật đồng thời route/action, schema và ví dụ trong `wwwroot/swagger.json`, cùng tài liệu này. Đối chiếu tên trường với các model ở `Areas/Reader/Models` và `Areas/Admin/ViewModels`.

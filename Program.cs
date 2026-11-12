@@ -14,7 +14,7 @@ namespace BTL_LTWEB
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews(options => options.Filters.Add<BTL_LTWEB.Common.SqlUnavailableFilter>());
 
             // Cấu hình quy tắc tìm kiếm View Engine phân cấp rõ ràng (Home có Admin, Reader, và Index đăng nhập)
             builder.Services.Configure<RazorViewEngineOptions>(options =>

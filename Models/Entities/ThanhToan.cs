@@ -5,6 +5,13 @@ namespace BTL_LTWEB.Models.Entities;
 
 public partial class ThanhToan
 {
+    public int? MaChiTietMuon { get; set; }
+    public decimal? TienNopMuon { get; set; }
+    public decimal? TienDenBu { get; set; }
+    public string? LoaiKhoanThu { get; set; }
+    public string? HinhThucXuLy { get; set; }
+    public string? GhiChu { get; set; }
+
     public int MaThanhToan { get; set; }
 
     public int MaBanDoc { get; set; }

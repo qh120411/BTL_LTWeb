@@ -233,6 +233,11 @@ BEGIN TRY
     -- 06. BanDoc
     CREATE TABLE [dbo].[BanDoc]
     (
+        [SoCCCD] NVARCHAR(20) NULL,
+        [NganhHoc] NVARCHAR(150) NULL,
+        [SoTaiKhoanNganHang] NVARCHAR(50) NULL,
+        [TenNganHang] NVARCHAR(150) NULL,
+        [AvatarUrl] NVARCHAR(255) NULL,
         [MaBanDoc] INT IDENTITY(1,1) NOT NULL,
         [MaSinhVien] VARCHAR(15) NOT NULL,
         [HoTen] NVARCHAR(100) NOT NULL,
@@ -597,6 +602,12 @@ BEGIN TRY
     -- 10. ThanhToan
     CREATE TABLE [dbo].[ThanhToan]
     (
+        [MaChiTietMuon] INT NULL,
+        [TienNopMuon] DECIMAL(18,2) NULL,
+        [TienDenBu] DECIMAL(18,2) NULL,
+        [LoaiKhoanThu] NVARCHAR(50) NULL,
+        [HinhThucXuLy] NVARCHAR(150) NULL,
+        [GhiChu] NVARCHAR(500) NULL,
         [MaThanhToan] INT IDENTITY(1,1) NOT NULL,
         [MaBanDoc] INT NOT NULL,
         [MaNhanVien] INT NOT NULL,

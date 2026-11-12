@@ -1,4 +1,4 @@
-﻿using BTL_LTWEB.Areas.Admin.ViewModels;
+using BTL_LTWEB.Areas.Admin.ViewModels;
 using BTL_LTWEB.Areas.Reader.Models;
 using BTL_LTWEB.Areas.Reader.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -40,7 +40,7 @@ public class CatalogController : AdminBaseController
         if (!string.IsNullOrWhiteSpace(major) && major != "all" && major != "Tất cả chuyên ngành")
         {
             var m = major.Trim().ToLower();
-            books = books.Where(b => 
+            books = books.Where(b =>
                 b.Major.Equals(major, StringComparison.OrdinalIgnoreCase) ||
                 b.MajorName.Equals(major, StringComparison.OrdinalIgnoreCase) ||
                 (m.Contains("thông tin") && b.Major == "cntt") ||
@@ -85,10 +85,10 @@ public class CatalogController : AdminBaseController
                 MajorCode = b.Major,
                 DinhDang = b.IsOnline ? "Bản điện tử" : "Sách in",
                 IsOnline = b.IsOnline,
-                CoverImage = string.IsNullOrWhiteSpace(b.CoverImage) ? "/images/covers/sach_01.jpg" : b.CoverImage,
+                CoverImage = string.IsNullOrWhiteSpace(b.CoverImage) ? "/images/covers/cover-placeholder.png" : b.CoverImage,
                 TongBan = b.TotalCopies,
                 SanCo = b.AvailableCopies,
-                DangMuon = Math.Max(0, b.TotalCopies - b.AvailableCopies),
+                DangMuon = b.Copies.Count(c => c.Status == "Đang mượn"),
                 ViTriKe = b.Shelf,
                 MoTa = b.Description,
                 Copies = b.Copies ?? new List<BookCopyItem>()
@@ -104,18 +104,25 @@ public class CatalogController : AdminBaseController
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Create(
-        string title, 
-        string authors, 
-        string publisher, 
-        string major, 
-        int year, 
-        int pages, 
-        string isbn, 
-        string shelf, 
-        int copiesCount, 
-        string? coverImage, 
+        string title,
+        string authors,
+        string? publisher,
+        string major,
+        int year,
+        int pages,
+        string? isbn,
+        string shelf,
+        int copiesCount,
+        string? coverImage,
         string? description)
     {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(authors) ||
+            !new[] { "cntt", "xaydung", "kinhte", "toanly", "chinhtri" }.Contains(major) ||
+            year < 1 || year > 9999 || pages <= 0 || string.IsNullOrWhiteSpace(shelf))
+            return BadRequest("Vui lòng nhập đầy đủ tên, tác giả, chuyên ngành, năm xuất bản, số trang và vị trí kệ hợp lệ.");
+        if (copiesCount <= 0 || copiesCount > 1000) return BadRequest("Vui lòng nhập số bản sách từ 1 đến 1000.");
+
         string majorName = major switch
         {
             "cntt" => "Công nghệ thông tin",
@@ -123,28 +130,28 @@ public class CatalogController : AdminBaseController
             "kinhte" => "Kinh tế & Quản trị",
             "toanly" => "Khoa học cơ bản",
             "chinhtri" => "Lý luận chính trị & Pháp luật",
-            _ => "Công nghệ thông tin"
+            _ => string.Empty
         };
 
         var book = new BookItem
         {
             Title = title?.Trim() ?? string.Empty,
             Authors = authors?.Trim() ?? string.Empty,
-            Publisher = string.IsNullOrWhiteSpace(publisher) ? "NXB Đại học Giao thông Vận tải" : publisher.Trim(),
-            Major = major ?? "cntt",
+            Publisher = publisher?.Trim() ?? string.Empty,
+            Major = major,
             MajorName = majorName,
             Category = "books",
             CategoryName = "Sách & Giáo trình",
-            Year = year > 0 ? year : DateTime.Today.Year,
-            Pages = pages > 0 ? pages : 250,
+            Year = year,
+            Pages = pages,
             ISBN = isbn?.Trim() ?? string.Empty,
-            Shelf = string.IsNullOrWhiteSpace(shelf) ? "Kệ IT-01 - Tầng 2 A8" : shelf.Trim(),
-            CoverImage = string.IsNullOrWhiteSpace(coverImage) ? "/images/covers/sach_01.jpg" : coverImage.Trim(),
+            Shelf = shelf.Trim(),
+            CoverImage = coverImage?.Trim() ?? string.Empty,
             Description = description?.Trim() ?? string.Empty,
             IsOnline = false
         };
 
-        var success = _catalogService.AddBook(book, copiesCount > 0 ? copiesCount : 4, out int newId, out string errorMessage);
+        var success = _catalogService.AddBook(book, copiesCount, out int newId, out string errorMessage);
         if (success)
         {
             TempData["SuccessMessage"] = $"Đã thêm học liệu: {book.Title}.";
@@ -161,18 +168,25 @@ public class CatalogController : AdminBaseController
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Update(
-        int id, 
-        string title, 
-        string authors, 
-        string publisher, 
-        string major, 
-        int year, 
-        int pages, 
-        string isbn, 
-        string shelf, 
-        string? coverImage, 
+        int id,
+        string title,
+        string authors,
+        string? publisher,
+        string major,
+        int year,
+        int pages,
+        string? isbn,
+        string shelf,
+        string? coverImage,
         string? description)
     {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(authors) ||
+            !new[] { "cntt", "xaydung", "kinhte", "toanly", "chinhtri" }.Contains(major) ||
+            year < 1 || year > 9999 || pages <= 0 || string.IsNullOrWhiteSpace(shelf))
+            return BadRequest("Vui lòng nhập đầy đủ tên, tác giả, chuyên ngành, năm xuất bản, số trang và vị trí kệ hợp lệ.");
+        if (id <= 0) return BadRequest("Mã học liệu không hợp lệ.");
+
         string majorName = major switch
         {
             "cntt" => "Công nghệ thông tin",
@@ -180,7 +194,7 @@ public class CatalogController : AdminBaseController
             "kinhte" => "Kinh tế & Quản trị",
             "toanly" => "Khoa học cơ bản",
             "chinhtri" => "Lý luận chính trị & Pháp luật",
-            _ => "Công nghệ thông tin"
+            _ => string.Empty
         };
 
         var book = new BookItem
@@ -189,12 +203,12 @@ public class CatalogController : AdminBaseController
             Title = title?.Trim() ?? string.Empty,
             Authors = authors?.Trim() ?? string.Empty,
             Publisher = publisher?.Trim() ?? string.Empty,
-            Major = major ?? "cntt",
+            Major = major,
             MajorName = majorName,
             Year = year,
             Pages = pages,
             ISBN = isbn?.Trim() ?? string.Empty,
-            Shelf = shelf?.Trim() ?? "Kệ IT-01",
+            Shelf = shelf.Trim(),
             CoverImage = coverImage?.Trim() ?? string.Empty,
             Description = description?.Trim() ?? string.Empty
         };

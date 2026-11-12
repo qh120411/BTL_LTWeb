@@ -116,7 +116,7 @@
                                     <label class="form-label-utc" for="inputCompensationAmount">Tiền bồi thường</label>
                                     <div class="input-group">
                                         <input type="number" class="form-control form-control-utc" id="inputCompensationAmount"
-                                               name="compensationAmount" value="150000" step="1" min="1" max="100000000" />
+                                               name="compensationAmount" step="1" min="1" max="100000000" />
                                         <span class="input-group-text bg-light">VNĐ</span>
                                     </div>
                                     <div class="form-text small text-muted">Theo giá bìa hoặc biên bản.</div>
@@ -337,7 +337,7 @@
             // Reset mặc định về Trả sách bình thường
             if (radioNormalReturn) radioNormalReturn.checked = true;
             if (compNewBook) compNewBook.checked = true;
-            if (inputCompensationAmount) inputCompensationAmount.value = "150000";
+            if (inputCompensationAmount) inputCompensationAmount.value = "";
             if (rcPayOverdueCheck) rcPayOverdueCheck.checked = true;
             if (inputNote) inputNote.value = "";
 

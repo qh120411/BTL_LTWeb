@@ -1,3 +1,5 @@
+> Cập nhật SQL-only: xem mục 9 [doc.md](../doc.md). Những mục bên dưới mô tả các đợt kiểm tra trước; nguồn dữ liệu hiện tại hoàn toàn là SQL, không còn cache/nguồn JSON.
+
 # Rà soát ứng dụng — 11/11/2026
 
 ## Phạm vi và kết quả
@@ -16,8 +18,8 @@
 3. API mượn/trả dùng chung nghiệp vụ SQL với Admin, không ghi dự phòng sang JSON để bỏ qua lỗi hết sách, học liệu điện tử hoặc mã bạn đọc không tồn tại.
 4. API chứa dữ liệu bạn đọc/giao dịch yêu cầu tài khoản cán bộ. Các POST mượn/trả, thêm cán bộ và đổi quyền yêu cầu anti-forgery token; Swagger và form AJAX gửi token tương ứng.
 5. Đăng nhập không chấp nhận mật khẩu dự phòng chung, không tự ghi đè mật khẩu và không cho tài khoản khóa đăng nhập. Giá trị trạng thái hoạt động bị lỗi mã hóa trong dữ liệu cũ được nhận diện riêng, không sửa dữ liệu gốc.
-6. Endpoint Microsoft chưa cấu hình không còn tự đăng nhập thành một sinh viên mẫu. Bỏ hai nút điền nhanh giảng viên do database không có các tài khoản đó.
-7. Cập nhật thông tin liên hệ/ngân hàng giữ nguyên định danh và lịch sử mượn, kể cả khi đọc hồ sơ từ JSON.
+6. Endpoint Microsoft chưa cấu hình đã được gỡ trong đợt rà soát UI/backend; `/Account/LoginWithMicrosoft` trả `404`. Form login chỉ giữ đăng nhập thư viện. Chi tiết thay đổi tại [doc.md](../doc.md).
+7. Cập nhật thông tin liên hệ/ngân hàng giữ nguyên định danh và lịch sử mượn, dữ liệu hồ sơ được lưu SQL.
 8. Form nhập QLĐT trỏ đúng action. Mã sách không tồn tại trả 404 thay vì hiển thị sách khác.
 9. Phân quyền kiểm tra vai trò; tạo cán bộ và tài khoản trong một lần lưu, tránh hồ sơ nhân viên mồ côi khi tạo tài khoản thất bại. Giới hạn mã/tên/email theo cột SQL.
 10. Tên sách/tên cán bộ được truyền qua `data-*`, tránh làm hỏng JavaScript khi tên chứa dấu nháy. Ô tiền bồi thường chỉ được kiểm tra khi chọn đền tiền.
@@ -40,7 +42,7 @@ Lần kiểm tra sau thay đổi giao diện admin: build không lỗi/cảnh b�
 ## Phần chưa hoàn chỉnh
 
 - Nhập QLĐT hiện là màn xem dữ liệu mẫu/hiện có; `ProcessImport` chỉ đếm bạn đọc, chưa đọc tệp hoặc kết nối nguồn đào tạo. Đường dẫn form đã được sửa, nhưng bộ nhập dữ liệu chưa được triển khai.
-- Email nhắc trả và Microsoft SSO chưa được kết nối.
+- Email nhắc trả chưa được kết nối. Microsoft SSO không có trong UI đăng nhập; action mẫu đã được gỡ.
 - Chưa kiểm tra trực tiếp bố cục hoặc console trong trình duyệt ở 1920×1080, Windows scale 100%, zoom 100%. Các kết quả HTTP/CSS không chứng minh giao diện không tràn hoặc cắt ở kích thước này.
 
 ## Chạy lại kiểm tra

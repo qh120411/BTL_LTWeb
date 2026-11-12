@@ -23,17 +23,10 @@
 .utc-login-forgot { justify-self: start; color: var(--utc-navy); font-size: 14px; line-height: 20px; font-weight: 500; }
 .utc-login-submit { min-height: 46px; padding: 12px 24px; border: 1px solid var(--utc-brand); border-radius: 6px; color: white; background: var(--utc-brand); font-size: 14px; font-weight: 500; line-height: 20px; }
 .utc-login-submit:hover { background: var(--utc-primary-hover); border-color: var(--utc-primary-hover); }
-.utc-login-support { color: var(--utc-muted); font-size: 12px; line-height: 1.45; margin: 24px 0 0; }
-.utc-login-support a:hover,.utc-login-forgot:hover { color: var(--utc-brand); text-decoration: underline; }
+/* Also hide retired content in views compiled before its markup was removed. */
+.utc-login-support,.utc-login-help,.utc-login-preview-link { display: none; }
+.utc-login-forgot:hover { color: var(--utc-brand); text-decoration: underline; }
 .utc-login-error { padding: 12px 16px; margin: 0 0 24px; font-size: 14px; line-height: 1.5; color: #9b303a; background: #fff2f2; border: 1px solid #f0ccd0; border-radius: 6px; overflow-wrap: anywhere; }
-.utc-login-help { color: var(--utc-muted); font-size: 12px; line-height: 1.5; margin-top: 16px; }
-.utc-login-help summary { cursor: pointer; }
-.utc-login-help p { margin: 12px 0; }
-.utc-login-demo-accounts { display: flex; flex-wrap: wrap; gap: 8px; }
-.utc-login-demo-accounts button { padding: 8px 10px; border: 1px solid var(--utc-line); border-radius: 6px; color: var(--utc-navy); background: var(--utc-cream); font-size: 12px; }
-.utc-login-demo-accounts button:hover { border-color: var(--utc-brand); }
-.utc-login-preview-link { display: inline-block; margin-top: 16px; font-size: 12px; color: var(--utc-brand); }
-.utc-login-preview-link:hover { text-decoration: underline; }
 .utc-login-body .utc-site-header .utc-header-btn-login { min-width: 220px; color: var(--utc-navy) !important; background: white; border-color: var(--utc-line); }
 @media (max-width: 1439.98px) {
     .utc-login-grid { grid-template-columns: minmax(0,1.24fr) minmax(0,1fr); gap: 48px; max-width: 1200px; }

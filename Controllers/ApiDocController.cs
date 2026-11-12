@@ -65,7 +65,7 @@ namespace BTL_LTWEB.Controllers
             return Ok(new
             {
                 isAuthenticated = true,
-                username = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.Identity.Name,
+                username = User.FindFirstValue(ClaimTypes.NameIdentifier),
                 fullName = User.FindFirstValue(ClaimTypes.Name),
                 roles = User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).Distinct()
             });

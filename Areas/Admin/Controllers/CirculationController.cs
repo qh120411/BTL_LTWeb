@@ -16,7 +16,7 @@ public class CirculationController : AdminBaseController
     private readonly QLThuVienUtcContext _dbContext;
 
     public CirculationController(
-        IReaderService readerService, 
+        IReaderService readerService,
         IBookCatalogService catalogService,
         QLThuVienUtcContext dbContext)
     {
@@ -55,11 +55,6 @@ public class CirculationController : AdminBaseController
         var books = _catalogService.GetAll().Where(b => !b.IsOnline).ToList();
 
         // Đồng bộ số bản sao sẵn có chính xác từ SQL Server
-        try
-        {
-            CatalogSqlBridge.RefreshAvailability(books, _dbContext);
-        }
-        catch { }
 
         var model = new CirculationIndexViewModel
         {
@@ -69,8 +64,11 @@ public class CirculationController : AdminBaseController
             AvailableBooks = books,
             Pagination = new AdminPaginationViewModel
             {
-                TotalItems = loans.Count, RequestedPage = page,
-                Controller = "Circulation", Fragment = "circulationList", Unit = "giao dịch",
+                TotalItems = loans.Count,
+                RequestedPage = page,
+                Controller = "Circulation",
+                Fragment = "circulationList",
+                Unit = "giao dịch",
                 Filters = new() { ["search"] = search, ["status"] = status }
             }
         };
@@ -110,44 +108,17 @@ public class CirculationController : AdminBaseController
         return RedirectToLocal(returnUrl);
     }
 
-    // Xử lý thu hồi / trả sách ngay tại quầy lưu thông
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult ReturnBook(string maBD, string maGD)
-    {
-        if (string.IsNullOrWhiteSpace(maBD) || string.IsNullOrWhiteSpace(maGD))
-        {
-            TempData["ErrorMessage"] = "Thông tin thu hồi trả sách không hợp lệ!";
-            return RedirectToAction(nameof(Index));
-        }
-
-        var success = _readerService.ReturnBook(maBD, maGD, out string bookTitle, out decimal reducedFine, User.FindFirstValue(ClaimTypes.NameIdentifier));
-        if (success)
-        {
-            string fineMsg = reducedFine > 0 
-                ? $" Đã giải phóng {reducedFine:N0} VNĐ tiền phạt quá hạn (Tổng cần thanh toán: 0 VNĐ)." 
-                : "";
-            TempData["SuccessMessage"] = $"Đã tiếp nhận thu hồi cuốn sách '{bookTitle}' từ bạn đọc '{maBD}' thành công!{fineMsg} CSDL đã được cập nhật.";
-        }
-        else
-        {
-            TempData["ErrorMessage"] = "Không tìm thấy giao dịch hoặc sách đã được hoàn trả trước đó!";
-        }
-
-        return RedirectToAction(nameof(Index));
-    }
-
     // Xử lý xác nhận trả sách hoặc bồi thường (mất/hỏng) từ Modal dùng chung
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult ProcessReturnOrCompensation(
-        string maBD, 
-        string maGD, 
-        string actionType, 
-        string? compensationType, 
-        decimal? compensationAmount, 
-        bool payOverdue, 
-        string? note, 
+        string maBD,
+        string maGD,
+        string actionType,
+        string? compensationType,
+        decimal? compensationAmount,
+        bool payOverdue,
+        string? note,
         string? returnUrl)
     {
         if (string.IsNullOrWhiteSpace(maBD) || string.IsNullOrWhiteSpace(maGD))
@@ -156,18 +127,27 @@ public class CirculationController : AdminBaseController
             return RedirectToLocal(returnUrl);
         }
 
-        actionType = string.IsNullOrWhiteSpace(actionType) ? "NormalReturn" : actionType;
-        compensationType = string.IsNullOrWhiteSpace(compensationType) ? "NewBook" : compensationType;
-        decimal compAmount = compensationAmount ?? 150000m;
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        if (actionType != "NormalReturn" && actionType != "Compensation")
+            return BadRequest("Vui lòng chọn hình thức xử lý hợp lệ.");
+        if (actionType == "Compensation" && compensationType != "Cash" && compensationType != "NewBook")
+            return BadRequest("Vui lòng chọn hình thức bồi thường.");
+        decimal compAmount = 0;
+        if (actionType == "Compensation" && compensationType == "Cash")
+        {
+            if (!compensationAmount.HasValue || compensationAmount <= 0 || compensationAmount > 100000000m)
+                return BadRequest("Vui lòng nhập số tiền bồi thường hợp lệ.");
+            compAmount = compensationAmount.Value;
+        }
 
         var success = _readerService.ProcessReturnOrCompensation(
-            maBD, 
-            maGD, 
-            actionType, 
-            compensationType, 
-            compAmount, 
-            payOverdue, 
-            note, 
+            maBD,
+            maGD,
+            actionType,
+            compensationType!,
+            compAmount,
+            payOverdue,
+            note,
             out string message, User.FindFirstValue(ClaimTypes.NameIdentifier));
 
         if (success)

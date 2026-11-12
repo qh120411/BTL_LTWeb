@@ -18,8 +18,6 @@ public partial class QLThuVienUtcContext : DbContext
     public virtual DbSet<BanDoc> BanDocs { get; set; }
     public virtual DbSet<BanSao> BanSaos { get; set; }
     public virtual DbSet<ChiTietMuon> ChiTietMuons { get; set; }
-    public virtual DbSet<DatTruoc> DatTruocs { get; set; }
-    public virtual DbSet<GiaHan> GiaHans { get; set; }
     public virtual DbSet<Lop> Lops { get; set; }
     public virtual DbSet<NhaXuatBan> NhaXuatBans { get; set; }
     public virtual DbSet<NhanVien> NhanViens { get; set; }
@@ -46,6 +44,11 @@ public partial class QLThuVienUtcContext : DbContext
         {
             entity.HasKey(e => e.MaBanDoc);
             entity.ToTable("BanDoc");
+            entity.Property(e => e.SoCCCD).HasMaxLength(20);
+            entity.Property(e => e.NganhHoc).HasMaxLength(150);
+            entity.Property(e => e.SoTaiKhoanNganHang).HasMaxLength(50);
+            entity.Property(e => e.TenNganHang).HasMaxLength(150);
+            entity.Property(e => e.AvatarUrl).HasMaxLength(255);
 
             entity.HasIndex(e => e.HoTen, "IX_BanDoc_HoTen");
             entity.HasIndex(e => e.MaLop, "IX_BanDoc_MaLop");
@@ -105,40 +108,6 @@ public partial class QLThuVienUtcContext : DbContext
 
             entity.HasOne(d => d.MaPhieuMuonNavigation).WithMany(p => p.ChiTietMuons)
                 .HasForeignKey(d => d.MaPhieuMuon)
-                .OnDelete(DeleteBehavior.ClientSetNull);
-        });
-
-        modelBuilder.Entity<DatTruoc>(entity =>
-        {
-            entity.HasKey(e => e.MaDatTruoc);
-            entity.ToTable("DatTruoc");
-
-            entity.Property(e => e.NgayDat).HasDefaultValueSql("(sysdatetime())");
-            entity.Property(e => e.TrangThai).HasMaxLength(30).HasDefaultValue("Chờ xử lý");
-
-            entity.HasOne(d => d.MaBanDocNavigation).WithMany(p => p.DatTruocs)
-                .HasForeignKey(d => d.MaBanDoc)
-                .OnDelete(DeleteBehavior.ClientSetNull);
-
-            entity.HasOne(d => d.MaTaiLieuNavigation).WithMany(p => p.DatTruocs)
-                .HasForeignKey(d => d.MaTaiLieu)
-                .OnDelete(DeleteBehavior.ClientSetNull);
-        });
-
-        modelBuilder.Entity<GiaHan>(entity =>
-        {
-            entity.HasKey(e => e.MaGiaHan);
-            entity.ToTable("GiaHan");
-
-            entity.Property(e => e.LyDo).HasMaxLength(255);
-            entity.Property(e => e.NgayGiaHan).HasDefaultValueSql("(sysdatetime())");
-
-            entity.HasOne(d => d.MaChiTietMuonNavigation).WithMany(p => p.GiaHans)
-                .HasForeignKey(d => d.MaChiTietMuon)
-                .OnDelete(DeleteBehavior.ClientSetNull);
-
-            entity.HasOne(d => d.MaNhanVienDuyetNavigation).WithMany(p => p.GiaHans)
-                .HasForeignKey(d => d.MaNhanVienDuyet)
                 .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
@@ -274,6 +243,11 @@ public partial class QLThuVienUtcContext : DbContext
         {
             entity.HasKey(e => e.MaThanhToan);
             entity.ToTable("ThanhToan");
+            entity.Property(e => e.TienNopMuon).HasColumnType("decimal(18,2)");
+            entity.Property(e => e.TienDenBu).HasColumnType("decimal(18,2)");
+            entity.Property(e => e.LoaiKhoanThu).HasMaxLength(50);
+            entity.Property(e => e.HinhThucXuLy).HasMaxLength(150);
+            entity.Property(e => e.GhiChu).HasMaxLength(500);
 
             entity.Property(e => e.NgayThanhToan).HasDefaultValueSql("(sysdatetime())");
             entity.Property(e => e.PhuongThuc).HasMaxLength(50).HasDefaultValue("Tiền mặt");

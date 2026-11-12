@@ -15,6 +15,7 @@ bin/
 obj/
 [Bb]in/
 [Oo]bj/
+/.tmp/
 
 ## Publishing & Packages
 *.nupkg

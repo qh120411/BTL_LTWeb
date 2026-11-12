@@ -58,22 +58,22 @@
 
                         <div class="col-md-2">
                             <label class="form-label-utc fw-bold">Năm XB</label>
-                            <input type="number" name="year" class="form-control form-control-utc" value="@DateTime.Today.Year" min="1990" max="2030" />
+                            <input type="number" name="year" class="form-control form-control-utc" min="1990" max="2030" />
                         </div>
 
                         <div class="col-md-2">
                             <label class="form-label-utc fw-bold">Số trang</label>
-                            <input type="number" name="pages" class="form-control form-control-utc" value="300" min="10" />
+                            <input type="number" name="pages" class="form-control form-control-utc" min="10" />
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label-utc fw-bold">Vị trí kệ</label>
-                            <input type="text" name="shelf" class="form-control form-control-utc" value="Kệ IT-01 - Tầng 2 Nhà A8" />
+                            <input type="text" name="shelf" class="form-control form-control-utc" />
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label-utc fw-bold">Số bản sao</label>
-                            <input type="number" name="copiesCount" class="form-control form-control-utc" value="4" min="1" max="20" />
+                            <input type="number" name="copiesCount" class="form-control form-control-utc" min="1" max="20" />
                         </div>
 
                         <div class="col-md-12">
@@ -201,12 +201,13 @@
             </div>
 
             <div class="modal-body p-4">
+                <p id="copiesModalBookTitle" class="fw-semibold text-navy mb-3"></p>
                 <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-3">
                     <div class="text-muted small">
                         Vị trí kệ: <strong id="copiesModalShelf" class="text-navy"></strong>
                     </div>
                     <div>
-                        <span id="copiesModalStatsBadge" class="badge bg-success px-3 py-1 fs-6 font-monospace">4/4 bản sẵn có</span>
+                        <span id="copiesModalStatsBadge" class="badge bg-secondary px-3 py-1 fs-6 font-monospace">Đang tải...</span>
                     </div>
                 </div>
 
@@ -284,16 +285,27 @@
         var copiesModalShelf = document.getElementById("copiesModalShelf");
         var copiesModalStatsBadge = document.getElementById("copiesModalStatsBadge");
         var copiesTableBody = document.getElementById("copiesTableBody");
+        function copyText(value) {
+            return String(value == null ? "" : value).replace(/[&<>"']/g, function (ch) {
+                return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch];
+            });
+        }
 
         document.querySelectorAll(".btn-view-copies").forEach(function (btn) {
             btn.addEventListener("click", function () {
                 var bookId = this.getAttribute("data-id");
 
+                copiesModalBookTitle.textContent = "";
+                copiesModalShelf.textContent = "";
+                copiesModalStatsBadge.textContent = "Đang tải...";
                 copiesTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-3 text-muted">Đang tải bản sao...</td></tr>';
                 copiesModal.show();
 
                 fetch('/Admin/Catalog/GetCopies/' + bookId)
-                    .then(function (res) { return res.json(); })
+                    .then(function (res) {
+                        if (!res.ok || res.redirected) throw new Error("Không tải được bản sách. Vui lòng kiểm tra phiên đăng nhập.");
+                        return res.json();
+                    })
                     .then(function (data) {
                         copiesModalBookTitle.textContent = data.title;
                         copiesModalShelf.textContent = data.shelf;
@@ -314,13 +326,13 @@
                         data.copies.forEach(function (c) {
                             var statusBadge = c.status === "Có sẵn"
                                 ? '<span class="badge bg-success text-white px-2 py-1"> Có sẵn trong kho</span>'
-                                : '<span class="badge bg-primary text-white px-2 py-1"> Đang mượn</span>';
+                                : '<span class="badge bg-secondary text-white px-2 py-1">' + copyText(c.status) + '</span>';
 
                             rows += '<tr>' +
-                                '<td><strong class="font-monospace text-navy">BS-' + c.id + '</strong></td>' +
-                                '<td><span class="badge bg-light text-dark border font-monospace px-2 py-1">' + c.barcode + '</span></td>' +
-                                '<td><span class="small text-muted">' + c.shelf + '</span></td>' +
-                                '<td><span class="badge bg-secondary-subtle text-secondary border">' + c.condition + '</span></td>' +
+                                '<td><strong class="font-monospace text-navy">BS-' + copyText(c.id) + '</strong></td>' +
+                                '<td><span class="badge bg-light text-dark border font-monospace px-2 py-1">' + copyText(c.barcode) + '</span></td>' +
+                                '<td><span class="small text-muted">' + copyText(c.shelf) + '</span></td>' +
+                                '<td><span class="badge bg-secondary-subtle text-secondary border">' + copyText(c.condition) + '</span></td>' +
                                 '<td style="text-align: center;">' + statusBadge + '</td>' +
                                 '</tr>';
                         });

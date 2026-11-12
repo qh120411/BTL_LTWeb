@@ -1,11 +1,10 @@
 .utc-services-page {
-    background: #fff;
-    padding: 28px 24px 64px;
+    background: var(--utc-bg-page, #fff);
+    padding: 28px 0 64px;
 }
 
 .utc-services-container {
     width: 100%;
-    max-width: 1040px;
     margin: 0 auto;
     color: var(--utc-ink, #203c58);
     font-size: 16px;
@@ -237,7 +236,7 @@
 }
 
 @media (max-width: 767.98px) {
-    .utc-services-page { padding: 24px 16px 40px; }
+    .utc-services-page { padding: 24px 0 40px; }
     .utc-services-nav { gap: 8px 20px; }
     .utc-service-section { padding: 32px 0; }
     .utc-service-section-heading { margin-bottom: 20px; }

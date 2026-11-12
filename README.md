@@ -13,9 +13,11 @@ Nhấn **F5 → UTC: Debug web (localhost:5125)**, hoặc chạy `dotnet run --l
 Ứng dụng mở trang chủ công khai; hồ sơ cá nhân và nghiệp vụ quản trị vẫn yêu cầu đăng nhập.
 Chi tiết: [Hướng dẫn chạy VS Code](docs/RUN_VSCODE.md).
 
+Báo cáo đối chiếu UI/backend và các phần mã dư đã dọn: [doc.md](doc.md).
+
 ## Tài liệu API
 
-- [Hướng dẫn API tiếng Việt](docs/API.md): endpoint, tham số, cấu trúc phản hồi, ví dụ PowerShell và hành vi SQL/JSON fallback.
+- [Hướng dẫn API tiếng Việt](docs/API.md): endpoint, tham số, cấu trúc phản hồi, ví dụ PowerShell và hành vi SQL-only.
 - Swagger UI khi chạy ứng dụng: [http://localhost:5124/swagger/index.html](http://localhost:5124/swagger/index.html) (cũng có tại `/ApiDoc`, `/api-docs`, `/swagger`, `/Docs/Api`).
 - Đặc tả OpenAPI: [`wwwroot/swagger.json`](wwwroot/swagger.json), được phục vụ tại `/swagger.json`.
 
@@ -26,7 +28,7 @@ Chi tiết: [Hướng dẫn chạy VS Code](docs/RUN_VSCODE.md).
 - Khung ứng dụng MVC với `HomeController`, Razor Views và layout dùng chung.
 - Giao diện header, footer, logo và thanh điều hướng của thư viện UTC.
 - Menu có nút mở/đóng trên màn hình nhỏ.
-- Khung trang chủ, trang Privacy và trang thông báo lỗi.
+- Khung trang chủ và trang thông báo lỗi.
 - Script SQL tạo cơ sở dữ liệu `QLThuVienUTC`, các bảng, ràng buộc và dữ liệu mẫu.
 
 ### Định hướng phát triển
@@ -37,7 +39,7 @@ Chi tiết: [Hướng dẫn chạy VS Code](docs/RUN_VSCODE.md).
 - Quản lý tài liệu, bản sao, tác giả và nhà xuất bản.
 - Quản lý bạn đọc, thẻ bạn đọc và giao dịch mượn trả.
 
-**Trạng thái hiện tại:** ứng dụng có hai phân hệ Reader/Admin, đăng nhập và phân quyền, kết nối SQL Server bằng Entity Framework Core. Một phần service còn lưu dữ liệu trong `App_Data/*.json`; cấu hình kết nối không tự chuyển các dữ liệu này vào SQL Server.
+**Trạng thái hiện tại:** ứng dụng có hai phân hệ Reader/Admin, đăng nhập và phân quyền, kết nối SQL Server bằng Entity Framework Core. Toàn bộ dữ liệu nghiệp vụ đọc/ghi SQL Server; không đọc/ghi `App_Data/*.json`. Database mới dùng `QLThuVienUTC.sql`; database đã có dùng script bổ sung `scripts/sql/20261112_SqlOnlyStorage.sql` (chỉ thêm cột). Chi tiết triển khai và kiểm tra tại mục 9 của `doc.md`.
 
 ## Công nghệ sử dụng
 

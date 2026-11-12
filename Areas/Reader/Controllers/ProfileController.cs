@@ -19,23 +19,25 @@ namespace BTL_LTWEB.Areas.Reader.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var studentId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "242630923";
-            var studentName = User.Identity?.Name ?? "Đỗ Văn Đạt";
-
-            var profile = _profileService.GetProfile(studentId, studentName);
-            return View(profile);
+            var studentId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrWhiteSpace(studentId)) return Unauthorized("Phiên đăng nhập thiếu định danh. Vui lòng đăng nhập lại.");
+            try { return View(_profileService.GetProfile(studentId)); }
+            catch (KeyNotFoundException) { return NotFound("Không tìm thấy hồ sơ bạn đọc của tài khoản đang đăng nhập."); }
         }
 
         // [POST] /Reader/Profile
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(UserProfileViewModel model)
+        public IActionResult Index(ProfileContactInputModel model)
         {
-            var studentId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "242630923";
-            var studentName = User.Identity?.Name ?? "Đỗ Văn Đạt";
+            var studentId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrWhiteSpace(studentId)) return Unauthorized("Phiên đăng nhập thiếu định danh. Vui lòng đăng nhập lại.");
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             // Only contact/bank fields belong to this form. Identity and loans stay server-owned.
-            var profile = _profileService.GetProfile(studentId, studentName);
+            UserProfileViewModel profile;
+            try { profile = _profileService.GetProfile(studentId); }
+            catch (KeyNotFoundException) { return NotFound("Không tìm thấy hồ sơ bạn đọc của tài khoản đang đăng nhập."); }
             profile.SoDienThoai = model.SoDienThoai;
             profile.DiaChiNha = model.DiaChiNha;
             profile.SoTaiKhoanNganHang = model.SoTaiKhoanNganHang;
@@ -43,7 +45,7 @@ namespace BTL_LTWEB.Areas.Reader.Controllers
             profile.Email = model.Email;
             _profileService.UpdateProfile(profile);
 
-            TempData["SuccessMessage"] = "Cập nhật thông tin cá nhân và ngân hàng thành công!";
+            TempData["SuccessMessage"] = "Cập nhật thông tin cá nhân thành công!";
             return RedirectToAction(nameof(Index));
         }
     }

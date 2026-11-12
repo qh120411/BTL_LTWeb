@@ -26,6 +26,7 @@
     <Folder Include="wwwroot\images\" />
     <Compile Remove="tests\**\*.cs" />
     <Content Remove="tests\**" />
+    <Content Remove="App_Data\**" />
   </ItemGroup>
 
 </Project>

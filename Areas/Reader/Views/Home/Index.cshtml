@@ -1,4 +1,4 @@
-@model BTL_LTWEB.Areas.Reader.Models.UserProfileViewModel?
+@model IReadOnlyList<BTL_LTWEB.Areas.Reader.Models.BookItem>
 @{
     Layout = "~/Views/Shared/Reader/_ReaderLayout.cshtml";
     ViewData["Title"] = "Trang chủ - Thư viện Đại học Giao thông Vận tải";
@@ -9,7 +9,7 @@
 }
 
 <div class="utc-home-wrapper">
-    <div class="container-xl">
+    <div class="container-xl utc-reader-container">
         <!-- 1. FLOATING SEARCH BOX -->
         <section class="utc-search-panel-box">
             <!-- Search Bar Form -->
@@ -62,23 +62,16 @@
             <div class="utc-col-highlights">
                 <h3 class="utc-column-main-heading">Học liệu đáng chú ý</h3>
 
-                <a href="/Reader/Document/Details/1" class="utc-highlight-row">
-                    <span class="utc-tag-cyan">CÔNG NGHỆ THÔNG TIN · GIẢI THUẬT</span>
-                    <h4 class="utc-highlight-row-title">Cấu trúc dữ liệu và giải thuật (Python: Thuật toán &amp; Cấu trúc dữ liệu)</h4>
-                    <span class="utc-highlight-row-author">Bùi Việt Hà</span>
-                </a>
+                @foreach (var book in Model.Take(3))
+                {
+                    <a href="/Reader/Document/Details/@book.Id" class="utc-highlight-row">
+                        <span class="utc-tag-cyan">@book.MajorName</span>
+                        <h4 class="utc-highlight-row-title">@book.Title</h4>
+                        <span class="utc-highlight-row-author">@book.Authors</span>
+                    </a>
+                }
+                @if (Model.Count == 0) { <p class="text-muted">Chưa có học liệu.</p> }
 
-                <a href="/Reader/Document/Details/2" class="utc-highlight-row">
-                    <span class="utc-tag-cyan">CƠ SỞ DỮ LIỆU · SQL</span>
-                    <h4 class="utc-highlight-row-title">Giáo trình Cơ sở dữ liệu quan hệ - Lý thuyết và Thực hành</h4>
-                    <span class="utc-highlight-row-author">Phạm Minh Chuẩn, Trịnh Thị Nhị, Nguyễn Văn Quyết</span>
-                </a>
-
-                <a href="/Reader/Document/Details/3" class="utc-highlight-row">
-                    <span class="utc-tag-cyan">MẠNG MÁY TÍNH · VIỄN THÔNG</span>
-                    <h4 class="utc-highlight-row-title">Giáo trình Mạng máy tính</h4>
-                    <span class="utc-highlight-row-author">Nguyễn Thế Lộc, Nguyễn Hồng Phương</span>
-                </a>
             </div>
 
             <!-- Cột 2: Bài viết tiêu điểm -->
@@ -165,29 +158,14 @@
             </div>
 
             <div class="utc-books-shelf-grid">
-                <a href="/Reader/Document/Details/1" class="utc-shelf-card">
-                    <span class="utc-tag-cyan">CÔNG NGHỆ THÔNG TIN · LẬP TRÌNH</span>
-                    <h5 class="utc-shelf-card-title">Cấu trúc dữ liệu và giải thuật (Python: Thuật toán &amp; Cấu trúc dữ liệu)</h5>
-                    <span class="utc-shelf-card-author">Bùi Việt Hà</span>
-                </a>
-
-                <a href="/Reader/Document/Details/2" class="utc-shelf-card">
-                    <span class="utc-tag-cyan">CƠ SỞ DỮ LIỆU · PHẦN MỀM</span>
-                    <h5 class="utc-shelf-card-title">Giáo trình Cơ sở dữ liệu quan hệ - Lý thuyết và Thực hành</h5>
-                    <span class="utc-shelf-card-author">Phạm Minh Chuẩn, Trịnh Thị Nhị, Nguyễn Văn Quyết</span>
-                </a>
-
-                <a href="/Reader/Document/Details/3" class="utc-shelf-card">
-                    <span class="utc-tag-cyan">MẠNG MÁY TÍNH · HỆ THỐNG</span>
-                    <h5 class="utc-shelf-card-title">Giáo trình Mạng máy tính</h5>
-                    <span class="utc-shelf-card-author">Nguyễn Thế Lộc, Nguyễn Hồng Phương</span>
-                </a>
-
-                <a href="/Reader/Document/Details/4" class="utc-shelf-card">
-                    <span class="utc-tag-cyan">AN TOÀN THÔNG TIN · BẢO MẬT</span>
-                    <h5 class="utc-shelf-card-title">Giáo trình Cơ sở An toàn thông tin</h5>
-                    <span class="utc-shelf-card-author">Học viện Công nghệ Bưu chính Viễn thông</span>
-                </a>
+                @foreach (var book in Model)
+                {
+                    <a href="/Reader/Document/Details/@book.Id" class="utc-shelf-card">
+                        <span class="utc-tag-cyan">@book.MajorName</span>
+                        <h5 class="utc-shelf-card-title">@book.Title</h5>
+                        <span class="utc-shelf-card-author">@book.Authors</span>
+                    </a>
+                }
             </div>
         </section>
 

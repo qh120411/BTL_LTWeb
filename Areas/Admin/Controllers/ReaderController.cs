@@ -88,31 +88,6 @@ public class ReaderController : AdminBaseController
         return RedirectToAction(nameof(Details), new { id = model.MaBD });
     }
 
-    // Trả sách cho bạn đọc
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult ReturnBook(string maBD, string maGD)
-    {
-        if (string.IsNullOrWhiteSpace(maBD) || string.IsNullOrWhiteSpace(maGD))
-        {
-            TempData["ErrorMessage"] = "Thông tin trả sách không hợp lệ!";
-            return RedirectToAction(nameof(Index));
-        }
-
-        var success = _readerService.ReturnBook(maBD, maGD, out string bookTitle, out decimal reducedFine, User.FindFirstValue(ClaimTypes.NameIdentifier));
-        if (success)
-        {
-            string fineMsg = reducedFine > 0 ? " Toàn bộ tiền phạt quá hạn của sách đã được tất toán (0 VNĐ)." : "";
-            TempData["SuccessMessage"] = $"Thủ thư đã tiếp nhận và hoàn tất trả cuốn sách '{bookTitle}' thành công!{fineMsg}";
-        }
-        else
-        {
-            TempData["ErrorMessage"] = "Không tìm thấy giao dịch mượn hoặc sách đã được trả trước đó!";
-        }
-
-        return RedirectToAction(nameof(Details), new { id = maBD });
-    }
-
     // Mượn thêm sách theo phong cách tra cứu OPAC
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -151,8 +126,10 @@ public class ReaderController : AdminBaseController
     [ValidateAntiForgeryToken]
     public IActionResult ProcessImport()
     {
-        _readerService.ProcessImport(out int updated, out int inserted);
-        TempData["SuccessMessage"] = $"Đồng bộ thành công {updated} sinh viên từ phòng Đào tạo (QLĐT)!";
+        if (_readerService.ProcessImport(out int updated, out int inserted))
+            TempData["SuccessMessage"] = $"Đã cập nhật {updated} và thêm {inserted} bạn đọc.";
+        else
+            TempData["ErrorMessage"] = "Chức năng nhập QLĐT chưa được cấu hình; chưa có dữ liệu nào được đồng bộ.";
         return RedirectToAction(nameof(Index));
     }
 }

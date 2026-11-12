@@ -18,7 +18,6 @@ public interface IReaderService
 
     // Bổ sung các phương thức lấy dữ liệu mượn trả, tài chính & quá hạn thật theo CSDL
     List<CirculationTransactionItem> GetAllCirculationTransactions();
-    Dictionary<string, List<string>> GetReaderBorrowedTitlesMap();
     List<OverdueItemViewModel> GetAllOverdueLoans();
     DashboardViewModel GetDashboardStatistics();
 

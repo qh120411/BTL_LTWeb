@@ -5,6 +5,12 @@ namespace BTL_LTWEB.Models.Entities;
 
 public partial class BanDoc
 {
+    public string? SoCCCD { get; set; }
+    public string? NganhHoc { get; set; }
+    public string? SoTaiKhoanNganHang { get; set; }
+    public string? TenNganHang { get; set; }
+    public string? AvatarUrl { get; set; }
+
     public int MaBanDoc { get; set; }
 
     public string MaSinhVien { get; set; } = null!;
@@ -34,8 +40,6 @@ public partial class BanDoc
     public string TrangThai { get; set; } = null!;
 
     public DateTime NgayTao { get; set; }
-
-    public virtual ICollection<DatTruoc> DatTruocs { get; set; } = new List<DatTruoc>();
 
     public virtual Lop? MaLopNavigation { get; set; }
 
