@@ -11,8 +11,6 @@ public partial class NhanVien
 
     public string HoTen { get; set; } = null!;
 
-    public DateOnly? NgaySinh { get; set; }
-
     public string? GioiTinh { get; set; }
 
     public string? SoDienThoai { get; set; }
