@@ -31,34 +31,103 @@
     </button>
 </div>
 
-<!-- 4 Thẻ KPI Thống kê Kho học liệu (Soft Semantic Colors) -->
+@{
+    int totalCopies = Model.TongBanSao > 0 ? Model.TongBanSao : 1;
+    double pctSanCo = Math.Round((double)Model.TongSanCo / totalCopies * 100, 1);
+    double pctDangMuon = Math.Round((double)Model.TongDangMuon / totalCopies * 100, 1);
+    double avgCopies = Model.TongDauSach > 0 ? Math.Round((double)Model.TongBanSao / Model.TongDauSach, 1) : 0;
+}
+
+<!-- KHỐI THỐNG KÊ KHO HỌC LIỆU TRỰC QUAN (PHÂN CẤP QUY MÔ & TỶ LỆ LƯU THÔNG) -->
 <div class="row g-3 mb-4">
-    <div class="col-md-3 col-sm-6">
-        <div class="kpi-card kpi-card-primary">
-            <div class="kpi-title">Tổng đầu sách CSDL</div>
-            <div class="kpi-value" style="color: var(--utc-primary);">@Model.TongDauSach</div>
-            <div class="small text-muted mt-1">Đầu sách danh mục giáo trình, tài liệu</div>
+    <!-- Cụm 1: Quy mô danh mục & Bản sao (2 thẻ card) -->
+    <div class="col-xl-5 col-lg-5">
+        <div class="row g-3">
+            <div class="col-sm-6">
+                <div class="card border-0 shadow-sm rounded-3 h-100 p-3" style="background: #ffffff; border-left: 4px solid var(--utc-primary, #004b87) !important;">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="text-uppercase fw-semibold text-muted" style="font-size: 11.5px; letter-spacing: 0.5px;">Tổng đầu sách</span>
+                        <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 34px; height: 34px; background: rgba(0, 75, 135, 0.1); color: var(--utc-primary, #004b87);">
+                            <i class="bi bi-journal-bookmark-fill fs-6"></i>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-baseline gap-2">
+                        <span class="fw-bold" style="font-size: 28px; color: var(--utc-primary, #004b87); line-height: 1;">@Model.TongDauSach</span>
+                        <span class="badge bg-light text-primary border" style="font-size: 11px;">~@avgCopies bản/sách</span>
+                    </div>
+                    <div class="small text-muted mt-2" style="font-size: 12px;">Đầu mục giáo trình, tài liệu</div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="card border-0 shadow-sm rounded-3 h-100 p-3" style="background: #ffffff; border-left: 4px solid #0284c7 !important;">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="text-uppercase fw-semibold text-muted" style="font-size: 11.5px; letter-spacing: 0.5px;">Tổng bản sao vật lý</span>
+                        <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 34px; height: 34px; background: rgba(2, 132, 199, 0.1); color: #0284c7;">
+                            <i class="bi bi-upc-scan fs-6"></i>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-baseline gap-2">
+                        <span class="fw-bold text-dark" style="font-size: 28px; line-height: 1;">@Model.TongBanSao</span>
+                        <span class="badge bg-light text-secondary border" style="font-size: 11px;">100% kho</span>
+                    </div>
+                    <div class="small text-muted mt-2" style="font-size: 12px;">Bản in gắn mã vạch lưu thông</div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="col-md-3 col-sm-6">
-        <div class="kpi-card kpi-card-info">
-            <div class="kpi-title">Tổng bản sao vật lý</div>
-            <div class="kpi-value" style="color: var(--utc-info);">@Model.TongBanSao</div>
-            <div class="small text-muted mt-1">Gắn mã vạch lưu thông tại các tầng kho</div>
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-6">
-        <div class="kpi-card kpi-card-success">
-            <div class="kpi-title text-success">Bản sẵn có trong kho</div>
-            <div class="kpi-value text-success">@Model.TongSanCo</div>
-            <div class="small text-muted mt-1">Sẵn sàng phục vụ sinh viên mượn đọc</div>
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-6">
-        <div class="kpi-card kpi-card-warning">
-            <div class="kpi-title text-warning">Đang mượn ngoài kho</div>
-            <div class="kpi-value text-warning">@Model.TongDangMuon</div>
-            <div class="small text-muted mt-1">Bản sách đang được sinh viên mượn đọc</div>
+
+    <!-- Cụm 2: Thước đo trạng thái & tỷ lệ lưu thông kho (Card trực quan dạng Stacked Bar) -->
+    <div class="col-xl-7 col-lg-7">
+        <div class="card border-0 shadow-sm rounded-3 h-100 p-3" style="background: #ffffff;">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-pie-chart-fill text-primary"></i>
+                    <span class="fw-bold text-dark" style="font-size: 14px;">Trạng thái &amp; Tỷ lệ lưu thông kho</span>
+                </div>
+                <span class="badge" style="background: rgba(245, 158, 11, 0.15); color: #b45309; font-size: 12px; font-weight: 600;">
+                    <i class="bi bi-arrow-repeat me-1"></i>Đang lưu hành: @pctDangMuon%
+                </span>
+            </div>
+
+            <!-- Thanh tiến độ kép (Stacked Progress Bar) thể hiện tỷ trọng trực quan -->
+            <div class="progress my-2 rounded-pill shadow-inner" style="height: 14px; background-color: #e2e8f0;">
+                <div class="progress-bar bg-success progress-bar-striped" role="progressbar" 
+                     style="width: @pctSanCo%;" 
+                     title="Sẵn có trong kho: @Model.TongSanCo bản (@pctSanCo%)">
+                </div>
+                <div class="progress-bar bg-warning progress-bar-striped" role="progressbar" 
+                     style="width: @pctDangMuon%; background-color: #f59e0b !important;" 
+                     title="Đang mượn ngoài kho: @Model.TongDangMuon bản (@pctDangMuon%)">
+                </div>
+            </div>
+
+            <!-- Chi tiết 2 nhóm dữ liệu -->
+            <div class="d-flex justify-content-between align-items-center pt-2 mt-auto" style="border-top: 1px dashed #e2e8f0;">
+                <!-- Nhóm 1: Sẵn có -->
+                <div class="d-flex align-items-center gap-2">
+                    <span class="rounded-circle" style="width: 10px; height: 10px; background-color: #10b981; display: inline-block;"></span>
+                    <div>
+                        <div class="small text-muted" style="font-size: 11.5px;">Bản sẵn có trên kệ</div>
+                        <div class="fw-bold text-success" style="font-size: 16px;">
+                            @Model.TongSanCo <span class="fw-normal text-muted" style="font-size: 12px;">(@pctSanCo%)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Đường phân cách dọc -->
+                <div style="width: 1px; height: 32px; background-color: #e2e8f0;"></div>
+
+                <!-- Nhóm 2: Đang mượn -->
+                <div class="d-flex align-items-center gap-2 text-end">
+                    <div>
+                        <div class="small text-muted" style="font-size: 11.5px;">Đang mượn ngoài kho</div>
+                        <div class="fw-bold" style="color: #d97706; font-size: 16px;">
+                            @Model.TongDangMuon <span class="fw-normal text-muted" style="font-size: 12px;">(@pctDangMuon%)</span>
+                        </div>
+                    </div>
+                    <span class="rounded-circle" style="width: 10px; height: 10px; background-color: #f59e0b; display: inline-block;"></span>
+                </div>
+            </div>
         </div>
     </div>
 </div>
