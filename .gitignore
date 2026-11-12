@@ -32,4 +32,4 @@ __pycache__/
 
 ## Local database exports (may contain private reader/account data)
 /exports/private/
-/QLThuVienUTC.sql
+
