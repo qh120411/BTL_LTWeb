@@ -164,7 +164,14 @@
             }
           },
           "503": {
-            "description": "Không truy cập được dữ liệu SQL Server; không trả số liệu dự phòng."
+            "description": "Lỗi SQL chưa được service xử lý, được SqlUnavailableFilter chuyển thành HTTP 503. Không có dữ liệu dự phòng.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -236,7 +243,14 @@
             }
           },
           "503": {
-            "description": "Không truy cập được dữ liệu SQL Server; không trả số liệu dự phòng."
+            "description": "Lỗi SQL chưa được service xử lý, được SqlUnavailableFilter chuyển thành HTTP 503. Không có dữ liệu dự phòng.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -283,7 +297,8 @@
                           "condition": "Tốt",
                           "status": "Có sẵn",
                           "importDate": "15/01/2024",
-                          "isAvailable": true
+                          "isAvailable": true,
+                          "dueDate": null
                         }
                       ]
                     }
@@ -303,7 +318,14 @@
             }
           },
           "503": {
-            "description": "Không truy cập được dữ liệu SQL Server; không trả số liệu dự phòng."
+            "description": "Lỗi SQL chưa được service xử lý, được SqlUnavailableFilter chuyển thành HTTP 503. Không có dữ liệu dự phòng.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -351,7 +373,8 @@
                       "ngayMuon": "10/11/2026",
                       "hanTra": "31/12/2026",
                       "trangThai": "Còn hạn",
-                      "isQuaHan": false
+                      "isQuaHan": false,
+                      "soNgayQuaHan": 0
                     }
                   ]
                 }
@@ -379,7 +402,14 @@
             }
           },
           "503": {
-            "description": "Không truy cập được dữ liệu SQL Server; không trả số liệu dự phòng."
+            "description": "Lỗi SQL chưa được service xử lý, được SqlUnavailableFilter chuyển thành HTTP 503. Không có dữ liệu dự phòng.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -408,7 +438,7 @@
         ],
         "operationId": "borrowBook",
         "summary": "Mượn một đầu sách (ghi dữ liệu)",
-        "description": "Cán bộ tạo phiếu qua SQL: tối đa 5 sách cho sinh viên, 10 cho GV/CB; chặn trùng đầu sách, hết bản, học liệu điện tử và bạn đọc không tồn tại. Kỳ 1 từ 11/08–31/12, hạn 31/12 cùng năm; kỳ 2 từ 02/01–31/05, hạn 31/05 cùng năm. Không ghi mượn dự phòng vào JSON.",
+        "description": "Cán bộ tạo phiếu mượn qua SQL: tối đa 5 cuốn cho sinh viên, 10 cho mã GV/CB. Chặn bạn đọc không hoạt động, trùng đầu sách, hết bản, bản mất/hỏng và học liệu điện tử. Kỳ 1 từ 11/08–31/12, hạn 31/12; kỳ 2 từ 02/01–31/05, hạn 31/05 cùng năm. Lỗi trong transaction được trả thành lỗi nghiệp vụ 400; lỗi SQL khi đọc catalog trước transaction có thể trả 503. Không có dữ liệu dự phòng JSON.",
         "responses": {
           "200": {
             "description": "Thao tác đã lưu thành công trong transaction SQL Server.",
@@ -430,7 +460,7 @@
             }
           },
           "400": {
-            "description": "Dữ liệu không hợp lệ, vi phạm nghiệp vụ hoặc thiếu/sai anti-forgery token.",
+            "description": "Lỗi dữ liệu/nghiệp vụ trả JSON theo Error. Lỗi anti-forgery hoặc phân tích JSON có thể trả 400 không có body JSON; không giả định luôn có trường message.",
             "content": {
               "application/json": {
                 "schema": {
@@ -480,6 +510,16 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Lỗi SQL chưa được service xử lý, được SqlUnavailableFilter chuyển thành HTTP 503. Không có dữ liệu dự phòng.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -505,7 +545,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Anti-forgery token của cùng phiên cookie; Swagger UI tự thêm."
+            "description": "Bắt buộc gửi token khớp cookie anti-forgery và người dùng hiện tại. Swagger UI tự điền giá trị của phiên này; sau khi đổi tài khoản cần tải lại trang. Client khác phải lấy token/cookie từ GET /ApiDoc trước khi POST."
           }
         ]
       }
@@ -517,7 +557,7 @@
         ],
         "operationId": "returnBook",
         "summary": "Trả sách (ghi dữ liệu)",
-        "description": "Bắt buộc maBD và maGD. Chỉ trả giao dịch đang mượn thuộc bạn đọc này, không tự chọn sách khác. Trả lặp bị từ chối. Tiền phạt và trạng thái sách được lưu cùng transaction SQL.",
+        "description": "Bắt buộc maBD và maGD. Chỉ trả giao dịch đang mượn của đúng bạn đọc; trả lặp bị từ chối. Nếu quá hạn, nghiệp vụ thu 100.000đ/cuốn và ghi phiếu thu cùng transaction SQL. Nếu không tìm thấy giao dịch hoặc service không lưu được (kể cả lỗi SQL được bắt bên trong), trả 400.",
         "responses": {
           "200": {
             "description": "Thao tác đã lưu thành công trong transaction SQL Server.",
@@ -531,7 +571,7 @@
                     "value": {
                       "success": true,
                       "mode": "SQL_Server",
-                      "message": "Đã nhận trả thành công sách 'Cấu trúc dữ liệu và giải thuật'"
+                      "message": "Đã nhận trả sách 'Cấu trúc dữ liệu và giải thuật'"
                     }
                   }
                 }
@@ -539,7 +579,7 @@
             }
           },
           "400": {
-            "description": "Dữ liệu không hợp lệ, vi phạm nghiệp vụ hoặc thiếu/sai anti-forgery token.",
+            "description": "Lỗi dữ liệu/nghiệp vụ trả JSON theo Error. Lỗi anti-forgery hoặc phân tích JSON có thể trả 400 không có body JSON; không giả định luôn có trường message.",
             "content": {
               "application/json": {
                 "schema": {
@@ -554,7 +594,13 @@
                   "noActiveLoans": {
                     "value": {
                       "success": false,
-                      "message": "Bạn đọc '242630923' hiện không có cuốn sách nào đang mượn để trả."
+                      "message": "Không tìm thấy giao dịch đang mượn của bạn đọc này hoặc chưa lưu được giao dịch."
+                    }
+                  },
+                  "missingTransaction": {
+                    "value": {
+                      "success": false,
+                      "message": "Vui lòng chọn đúng mã giao dịch cần trả."
                     }
                   }
                 }
@@ -608,7 +654,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Anti-forgery token của cùng phiên cookie; Swagger UI tự thêm."
+            "description": "Bắt buộc gửi token khớp cookie anti-forgery và người dùng hiện tại. Swagger UI tự điền giá trị của phiên này; sau khi đổi tài khoản cần tải lại trang. Client khác phải lấy token/cookie từ GET /ApiDoc trước khi POST."
           }
         ]
       }
@@ -667,7 +713,14 @@
             }
           },
           "503": {
-            "description": "Không truy cập được dữ liệu SQL Server; không trả số liệu dự phòng."
+            "description": "Lỗi SQL chưa được service xử lý, được SqlUnavailableFilter chuyển thành HTTP 503. Không có dữ liệu dự phòng.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -731,7 +784,7 @@
             }
           },
           "404": {
-            "description": "Không lấy được hồ sơ có họ tên.",
+            "description": "Không tìm thấy bạn đọc theo mã sinh viên hoặc khóa số.",
             "content": {
               "application/json": {
                 "schema": {
@@ -764,7 +817,14 @@
             }
           },
           "503": {
-            "description": "Không truy cập được dữ liệu SQL Server; không trả số liệu dự phòng."
+            "description": "Lỗi SQL chưa được service xử lý, được SqlUnavailableFilter chuyển thành HTTP 503. Không có dữ liệu dự phòng.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -826,7 +886,14 @@
             }
           },
           "503": {
-            "description": "Không truy cập được dữ liệu SQL Server; không trả số liệu dự phòng."
+            "description": "Lỗi SQL chưa được service xử lý, được SqlUnavailableFilter chuyển thành HTTP 503. Không có dữ liệu dự phòng.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -888,7 +955,7 @@
             "enum": [
               "Healthy"
             ],
-            "description": "Giá trị cố định khi action hoàn tất, không thể hiện SQL còn kết nối."
+            "description": "Chỉ trả Healthy sau khi kết nối SQL và đọc thành công các bộ đếm."
           },
           "time": {
             "type": "string",
@@ -896,7 +963,10 @@
             "description": "Giờ máy chủ, yyyy-MM-dd HH:mm:ss, không kèm múi giờ."
           },
           "databaseConnected": {
-            "type": "boolean"
+            "type": "boolean",
+            "enum": [
+              true
+            ]
           },
           "totalBooks": {
             "type": "integer",
@@ -1048,7 +1118,7 @@
             "type": "string",
             "format": "date",
             "nullable": true,
-            "description": "Hạn trả ghi trong giao dịch chưa hoàn tất; null khi không có dữ liệu."
+            "description": "yyyy-MM-dd hoặc null. Lấy hạn trả lớn nhất trong các giao dịch chưa hoàn tất của bản sao; không phải ngày hứa sách sẽ có sẵn."
           }
         }
       },
@@ -1119,7 +1189,8 @@
           },
           "documentCode": {
             "type": "string",
-            "readOnly": true
+            "readOnly": true,
+            "description": "Khóa MaTaiLieu ở dạng chuỗi, không suy ra tiền tố loại học liệu."
           },
           "stockBadgeText": {
             "type": "string",
@@ -1298,7 +1369,8 @@
             "type": "string",
             "nullable": false,
             "example": "GD261110-001",
-            "description": "Mã giao dịch đang mượn của đúng bạn đọc, bắt buộc."
+            "description": "Không để trống hoặc chỉ có khoảng trắng. Nhận mã GDyyMMdd-ID từ danh sách giao dịch, ID ChiTietMuon dạng chuỗi số, hoặc mã vạch bản sách đang mượn của bạn đọc này.",
+            "minLength": 1
           }
         },
         "required": [
@@ -1458,7 +1530,8 @@
             "type": "string"
           },
           "trangThaiHocTap": {
-            "type": "string"
+            "type": "string",
+            "description": "Hiện chưa có trường SQL tương ứng; trả Chưa có dữ liệu."
           },
           "nhom": {
             "type": "string"
@@ -1470,7 +1543,8 @@
             "type": "string"
           },
           "hieuLucQuyen": {
-            "type": "string"
+            "type": "string",
+            "description": "Ngày hết hạn thẻ yyyy-MM-dd; chuỗi rỗng khi SQL chưa có dữ liệu."
           },
           "soSachDangMuon": {
             "type": "integer",
@@ -1482,7 +1556,7 @@
           },
           "tongTienPhat": {
             "type": "number",
-            "description": "VND"
+            "description": "Phí quá hạn tính theo quy tắc ứng dụng cho các giao dịch đang mượn; không phải tổng công nợ đã đối chiếu bảng ViPham."
           },
           "borrowTransactions": {
             "type": "array",
@@ -1494,7 +1568,8 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/BookItem"
-            }
+            },
+            "description": "Toàn bộ danh mục để tra cứu, gồm cả học liệu hết bản; cần kiểm tra isOnline và availableCopies trước khi chọn mượn."
           }
         }
       },
@@ -1618,7 +1693,8 @@
           },
           "matChoBoiThuong": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "description": "Số bản sách mất/hỏng trong kho; tên trường được giữ tương thích, không phải số hồ sơ bồi thường đang chờ."
           },
           "luotQuaHan": {
             "type": "integer",
@@ -1632,7 +1708,8 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/DashboardTransactionItem"
-            }
+            },
+            "description": "Tối đa 8 giao dịch đang mở, mới nhất theo ngày mượn; không phải lịch sử tất cả phiếu đã trả."
           },
           "tongQuyTaiChinh": {
             "type": "number"
@@ -1675,6 +1752,36 @@
           "time",
           "databaseConnected"
         ]
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "enum": [
+              503
+            ]
+          },
+          "detail": {
+            "type": "string"
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "title",
+          "status",
+          "detail"
+        ]
       }
     },
     "securitySchemes": {
@@ -1682,7 +1789,7 @@
         "type": "apiKey",
         "in": "cookie",
         "name": "UTC_Library_Auth_v3",
-        "description": "Đăng nhập tài khoản cán bộ qua /Account/Login."
+        "description": "Dùng cookie cán bộ từ POST form /Account/Login. Swagger dùng cookie của trình duyệt, không nhập chuỗi cookie vào Authorize. Chưa đăng nhập trả 401; tài khoản bạn đọc trả 403. Sau khi đăng nhập ở tab khác, tải lại trang tài liệu để đổi token."
       }
     }
   }

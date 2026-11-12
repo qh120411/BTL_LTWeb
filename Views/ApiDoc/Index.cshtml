@@ -2,7 +2,7 @@
     Layout = null;
 }
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,42 +13,27 @@
         html { box-sizing: border-box; overflow-y: scroll; }
         *, *:before, *:after { box-sizing: inherit; }
         body { margin: 0; background: #fafafa; }
+        .api-doc-guide { max-width: 1460px; margin: 24px auto 0; padding: 20px; background: white; border: 1px solid #deebf4; border-radius: 6px; font: 14px/1.7 system-ui, sans-serif; color: #203c58; }
+        .api-doc-guide h1 { margin: 0 0 8px; font-size: 22px; color: #174c7f; }
+        .api-doc-guide p { margin: 6px 0; }
+        .api-doc-guide a { color: #0079ba; }
+        #api-doc-status { max-width: 1460px; margin: 16px auto; padding: 0 20px; font: 14px/1.6 system-ui, sans-serif; }
     </style>
 </head>
 <body>
     <div hidden>@Html.AntiForgeryToken()</div>
+    <section class="api-doc-guide" aria-labelledby="apiDocTitle">
+        <h1 id="apiDocTitle">UTC Library API</h1>
+        <p>Danh mục học liệu được tra cứu công khai. API bạn đọc, mượn trả và thống kê yêu cầu <a href="/Account/Login">đăng nhập tài khoản cán bộ</a>.</p>
+        <p>Swagger dùng phiên đăng nhập hiện tại và tự điền token cho các yêu cầu POST. Sau khi đăng nhập hoặc đổi tài khoản ở tab khác, tải lại trang này trước khi thử API.</p>
+        <p>POST mượn/trả ghi dữ liệu thật vào SQL. Ví dụ bên dưới chỉ minh họa cấu trúc; chọn đúng mã học liệu, bạn đọc và giao dịch trước khi gửi.</p>
+        <p><a href="/swagger.json">Xem đặc tả OpenAPI</a> · <a href="/Reader/Home">Về website</a></p>
+    </section>
+    <p id="api-doc-status" role="status">Đang tải tài liệu API…</p>
     <div id="swagger-ui"></div>
 
     <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
     <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-standalone-preset.js"></script>
-    <script>
-        window.onload = function() {
-            window.ui = SwaggerUIBundle({
-                url: "/swagger.json",
-                dom_id: '#swagger-ui',
-                deepLinking: true,
-                docExpansion: "list",
-                requestInterceptor: function(request) {
-                    var method = String(request.method || 'GET').toUpperCase();
-                    if (method === 'POST') {
-                        var token = document.querySelector('input[name="__RequestVerificationToken"]');
-                        if (token) {
-                            request.headers = request.headers || {};
-                            request.headers['RequestVerificationToken'] = token.value;
-                        }
-                    }
-                    return request;
-                },
-                presets: [
-                    SwaggerUIBundle.presets.apis,
-                    SwaggerUIStandalonePreset
-                ],
-                plugins: [
-                    SwaggerUIBundle.plugins.DownloadUrl
-                ],
-                layout: "StandaloneLayout"
-            });
-        };
-    </script>
+    <script src="~/js/api-doc.js" asp-append-version="true"></script>
 </body>
 </html>

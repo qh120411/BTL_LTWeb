@@ -23,6 +23,13 @@
 .utc-login-forgot { justify-self: start; color: var(--utc-navy); font-size: 14px; line-height: 20px; font-weight: 500; }
 .utc-login-submit { min-height: 46px; padding: 12px 24px; border: 1px solid var(--utc-brand); border-radius: 6px; color: white; background: var(--utc-brand); font-size: 14px; font-weight: 500; line-height: 20px; }
 .utc-login-submit:hover { background: var(--utc-primary-hover); border-color: var(--utc-primary-hover); }
+.utc-quick-login { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--utc-line); }
+.utc-quick-login > p { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; color: var(--utc-muted); font-size: 13px; font-weight: 500; }
+.utc-quick-login > p span { padding: 2px 7px; border-radius: 4px; color: var(--utc-navy); background: var(--utc-cream); font-size: 11px; }
+.utc-quick-login-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.utc-quick-login-button { display: inline-flex; flex: 1 1 130px; justify-content: center; align-items: center; gap: 8px; min-height: 44px; padding: 10px 16px; border: 1px solid var(--utc-line); border-radius: 6px; color: var(--utc-navy); background: var(--utc-cream); font-size: 14px; font-weight: 500; }
+.utc-quick-login-button:hover { border-color: var(--utc-brand); color: var(--utc-brand); background: var(--utc-blue); }
+.utc-quick-login-button:disabled { opacity: .6; cursor: wait; }
 /* Also hide retired content in views compiled before its markup was removed. */
 .utc-login-support,.utc-login-help,.utc-login-preview-link { display: none; }
 .utc-login-forgot:hover { color: var(--utc-brand); text-decoration: underline; }

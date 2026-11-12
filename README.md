@@ -17,7 +17,6 @@ Báo cáo đối chiếu UI/backend và các phần mã dư đã dọn: [doc.md]
 
 ## Tài liệu API
 
-- [Hướng dẫn API tiếng Việt](docs/API.md): endpoint, tham số, cấu trúc phản hồi, ví dụ PowerShell và hành vi SQL-only.
 - Swagger UI khi chạy ứng dụng: [http://localhost:5124/swagger/index.html](http://localhost:5124/swagger/index.html) (cũng có tại `/ApiDoc`, `/api-docs`, `/swagger`, `/Docs/Api`).
 - Đặc tả OpenAPI: [`wwwroot/swagger.json`](wwwroot/swagger.json), được phục vụ tại `/swagger.json`.
 

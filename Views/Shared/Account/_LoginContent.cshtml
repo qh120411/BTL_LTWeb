@@ -1,3 +1,4 @@
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment WebEnvironment
 @{
     string returnUrl = ViewBag.ReturnUrl ?? "";
     string errorMsg = ViewBag.Error ?? "";
@@ -35,6 +36,22 @@
                 <a class="utc-login-forgot" href="mailto:thuvien@utc.edu.vn?subject=Hỗ%20trợ%20cấp%20lại%20mật%20khẩu">Quên mật khẩu? →</a>
                 <button type="submit" class="utc-login-submit">Đăng nhập</button>
             </form>
+            @if (WebEnvironment.IsDevelopment())
+            {
+                <div class="utc-quick-login" aria-labelledby="quickLoginTitle">
+                    <p id="quickLoginTitle">Đăng nhập nhanh <span>Demo</span></p>
+                    <div class="utc-quick-login-actions">
+                        <button type="button" class="utc-quick-login-button" data-quick-login
+                                data-username="admin" data-password="Admin@123">
+                            <i class="bi bi-shield-check" aria-hidden="true"></i> Admin
+                        </button>
+                        <button type="button" class="utc-quick-login-button" data-quick-login
+                                data-username="242630923" data-password="Dat242630923">
+                            <i class="bi bi-person" aria-hidden="true"></i> Student
+                        </button>
+                    </div>
+                </div>
+            }
         </div>
     </div>
 </section>
